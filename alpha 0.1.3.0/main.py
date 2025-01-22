@@ -1,7 +1,8 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QLabel, QScrollArea, QMessageBox, QGraphicsDropShadowEffect
+from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QLabel, QScrollArea, QMessageBox
 from PyQt5.QtGui import QPalette, QColor, QFont
 from PyQt5.QtCore import Qt
+from tools.subtitle_converter import SubtitleConverter
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -22,7 +23,7 @@ class MainWindow(QMainWindow):
             widget = self.layout.itemAt(i).widget()
             if widget is not None:
                 widget.setParent(None)
-        
+
         # Add safe area around the edges
         self.layout.setContentsMargins(100, 100, 100, 100)
 
@@ -32,13 +33,14 @@ class MainWindow(QMainWindow):
         scroll_content = QWidget(scroll)
         scroll_layout = QHBoxLayout(scroll_content)
         scroll.setWidget(scroll_content)
-        
+
         self.layout.addWidget(scroll)
 
         # Add tool buttons
         tools = [
             ("Longer Appearance SRT", "Increase the duration each subtitle appears."),
             ("Merge SRT Files", "Combine multiple SRT files into one."),
+            ("Subtitle Converter", "Convert subtitles between different formats."),
             ("Coming Soon", "New tools will be added here.")
         ]
 
@@ -51,18 +53,19 @@ class MainWindow(QMainWindow):
         button = QPushButton()
         button.setStyleSheet("""
             QPushButton {
-                border: 10px solid #4f86f7; /* Thicker edge line */
+                border: 2px solid #4f86f7; /* Thicker edge line */
                 color: white;
                 border-radius: 10px;
                 padding: 10px;
                 min-width: 150px;
                 min-height: 200px;
                 margin: 10px;
-                background-color: #2c2f38; /* Same as background color */
+                background-color: #4f86f7; /* Accented blue color */
                 text-align: center; /* Center align text */
             }
             QPushButton:hover {
                 border-color: #3a6dbf;
+                background-color: #3a6dbf; /* Darker blue on hover */
             }
         """)
 
@@ -72,19 +75,19 @@ class MainWindow(QMainWindow):
         name_label.setStyleSheet("color: #4f86f7;")
         name_label.setWordWrap(True)  # Enable word wrap
         name_label.setAlignment(Qt.AlignCenter)  # Center align text
-        
+
         # Create description label
         description_label = QLabel(tool_description)
         description_label.setFont(QFont("Arial", 12))
         description_label.setStyleSheet("color: white;")
         description_label.setWordWrap(True)  # Enable word wrap
         description_label.setAlignment(Qt.AlignCenter)  # Center align text
-        
+
         # Create layout for the button
         button_layout = QVBoxLayout(button)
         button_layout.addWidget(name_label)
         button_layout.addWidget(description_label)
-        
+
         button.clicked.connect(lambda: self.tool_selected(tool_name))
         return button
 
@@ -95,6 +98,8 @@ class MainWindow(QMainWindow):
         elif tool_name == "Merge SRT Files":
             from tools.merge_srt import MergeSRT
             self.load_tool(MergeSRT)
+        elif tool_name == "Subtitle Converter":
+            self.load_tool(SubtitleConverter)
         else:
             QMessageBox.information(self, "Coming Soon", "This feature is coming soon!")
 
@@ -104,7 +109,7 @@ class MainWindow(QMainWindow):
             widget = self.layout.itemAt(i).widget()
             if widget is not None:
                 widget.setParent(None)
-        
+
         tool_widget = tool_class(parent=self.central_widget, back_callback=self.main_menu)
         self.layout.addWidget(tool_widget)
         tool_widget.show()
