@@ -136,4 +136,16 @@ def ttml_to_ssa(content):
     return ssa_content
 
 def cap_to_ssa(content):
-    ssa_content = "[Script Info]\nTitle: Default SSA\nScriptType
+    ssa_content = "[Script Info]\nTitle: Default SSA\nScriptType: v4.00\n\n[V4 Styles]\nFormat: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, TertiaryColour, BackColour, Bold, Italic, Underline, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding\n"
+    ssa_content += "Style: Default,Arial,20,16777215,0,16777215,0,-1,0,0,0,100,100,0,0,1,1,0,2,10,10,10,1\n"
+    ssa_content += "\n[Events]\n"
+    ssa_content += "Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\n"
+
+    matches = re.findall(r'<Caption time="([^"]+)"[^>]*>(.*?)</Caption>', content, re.DOTALL)
+    for index, (time, text) in enumerate(matches):
+        start_time = time.replace('.', ':')
+        end_time = f"0:{int(time.split(':')[1]) + 1}:{time.split(':')[2]}"
+        text = re.sub(r'<[^>]+>', '', text).replace('\n', '\\N')  # Remove HTML tags and replace newline
+        ssa_content += f"Dialogue: Marked=0,{start_time},{end_time},Default,,0,0,0,,{text}\n"
+
+    return ssa_content
