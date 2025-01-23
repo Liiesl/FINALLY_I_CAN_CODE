@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QLabel, QScrollArea, QMessageBox, QListWidget, QListWidgetItem
+from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QLabel, QScrollArea, QMessageBox
 from PyQt5.QtGui import QPalette, QColor, QFont
 from PyQt5.QtCore import Qt, QPoint
 import qtawesome as qta  # Import QtAwesome for icons
@@ -93,91 +93,121 @@ class MainWindow(QMainWindow):
 
     def create_tool_button(self, tool_name, tool_description):
         print(f"MainWindow: Creating Tool Button for {tool_name}")
-        button = QPushButton()
-        button.setStyleSheet("""
-            QPushButton {
-                border: 2px solid #4f86f7;
-                color: white;
-                border-radius: 10px;
-                padding: 10px;
-                min-width: 150px;
-                min-height: 200px;
-                margin: 10px;
-                background-color: #4f86f7;
-                text-align: center;
-            }
-            QPushButton:hover {
-                border-color: #3a6dbf;
-                background-color: #3a6dbf;
-            }
-        """)
+        try:
+            button = QPushButton()
+            button.setStyleSheet("""
+                QPushButton {
+                    border: 2px solid #4f86f7;
+                    color: white;
+                    border-radius: 10px;
+                    padding: 10px;
+                    min-width: 150px;
+                    min-height: 200px;
+                    margin: 10px;
+                    background-color: #4f86f7;
+                    text-align: center;
+                }
+                QPushButton:hover {
+                    border-color: #3a6dbf;
+                    background-color: #3a6dbf;
+                }
+            """)
 
-        name_label = QLabel(tool_name)
-        name_label.setFont(QFont("Arial", 18, QFont.Bold))
-        name_label.setStyleSheet("color: #4f86f7;")
-        name_label.setWordWrap(True)
-        name_label.setAlignment(Qt.AlignCenter)
+            name_label = QLabel(tool_name)
+            name_label.setFont(QFont("Arial", 18, QFont.Bold))
+            name_label.setStyleSheet("color: #4f86f7;")
+            name_label.setWordWrap(True)
+            name_label.setAlignment(Qt.AlignCenter)
 
-        description_label = QLabel(tool_description)
-        description_label.setFont(QFont("Arial", 12))
-        description_label.setStyleSheet("color: white;")
-        description_label.setWordWrap(True)
-        description_label.setAlignment(Qt.AlignCenter)
+            description_label = QLabel(tool_description)
+            description_label.setFont(QFont("Arial", 12))
+            description_label.setStyleSheet("color: white;")
+            description_label.setWordWrap(True)
+            description_label.setAlignment(Qt.AlignCenter)
 
-        button_layout = QVBoxLayout(button)
-        button_layout.addWidget(name_label)
-        button_layout.addWidget(description_label)
+            button_layout = QVBoxLayout(button)
+            button_layout.addWidget(name_label)
+            button_layout.addWidget(description_label)
 
-        button.clicked.connect(lambda: self.tool_selected(tool_name))
-        button.show()  # Ensure button is visible
-        return button
+            button.clicked.connect(lambda: self.tool_selected(tool_name))
+            button.show()  # Ensure button is visible
+            return button
+        except Exception as e:
+            print(f"Error creating tool button {tool_name}: {e}")
+            import traceback
+            traceback.print_exc()
 
     def tool_selected(self, tool_name):
         print(f"MainWindow: Tool Selected - {tool_name}")
-        if tool_name == "Longer Appearance SRT":
-            from tools.longer_appearance import LongerAppearanceSRT
-            self.load_tool(LongerAppearanceSRT)
-        elif tool_name == "Merge SRT Files":
-            from tools.merge_srt import MergeSRT
-            self.load_tool(MergeSRT)
-        elif tool_name == "Subtitle Converter":
-            self.load_tool(SubtitleConverter)
-        else:
-            QMessageBox.information(self, "Coming Soon", "This feature is coming soon!")
+        try:
+            if tool_name == "Longer Appearance SRT":
+                from tools.longer_appearance import LongerAppearanceSRT
+                self.load_tool(LongerAppearanceSRT)
+            elif tool_name == "Merge SRT Files":
+                from tools.merge_srt import MergeSRT
+                self.load_tool(MergeSRT)
+            elif tool_name == "Subtitle Converter":
+                self.load_tool(SubtitleConverter)
+            else:
+                QMessageBox.information(self, "Coming Soon", "This feature is coming soon!")
+        except Exception as e:
+            print(f"Error selecting tool {tool_name}: {e}")
+            import traceback
+            traceback.print_exc()
 
     def load_tool(self, tool_class):
         print(f"MainWindow: Loading Tool - {tool_class.__name__}")
-        for i in reversed(range(self.main_layout.count())):
-            widget = self.main_layout.itemAt(i).widget()
-            if widget is not None:
-                widget.setParent(None)
+        try:
+            for i in reversed(range(self.main_layout.count())):
+                widget = self.main_layout.itemAt(i).widget()
+                if widget is not None:
+                    widget.setParent(None)
 
-        tool_widget = tool_class(parent=self.central_widget, back_callback=self.main_menu)
-        self.main_layout.addWidget(tool_widget)
-        tool_widget.show()
+            tool_widget = tool_class(parent=self.central_widget, back_callback=self.main_menu)
+            self.main_layout.addWidget(tool_widget)
+            tool_widget.show()
+        except Exception as e:
+            print(f"Error loading tool {tool_class.__name__}: {e}")
+            import traceback
+            traceback.print_exc()
 
     def toggle_side_page(self):
         print("MainWindow: Toggling Side Page")
-        if self.side_page and self.side_page.isVisible():
-            self.side_page.hide()
-        else:
-            self.show_side_page()
+        try:
+            if self.side_page and self.side_page.isVisible():
+                self.side_page.hide()
+            else:
+                self.show_side_page()
+        except Exception as e:
+            print(f"Error toggling side page: {e}")
+            import traceback
+            traceback.print_exc()
 
     def show_side_page(self):
         print("MainWindow: Showing Side Page")
-        if self.side_page is None:
-            self.side_page = SidePage(self)
-        
-        self.position_side_page()
-        self.side_page.show()
+        try:
+            if self.side_page is None:
+                self.side_page = SidePage(self)
+            
+            self.position_side_page()
+            self.side_page.show()
+        except Exception as e:
+            print(f"Error showing side page: {e}")
+            import traceback
+            traceback.print_exc()
 
     def position_side_page(self):
         print("MainWindow: Positioning Side Page")
-        # Position the side page just below the hamburger button
-        button_pos = self.hamburger_button.mapToGlobal(QPoint(0, 0))
-        button_height = self.hamburger_button.height()
-        # Glue the left edge of the side page to the left edge of the window
-        self.side_page.move(self.geometry().left(), button_pos.y() + button_height)
+        try:
+            # Position the side page just below the hamburger button
+            button_pos = self.hamburger_button.mapToGlobal(QPoint(0, 0))
+            button_height = self.hamburger_button.height()
+            # Glue the left edge of the side page to the left edge of the window
+            self.side_page.move(self.geometry().left(), button_pos.y() + button_height)
+        except Exception as e:
+            print(f"Error positioning side page: {e}")
+            import traceback
+            traceback.print_exc()
 
     def moveEvent(self, event):
         if self.side_page and self.side_page.isVisible():
@@ -218,9 +248,14 @@ class SidePage(QWidget):
 
     def handle_item_clicked(self, item):
         print(f"SidePage: Item Clicked - {item.text()}")
-        if item.text() == "Settings":
-            self.parent().open_settings()
-        self.hide()
+        try:
+            if item.text() == "Settings":
+                self.parent().open_settings()
+            self.hide()
+        except Exception as e:
+            print(f"Error handling item click {item.text()}: {e}")
+            import traceback
+            traceback.print_exc()
 
 if __name__ == "__main__":
     try:
