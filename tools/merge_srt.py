@@ -18,16 +18,16 @@ class MergeSRT(QWidget):
         layout = QVBoxLayout(self)
 
         text_size = self.config.get_text_size()
-        font_size = {
+        self.font_size = {
             "small": 18,
             "default": 26,
             "large": 34,
             "huge": 42
         }.get(text_size, 26)
 
-        button_font_size = font_size - 12
-        label_font_size = font_size - 12
-        input_font_size = font_size - 12
+        button_font_size = self.font_size - 12
+        label_font_size = self.font_size - 12
+        input_font_size = self.font_size - 12
 
         # Back to Home button
         self.add_button(layout, "Back to Home", self.back_callback, f"background-color: #4f86f7; color: white; border-radius: 5px; padding: 10px; font-size: {button_font_size}px;")
@@ -176,13 +176,13 @@ class MergeSRT(QWidget):
 
     def show_glue_end_to_end(self):
         self.stacked_widget.setCurrentWidget(self.glue_end_to_end_widget)
-        self.glue_end_to_end_button.setStyleSheet(self.get_mode_button_style(selected=True))
-        self.stacked_merge_button.setStyleSheet(self.get_mode_button_style(selected=False))
-        
+        self.glue_end_to_end_button.setStyleSheet(self.get_mode_button_style(selected=True, font_size=self.font_size - 12))
+        self.stacked_merge_button.setStyleSheet(self.get_mode_button_style(selected=False, font_size=self.font_size - 12))
+
     def show_stacked_merge(self):
         self.stacked_widget.setCurrentWidget(self.stacked_merge_widget)
-        self.glue_end_to_end_button.setStyleSheet(self.get_mode_button_style(selected=False, font_size=self.config.get_text_size() - 12))
-        self.stacked_merge_button.setStyleSheet(self.get_mode_button_style(selected=True, font_size=self.config.get_text_size() - 12))
+        self.glue_end_to_end_button.setStyleSheet(self.get_mode_button_style(selected=False, font_size=self.font_size - 12))
+        self.stacked_merge_button.setStyleSheet(self.get_mode_button_style(selected=True, font_size=self.font_size - 12))
 
     def select_main_subtitle(self):
         file_path = self.select_subtitle_file()
