@@ -51,3 +51,43 @@ alpha 0.1.2.0
 -change gui framework to pyQt5
 
 alpha 0.1.2.1
+-change the layout of main page to horizontal
+
+alpha 0.1.2.2
+-change the rectangle on main page to only show edge line
+-improve the layout of longer appearance SRT tool
+
+alpha 0.1.2.3
+-change the orientation for the rectangle on the main page to vertical
+-add safe area around the window
+
+alpha 0.1.2.4
+-rework merge srt tool
+-add 2 mode in merge srt tool
+-improve ui in merge srt tool
+
+alpha 0.1.2.5
+-further work on merge srt tool lead to irreversible bug
+
+alpha 0.1.2.6
+-unsuccessful attempt to rebuild merge srt tool
+
+alpha 0.1.2.7
+-rebuild merge srt tool
+-now the merge srt tool is working as intended
+
+alpha 0.1.3.0
+-add convert subtitle tool
+-add the compatibility to convert subtitle to SRT
+-add the compatibility to convert subtitle to VTT
+-add the compatibility to convert subtitle to TXT
+-add the compatibility to convert subtitle to ASS
+-add the compatibility to convert subtitle to SBV
+-add the compatibility to convert subtitle to DFXP
+-add the compatibility to convert subtitle to STL
+-add the compatibility to convert subtitle to MPL
+-add the compatibility to convert subtitle to USF
+-add the compatibility to convert subtitle to LRC
+-add the compatibility to convert subtitle to RT
+-add the compatibility to convert subtitle to TTML
+-add the compatibility to convert subtitle to CAP
