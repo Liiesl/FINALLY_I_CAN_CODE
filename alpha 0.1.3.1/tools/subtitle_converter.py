@@ -4,7 +4,7 @@ from tools.subtitleconverter.ass_converter import convert_to_ass
 from tools.subtitleconverter.sub_converter import convert_to_sub
 from tools.subtitleconverter.ssa_converter import convert_to_ssa
 from tools.subtitleconverter.sbv_converter import convert_to_sbv
-from tools.subtitleconverter.dfp_converter import convert_to_dfp
+from tools.subtitleconverter.dfp_converter import convert_to_dfxp
 from tools.subtitleconverter.stl_converter import convert_to_stl
 from tools.subtitleconverter.mpl_converter import convert_to_mpl
 from tools.subtitleconverter.usf_converter import convert_to_usf
@@ -32,11 +32,12 @@ class SubtitleConverter(QWidget):
 
         select_file_button = QPushButton("Select File")
         select_file_button.clicked.connect(self.select_files)
-        file_layout.addWidget(select_file_button)
+        select_file_button.setFixedWidth(200)
+        file_layout.addWidget(select_file_button, 1)
 
         self.file_list = QListWidget()
-        self.file_list.setFixedWidth(200)
-        file_layout.addWidget(self.file_list)
+        self.file_list.setFixedWidth(400)
+        file_layout.addWidget(self.file_list, 2)
 
         layout.addLayout(file_layout)
 
@@ -48,10 +49,9 @@ class SubtitleConverter(QWidget):
 
         self.format_dropdown = QComboBox()
         self.format_dropdown.addItems([
-            "SRT (.srt)", "ASS (.ass)", "SUB (.sub)", "TXT (.txt)", "SSA (.ssa)",
-            "SBV (.sbv)", "DFXP (.dfxp)", "STL (.stl)", "MPL (.mpl)", "USF (.usf)",
-            "LRC (.lrc)", "RT (.rt)", "TTML (.ttml)", "CAP (.cap)"
-            # Add more formats as needed
+            "SRT (.srt)", "SUB (.sub)", "TXT (.txt)", "ASS (.ass)", "SSA (.ssa)",
+            "VTT (.vtt)", "SBV (.sbv)", "DFXP (.dfxp)", "STL (.stl)", "IDX (.idx)",
+            "MPL (.mpl)", "USF (.usf)", "LRC (.lrc)", "RT (.rt)", "TTML (.ttml)", "CAP (.cap)"
         ])
         format_layout.addWidget(self.format_dropdown)
 
@@ -86,9 +86,12 @@ class SubtitleConverter(QWidget):
             """)
 
     def select_files(self):
-        file_paths, _ = QFileDialog.getOpenFileNames(self, "Select Subtitle Files", "", "Subtitle Files (*.srt *.ass *.sub *.txt *.ssa *.sbv *.dfxp *.stl *.mpl *.usf *.lrc *.rt *.ttml *.cap)")
+        file_paths, _ = QFileDialog.getOpenFileNames(self, "Select Subtitle Files", "", "Subtitle Files (*.srt *.ass *.sub *.txt *.ssa *.vtt *.sbv *.dfxp *.stl *.idx *.mpl *.usf *.lrc *.rt *.ttml *.cap)")
         if file_paths:
-            self.file_list.addItems(file_paths)
+            self.file_list.clear()
+            for file_path in file_paths:
+                self.file_list.addItem(os.path.basename(file_path))
+            self.file_list.file_paths = file_paths
 
     def convert_subtitle(self):
         if self.file_list.count() == 0:
@@ -97,7 +100,7 @@ class SubtitleConverter(QWidget):
 
         target_format = self.format_dropdown.currentText().split(' ')[0].lower()  # Extract format (e.g., "srt")
         for index in range(self.file_list.count()):
-            subtitle_path = self.file_list.item(index).text()
+            subtitle_path = self.file_list.file_paths[index]
             save_path, _ = QFileDialog.getSaveFileName(self, "Save Converted File", "", "CAP Files (*.cap)")
             if not save_path:
                 continue
