@@ -2,6 +2,7 @@ import os
 import re
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QFileDialog, QMessageBox, QLabel, QLineEdit, QStackedWidget, QFrame
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QPalette, QColor
 
 class SubtitleShifter(QWidget):
     def __init__(self, parent=None, back_callback=None):
@@ -151,20 +152,35 @@ class SubtitleShifter(QWidget):
     def whole_shift(self):
         ms_shift = int(self.ms_input.text())
         if self.subtitle_path:
-            # Call function to shift whole subtitle by ms_shift
-            shift_subtitle(self.subtitle_path, ms_shift)
-            QMessageBox.information(self, "Success", "Subtitles shifted successfully!")
+            save_path, _ = QFileDialog.getSaveFileName(self, "Save Shifted Subtitles", "", "Subtitle Files (*.srt)")
+            if save_path:
+                shift_subtitle(self.subtitle_path, ms_shift, save_path)
+                self.show_success_message("Subtitles shifted successfully!")
 
     def partial_shift(self):
         start_time = self.start_input.text()
         end_time = self.end_input.text()
         ms_shift = int(self.ms_input_partial.text())
         if self.subtitle_path:
-            # Call function to shift partial subtitle by ms_shift within start and end time
-            shift_subtitle_partial(self.subtitle_path, start_time, end_time, ms_shift)
-            QMessageBox.information(self, "Success", "Subtitles shifted successfully!")
+            save_path, _ = QFileDialog.getSaveFileName(self, "Save Shifted Subtitles", "", "Subtitle Files (*.srt)")
+            if save_path:
+                shift_subtitle_partial(self.subtitle_path, start_time, end_time, ms_shift, save_path)
+                self.show_success_message("Subtitles shifted successfully!")
 
-def shift_subtitle(file_path, ms_shift):
+    def show_success_message(self, message):
+        msg_box = QMessageBox()
+        msg_box.setWindowTitle("Success")
+        msg_box.setText(message)
+        msg_box.setIcon(QMessageBox.Information)
+
+        # Change the text color to black or any visible color
+        palette = msg_box.palette()
+        palette.setColor(QPalette.WindowText, QColor(Qt.black))
+        msg_box.setPalette(palette)
+
+        msg_box.exec_()
+
+def shift_subtitle(file_path, ms_shift, save_path):
     with open(file_path, 'r') as file:
         content = file.readlines()
 
@@ -178,10 +194,10 @@ def shift_subtitle(file_path, ms_shift):
         else:
             shifted_content.append(line)
 
-    with open(file_path, 'w') as file:
+    with open(save_path, 'w') as file:
         file.writelines(shifted_content)
 
-def shift_subtitle_partial(file_path, start_time, end_time, ms_shift):
+def shift_subtitle_partial(file_path, start_time, end_time, ms_shift, save_path):
     with open(file_path, 'r') as file:
         content = file.readlines()
 
@@ -198,7 +214,7 @@ def shift_subtitle_partial(file_path, start_time, end_time, ms_shift):
         else:
             shifted_content.append(line)
 
-    with open(file_path, 'w') as file:
+    with open(save_path, 'w') as file:
         file.writelines(shifted_content)
 
 def shift_time(time_str, ms_shift):
