@@ -144,8 +144,6 @@ class MainWindow(QMainWindow):
             self.load_tool(MergeSRT)
         elif tool_name == "Subtitle Converter":
             self.load_tool(SubtitleConverter)
-        elif tool_name == "Settings":
-            self.open_settings()
         else:
             QMessageBox.information(self, "Coming Soon", "This feature is coming soon!")
 
