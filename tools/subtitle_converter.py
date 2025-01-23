@@ -121,7 +121,10 @@ class SubtitleConverter(QWidget):
         default_save_directory = self.config.get_default_save_directory()
         for index in range(self.file_list.count()):
             subtitle_path = self.file_list.file_paths[index]
-            save_path = os.path.join(default_save_directory, f"{os.path.splitext(os.path.basename(subtitle_path))[0]}.{target_format}")
+            save_path, _ = QFileDialog.getSaveFileName(self, "Save Converted File", os.path.join(default_save_directory, f"{os.path.splitext(os.path.basename(subtitle_path))[0]}.{target_format}"), f"{target_format.upper()} Files (*.{target_format})")
+            if not save_path:
+                continue
+
             try:
                 with open(subtitle_path, 'r') as file:
                     content = file.read()
