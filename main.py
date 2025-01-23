@@ -127,6 +127,8 @@ class MainWindow(QMainWindow):
             self.load_tool(MergeSRT)
         elif tool_name == "Subtitle Converter":
             self.load_tool(SubtitleConverter)
+        elif tool_name == "Settings":
+            self.open_settings()
         else:
             QMessageBox.information(self, "Coming Soon", "This feature is coming soon!")
 
@@ -178,8 +180,8 @@ class MainWindow(QMainWindow):
 
     def open_settings(self):
         if self.settings_window is None:
-            self.settings_window = Settings(self)
-        self.settings_window.show()
+            self.settings_window = Settings(self, back_callback=self.main_menu)
+        self.load_tool(Settings)
 
 class SidePage(QWidget):
     def __init__(self, parent=None):
