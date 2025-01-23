@@ -1,8 +1,9 @@
 import sys
 import qtawesome as qta
-from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QLabel, QScrollArea, QMessageBox, QSplitter
+from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QLabel, QScrollArea, QMessageBox, QSplitter, QFrame
 from PyQt5.QtGui import QPalette, QColor, QFont
 from PyQt5.QtCore import Qt
+
 from tools.subtitle_converter import SubtitleConverter
 from side_panel import SidePanel  # Import the SidePanel class
 from settings import Settings  # Import the Settings class
@@ -12,7 +13,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("SRT Editor")
-        self.setGeometry(100, 100, 800, 600)
+        self.setGeometry(100, 100, 1200, 800)
         self.setStyleSheet("background-color: #2c2f38;")
 
         self.central_widget = QWidget()
@@ -67,20 +68,10 @@ class MainWindow(QMainWindow):
             self.main_content_layout.insertLayout(0, self.top_bar)
             self.top_bar_added = True
 
-        # Create a scroll area
-        scroll = QScrollArea()
-        scroll.setWidgetResizable(True)
-        scroll_content = QWidget(scroll)
-        scroll_layout = QHBoxLayout(scroll_content)
-        scroll.setWidget(scroll_content)
-
-        self.main_content_layout.addWidget(scroll)
-
-        # Apply the safe area margins from config
-        self.update_safe_area_size()
-
-        # Apply the text size from config
-        self.apply_text_size()
+        # Create a widget to hold the tool buttons
+        self.tool_buttons_container = QWidget()
+        self.tool_buttons_layout = QHBoxLayout(self.tool_buttons_container)
+        self.tool_buttons_layout.setContentsMargins(0, 0, 0, 0)
 
         # Add tool buttons
         tools = [
@@ -91,9 +82,42 @@ class MainWindow(QMainWindow):
         ]
 
         for tool in tools:
-            scroll_layout.addWidget(self.create_tool_button(tool[0], tool[1]))
+            self.tool_buttons_layout.addWidget(self.create_tool_button(tool[0], tool[1]))
 
-        scroll_layout.addStretch()
+        self.tool_buttons_layout.addStretch()
+
+        # Create a frame to hold the navigation buttons and tool buttons container
+        navigation_frame = QFrame()
+        navigation_layout = QHBoxLayout(navigation_frame)
+
+        # Left arrow button
+        self.left_arrow_button = QPushButton()
+        left_arrow_icon = qta.icon('fa.chevron-left')
+        self.left_arrow_button.setIcon(left_arrow_icon)
+        self.left_arrow_button.setFixedSize(30, 30)
+        self.left_arrow_button.setStyleSheet("background-color: #4f86f7; border: none;")
+        self.left_arrow_button.clicked.connect(self.scroll_left)
+        navigation_layout.addWidget(self.left_arrow_button)
+
+        # Add the tool buttons container to the navigation layout
+        navigation_layout.addWidget(self.tool_buttons_container)
+
+        # Right arrow button
+        self.right_arrow_button = QPushButton()
+        right_arrow_icon = qta.icon('fa.chevron-right')
+        self.right_arrow_button.setIcon(right_arrow_icon)
+        self.right_arrow_button.setFixedSize(30, 30)
+        self.right_arrow_button.setStyleSheet("background-color: #4f86f7; border: none;")
+        self.right_arrow_button.clicked.connect(self.scroll_right)
+        navigation_layout.addWidget(self.right_arrow_button)
+
+        self.main_content_layout.addWidget(navigation_frame)
+
+        # Apply the safe area margins from config
+        self.update_safe_area_size()
+
+        # Apply the text size from config
+        self.apply_text_size()
 
     def create_tool_button(self, tool_name, tool_description):
         button = QPushButton()
@@ -103,8 +127,8 @@ class MainWindow(QMainWindow):
                 color: white;
                 border-radius: 10px;
                 padding: 10px;
-                min-width: 150px;
-                min-height: 200px;
+                min-width: 200px;
+                min-height: 300px;
                 margin: 10px;
                 background-color: #2c2f38; 
                 text-align: center; 
@@ -188,6 +212,14 @@ class MainWindow(QMainWindow):
                 font-size: {font_size}px;
             }}
         """)
+
+    def scroll_left(self):
+        scroll_area = self.tool_buttons_container.parent()
+        scroll_area.horizontalScrollBar().setValue(scroll_area.horizontalScrollBar().value() - 100)
+
+    def scroll_right(self):
+        scroll_area = self.tool_buttons_container.parent()
+        scroll_area.horizontalScrollBar().setValue(scroll_area.horizontalScrollBar().value() + 100)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
