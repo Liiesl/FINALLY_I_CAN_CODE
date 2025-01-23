@@ -101,3 +101,4 @@ alpha 0.1.3.1
 
 alpha 0.1.4.0
 -add settings
+-add side pages
