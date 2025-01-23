@@ -211,16 +211,17 @@ class MainWindow(QMainWindow):
         """)
 
     def update_tool_button_visibility(self, event=None):
-        container_width = self.tool_buttons_container.width()
-        button_width = 220
-        visible_buttons = container_width // button_width
-        for i in range(self.tool_buttons_layout.count()):
-            item = self.tool_buttons_layout.itemAt(i)
-            if item is not None and item.widget() is not None:
-                if i < visible_buttons:
-                    item.widget().setVisible(True)
-                else:
-                    item.widget().setVisible(False)
+        if self.tool_buttons_container:
+            container_width = self.tool_buttons_container.width()
+            button_width = 220
+            visible_buttons = container_width // button_width
+            for i in range(self.tool_buttons_layout.count()):
+                item = self.tool_buttons_layout.itemAt(i)
+                if item is not None and item.widget() is not None:
+                    if i < visible_buttons:
+                        item.widget().setVisible(True)
+                    else:
+                        item.widget().setVisible(False)
 
     def scroll_left(self):
         current_value = self.scroll_area.horizontalScrollBar().value()
