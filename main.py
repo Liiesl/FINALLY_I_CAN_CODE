@@ -9,6 +9,7 @@ from tools.subtitle_converter import SubtitleConverter
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+        print("MainWindow: Initializing")
         self.setWindowTitle("SRT Editor")
         self.setGeometry(100, 100, 800, 400)
         self.setStyleSheet("background-color: #2c2f38;")
@@ -24,6 +25,7 @@ class MainWindow(QMainWindow):
         self.init_ui()
 
     def init_ui(self):
+        print("MainWindow: Initializing UI")
         # Create a layout for the main content
         self.main_layout = QVBoxLayout()
 
@@ -39,6 +41,7 @@ class MainWindow(QMainWindow):
         self.central_widget.setLayout(self.main_layout)
 
     def add_hamburger_button(self):
+        print("MainWindow: Adding Hamburger Button")
         # Create a container for the hamburger button
         container = QWidget()
         container_layout = QHBoxLayout(container)
@@ -57,6 +60,7 @@ class MainWindow(QMainWindow):
         self.main_layout.addWidget(container, alignment=Qt.AlignTop | Qt.AlignLeft)
 
     def main_menu(self):
+        print("MainWindow: Adding Main Menu")
         # Clear the central widget layout
         for i in reversed(range(self.main_layout.count())):
             widget = self.main_layout.itemAt(i).widget()
@@ -86,6 +90,7 @@ class MainWindow(QMainWindow):
         scroll_layout.addStretch()
 
     def create_tool_button(self, tool_name, tool_description):
+        print(f"MainWindow: Creating Tool Button for {tool_name}")
         button = QPushButton()
         button.setStyleSheet("""
             QPushButton {
@@ -125,6 +130,7 @@ class MainWindow(QMainWindow):
         return button
 
     def tool_selected(self, tool_name):
+        print(f"MainWindow: Tool Selected - {tool_name}")
         if tool_name == "Longer Appearance SRT":
             from tools.longer_appearance import LongerAppearanceSRT
             self.load_tool(LongerAppearanceSRT)
@@ -139,27 +145,29 @@ class MainWindow(QMainWindow):
             QMessageBox.information(self, "Coming Soon", "This feature is coming soon!")
 
     def load_tool(self, tool_class):
-        # Clear the central widget layout
+        print(f"MainWindow: Loading Tool - {tool_class.__name__}")
         for i in reversed(range(self.main_layout.count())):
             widget = self.main_layout.itemAt(i).widget()
             if widget is not None:
                 widget.setParent(None)
 
-        # Instantiate the tool widget and add it to the main layout
         tool_widget = tool_class(parent=self.central_widget, back_callback=self.main_menu)
         self.main_layout.addWidget(tool_widget)
         tool_widget.show()
 
     def open_settings(self):
+        print("MainWindow: Opening Settings")
         self.load_tool(Settings)
 
     def toggle_side_page(self):
+        print("MainWindow: Toggling Side Page")
         if self.side_page and self.side_page.isVisible():
             self.side_page.hide()
         else:
             self.show_side_page()
 
     def show_side_page(self):
+        print("MainWindow: Showing Side Page")
         if self.side_page is None:
             self.side_page = SidePage(self)
         
@@ -167,6 +175,7 @@ class MainWindow(QMainWindow):
         self.side_page.show()
 
     def position_side_page(self):
+        print("MainWindow: Positioning Side Page")
         # Position the side page just below the hamburger button
         button_pos = self.hamburger_button.mapToGlobal(QPoint(0, 0))
         button_height = self.hamburger_button.height()
@@ -192,6 +201,7 @@ class MainWindow(QMainWindow):
 class SidePage(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
+        print("SidePage: Initializing")
         self.setWindowTitle("Side Page")
         self.setGeometry(0, 0, 200, 400)
         self.setStyleSheet("background-color: #2c2f38;")
@@ -210,11 +220,13 @@ class SidePage(QWidget):
         self.list_widget.itemClicked.connect(self.handle_item_clicked)
 
     def handle_item_clicked(self, item):
+        print(f"SidePage: Item Clicked - {item.text()}")
         if item.text() == "Settings":
             self.parent().open_settings()
         self.hide()
 
 if __name__ == "__main__":
+    print("Starting Application")
     app = QApplication(sys.argv)
 
     palette = QPalette()
@@ -234,4 +246,5 @@ if __name__ == "__main__":
 
     window = MainWindow()
     window.show()
+    print("Application Running")
     sys.exit(app.exec_())
