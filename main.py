@@ -78,7 +78,10 @@ class MainWindow(QMainWindow):
             ("Longer Appearance SRT", "Increase the duration each subtitle appears."),
             ("Merge SRT Files", "Combine multiple SRT files into one."),
             ("Subtitle Converter", "Convert subtitles between different formats."),
-            ("Coming Soon", "New tools will be added here.")
+            ("Coming Soon", "New tools will be added here."),
+            ("Temporary Tool 1", "Temporary tool for testing."),
+            ("Temporary Tool 2", "Temporary tool for testing."),
+            ("Temporary Tool 3", "Temporary tool for testing.")
         ]
 
         for tool in tools:
@@ -123,10 +126,10 @@ class MainWindow(QMainWindow):
         button = QPushButton()
         button.setStyleSheet("""
             QPushButton {
-                border: 10px solid #4f86f7; 
+                border: 5px solid #4f86f7; 
                 color: white;
                 border-radius: 10px;
-                padding: 10px;
+                padding: 5px;
                 min-width: 200px;
                 min-height: 300px;
                 margin: 10px;
