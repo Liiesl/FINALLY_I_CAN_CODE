@@ -15,6 +15,7 @@ class MainWindow(QMainWindow):
 
         self.central_widget = QWidget()
         self.layout = QVBoxLayout(self.central_widget)
+        self.central_widget.setLayout(self.layout)
         self.setCentralWidget(self.central_widget)
 
         self.side_page = None
@@ -24,13 +25,17 @@ class MainWindow(QMainWindow):
     def init_ui(self):
         # Create a layout for the main content
         self.main_layout = QVBoxLayout()
-        self.central_widget.setLayout(self.main_layout)
 
         # Add the hamburger button at the top left corner
         self.add_hamburger_button()
 
         # Add the main menu content
         self.main_menu()
+
+        # Clear any existing layout before setting the new one
+        if self.central_widget.layout() is not None:
+            QWidget().setLayout(self.central_widget.layout())
+        self.central_widget.setLayout(self.main_layout)
 
     def add_hamburger_button(self):
         # Create a container for the hamburger button
