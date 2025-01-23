@@ -138,15 +138,20 @@ class MainWindow(QMainWindow):
         else:
             QMessageBox.information(self, "Coming Soon", "This feature is coming soon!")
 
-    def load_tool(self, tool_class):
-        for i in reversed(range(self.main_layout.count())):
-            widget = self.main_layout.itemAt(i).widget()
-            if widget is not None:
-                widget.setParent(None)
+def load_tool(self, tool_class):
+    # Clear the central widget layout
+    for i in reversed(range(self.main_layout.count())):
+        widget = self.main_layout.itemAt(i).widget()
+        if widget is not None:
+            widget.setParent(None)
 
-        tool_widget = tool_class(parent=self.central_widget, back_callback=self.main_menu)
-        self.main_layout.addWidget(tool_widget)
-        tool_widget.show()
+    # Instantiate the tool widget and add it to the main layout
+    tool_widget = tool_class(parent=self.central_widget, back_callback=self.main_menu)
+    self.main_layout.addWidget(tool_widget)
+    tool_widget.show()
+
+def open_settings(self):
+    self.load_tool(Settings)
 
     def toggle_side_page(self):
         if self.side_page and self.side_page.isVisible():
