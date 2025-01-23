@@ -1,8 +1,10 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton, QSlider
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, pyqtSignal
 from config import Config
 
 class Settings(QWidget):
+    settings_saved = pyqtSignal()  # Define a signal for settings saved
+
     def __init__(self, parent=None, back_callback=None):
         super().__init__(parent)
         self.back_callback = back_callback
@@ -48,4 +50,5 @@ class Settings(QWidget):
 
     def save_settings(self):
         self.config.set_safe_area_size(self.safe_area_slider.value())
+        self.settings_saved.emit()  # Emit the settings_saved signal
         self.back_callback()
