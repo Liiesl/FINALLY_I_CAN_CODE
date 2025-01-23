@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QLabel, QScrollArea, QMessageBox, QListWidget, QListWidgetItem
-from PyQt5.QtGui import QPalette, QColor, QFont, QIcon
+from PyQt5.QtGui import QPalette, QColor, QFont
 from PyQt5.QtCore import Qt, QPoint
 import qtawesome as qta  # Import QtAwesome for icons
 from settings import Settings  # Import the Settings class
@@ -19,6 +19,7 @@ class MainWindow(QMainWindow):
 
         self.side_page = None
         self.hamburger_button = None
+        self.settings_window = None
 
         self.init_ui()
 
@@ -175,6 +176,11 @@ class MainWindow(QMainWindow):
                 self.side_page.hide()
         super().mousePressEvent(event)
 
+    def open_settings(self):
+        if self.settings_window is None:
+            self.settings_window = Settings(self)
+        self.settings_window.show()
+
 class SidePage(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -199,20 +205,6 @@ class SidePage(QWidget):
         if item.text() == "Settings":
             self.parent().open_settings()
         self.hide()
-
-class Settings(QWidget):
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.setWindowTitle("Settings")
-        self.setGeometry(300, 300, 400, 300)
-        self.setStyleSheet("background-color: #2c2f38;")
-        
-        layout = QVBoxLayout(self)
-        # Add your settings UI elements here
-        label = QLabel("Settings Page", self)
-        label.setFont(QFont("Arial", 14))
-        label.setStyleSheet("color: white;")
-        layout.addWidget(label)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
