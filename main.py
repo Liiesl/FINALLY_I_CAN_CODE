@@ -5,9 +5,9 @@ from PyQt5.QtGui import QPalette, QColor, QFont
 from PyQt5.QtCore import Qt, QPropertyAnimation
 
 from tools.subtitle_converter import SubtitleConverter
-from side_panel import SidePanel  # Import the SidePanel class
-from settings import Settings  # Import the Settings class
-from config import Config  # Import the Config class
+from side_panel import SidePanel
+from settings import Settings
+from config import Config
 
 class MainWindow(QMainWindow):
     def __init__(self):
