@@ -1,13 +1,13 @@
 import sys
 import qtawesome as qta
-from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QLabel, QScrollArea, QMessageBox, QSplitter, QFrame, QGraphicsOpacityEffect
+from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QLabel, QScrollArea, QMessageBox, QSplitter, QFrame
 from PyQt5.QtGui import QPalette, QColor, QFont
-from PyQt5.QtCore import Qt, QPropertyAnimation
+from PyQt5.QtCore import Qt
 
 from tools.subtitle_converter import SubtitleConverter
-from side_panel import SidePanel  # Import the SidePanel class
-from settings import Settings  # Import the Settings class
-from config import Config  # Import the Config class
+from side_panel import SidePanel
+from settings import Settings
+from config import Config
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -20,7 +20,7 @@ class MainWindow(QMainWindow):
         self.layout = QHBoxLayout(self.central_widget)
         self.setCentralWidget(self.central_widget)
 
-        self.config = Config()  # Load configuration
+        self.config = Config()
 
         self.side_panel = SidePanel(self, self.open_settings)
         self.side_panel.setVisible(False)
@@ -29,31 +29,26 @@ class MainWindow(QMainWindow):
         self.main_content_layout = QVBoxLayout(self.main_content)
         self.main_content.setLayout(self.main_content_layout)
 
-        # Splitter to allow dynamic resizing
         self.splitter = QSplitter(Qt.Horizontal)
         self.splitter.addWidget(self.side_panel)
         self.splitter.addWidget(self.main_content)
-        self.splitter.setSizes([0, 1])  # Initially hide the side panel
+        self.splitter.setSizes([0, 1])
 
         self.layout.addWidget(self.splitter)
 
-        # Create a horizontal layout for the top bar
         self.top_bar = QHBoxLayout()
-        self.top_bar_added = False  # Flag to check if the top bar has been added
+        self.top_bar_added = False
 
-        # Add the side panel toggle button (hamburger menu)
         self.menu_button = None
 
         self.main_menu()
 
     def main_menu(self):
-        # Clear the main content layout
         for i in reversed(range(self.main_content_layout.count())):
             widget = self.main_content_layout.itemAt(i).widget()
             if widget is not None:
                 widget.setParent(None)
 
-        # Add the side panel toggle button (hamburger menu) if not already created
         if self.menu_button is None:
             self.menu_button = QPushButton()
             menu_icon = qta.icon('fa.bars')
@@ -63,17 +58,14 @@ class MainWindow(QMainWindow):
             self.menu_button.clicked.connect(self.toggle_side_panel)
             self.top_bar.addWidget(self.menu_button, alignment=Qt.AlignLeft)
 
-        # Add the top bar to the main content layout if not already added
         if not self.top_bar_added:
             self.main_content_layout.insertLayout(0, self.top_bar)
             self.top_bar_added = True
 
-        # Create a widget to hold the tool buttons
         self.tool_buttons_container = QWidget()
         self.tool_buttons_layout = QHBoxLayout(self.tool_buttons_container)
         self.tool_buttons_layout.setContentsMargins(0, 0, 0, 0)
 
-        # Add tool buttons
         tools = [
             ("Longer Appearance SRT", "Increase the duration each subtitle appears."),
             ("Merge SRT Files", "Combine multiple SRT files into one."),
@@ -89,12 +81,10 @@ class MainWindow(QMainWindow):
 
         self.tool_buttons_layout.addStretch()
 
-        # Create a frame to hold the navigation buttons and tool buttons container
         navigation_frame = QFrame()
         navigation_layout = QHBoxLayout(navigation_frame)
         navigation_layout.setContentsMargins(0, 0, 0, 0)
 
-        # Left arrow button
         self.left_arrow_button = QPushButton()
         left_arrow_icon = qta.icon('fa.chevron-left')
         self.left_arrow_button.setIcon(left_arrow_icon)
@@ -103,7 +93,6 @@ class MainWindow(QMainWindow):
         self.left_arrow_button.clicked.connect(self.scroll_left)
         navigation_layout.addWidget(self.left_arrow_button)
 
-        # Add the tool buttons container to the navigation layout
         scroll_area = QScrollArea()
         scroll_area.setWidgetResizable(True)
         scroll_area.setWidget(self.tool_buttons_container)
@@ -111,7 +100,6 @@ class MainWindow(QMainWindow):
         scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         navigation_layout.addWidget(scroll_area)
 
-        # Right arrow button
         self.right_arrow_button = QPushButton()
         right_arrow_icon = qta.icon('fa.chevron-right')
         self.right_arrow_button.setIcon(right_arrow_icon)
@@ -122,16 +110,9 @@ class MainWindow(QMainWindow):
 
         self.main_content_layout.addWidget(navigation_frame)
 
-        # Apply the safe area margins from config
         self.update_safe_area_size()
-
-        # Apply the text size from config
         self.apply_text_size()
-
-        # Update the visibility of the tool buttons
         self.update_tool_button_visibility()
-
-        # Connect the resize event to update visibility
         self.resizeEvent = self.update_tool_button_visibility
 
     def create_tool_button(self, tool_name, tool_description):
@@ -204,12 +185,12 @@ class MainWindow(QMainWindow):
 
     def open_settings(self, item=None):
         settings = Settings(parent=self.main_content, back_callback=self.main_menu)
-        settings.settings_saved.connect(self.update_safe_area_size)  # Connect the signal
-        settings.settings_saved.connect(self.apply_text_size)  # Connect the signal for text size
+        settings.settings_saved.connect(self.update_safe_area_size)
+        settings.settings_saved.connect(self.apply_text_size)
         self.load_tool(settings)
 
     def update_safe_area_size(self):
-        self.config = Config()  # Reload the configuration
+        self.config = Config()
         safe_area_size = self.config.get_safe_area_size()
         self.main_content_layout.setContentsMargins(safe_area_size, safe_area_size, safe_area_size, safe_area_size)
 
@@ -220,7 +201,7 @@ class MainWindow(QMainWindow):
             "default": 26,
             "large": 34,
             "huge": 42
-        }.get(text_size, 26)  # Default to 26 if not found
+        }.get(text_size, 26)
 
         self.setStyleSheet(f"""
             * {{
@@ -230,35 +211,15 @@ class MainWindow(QMainWindow):
 
     def update_tool_button_visibility(self, event=None):
         container_width = self.tool_buttons_container.width()
-        button_width = 220  # 200px button width + 20px margin
+        button_width = 220
         visible_buttons = container_width // button_width
         for i in range(self.tool_buttons_layout.count()):
             item = self.tool_buttons_layout.itemAt(i)
             if item is not None and item.widget() is not None:
                 if i < visible_buttons:
-                    self.fade_in(item.widget())
                     item.widget().setVisible(True)
                 else:
-                    self.fade_out(item.widget())
                     item.widget().setVisible(False)
-
-    def fade_in(self, widget):
-        effect = QGraphicsOpacityEffect(widget)
-        widget.setGraphicsEffect(effect)
-        animation = QPropertyAnimation(effect, b"opacity")
-        animation.setDuration(500)
-        animation.setStartValue(0)
-        animation.setEndValue(1)
-        animation.start()
-
-    def fade_out(self, widget):
-        effect = QGraphicsOpacityEffect(widget)
-        widget.setGraphicsEffect(effect)
-        animation = QPropertyAnimation(effect, b"opacity")
-        animation.setDuration(500)
-        animation.setStartValue(1)
-        animation.setEndValue(0)
-        animation.start()
 
     def scroll_left(self):
         scroll_area = self.tool_buttons_container.parent().parent()
