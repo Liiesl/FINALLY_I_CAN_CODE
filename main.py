@@ -77,8 +77,7 @@ class MainWindow(QMainWindow):
         self.main_content_layout.addWidget(scroll)
 
         # Apply the safe area margins from config
-        safe_area_size = self.config.get_safe_area_size()
-        self.main_content_layout.setContentsMargins(safe_area_size, safe_area_size, safe_area_size, safe_area_size)
+        self.update_safe_area_size()
 
         # Add tool buttons
         tools = [
@@ -163,7 +162,12 @@ class MainWindow(QMainWindow):
 
     def open_settings(self, item=None):
         settings = Settings(parent=self.main_content, back_callback=self.main_menu)
+        settings.settings_saved.connect(self.update_safe_area_size)  # Connect the signal
         self.load_tool(settings)
+
+    def update_safe_area_size(self):
+        safe_area_size = self.config.get_safe_area_size()
+        self.main_content_layout.setContentsMargins(safe_area_size, safe_area_size, safe_area_size, safe_area_size)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
