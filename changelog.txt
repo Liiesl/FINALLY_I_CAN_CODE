@@ -104,3 +104,4 @@ alpha 0.1.4.0
 -add side panels
 
 alpha 0.1.4.1
+-add safe area slider to the settings
