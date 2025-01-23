@@ -1,3 +1,6 @@
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QComboBox, QLineEdit, QMessageBox
+from PyQt5.QtGui import QFont
+
 class Settings(QWidget):
     def __init__(self, parent=None, back_callback=None):
         super().__init__(parent)
