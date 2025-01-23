@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QSlider, QComboBox
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QSlider, QComboBox, QMessageBox
 from PyQt5.QtCore import Qt, pyqtSignal
 from config import Config
 
@@ -96,5 +96,7 @@ class Settings(QWidget):
 
     def save_settings(self):
         self.config.set_safe_area_size(self.safe_area_slider.value())
+        self.config.set_text_size(self.text_size_dropdown.currentText())
         self.settings_saved.emit()  # Emit the settings_saved signal
+        QMessageBox.information(self, "Success", "Settings saved successfully!")
         self.back_callback()
