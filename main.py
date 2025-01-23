@@ -1,7 +1,7 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QLabel, QScrollArea, QMessageBox
-from PyQt5.QtGui import QPalette, QColor, QFont
-from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QLabel, QScrollArea, QMessageBox, QListWidget, QListWidgetItem
+from PyQt5.QtGui import QPalette, QColor, QFont, QPainter, QPolygon, QIcon
+from PyQt5.QtCore import Qt, QPoint
 from tools.subtitle_converter import SubtitleConverter
 from settings import Settings  # Import the Settings class
 
@@ -15,6 +15,8 @@ class MainWindow(QMainWindow):
         self.central_widget = QWidget()
         self.layout = QVBoxLayout(self.central_widget)
         self.setCentralWidget(self.central_widget)
+
+        self.side_page = None
 
         self.main_menu()
 
@@ -50,25 +52,14 @@ class MainWindow(QMainWindow):
 
         scroll_layout.addStretch()
 
-        # Add settings button
-        settings_button = QPushButton("Settings")
-        settings_button.setFont(QFont("Arial", 14, QFont.Bold))
-        settings_button.setStyleSheet("""
-            QPushButton {
-                border: 2px solid #4f86f7;
-                color: white;
-                border-radius: 10px;
-                padding: 10px;
-                min-width: 150px;
-                background-color: #4f86f7;
-            }
-            QPushButton:hover {
-                border-color: #3a6dbf;
-                background-color: #3a6dbf;
-            }
-        """)
-        settings_button.clicked.connect(self.open_settings)
-        scroll_layout.addWidget(settings_button)
+        # Add triangle button
+        triangle_button = QPushButton()
+        triangle_button.setFixedSize(50, 50)
+        triangle_button.setIcon(self.create_triangle_icon())
+        triangle_button.setIconSize(triangle_button.size())
+        triangle_button.setStyleSheet("border: none; background: transparent;")
+        triangle_button.clicked.connect(self.show_side_page)
+        self.layout.addWidget(triangle_button, alignment=Qt.AlignTop | Qt.AlignLeft)
 
     def create_tool_button(self, tool_name, tool_description):
         button = QPushButton()
@@ -131,9 +122,47 @@ class MainWindow(QMainWindow):
         self.layout.addWidget(tool_widget)
         tool_widget.show()
 
-    def open_settings(self):
-        self.settings_window = Settings(self)
-        self.settings_window.show()
+    def create_triangle_icon(self):
+        pixmap = QPixmap(50, 50)
+        pixmap.fill(Qt.transparent)
+        painter = QPainter(pixmap)
+        painter.setBrush(Qt.black)
+        points = [QPoint(25, 5), QPoint(5, 45), QPoint(45, 45)]
+        triangle = QPolygon(points)
+        painter.drawPolygon(triangle)
+        painter.end()
+        return QIcon(pixmap)
+
+    def show_side_page(self):
+        if self.side_page is None:
+            self.side_page = SidePage(self)
+        self.side_page.show()
+
+class SidePage(QWidget):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle("Side Page")
+        self.setGeometry(0, 0, 200, 400)
+        self.setStyleSheet("background-color: #2c2f38;")
+        
+        layout = QVBoxLayout(self)
+
+        # Add list of clickable texts
+        self.list_widget = QListWidget()
+        layout.addWidget(self.list_widget)
+
+        # Add settings item
+        settings_item = QListWidgetItem("Settings")
+        self.list_widget.addItem(settings_item)
+
+        # Connect item click to the corresponding function
+        self.list_widget.itemClicked.connect(self.handle_item_clicked)
+
+    def handle_item_clicked(self, item):
+        if item.text() == "Settings":
+            self.parent().settings_window = Settings(self)
+            self.parent().settings_window.show()
+        self.hide()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
