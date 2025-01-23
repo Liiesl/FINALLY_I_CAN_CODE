@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton, QSlider
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton, QSlider, QComboBox
 from PyQt5.QtCore import Qt, pyqtSignal
 from config import Config
 
@@ -37,6 +37,17 @@ class Settings(QWidget):
         self.safe_area_value_label.setStyleSheet("color: white;")
         layout.addWidget(self.safe_area_value_label)
 
+        # Text Size Dropdown
+        text_size_label = QLabel("Text Size:")
+        text_size_label.setStyleSheet("color: white; font-size: 16px;")
+        layout.addWidget(text_size_label)
+
+        self.text_size_dropdown = QComboBox()
+        self.text_size_dropdown.addItems(["small", "default", "large", "huge"])
+        self.text_size_dropdown.setCurrentText(self.config.get_text_size())
+        self.text_size_dropdown.currentTextChanged.connect(self.update_text_size)
+        layout.addWidget(self.text_size_dropdown)
+
         # Save button
         save_button = QPushButton("Save")
         save_button.clicked.connect(self.save_settings)
@@ -45,8 +56,37 @@ class Settings(QWidget):
         self.setLayout(layout)
         self.setStyleSheet("background-color: #2c2f38;")
 
+        # Apply button styles
+        self.apply_button_styles([back_button, save_button])
+
+    def apply_button_styles(self, buttons):
+        for button in buttons:
+            button.setStyleSheet("""
+                QPushButton {
+                    border: 2px solid #4f86f7; /* Thicker edge line */
+                    color: white;
+                    border-radius: 10px;
+                    padding: 10px;
+                    min-height: 40px;
+                    background-color: #4f86f7; /* Accented blue color */
+                    text-align: center; /* Center align text */
+                }
+                QPushButton:hover {
+                    border-color: #3a6dbf;
+                    background-color: #3a6dbf; /* Darker blue on hover */
+                }
+            """)
+
     def update_safe_area(self, value):
         self.safe_area_value_label.setText(f"{value} px")
+
+    def update_text_size(self, size):
+        self.config.set_text_size(size)
+        self.apply_text_size_to_all_pages()
+
+    def apply_text_size_to_all_pages(self):
+        # Placeholder function to apply text size to all pages
+        pass
 
     def save_settings(self):
         self.config.set_safe_area_size(self.safe_area_slider.value())
