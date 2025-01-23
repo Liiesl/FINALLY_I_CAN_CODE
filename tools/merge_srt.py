@@ -331,7 +331,7 @@ class MergeSRT(QWidget):
 
     def save_file(self, dialog_title, default_name):
         default_save_directory = self.config.get_default_save_directory()
-        save_path = os.path.join(default_save_directory, default_name)
+        save_path, _ = QFileDialog.getSaveFileName(self, dialog_title, os.path.join(default_save_directory, default_name), "Subtitle Files (*.srt)")
         return save_path
 
     def show_error(self, message):
