@@ -163,7 +163,8 @@ class MainWindow(QMainWindow):
             self.splitter.setSizes([self.width() // 2, self.width() // 2])
 
     def open_settings(self):
-        self.load_tool(Settings)
+        settings = Settings(self, back_callback=self.main_menu)
+        self.load_tool(settings)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
