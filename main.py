@@ -17,12 +17,16 @@ class MainWindow(QMainWindow):
         self.setGeometry(100, 100, 1200, 800)
         self.setStyleSheet("background-color: #2c2f38;")
 
+        self.config = Config()
+        self.main_menu_active = True  # Track if the main menu is active
+
+        self.setup_ui()
+        self.main_menu()
+
+    def setup_ui(self):
         self.central_widget = QWidget()
         self.layout = QHBoxLayout(self.central_widget)
         self.setCentralWidget(self.central_widget)
-
-        self.config = Config()
-        self.main_menu_active = True  # Track if the main menu is active
 
         self.side_panel = SidePanel(self, self.open_settings)
         self.side_panel.setVisible(False)
@@ -43,23 +47,13 @@ class MainWindow(QMainWindow):
 
         self.menu_button = None
 
-        self.main_menu()
-
     def main_menu(self):
         self.main_menu_active = True  # Set flag to indicate main menu is active
 
-        for i in reversed(range(self.main_content_layout.count())):
-            widget = self.main_content_layout.itemAt(i).widget()
-            if widget is not None:
-                widget.setParent(None)
+        self.clear_layout(self.main_content_layout)
 
         if self.menu_button is None:
-            self.menu_button = QPushButton()
-            menu_icon = qta.icon('fa.bars')
-            self.menu_button.setIcon(menu_icon)
-            self.menu_button.setFixedSize(30, 30)
-            self.menu_button.setStyleSheet("background-color: transparent; border: none;")
-            self.menu_button.clicked.connect(self.toggle_side_panel)
+            self.menu_button = self.create_button("", self.toggle_side_panel, icon=qta.icon('fa.bars'), style="background-color: transparent; border: none;", size=(30, 30))
             self.top_bar.addWidget(self.menu_button, alignment=Qt.AlignLeft)
 
         if not self.top_bar_added:
@@ -90,12 +84,7 @@ class MainWindow(QMainWindow):
         navigation_layout = QHBoxLayout(navigation_frame)
         navigation_layout.setContentsMargins(0, 0, 0, 0)
 
-        self.left_arrow_button = QPushButton()
-        left_arrow_icon = qta.icon('fa.chevron-left')
-        self.left_arrow_button.setIcon(left_arrow_icon)
-        self.left_arrow_button.setFixedSize(50, 300)
-        self.left_arrow_button.setStyleSheet("background-color: #4f86f7; border: none;")
-        self.left_arrow_button.clicked.connect(self.scroll_left)
+        self.left_arrow_button = self.create_button("", self.scroll_left, icon=qta.icon('fa.chevron-left'), style="background-color: #4f86f7; border: none;", size=(50, 300))
         navigation_layout.addWidget(self.left_arrow_button)
 
         scroll_area = QScrollArea()
@@ -106,12 +95,7 @@ class MainWindow(QMainWindow):
         self.scroll_area = scroll_area
         navigation_layout.addWidget(scroll_area)
 
-        self.right_arrow_button = QPushButton()
-        right_arrow_icon = qta.icon('fa.chevron-right')
-        self.right_arrow_button.setIcon(right_arrow_icon)
-        self.right_arrow_button.setFixedSize(50, 300)
-        self.right_arrow_button.setStyleSheet("background-color: #4f86f7; border: none;")
-        self.right_arrow_button.clicked.connect(self.scroll_right)
+        self.right_arrow_button = self.create_button("", self.scroll_right, icon=qta.icon('fa.chevron-right'), style="background-color: #4f86f7; border: none;", size=(50, 300))
         navigation_layout.addWidget(self.right_arrow_button)
 
         self.main_content_layout.addWidget(navigation_frame)
@@ -120,6 +104,16 @@ class MainWindow(QMainWindow):
         self.apply_text_size()
         self.update_tool_button_visibility()
         self.resizeEvent = self.update_tool_button_visibility
+
+    def create_button(self, text, callback, icon=None, style="", size=(None, None)):
+        button = QPushButton(text)
+        if icon:
+            button.setIcon(icon)
+        button.setStyleSheet(style)
+        if size[0] and size[1]:
+            button.setFixedSize(*size)
+        button.clicked.connect(callback)
+        return button
 
     def create_tool_button(self, tool_name, tool_description):
         button = QPushButton()
@@ -141,29 +135,9 @@ class MainWindow(QMainWindow):
             }
         """)
 
-        # Get the current text size and calculate the adjusted sizes
-        text_size = self.config.get_text_size()
-        font_size = {
-            "small": 18,
-            "default": 26,
-            "large": 34,
-            "huge": 42
-        }.get(text_size, 26)
-
-        name_font_size = font_size + 2
-        description_font_size = font_size - 3
-
-        name_label = QLabel(tool_name)
-        name_label.setFont(QFont("Arial", name_font_size, QFont.Bold))
-        name_label.setStyleSheet("color: #4f86f7; background-color: transparent;")
-        name_label.setWordWrap(True)
-        name_label.setAlignment(Qt.AlignCenter)
-
-        description_label = QLabel(tool_description)
-        description_label.setFont(QFont("Arial", description_font_size))
-        description_label.setStyleSheet("color: #D3D3D3; background-color: transparent;")
-        description_label.setWordWrap(True)
-        description_label.setAlignment(Qt.AlignCenter)
+        font_size = self.get_adjusted_font_size()
+        name_label = self.create_label(tool_name, QFont("Arial", font_size + 2, QFont.Bold), "color: #4f86f7; background-color: transparent;")
+        description_label = self.create_label(tool_description, QFont("Arial", font_size - 3), "color: #D3D3D3; background-color: transparent;")
 
         button_layout = QVBoxLayout(button)
         button_layout.addWidget(name_label)
@@ -172,28 +146,32 @@ class MainWindow(QMainWindow):
         button.clicked.connect(lambda: self.tool_selected(tool_name))
         return button
 
+    def create_label(self, text, font, style):
+        label = QLabel(text)
+        label.setFont(font)
+        label.setStyleSheet(style)
+        label.setWordWrap(True)
+        label.setAlignment(Qt.AlignCenter)
+        return label
+
     def tool_selected(self, tool_name):
-        if tool_name == "Longer Appearance SRT":
-            from tools.longer_appearance import LongerAppearanceSRT
-            self.load_tool(LongerAppearanceSRT(parent=self.main_content, back_callback=self.main_menu))
-        elif tool_name == "Merge SRT Files":
-            from tools.merge_srt import MergeSRT
-            self.load_tool(MergeSRT(parent=self.main_content, back_callback=self.main_menu))
-        elif tool_name == "Subtitle Converter":
-            self.load_tool(SubtitleConverter(parent=self.main_content, back_callback=self.main_menu))
-        elif tool_name == "Subtitle Shifter":
-            self.load_tool(SubtitleShifter(parent=self.main_content, back_callback=self.main_menu))
+        tool_mapping = {
+            "Longer Appearance SRT": "tools.longer_appearance.LongerAppearanceSRT",
+            "Merge SRT Files": "tools.merge_srt.MergeSRT",
+            "Subtitle Converter": "tools.subtitle_converter.SubtitleConverter",
+            "Subtitle Shifter": "tools.subtitle_shifter.SubtitleShifter"
+        }
+        if tool_name in tool_mapping:
+            module_name, class_name = tool_mapping[tool_name].rsplit(".", 1)
+            module = __import__(module_name, fromlist=[class_name])
+            tool_class = getattr(module, class_name)
+            self.load_tool(tool_class(parent=self.main_content, back_callback=self.main_menu))
         else:
             QMessageBox.information(self, "Coming Soon", "This feature is coming soon!")
 
     def load_tool(self, tool_widget):
         self.main_menu_active = False  # Set flag to indicate main menu is not active
-
-        for i in reversed(range(self.main_content_layout.count())):
-            widget = self.main_content_layout.itemAt(i).widget()
-            if widget is not None:
-                widget.setParent(None)
-
+        self.clear_layout(self.main_content_layout)
         self.main_content_layout.addWidget(tool_widget)
         tool_widget.show()
 
@@ -209,24 +187,25 @@ class MainWindow(QMainWindow):
         self.load_tool(Settings(parent=self.main_content, back_callback=self.main_menu))
 
     def update_safe_area_size(self):
-        self.config = Config()
         safe_area_size = self.config.get_safe_area_size()
         self.main_content_layout.setContentsMargins(safe_area_size, safe_area_size, safe_area_size, safe_area_size)
 
     def apply_text_size(self):
-        text_size = self.config.get_text_size()
-        font_size = {
-            "small": 18,
-            "default": 26,
-            "large": 34,
-            "huge": 42
-        }.get(text_size, 26)
-
+        font_size = self.get_adjusted_font_size()
         self.setStyleSheet(f"""
             * {{
                 font-size: {font_size}px;
             }}
         """)
+
+    def get_adjusted_font_size(self):
+        text_size = self.config.get_text_size()
+        return {
+            "small": 18,
+            "default": 26,
+            "large": 34,
+            "huge": 42
+        }.get(text_size, 26)
 
     def update_tool_button_visibility(self, event=None):
         if self.main_menu_active and self.tool_buttons_container:
@@ -235,11 +214,8 @@ class MainWindow(QMainWindow):
             visible_buttons = container_width // button_width
             for i in range(self.tool_buttons_layout.count()):
                 item = self.tool_buttons_layout.itemAt(i)
-                if item is not None and item.widget() is not None:
-                    if i < visible_buttons:
-                        item.widget().setVisible(True)
-                    else:
-                        item.widget().setVisible(False)
+                if item and item.widget():
+                    item.widget().setVisible(i < visible_buttons)
 
     def scroll_left(self):
         current_value = self.scroll_area.horizontalScrollBar().value()
@@ -258,8 +234,14 @@ class MainWindow(QMainWindow):
         animation.setStartValue(start_value)
         animation.setEndValue(end_value)
         animation.start()
-        # Keep a reference to avoid garbage collection
-        self.animation = animation
+        self.animation = animation  # Keep a reference to avoid garbage collection
+
+    def clear_layout(self, layout):
+        while layout.count():
+            item = layout.takeAt(0)
+            widget = item.widget()
+            if widget is not None:
+                widget.deleteLater()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
