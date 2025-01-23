@@ -21,7 +21,7 @@ class Settings(QWidget):
 
         # Safe Area Slider
         safe_area_label = QLabel("Safe Area Size (px):")
-        safe_area_label.setStyleSheet("color: white; font-size: 18px;")
+        safe_area_label.setStyleSheet("color: white; font-size: 26px;")
         layout.addWidget(safe_area_label)
 
         self.safe_area_slider = QSlider(Qt.Horizontal)
@@ -39,7 +39,7 @@ class Settings(QWidget):
 
         # Text Size Dropdown
         text_size_label = QLabel("Text Size:")
-        text_size_label.setStyleSheet("color: white; font-size: 18px;")
+        text_size_label.setStyleSheet("color: white; font-size: 26px;")
         layout.addWidget(text_size_label)
 
         self.text_size_dropdown = QComboBox()
