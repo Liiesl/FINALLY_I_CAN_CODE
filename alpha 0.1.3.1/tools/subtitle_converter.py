@@ -30,13 +30,11 @@ class SubtitleConverter(QWidget):
         # File selection section
         file_layout = QHBoxLayout()
 
-        select_file_button = QPushButton("Select File")
-        select_file_button.clicked.connect(self.select_files)
-        select_file_button.setFixedWidth(200)
-        file_layout.addWidget(select_file_button, 1)
+        self.select_file_button = QPushButton("Select File")
+        self.select_file_button.clicked.connect(self.select_files)
+        file_layout.addWidget(self.select_file_button, 1)
 
         self.file_list = QListWidget()
-        self.file_list.setFixedWidth(400)
         file_layout.addWidget(self.file_list, 2)
 
         layout.addLayout(file_layout)
@@ -53,19 +51,20 @@ class SubtitleConverter(QWidget):
             "VTT (.vtt)", "SBV (.sbv)", "DFXP (.dfxp)", "STL (.stl)", "IDX (.idx)",
             "MPL (.mpl)", "USF (.usf)", "LRC (.lrc)", "RT (.rt)", "TTML (.ttml)", "CAP (.cap)"
         ])
+        self.format_dropdown.currentIndexChanged.connect(self.update_convert_button)
         format_layout.addWidget(self.format_dropdown)
 
         layout.addLayout(format_layout)
 
         # Convert button
-        convert_button = QPushButton("Convert to CAP")
-        convert_button.clicked.connect(self.convert_subtitle)
-        layout.addWidget(convert_button)
+        self.convert_button = QPushButton("Convert to CAP")
+        self.convert_button.clicked.connect(self.convert_subtitle)
+        layout.addWidget(self.convert_button)
 
         self.setLayout(layout)
 
         # Apply the same style to all buttons
-        self.apply_button_styles([back_button, select_file_button, convert_button])
+        self.apply_button_styles([back_button, self.select_file_button, self.convert_button])
 
     def apply_button_styles(self, buttons):
         for button in buttons:
@@ -93,6 +92,10 @@ class SubtitleConverter(QWidget):
                 self.file_list.addItem(os.path.basename(file_path))
             self.file_list.file_paths = file_paths
 
+    def update_convert_button(self):
+        target_format = self.format_dropdown.currentText().split(' ')[0]
+        self.convert_button.setText(f"Convert to {target_format}")
+
     def convert_subtitle(self):
         if self.file_list.count() == 0:
             QMessageBox.warning(self, "Error", "Please select at least one file to convert.")
@@ -101,7 +104,7 @@ class SubtitleConverter(QWidget):
         target_format = self.format_dropdown.currentText().split(' ')[0].lower()  # Extract format (e.g., "srt")
         for index in range(self.file_list.count()):
             subtitle_path = self.file_list.file_paths[index]
-            save_path, _ = QFileDialog.getSaveFileName(self, "Save Converted File", "", "CAP Files (*.cap)")
+            save_path, _ = QFileDialog.getSaveFileName(self, "Save Converted File", "", f"{target_format.upper()} Files (*.{target_format})")
             if not save_path:
                 continue
 
@@ -109,7 +112,7 @@ class SubtitleConverter(QWidget):
                 with open(subtitle_path, 'r') as file:
                     content = file.read()
 
-                # Convert the content to CAP
+                # Convert the content to the selected format (example for CAP)
                 converted_content = convert_to_cap(content, target_format)
 
                 with open(save_path, 'w') as file:
@@ -118,4 +121,4 @@ class SubtitleConverter(QWidget):
             except Exception as e:
                 QMessageBox.critical(self, "Error", f"Failed to convert file: {e}")
 
-        QMessageBox.information(self, "Success", "Subtitle files converted to CAP successfully!")
+        QMessageBox.information(self, "Success", f"Subtitle files converted to {target_format.upper()} successfully!")
