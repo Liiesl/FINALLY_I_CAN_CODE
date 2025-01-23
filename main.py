@@ -15,7 +15,6 @@ class MainWindow(QMainWindow):
 
         self.central_widget = QWidget()
         self.layout = QVBoxLayout(self.central_widget)
-        self.central_widget.setLayout(self.layout)
         self.setCentralWidget(self.central_widget)
 
         self.side_page = None
@@ -46,6 +45,7 @@ class MainWindow(QMainWindow):
 
         # Create the hamburger button
         hamburger_button = QPushButton()
+        hamburger_button.setFixedSize(30, 30)  # Make the button smaller
         hamburger_button.setIcon(qta.icon('fa.bars'))  # Use FontAwesome 'bars' icon
         hamburger_button.setIconSize(hamburger_button.size())
         hamburger_button.setStyleSheet("border: none; background: transparent;")
