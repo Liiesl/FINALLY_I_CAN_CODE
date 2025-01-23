@@ -144,13 +144,12 @@ class MainWindow(QMainWindow):
         else:
             QMessageBox.information(self, "Coming Soon", "This feature is coming soon!")
 
-    def load_tool(self, tool_class):
+    def load_tool(self, tool_widget):
         for i in reversed(range(self.main_content_layout.count())):
             widget = self.main_content_layout.itemAt(i).widget()
             if widget is not None:
                 widget.setParent(None)
 
-        tool_widget = tool_class(parent=self.main_content, back_callback=self.main_menu)
         self.main_content_layout.addWidget(tool_widget)
         tool_widget.show()
 
