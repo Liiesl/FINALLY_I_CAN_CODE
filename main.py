@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout,
 from PyQt5.QtGui import QPalette, QColor, QFont, QIcon
 from PyQt5.QtCore import Qt
 from tools.subtitle_converter import SubtitleConverter
+from settings import Settings  # Import the Settings class
 from side_panel import SidePanel  # Import the SidePanel class
 
 class MainWindow(QMainWindow):
@@ -64,6 +65,26 @@ class MainWindow(QMainWindow):
             scroll_layout.addWidget(self.create_tool_button(tool[0], tool[1]))
 
         scroll_layout.addStretch()
+
+        # Add settings button
+        settings_button = QPushButton("Settings")
+        settings_button.setFont(QFont("Arial", 14, QFont.Bold))
+        settings_button.setStyleSheet("""
+            QPushButton {
+                border: 2px solid #4f86f7;
+                color: white;
+                border-radius: 10px;
+                padding: 10px;
+                min-width: 150px;
+                background-color: #4f86f7;
+            }
+            QPushButton:hover {
+                border-color: #3a6dbf;
+                background-color: #3a6dbf;
+            }
+        """)
+        settings_button.clicked.connect(self.open_settings)
+        scroll_layout.addWidget(settings_button)
 
     def create_tool_button(self, tool_name, tool_description):
         button = QPushButton()
@@ -130,7 +151,7 @@ class MainWindow(QMainWindow):
         self.side_panel.setVisible(not self.side_panel.isVisible())
 
         if self.side_panel.isVisible():
-            self.side_panel.raise_()
+            self.side_panel.raise_())
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
