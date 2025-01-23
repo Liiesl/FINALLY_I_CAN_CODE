@@ -176,9 +176,9 @@ class MergeSRT(QWidget):
 
     def show_glue_end_to_end(self):
         self.stacked_widget.setCurrentWidget(self.glue_end_to_end_widget)
-        self.glue_end_to_end_button.setStyleSheet(self.get_mode_button_style(selected=True, font_size=self.config.get_text_size() - 12))
-        self.stacked_merge_button.setStyleSheet(self.get_mode_button_style(selected=False, font_size=self.config.get_text_size() - 12))
-
+        self.glue_end_to_end_button.setStyleSheet(self.get_mode_button_style(selected=True))
+        self.stacked_merge_button.setStyleSheet(self.get_mode_button_style(selected=False))
+        
     def show_stacked_merge(self):
         self.stacked_widget.setCurrentWidget(self.stacked_merge_widget)
         self.glue_end_to_end_button.setStyleSheet(self.get_mode_button_style(selected=False, font_size=self.config.get_text_size() - 12))
