@@ -35,9 +35,11 @@ class MainWindow(QMainWindow):
         top_bar = QHBoxLayout()
         self.layout.addLayout(top_bar)
 
-        # Add the side panel toggle button
+        # Add the side panel toggle button (hamburger menu)
         menu_button = QPushButton()
-        menu_button.setIcon(QIcon.fromTheme("view-list"))  # Using icon from theme
+        menu_icon = QIcon()
+        menu_icon.addFile("hamburger_icon.png")  # Ensure you have a suitable icon file in your project
+        menu_button.setIcon(menu_icon)
         menu_button.setFixedSize(30, 30)
         menu_button.setStyleSheet("background-color: transparent; border: none;")
         menu_button.clicked.connect(self.toggle_side_panel)
@@ -64,26 +66,6 @@ class MainWindow(QMainWindow):
             scroll_layout.addWidget(self.create_tool_button(tool[0], tool[1]))
 
         scroll_layout.addStretch()
-
-        # Add settings button
-        settings_button = QPushButton("Settings")
-        settings_button.setFont(QFont("Arial", 14, QFont.Bold))
-        settings_button.setStyleSheet("""
-            QPushButton {
-                border: 2px solid #4f86f7;
-                color: white;
-                border-radius: 10px;
-                padding: 10px;
-                min-width: 150px;
-                background-color: #4f86f7;
-            }
-            QPushButton:hover {
-                border-color: #3a6dbf;
-                background-color: #3a6dbf;
-            }
-        """)
-        settings_button.clicked.connect(self.open_settings)
-        scroll_layout.addWidget(settings_button)
 
     def create_tool_button(self, tool_name, tool_description):
         button = QPushButton()
@@ -151,10 +133,6 @@ class MainWindow(QMainWindow):
 
         if self.side_panel.isVisible():
             self.side_panel.raise_()
-
-    def open_settings(self):
-        self.settings_window = Settings(self)
-        self.settings_window.show()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
