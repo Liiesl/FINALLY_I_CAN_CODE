@@ -149,12 +149,24 @@ class MainWindow(QMainWindow):
         if self.side_page is None:
             self.side_page = SidePage(self)
         
+        self.position_side_page()
+        self.side_page.show()
+
+    def position_side_page(self):
         # Position the side page just below the hamburger button
         button_pos = self.hamburger_button.mapToGlobal(QPoint(0, 0))
         button_height = self.hamburger_button.height()
         self.side_page.move(button_pos.x(), button_pos.y() + button_height)
-        
-        self.side_page.show()
+
+    def moveEvent(self, event):
+        if self.side_page and self.side_page.isVisible():
+            self.position_side_page()
+        super().moveEvent(event)
+
+    def resizeEvent(self, event):
+        if self.side_page and self.side_page.isVisible():
+            self.position_side_page()
+        super().resizeEvent(event)
 
     def mousePressEvent(self, event):
         if self.side_page and self.side_page.isVisible():
