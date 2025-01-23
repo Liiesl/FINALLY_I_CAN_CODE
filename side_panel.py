@@ -26,7 +26,7 @@ class SidePanel(QWidget):
         self.settings_list.addItem(settings_item)
 
         # Connect the item click event to the callback
-        self.settings_list.itemClicked.connect(lambda item: open_settings_callback())
+        self.settings_list.itemClicked.connect(open_settings_callback)
 
         self.layout().addWidget(self.settings_list)
         self.layout().insertWidget(1, self.settings_list)  # Insert the list at the top, below the info label
