@@ -1,8 +1,8 @@
 import sys
 import qtawesome as qta
-from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QLabel, QScrollArea, QMessageBox, QSplitter, QFrame
+from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QLabel, QScrollArea, QMessageBox, QSplitter, QFrame, QGraphicsOpacityEffect
 from PyQt5.QtGui import QPalette, QColor, QFont
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QPropertyAnimation
 
 from tools.subtitle_converter import SubtitleConverter
 from side_panel import SidePanel  # Import the SidePanel class
@@ -54,7 +54,7 @@ class MainWindow(QMainWindow):
                 widget.setParent(None)
 
         # Add the side panel toggle button (hamburger menu) if not already created
-        if (self.menu_button is None):
+        if self.menu_button is None:
             self.menu_button = QPushButton()
             menu_icon = qta.icon('fa.bars')
             self.menu_button.setIcon(menu_icon)
@@ -92,12 +92,13 @@ class MainWindow(QMainWindow):
         # Create a frame to hold the navigation buttons and tool buttons container
         navigation_frame = QFrame()
         navigation_layout = QHBoxLayout(navigation_frame)
+        navigation_layout.setContentsMargins(0, 0, 0, 0)
 
         # Left arrow button
         self.left_arrow_button = QPushButton()
         left_arrow_icon = qta.icon('fa.chevron-left')
         self.left_arrow_button.setIcon(left_arrow_icon)
-        self.left_arrow_button.setFixedSize(30, 30)
+        self.left_arrow_button.setFixedSize(50, 300)
         self.left_arrow_button.setStyleSheet("background-color: #4f86f7; border: none;")
         self.left_arrow_button.clicked.connect(self.scroll_left)
         navigation_layout.addWidget(self.left_arrow_button)
@@ -109,7 +110,7 @@ class MainWindow(QMainWindow):
         self.right_arrow_button = QPushButton()
         right_arrow_icon = qta.icon('fa.chevron-right')
         self.right_arrow_button.setIcon(right_arrow_icon)
-        self.right_arrow_button.setFixedSize(30, 30)
+        self.right_arrow_button.setFixedSize(50, 300)
         self.right_arrow_button.setStyleSheet("background-color: #4f86f7; border: none;")
         self.right_arrow_button.clicked.connect(self.scroll_right)
         navigation_layout.addWidget(self.right_arrow_button)
@@ -122,14 +123,20 @@ class MainWindow(QMainWindow):
         # Apply the text size from config
         self.apply_text_size()
 
+        # Update the visibility of the tool buttons
+        self.update_tool_button_visibility()
+
+        # Connect the resize event to update visibility
+        self.resizeEvent = self.update_tool_button_visibility
+
     def create_tool_button(self, tool_name, tool_description):
         button = QPushButton()
         button.setStyleSheet("""
             QPushButton {
-                border: 5px solid #4f86f7; 
+                border: 10px solid #4f86f7; 
                 color: white;
                 border-radius: 10px;
-                padding: 5px;
+                padding: 10px;
                 min-width: 200px;
                 min-height: 300px;
                 margin: 10px;
@@ -215,6 +222,38 @@ class MainWindow(QMainWindow):
                 font-size: {font_size}px;
             }}
         """)
+
+    def update_tool_button_visibility(self, event=None):
+        container_width = self.tool_buttons_container.width()
+        button_width = 220  # 200px button width + 20px margin
+        visible_buttons = container_width // button_width
+        for i in range(self.tool_buttons_layout.count()):
+            item = self.tool_buttons_layout.itemAt(i)
+            if item is not None and item.widget() is not None:
+                if i < visible_buttons:
+                    self.fade_in(item.widget())
+                    item.widget().setVisible(True)
+                else:
+                    self.fade_out(item.widget())
+                    item.widget().setVisible(False)
+
+    def fade_in(self, widget):
+        effect = QGraphicsOpacityEffect(widget)
+        widget.setGraphicsEffect(effect)
+        animation = QPropertyAnimation(effect, b"opacity")
+        animation.setDuration(500)
+        animation.setStartValue(0)
+        animation.setEndValue(1)
+        animation.start()
+
+    def fade_out(self, widget):
+        effect = QGraphicsOpacityEffect(widget)
+        widget.setGraphicsEffect(effect)
+        animation = QPropertyAnimation(effect, b"opacity")
+        animation.setDuration(500)
+        animation.setStartValue(1)
+        animation.setEndValue(0)
+        animation.start()
 
     def scroll_left(self):
         scroll_area = self.tool_buttons_container.parent()
