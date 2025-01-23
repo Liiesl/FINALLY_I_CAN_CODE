@@ -3,15 +3,13 @@ from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QFil
 from PyQt5.QtGui import QFont, QColor, QIcon, QPixmap
 from PyQt5.QtCore import Qt
 from .smprocessing import merge_subtitles, read_file, write_file
+from config import Config
 
 class MergeSRT(QWidget):
-    BUTTON_STYLE = "background-color: #4f86f7; color: white; border-radius: 5px; padding: 10px; font-size: 14px;"
-    LABEL_STYLE = "color: white; font-size: 14px;"
-    INPUT_STYLE = "background-color: #3c3f41; color: white; font-size: 14px; padding: 10px;"
-
     def __init__(self, parent=None, back_callback=None):
         super().__init__(parent)
         self.back_callback = back_callback
+        self.config = Config()
         self.main_subtitle_path = ""
         self.secondary_subtitle_paths = []
         self.setup_ui()
@@ -19,11 +17,23 @@ class MergeSRT(QWidget):
     def setup_ui(self):
         layout = QVBoxLayout(self)
 
+        text_size = self.config.get_text_size()
+        font_size = {
+            "small": 18,
+            "default": 26,
+            "large": 34,
+            "huge": 42
+        }.get(text_size, 26)
+
+        button_font_size = font_size - 12
+        label_font_size = font_size - 12
+        input_font_size = font_size - 12
+
         # Back to Home button
-        self.add_button(layout, "Back to Home", self.back_callback)
+        self.add_button(layout, "Back to Home", self.back_callback, f"background-color: #4f86f7; color: white; border-radius: 5px; padding: 10px; font-size: {button_font_size}px;")
 
         # Mode selection
-        self.setup_mode_selection(layout)
+        self.setup_mode_selection(layout, button_font_size, label_font_size)
 
         # Separator line
         self.add_separator(layout)
@@ -33,28 +43,28 @@ class MergeSRT(QWidget):
         layout.addWidget(self.stacked_widget)
 
         # Glue End to End mode
-        self.setup_glue_end_to_end_mode()
+        self.setup_glue_end_to_end_mode(button_font_size, label_font_size, input_font_size)
 
         # Stacked Merge mode
-        self.setup_stacked_merge_mode()
+        self.setup_stacked_merge_mode(button_font_size, label_font_size, input_font_size)
 
         # Show the Glue End to End mode by default
         self.show_glue_end_to_end()
 
-    def add_button(self, layout, text, callback, style=BUTTON_STYLE):
+    def add_button(self, layout, text, callback, style):
         button = QPushButton(text)
         button.setStyleSheet(style)
         button.clicked.connect(callback)
         layout.addWidget(button)
         return button
 
-    def add_label(self, layout, text, style=LABEL_STYLE):
+    def add_label(self, layout, text, style):
         label = QLabel(text)
         label.setStyleSheet(style)
         layout.addWidget(label)
         return label
 
-    def add_input(self, layout, placeholder="", width=100, style=INPUT_STYLE):
+    def add_input(self, layout, placeholder="", width=100, style):
         input_box = QLineEdit()
         input_box.setPlaceholderText(placeholder)
         input_box.setStyleSheet(style)
@@ -69,89 +79,89 @@ class MergeSRT(QWidget):
         separator.setStyleSheet("color: #3c3f41;")
         layout.addWidget(separator)
 
-    def setup_mode_selection(self, layout):
+    def setup_mode_selection(self, layout, button_font_size, label_font_size):
         mode_layout = QHBoxLayout()
-        self.add_label(mode_layout, "Select Mode:")
+        self.add_label(mode_layout, "Select Mode:", f"color: white; font-size: {label_font_size}px;")
 
-        self.glue_end_to_end_button = self.add_button(mode_layout, "Glue End to End", self.show_glue_end_to_end, self.get_mode_button_style(selected=False))
-        self.stacked_merge_button = self.add_button(mode_layout, "Stacked Merge", self.show_stacked_merge, self.get_mode_button_style(selected=True))
+        self.glue_end_to_end_button = self.add_button(mode_layout, "Glue End to End", self.show_glue_end_to_end, self.get_mode_button_style(selected=False, font_size=button_font_size))
+        self.stacked_merge_button = self.add_button(mode_layout, "Stacked Merge", self.show_stacked_merge, self.get_mode_button_style(selected=True, font_size=button_font_size))
 
         layout.addLayout(mode_layout)
 
-    def setup_glue_end_to_end_mode(self):
+    def setup_glue_end_to_end_mode(self, button_font_size, label_font_size, input_font_size):
         self.glue_end_to_end_widget = QWidget()
         glue_layout = QVBoxLayout(self.glue_end_to_end_widget)
 
         # Main subtitle file selection
         main_file_layout = QHBoxLayout()
-        self.main_subtitle_button = self.add_button(main_file_layout, "Select Main Subtitle", self.select_main_subtitle)
-        self.main_file_preview = self.add_label(main_file_layout, "", style="color: white; font-size: 12px;")
+        self.main_subtitle_button = self.add_button(main_file_layout, "Select Main Subtitle", self.select_main_subtitle, f"background-color: #4f86f7; color: white; border-radius: 5px; padding: 10px; font-size: {button_font_size}px;")
+        self.main_file_preview = self.add_label(main_file_layout, "", f"color: white; font-size: {label_font_size}px;")
         glue_layout.addLayout(main_file_layout)
 
         # Secondary subtitle file selection
         secondary_file_layout = QHBoxLayout()
-        self.secondary_subtitle_button = self.add_button(secondary_file_layout, "Select Secondary Subtitle", self.select_secondary_subtitle)
-        self.secondary_file_preview = self.add_label(secondary_file_layout, "", style="color: white; font-size: 12px;")
+        self.secondary_subtitle_button = self.add_button(secondary_file_layout, "Select Secondary Subtitle", self.select_secondary_subtitle, f"background-color: #4f86f7; color: white; border-radius: 5px; padding: 10px; font-size: {button_font_size}px;")
+        self.secondary_file_preview = self.add_label(secondary_file_layout, "", f"color: white; font-size: {label_font_size}px;")
         glue_layout.addLayout(secondary_file_layout)
 
         # Base length input
         base_length_layout = QHBoxLayout()
-        self.base_length_label = self.add_label(base_length_layout, "Length of main subtitle's video:")
+        self.base_length_label = self.add_label(base_length_layout, "Length of main subtitle's video:", f"color: white; font-size: {label_font_size}px;")
         base_length_layout.addSpacerItem(QSpacerItem(5, 0, QSizePolicy.Fixed, QSizePolicy.Minimum))
-        self.base_length_input = self.add_input(base_length_layout, "00:00:00")
+        self.base_length_input = self.add_input(base_length_layout, "00:00:00", 100, f"background-color: #3c3f41; color: white; font-size: {input_font_size}px; padding: 10px;")
         self.base_length_input.textChanged.connect(self.format_base_length)
         glue_layout.addLayout(base_length_layout)
 
         # Export button
-        self.export_button = self.add_button(glue_layout, "Export", self.glue_end_to_end_merge, self.BUTTON_STYLE)
+        self.export_button = self.add_button(glue_layout, "Export", self.glue_end_to_end_merge, f"background-color: #4f86f7; color: white; border-radius: 5px; padding: 10px; font-size: {button_font_size}px;")
         glue_layout.addWidget(self.export_button, alignment=Qt.AlignRight)
 
         self.stacked_widget.addWidget(self.glue_end_to_end_widget)
 
-    def setup_stacked_merge_mode(self):
+    def setup_stacked_merge_mode(self, button_font_size, label_font_size, input_font_size):
         self.stacked_merge_widget = QWidget()
         stacked_layout = QVBoxLayout(self.stacked_merge_widget)
 
         # Main subtitle file selection
         main_file_layout = QHBoxLayout()
-        self.main_subtitle_button = self.add_button(main_file_layout, "Select Main Subtitle", self.select_main_subtitle)
-        self.main_file_preview = self.add_label(main_file_layout, "", style="color: white; font-size: 12px;")
+        self.main_subtitle_button = self.add_button(main_file_layout, "Select Main Subtitle", self.select_main_subtitle, f"background-color: #4f86f7; color: white; border-radius: 5px; padding: 10px; font-size: {button_font_size}px;")
+        self.main_file_preview = self.add_label(main_file_layout, "", f"color: white; font-size: {label_font_size}px;")
         stacked_layout.addLayout(main_file_layout)
 
         # Secondary subtitle file selection (multiple files)
         secondary_file_layout = QVBoxLayout()
-        self.secondary_subtitle_button = self.add_button(secondary_file_layout, "Select Secondary Subtitles", self.select_multiple_secondary_subtitles)
+        self.secondary_subtitle_button = self.add_button(secondary_file_layout, "Select Secondary Subtitles", self.select_multiple_secondary_subtitles, f"background-color: #4f86f7; color: white; border-radius: 5px; padding: 10px; font-size: {button_font_size}px;")
         self.secondary_file_list = QListWidget()
-        self.secondary_file_list.setStyleSheet("background-color: #3c3f41; color: white; font-size: 12px;")
+        self.secondary_file_list.setStyleSheet(f"background-color: #3c3f41; color: white; font-size: {label_font_size}px;")
         secondary_file_layout.addWidget(self.secondary_file_list)
         stacked_layout.addLayout(secondary_file_layout)
 
         # Color options
-        self.setup_color_options(stacked_layout)
+        self.setup_color_options(stacked_layout, input_font_size, label_font_size)
 
         # Export button
-        self.stacked_export_button = self.add_button(stacked_layout, "Export", self.stacked_merge, self.BUTTON_STYLE)
+        self.stacked_export_button = self.add_button(stacked_layout, "Export", self.stacked_merge, f"background-color: #4f86f7; color: white; border-radius: 5px; padding: 10px; font-size: {button_font_size}px;")
         stacked_layout.addWidget(self.stacked_export_button, alignment=Qt.AlignRight)
 
         self.stacked_widget.addWidget(self.stacked_merge_widget)
 
-    def setup_color_options(self, layout):
+    def setup_color_options(self, layout, input_font_size, label_font_size):
         color_layout = QVBoxLayout()
-        self.color_label = self.add_label(color_layout, "Color options:")
+        self.color_label = self.add_label(color_layout, "Color options:", f"color: white; font-size: {label_font_size}px;")
 
         self.color_combo = QComboBox()
         self.color_combo.addItems(["None", "Color the merged subtitles"])
-        self.color_combo.setStyleSheet(self.INPUT_STYLE)
+        self.color_combo.setStyleSheet(f"background-color: #3c3f41; color: white; font-size: {input_font_size}px;")
         self.color_combo.currentIndexChanged.connect(self.toggle_color_options)
         color_layout.addWidget(self.color_combo)
 
         self.color_palette_layout = QHBoxLayout()
         self.color_palette = QComboBox()
         self.add_color_options_to_palette()
-        self.color_palette.setStyleSheet(self.INPUT_STYLE)
+        self.color_palette.setStyleSheet(f"background-color: #3c3f41; color: white; font-size: {input_font_size}px;")
         self.color_palette_layout.addWidget(self.color_palette)
 
-        self.hex_input = self.add_input(self.color_palette_layout, "#000000")
+        self.hex_input = self.add_input(self.color_palette_layout, "#000000", 100, f"background-color: #3c3f41; color: white; font-size: {input_font_size}px; padding: 10px;")
         color_layout.addLayout(self.color_palette_layout)
 
         # Initially hide color options
@@ -159,20 +169,20 @@ class MergeSRT(QWidget):
 
         layout.addLayout(color_layout)
 
-    def get_mode_button_style(self, selected=False):
+    def get_mode_button_style(self, selected, font_size):
         if selected:
-            return "background-color: #3a6dbf; color: white; border-radius: 5px; padding: 10px; font-size: 14px;"
-        return self.BUTTON_STYLE
+            return f"background-color: #3a6dbf; color: white; border-radius: 5px; padding: 10px; font-size: {font_size}px;"
+        return f"background-color: #4f86f7; color: white; border-radius: 5px; padding: 10px; font-size: {font_size}px;"
 
     def show_glue_end_to_end(self):
         self.stacked_widget.setCurrentWidget(self.glue_end_to_end_widget)
-        self.glue_end_to_end_button.setStyleSheet(self.get_mode_button_style(selected=True))
-        self.stacked_merge_button.setStyleSheet(self.get_mode_button_style(selected=False))
+        self.glue_end_to_end_button.setStyleSheet(self.get_mode_button_style(selected=True, font_size=self.config.get_text_size() - 12))
+        self.stacked_merge_button.setStyleSheet(self.get_mode_button_style(selected=False, font_size=self.config.get_text_size() - 12))
 
     def show_stacked_merge(self):
         self.stacked_widget.setCurrentWidget(self.stacked_merge_widget)
-        self.glue_end_to_end_button.setStyleSheet(self.get_mode_button_style(selected=False))
-        self.stacked_merge_button.setStyleSheet(self.get_mode_button_style(selected=True))
+        self.glue_end_to_end_button.setStyleSheet(self.get_mode_button_style(selected=False, font_size=self.config.get_text_size() - 12))
+        self.stacked_merge_button.setStyleSheet(self.get_mode_button_style(selected=True, font_size=self.config.get_text_size() - 12))
 
     def select_main_subtitle(self):
         file_path = self.select_subtitle_file()
