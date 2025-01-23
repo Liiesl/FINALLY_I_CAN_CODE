@@ -38,6 +38,7 @@ class MainWindow(QMainWindow):
         if self.central_widget.layout() is not None:
             QWidget().setLayout(self.central_widget.layout())
         self.central_widget.setLayout(self.main_layout)
+        print("UI Initialized.")
 
     def add_hamburger_button(self):
         print("Adding hamburger button...")
@@ -57,6 +58,7 @@ class MainWindow(QMainWindow):
 
         container_layout.addWidget(self.hamburger_button)
         self.main_layout.addWidget(container, alignment=Qt.AlignTop | Qt.AlignLeft)
+        print("Hamburger button added.")
 
     def main_menu(self):
         print("Setting up main menu...")
@@ -87,6 +89,7 @@ class MainWindow(QMainWindow):
             scroll_layout.addWidget(self.create_tool_button(tool[0], tool[1]))
 
         scroll_layout.addStretch()
+        print("Main menu set up.")
 
     def create_tool_button(self, tool_name, tool_description):
         print(f"Creating tool button: {tool_name}")
@@ -126,6 +129,7 @@ class MainWindow(QMainWindow):
         button_layout.addWidget(description_label)
 
         button.clicked.connect(lambda: self.tool_selected(tool_name))
+        print(f"{tool_name} button created.")
         return button
 
     def tool_selected(self, tool_name):
@@ -153,6 +157,7 @@ class MainWindow(QMainWindow):
         tool_widget = tool_class(parent=self.central_widget, back_callback=self.main_menu)
         self.main_layout.addWidget(tool_widget)
         tool_widget.show()
+        print(f"{tool_class.__name__} loaded.")
 
     def toggle_side_page(self):
         print("Toggling side page...")
@@ -168,6 +173,7 @@ class MainWindow(QMainWindow):
         
         self.position_side_page()
         self.side_page.show()
+        print("Side page shown.")
 
     def position_side_page(self):
         # Position the side page just below the hamburger button
