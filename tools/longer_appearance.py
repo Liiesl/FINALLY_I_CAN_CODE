@@ -1,26 +1,36 @@
 import os
 import re
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QFileDialog, QMessageBox, QListWidget, QLabel, QComboBox
+from config import Config
 
 class LongerAppearanceSRT(QWidget):
     def __init__(self, parent=None, back_callback=None):
         super().__init__(parent)
         self.back_callback = back_callback
+        self.config = Config()
         self.setup_ui()
 
     def setup_ui(self):
         layout = QVBoxLayout(self)
 
+        text_size = self.config.get_text_size()
+        font_size = {
+            "small": 18,
+            "default": 26,
+            "large": 34,
+            "huge": 42
+        }.get(text_size, 26)
+
         # Create a horizontal layout for the back and select files buttons
         button_layout = QHBoxLayout()
 
         back_button = QPushButton("Back to Main Menu")
-        back_button.setStyleSheet("background-color: #4f86f7; color: white; border-radius: 5px; padding: 15px; font-size: 14px;")
+        back_button.setStyleSheet(f"background-color: #4f86f7; color: white; border-radius: 5px; padding: 15px; font-size: {font_size - 12}px;")
         back_button.clicked.connect(self.back_callback)
         button_layout.addWidget(back_button)
 
         file_button = QPushButton("Select Files")
-        file_button.setStyleSheet("background-color: #4f86f7; color: white; border-radius: 5px; padding: 15px; font-size: 14px;")
+        file_button.setStyleSheet(f"background-color: #4f86f7; color: white; border-radius: 5px; padding: 15px; font-size: {font_size - 12}px;")
         file_button.clicked.connect(self.browse_files)
         button_layout.addWidget(file_button)
 
@@ -34,16 +44,16 @@ class LongerAppearanceSRT(QWidget):
         dropdown_layout = QHBoxLayout()
 
         seconds_label = QLabel("Add Seconds:")
-        seconds_label.setStyleSheet("color: white; font-size: 14px;")
+        seconds_label.setStyleSheet(f"color: white; font-size: {font_size - 12}px;")
         dropdown_layout.addWidget(seconds_label)
 
         self.seconds_dropdown = QComboBox()
         self.seconds_dropdown.addItems([str(i) for i in range(1, 6)])
-        self.seconds_dropdown.setStyleSheet("background-color: #3c3f41; color: white; font-size: 14px; padding: 15px;")
+        self.seconds_dropdown.setStyleSheet(f"background-color: #3c3f41; color: white; font-size: {font_size - 12}px; padding: 15px;")
         dropdown_layout.addWidget(self.seconds_dropdown)
 
         export_button = QPushButton("Export")
-        export_button.setStyleSheet("background-color: #4f86f7; color: white; border-radius: 5px; padding: 15px; font-size: 14px;")
+        export_button.setStyleSheet(f"background-color: #4f86f7; color: white; border-radius: 5px; padding: 15px; font-size: {font_size - 12}px;")
         export_button.clicked.connect(self.export_files)
         dropdown_layout.addWidget(export_button)
 
