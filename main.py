@@ -2,12 +2,12 @@ import sys
 import qtawesome as qta
 from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QLabel, QScrollArea, QMessageBox, QSplitter, QFrame
 from PyQt5.QtGui import QPalette, QColor, QFont
-from PyQt5.QtCore import Qt, QPropertyAnimation
+from PyQt5.QtCore import Qt
 
 from tools.subtitle_converter import SubtitleConverter
-from side_panel import SidePanel  # Import the SidePanel class
-from settings import Settings  # Import the Settings class
-from config import Config  # Import the Config class
+from side_panel import SidePanel
+from settings import Settings
+from config import Config
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -98,7 +98,6 @@ class MainWindow(QMainWindow):
         scroll_area.setWidget(self.tool_buttons_container)
         scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.scroll_area = scroll_area
         navigation_layout.addWidget(scroll_area)
 
         self.right_arrow_button = QPushButton()
@@ -120,15 +119,15 @@ class MainWindow(QMainWindow):
         button = QPushButton()
         button.setStyleSheet("""
             QPushButton {
-                border: 5px solid #4f86f7; /* Thicker edge line */
+                border: 5px solid #4f86f7; 
                 color: white;
                 border-radius: 5px;
                 padding: 10px;
-                min-width: 150px;
-                min-height: 200px;
+                min-width: 200px;
+                min-height: 300px;
                 margin: 10px;
-                background-color: #2c2f38; /* Same as background color */
-                text-align: center; /* Center align text */
+                background-color: #2c2f38; 
+                text-align: center; 
             }
             QPushButton:hover {
                 border-color: #3a6dbf;
@@ -223,22 +222,12 @@ class MainWindow(QMainWindow):
                     item.widget().setVisible(False)
 
     def scroll_left(self):
-        current_value = self.scroll_area.horizontalScrollBar().value()
-        new_value = max(0, current_value - 220)
-        self.animate_scroll(current_value, new_value)
+        scroll_area = self.tool_buttons_container.parent().parent()
+        scroll_area.horizontalScrollBar().setValue(scroll_area.horizontalScrollBar().value() - 220)
 
     def scroll_right(self):
-        max_value = self.scroll_area.horizontalScrollBar().maximum()
-        current_value = self.scroll_area.horizontalScrollBar().value()
-        new_value = min(max_value, current_value + 220)
-        self.animate_scroll(current_value, new_value)
-
-    def animate_scroll(self, start_value, end_value):
-        animation = QPropertyAnimation(self.scroll_area.horizontalScrollBar(), b"value")
-        animation.setDuration(500)
-        animation.setStartValue(start_value)
-        animation.setEndValue(end_value)
-        animation.start()
+        scroll_area = self.tool_buttons_container.parent().parent()
+        scroll_area.horizontalScrollBar().setValue(scroll_area.horizontalScrollBar().value() + 220)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
