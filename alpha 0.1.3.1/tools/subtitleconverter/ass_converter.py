@@ -216,3 +216,27 @@ def rt_to_ass(content):
         ass_content += f'Dialogue: 0,{start_time},{end_time},Default,,0,0,0,,{text}\n'
 
     return ass_content
+
+def convert_to_ass(format, content):
+    if format == "srt":
+        return srt_to_ass(content)
+    elif format == "vtt":
+        return vtt_to_ass(content)
+    elif format == "txt":
+        return txt_to_ass(content)
+    elif format == "sbv":
+        return sbv_to_ass(content)
+    elif format == "dfxp":
+        return dfxp_to_ass(content)
+    elif format == "stl":
+        return stl_to_ass(content)
+    elif format == "mpl":
+        return mpl_to_ass(content)
+    elif format == "usf":
+        return usf_to_ass(content)
+    elif format == "lrc":
+        return lrc_to_ass(content)
+    elif format == "rt":
+        return rt_to_ass(content)
+    else:
+        raise ValueError("Unsupported format")
