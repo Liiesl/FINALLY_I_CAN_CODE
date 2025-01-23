@@ -35,9 +35,17 @@ class Settings(QWidget):
         self.safe_area_value_label.setStyleSheet("color: white;")
         layout.addWidget(self.safe_area_value_label)
 
+        # Save button
+        save_button = QPushButton("Save")
+        save_button.clicked.connect(self.save_settings)
+        layout.addWidget(save_button)
+
         self.setLayout(layout)
         self.setStyleSheet("background-color: #2c2f38;")
 
     def update_safe_area(self, value):
         self.safe_area_value_label.setText(f"{value} px")
-        self.config.set_safe_area_size(value)
+
+    def save_settings(self):
+        self.config.set_safe_area_size(self.safe_area_slider.value())
+        self.back_callback()
