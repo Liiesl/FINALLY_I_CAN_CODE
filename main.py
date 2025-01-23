@@ -166,6 +166,7 @@ class MainWindow(QMainWindow):
         self.load_tool(settings)
 
     def update_safe_area_size(self):
+        self.config = Config()  # Reload the configuration
         safe_area_size = self.config.get_safe_area_size()
         self.main_content_layout.setContentsMargins(safe_area_size, safe_area_size, safe_area_size, safe_area_size)
 
