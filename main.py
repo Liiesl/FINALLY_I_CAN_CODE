@@ -19,7 +19,7 @@ class MainWindow(QMainWindow):
 
         self.side_page = None
         self.hamburger_button = None
-        self.settings_window = None
+        self.settings_widget = None
 
         self.init_ui()
 
@@ -57,6 +57,12 @@ class MainWindow(QMainWindow):
         self.main_layout.addWidget(container, alignment=Qt.AlignTop | Qt.AlignLeft)
 
     def main_menu(self):
+        # Clear the central widget layout
+        for i in reversed(range(self.main_layout.count())):
+            widget = self.main_layout.itemAt(i).widget()
+            if widget is not None:
+                widget.setParent(None)
+
         # Create a scroll area
         scroll = QScrollArea()
         scroll.setWidgetResizable(True)
@@ -71,7 +77,7 @@ class MainWindow(QMainWindow):
             ("Longer Appearance SRT", "Increase the duration each subtitle appears."),
             ("Merge SRT Files", "Combine multiple SRT files into one."),
             ("Subtitle Converter", "Convert subtitles between different formats."),
-            ("Coming Soon", "New tools will be added here.")
+            ("Settings", "Configure application settings.")
         ]
 
         for tool in tools:
@@ -179,8 +185,6 @@ class MainWindow(QMainWindow):
         super().mousePressEvent(event)
 
     def open_settings(self):
-        if self.settings_window is None:
-            self.settings_window = Settings(self, back_callback=self.main_menu)
         self.load_tool(Settings)
 
 class SidePage(QWidget):
