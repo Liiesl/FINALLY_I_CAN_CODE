@@ -225,7 +225,19 @@ class MergeSRT(QWidget):
             return
 
         base_seconds = self.time_to_seconds(base_length)
-        self.merge_subtitles_end_to_end(self.main_subtitle_path, self.secondary_subtitle_path, base_seconds)
+        try:
+            main_content = read_file(self.main_subtitle_path)
+            secondary_content = read_file(self.secondary_subtitle_path)
+
+            offset_content = self.offset_subtitle_times(secondary_content, base_seconds)
+            merged_content = main_content + '\n\n' + offset_content
+
+            save_path = self.save_file("Save Merged File", "merged.srt")
+            if save_path:
+                write_file(save_path, merged_content)
+                self.show_success("Merged file saved successfully!")
+        except Exception as e:
+            self.show_error(f"An error occurred while merging the files.\n\n{e}")
 
     def validate_time_format(self, time_str):
         parts = time_str.split(':')
@@ -330,18 +342,29 @@ class MergeSRT(QWidget):
         return None
 
     def save_file(self, dialog_title, default_name):
-        default_save_directory = self.config.get_default_save_directory()
-        save_path, _ = QFileDialog.getSaveFileName(self, dialog_title, os.path.join(default_save_directory, default_name), "Subtitle Files (*.srt)")
+        options = QFileDialog.Options()
+        options |= QFileDialog.DontUseNativeDialog
+        save_path, _ = QFileDialog.getSaveFileName(self, dialog_title, default_name, "Subtitle Files (*.srt)", options=options)
         
-        # Ensure the file is saved with a unique name
         if save_path:
-            base, ext = os.path.splitext(save_path)
-            counter = 1
-            while os.path.exists(save_path):
-                save_path = f"{base}_{counter}{ext}"
-                counter += 1
-        
-        return save_path
+            # Check if the file already exists
+            if os.path.exists(save_path):
+                # Prompt the user to confirm overwriting the existing file
+                reply = QMessageBox.question(self, 'File exists',
+                                             f'{save_path} already exists. Do you want to overwrite it?',
+                                             QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+                if reply == QMessageBox.No:
+                    return None  # User chose not to overwrite the file
+
+            # Create a new file or overwrite the existing file
+            try:
+                with open(save_path, 'w') as file:
+                    file.write("")  # Create an empty file
+                return save_path
+            except IOError as e:
+                self.show_error(f"An error occurred while creating the file: {e}")
+                return None
+        return None
 
     def show_error(self, message):
         QMessageBox.critical(self, "Error", message)
