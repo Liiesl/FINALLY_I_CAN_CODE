@@ -125,10 +125,10 @@ class MainWindow(QMainWindow):
             QPushButton {
                 border: 5px solid #4f86f7; 
                 color: white;
-                border-radius: 5px;
+                border-radius: 15px; /* Increased corner radius */
                 padding: 10px;
-                min-width: 200px;
-                min-height: 300px;
+                min-width: 300px; /* Increased width */
+                min-height: 400px; /* Increased height */
                 margin: 10px;
                 background-color: #2c2f38; 
                 text-align: center; 
