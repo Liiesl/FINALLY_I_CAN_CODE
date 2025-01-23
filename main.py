@@ -134,12 +134,12 @@ class MainWindow(QMainWindow):
     def tool_selected(self, tool_name):
         if tool_name == "Longer Appearance SRT":
             from tools.longer_appearance import LongerAppearanceSRT
-            self.load_tool(LongerAppearanceSRT)
+            self.load_tool(LongerAppearanceSRT())
         elif tool_name == "Merge SRT Files":
             from tools.merge_srt import MergeSRT
-            self.load_tool(MergeSRT)
+            self.load_tool(MergeSRT())
         elif tool_name == "Subtitle Converter":
-            self.load_tool(SubtitleConverter)
+            self.load_tool(SubtitleConverter())
         else:
             QMessageBox.information(self, "Coming Soon", "This feature is coming soon!")
 
