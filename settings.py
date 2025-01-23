@@ -34,11 +34,11 @@ class Settings(QWidget):
         self.safe_area_slider.valueChanged.connect(self.update_safe_area)
         safe_area_layout.addWidget(self.safe_area_slider)
 
-        layout.addLayout(safe_area_layout)
-
         self.safe_area_value_label = QLabel(f"{self.config.get_safe_area_size()} px")
         self.safe_area_value_label.setStyleSheet("color: white;")
-        layout.addWidget(self.safe_area_value_label)
+        safe_area_layout.addWidget(self.safe_area_value_label)
+
+        layout.addLayout(safe_area_layout)
 
         # Text Size Dropdown
         text_size_layout = QHBoxLayout()
