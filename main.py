@@ -1,7 +1,8 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QLabel, QScrollArea, QMessageBox, QListWidget, QListWidgetItem
-from PyQt5.QtGui import QPalette, QColor, QFont, QPainter, QPolygon, QIcon, QPixmap  # Import QPixmap
-from PyQt5.QtCore import Qt, QPoint
+from PyQt5.QtGui import QPalette, QColor, QFont, QIcon
+from PyQt5.QtCore import Qt
+import qtawesome as qta  # Import QtAwesome for icons
 from tools.subtitle_converter import SubtitleConverter
 from settings import Settings  # Import the Settings class
 
@@ -18,18 +19,37 @@ class MainWindow(QMainWindow):
 
         self.side_page = None
 
+        self.init_ui()
+
+    def init_ui(self):
+        # Create a layout for the main content
+        self.main_layout = QVBoxLayout()
+        self.central_widget.setLayout(self.main_layout)
+
+        # Add the hamburger button at the top left corner
+        self.add_hamburger_button()
+
+        # Add the main menu content
         self.main_menu()
 
+    def add_hamburger_button(self):
+        # Create a container for the hamburger button
+        container = QWidget()
+        container_layout = QHBoxLayout(container)
+        container_layout.setContentsMargins(0, 0, 0, 0)  # No margins
+        container_layout.setAlignment(Qt.AlignTop | Qt.AlignLeft)  # Align to top-left
+
+        # Create the hamburger button
+        hamburger_button = QPushButton()
+        hamburger_button.setIcon(qta.icon('fa.bars'))  # Use FontAwesome 'bars' icon
+        hamburger_button.setIconSize(hamburger_button.size())
+        hamburger_button.setStyleSheet("border: none; background: transparent;")
+        hamburger_button.clicked.connect(self.show_side_page)
+
+        container_layout.addWidget(hamburger_button)
+        self.main_layout.addWidget(container, alignment=Qt.AlignTop | Qt.AlignLeft)
+
     def main_menu(self):
-        # Clear the central widget layout
-        for i in reversed(range(self.layout.count())):
-            widget = self.layout.itemAt(i).widget()
-            if widget is not None:
-                widget.setParent(None)
-
-        # Add safe area around the edges
-        self.layout.setContentsMargins(100, 100, 100, 100)
-
         # Create a scroll area
         scroll = QScrollArea()
         scroll.setWidgetResizable(True)
@@ -37,7 +57,7 @@ class MainWindow(QMainWindow):
         scroll_layout = QHBoxLayout(scroll_content)
         scroll.setWidget(scroll_content)
 
-        self.layout.addWidget(scroll)
+        self.main_layout.addWidget(scroll)
 
         # Add tool buttons
         tools = [
@@ -51,15 +71,6 @@ class MainWindow(QMainWindow):
             scroll_layout.addWidget(self.create_tool_button(tool[0], tool[1]))
 
         scroll_layout.addStretch()
-
-        # Add triangle button
-        triangle_button = QPushButton()
-        triangle_button.setFixedSize(50, 50)
-        triangle_button.setIcon(self.create_triangle_icon())
-        triangle_button.setIconSize(triangle_button.size())
-        triangle_button.setStyleSheet("border: none; background: transparent;")
-        triangle_button.clicked.connect(self.show_side_page)
-        self.layout.addWidget(triangle_button, alignment=Qt.AlignTop | Qt.AlignLeft)
 
     def create_tool_button(self, tool_name, tool_description):
         button = QPushButton()
@@ -113,25 +124,14 @@ class MainWindow(QMainWindow):
             QMessageBox.information(self, "Coming Soon", "This feature is coming soon!")
 
     def load_tool(self, tool_class):
-        for i in reversed(range(self.layout.count())):
-            widget = self.layout.itemAt(i).widget()
+        for i in reversed(range(self.main_layout.count())):
+            widget = self.main_layout.itemAt(i).widget()
             if widget is not None:
                 widget.setParent(None)
 
         tool_widget = tool_class(parent=self.central_widget, back_callback=self.main_menu)
-        self.layout.addWidget(tool_widget)
+        self.main_layout.addWidget(tool_widget)
         tool_widget.show()
-
-    def create_triangle_icon(self):
-        pixmap = QPixmap(50, 50)
-        pixmap.fill(Qt.transparent)
-        painter = QPainter(pixmap)
-        painter.setBrush(Qt.black)
-        points = [QPoint(25, 5), QPoint(5, 45), QPoint(45, 45)]
-        triangle = QPolygon(points)
-        painter.drawPolygon(triangle)
-        painter.end()
-        return QIcon(pixmap)
 
     def show_side_page(self):
         if self.side_page is None:
