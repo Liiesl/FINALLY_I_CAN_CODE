@@ -3,12 +3,14 @@ import re
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QFileDialog, QMessageBox, QLabel, QLineEdit, QStackedWidget, QFrame
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPalette, QColor
+from config import Config
 
 class SubtitleShifter(QWidget):
     def __init__(self, parent=None, back_callback=None):
         super().__init__(parent)
         self.back_callback = back_callback
         self.subtitle_path = ""
+        self.config = Config()
         self.setup_ui()
 
     def setup_ui(self):
@@ -154,20 +156,20 @@ class SubtitleShifter(QWidget):
     def whole_shift(self):
         ms_shift = int(self.ms_input.text())
         if self.subtitle_path:
-            save_path, _ = QFileDialog.getSaveFileName(self, "Save Shifted Subtitles", "", "Subtitle Files (*.srt)")
-            if save_path:
-                shift_subtitle(self.subtitle_path, ms_shift, save_path)
-                self.show_success_message("Subtitles shifted successfully!")
+            default_save_directory = self.config.get_default_save_directory()
+            save_path = os.path.join(default_save_directory, f"shifted_{os.path.basename(self.subtitle_path)}")
+            shift_subtitle(self.subtitle_path, ms_shift, save_path)
+            self.show_success_message("Subtitles shifted successfully!")
 
     def partial_shift(self):
         start_time = self.start_input.text()
         end_time = self.end_input.text()
         ms_shift = int(self.ms_input_partial.text())
         if self.subtitle_path:
-            save_path, _ = QFileDialog.getSaveFileName(self, "Save Shifted Subtitles", "", "Subtitle Files (*.srt)")
-            if save_path:
-                shift_subtitle_partial(self.subtitle_path, start_time, end_time, ms_shift, save_path)
-                self.show_success_message("Subtitles shifted successfully!")
+            default_save_directory = self.config.get_default_save_directory()
+            save_path = os.path.join(default_save_directory, f"shifted_{os.path.basename(self.subtitle_path)}")
+            shift_subtitle_partial(self.subtitle_path, start_time, end_time, ms_shift, save_path)
+            self.show_success_message("Subtitles shifted successfully!")
 
     def show_success_message(self, message):
         msg_box = QMessageBox()
