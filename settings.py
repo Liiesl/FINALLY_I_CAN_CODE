@@ -2,7 +2,6 @@ from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButt
 from PyQt5.QtCore import Qt, pyqtSignal
 from config import Config
 
-
 class Settings(QWidget):
     settings_saved = pyqtSignal()  # Define a signal for settings saved
 
