@@ -1,35 +1,39 @@
-import json
 import os
+import json
 
 class Config:
-    CONFIG_FILE = "config.json"
+    CONFIG_PATH = "config.json"
 
     def __init__(self):
-        self.data = {
-            "safe_area_size": 0,
-            "text_size": "small"  # Default text size
-        }
-        self.load()
+        self.config_data = self.load_config()
 
-    def load(self):
-        if os.path.exists(self.CONFIG_FILE):
-            with open(self.CONFIG_FILE, "r") as file:
-                self.data = json.load(file)
+    def load_config(self):
+        if os.path.exists(self.CONFIG_PATH):
+            with open(self.CONFIG_PATH, "r") as file:
+                return json.load(file)
+        return {}
 
-    def save(self):
-        with open(self.CONFIG_FILE, "w") as file:
-            json.dump(self.data, file, indent=4)
+    def save_config(self):
+        with open(self.CONFIG_PATH, "w") as file:
+            json.dump(self.config_data, file, indent=4)
 
     def get_safe_area_size(self):
-        return self.data.get("safe_area_size", 0)
+        return self.config_data.get("safe_area_size", 20)
 
     def set_safe_area_size(self, size):
-        self.data["safe_area_size"] = size
-        self.save()
+        self.config_data["safe_area_size"] = size
+        self.save_config()
 
     def get_text_size(self):
-        return self.data.get("text_size", "small")
+        return self.config_data.get("text_size", "default")
 
     def set_text_size(self, size):
-        self.data["text_size"] = size
-        self.save()
+        self.config_data["text_size"] = size
+        self.save_config()
+
+    def get_default_save_directory(self):
+        return self.config_data.get("default_save_directory", os.path.expanduser("~"))
+
+    def set_default_save_directory(self, directory):
+        self.config_data["default_save_directory"] = directory
+        self.save_config()
