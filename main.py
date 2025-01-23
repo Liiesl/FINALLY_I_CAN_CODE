@@ -1,6 +1,6 @@
 import sys
 import qtawesome as qta
-from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QLabel, QScrollArea, QMessageBox
+from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QLabel, QScrollArea, QMessageBox, QSplitter
 from PyQt5.QtGui import QPalette, QColor, QFont
 from PyQt5.QtCore import Qt
 from tools.subtitle_converter import SubtitleConverter
@@ -10,28 +10,39 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("SRT Editor")
-        self.setGeometry(100, 100, 800, 400)
+        self.setGeometry(100, 100, 800, 600)
         self.setStyleSheet("background-color: #2c2f38;")
 
         self.central_widget = QWidget()
-        self.layout = QVBoxLayout(self.central_widget)
+        self.layout = QHBoxLayout(self.central_widget)
         self.setCentralWidget(self.central_widget)
 
         self.side_panel = SidePanel(self)
         self.side_panel.setVisible(False)
 
+        self.main_content = QWidget()
+        self.main_content_layout = QVBoxLayout(self.main_content)
+        self.main_content.setLayout(self.main_content_layout)
+
+        # Splitter to allow dynamic resizing
+        self.splitter = QSplitter(Qt.Horizontal)
+        self.splitter.addWidget(self.side_panel)
+        self.splitter.addWidget(self.main_content)
+        self.splitter.setSizes([0, 1])  # Initially hide the side panel
+
+        self.layout.addWidget(self.splitter)
         self.main_menu()
 
     def main_menu(self):
-        # Clear the central widget layout
-        for i in reversed(range(self.layout.count())):
-            widget = self.layout.itemAt(i).widget()
+        # Clear the main content layout
+        for i in reversed(range(self.main_content_layout.count())):
+            widget = self.main_content_layout.itemAt(i).widget()
             if widget is not None:
                 widget.setParent(None)
 
         # Create a horizontal layout for the top bar
         top_bar = QHBoxLayout()
-        self.layout.addLayout(top_bar)
+        self.main_content_layout.addLayout(top_bar)
 
         # Add the side panel toggle button (hamburger menu)
         menu_button = QPushButton()
@@ -49,7 +60,7 @@ class MainWindow(QMainWindow):
         scroll_layout = QHBoxLayout(scroll_content)
         scroll.setWidget(scroll_content)
 
-        self.layout.addWidget(scroll)
+        self.main_content_layout.addWidget(scroll)
 
         # Add tool buttons
         tools = [
@@ -116,20 +127,22 @@ class MainWindow(QMainWindow):
             QMessageBox.information(self, "Coming Soon", "This feature is coming soon!")
 
     def load_tool(self, tool_class):
-        for i in reversed(range(self.layout.count())):
-            widget = self.layout.itemAt(i).widget()
+        for i in reversed(range(self.main_content_layout.count())):
+            widget = self.main_content_layout.itemAt(i).widget()
             if widget is not None:
                 widget.setParent(None)
 
-        tool_widget = tool_class(parent=self.central_widget, back_callback=self.main_menu)
-        self.layout.addWidget(tool_widget)
+        tool_widget = tool_class(parent=self.main_content, back_callback=self.main_menu)
+        self.main_content_layout.addWidget(tool_widget)
         tool_widget.show()
 
     def toggle_side_panel(self):
-        self.side_panel.setVisible(not self.side_panel.isVisible())
-
         if self.side_panel.isVisible():
-            self.side_panel.raise_()
+            self.splitter.setSizes([0, 1])
+            self.side_panel.setVisible(False)
+        else:
+            self.side_panel.setVisible(True)
+            self.splitter.setSizes([self.width() // 2, self.width() // 2])
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
