@@ -67,8 +67,8 @@ class SubtitleShifter(QWidget):
         mode_layout = QHBoxLayout()
         self.add_label(mode_layout, "Select Mode:", "color: white; font-size: 14px;")
 
-        self.whole_shift_button = self.add_button(mode_layout, "Whole Shift", self.show_whole_shift, "background-color: #4f86f7; color: white; border-radius: 5px; padding: 10px; font-size: 14px;")
-        self.partial_shift_button = self.add_button(mode_layout, "Partial Shift", self.show_partial_shift, "background-color: #4f86f7; color: white; border-radius: 5px; padding: 10px; font-size: 14px;")
+        self.whole_shift_button = self.add_button(mode_layout, "Whole Shift", self.show_whole_shift, self.get_mode_button_style(selected=True))
+        self.partial_shift_button = self.add_button(mode_layout, "Partial Shift", self.show_partial_shift, self.get_mode_button_style(selected=False))
 
         layout.addLayout(mode_layout)
 
@@ -126,11 +126,20 @@ class SubtitleShifter(QWidget):
 
         self.stacked_widget.addWidget(self.partial_shift_widget)
 
+    def get_mode_button_style(self, selected):
+        if selected:
+            return "background-color: #3a6dbf; color: white; border-radius: 5px; padding: 10px; font-size: 14px;"
+        return "background-color: #4f86f7; color: white; border-radius: 5px; padding: 10px; font-size: 14px;"
+
     def show_whole_shift(self):
         self.stacked_widget.setCurrentWidget(self.whole_shift_widget)
+        self.whole_shift_button.setStyleSheet(self.get_mode_button_style(selected=True))
+        self.partial_shift_button.setStyleSheet(self.get_mode_button_style(selected=False))
 
     def show_partial_shift(self):
         self.stacked_widget.setCurrentWidget(self.partial_shift_widget)
+        self.whole_shift_button.setStyleSheet(self.get_mode_button_style(selected=False))
+        self.partial_shift_button.setStyleSheet(self.get_mode_button_style(selected=True))
 
     def select_subtitle(self):
         file_path, _ = QFileDialog.getOpenFileName(self, "Select Subtitle File", "", "Subtitle Files (*.srt)")
