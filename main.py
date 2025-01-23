@@ -104,7 +104,12 @@ class MainWindow(QMainWindow):
         navigation_layout.addWidget(self.left_arrow_button)
 
         # Add the tool buttons container to the navigation layout
-        navigation_layout.addWidget(self.tool_buttons_container)
+        scroll_area = QScrollArea()
+        scroll_area.setWidgetResizable(True)
+        scroll_area.setWidget(self.tool_buttons_container)
+        scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        navigation_layout.addWidget(scroll_area)
 
         # Right arrow button
         self.right_arrow_button = QPushButton()
@@ -133,9 +138,9 @@ class MainWindow(QMainWindow):
         button = QPushButton()
         button.setStyleSheet("""
             QPushButton {
-                border: 10px solid #4f86f7; 
+                border: 5px solid #4f86f7; 
                 color: white;
-                border-radius: 10px;
+                border-radius: 5px;
                 padding: 10px;
                 min-width: 200px;
                 min-height: 300px;
@@ -256,12 +261,12 @@ class MainWindow(QMainWindow):
         animation.start()
 
     def scroll_left(self):
-        scroll_area = self.tool_buttons_container.parent()
-        scroll_area.horizontalScrollBar().setValue(scroll_area.horizontalScrollBar().value() - 100)
+        scroll_area = self.tool_buttons_container.parent().parent()
+        scroll_area.horizontalScrollBar().setValue(scroll_area.horizontalScrollBar().value() - 220)
 
     def scroll_right(self):
-        scroll_area = self.tool_buttons_container.parent()
-        scroll_area.horizontalScrollBar().setValue(scroll_area.horizontalScrollBar().value() + 100)
+        scroll_area = self.tool_buttons_container.parent().parent()
+        scroll_area.horizontalScrollBar().setValue(scroll_area.horizontalScrollBar().value() + 220)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
