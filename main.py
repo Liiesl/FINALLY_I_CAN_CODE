@@ -21,6 +21,7 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.central_widget)
 
         self.config = Config()
+        self.main_menu_active = True  # Track if the main menu is active
 
         self.side_panel = SidePanel(self, self.open_settings)
         self.side_panel.setVisible(False)
@@ -44,6 +45,8 @@ class MainWindow(QMainWindow):
         self.main_menu()
 
     def main_menu(self):
+        self.main_menu_active = True  # Set flag to indicate main menu is active
+
         for i in reversed(range(self.main_content_layout.count())):
             widget = self.main_content_layout.itemAt(i).widget()
             if widget is not None:
@@ -168,6 +171,8 @@ class MainWindow(QMainWindow):
             QMessageBox.information(self, "Coming Soon", "This feature is coming soon!")
 
     def load_tool(self, tool_widget):
+        self.main_menu_active = False  # Set flag to indicate main menu is not active
+
         for i in reversed(range(self.main_content_layout.count())):
             widget = self.main_content_layout.itemAt(i).widget()
             if widget is not None:
@@ -185,10 +190,7 @@ class MainWindow(QMainWindow):
             self.splitter.setSizes([self.width() // 2, self.width() // 2])
 
     def open_settings(self, item=None):
-        settings = Settings(parent=self.main_content, back_callback=self.main_menu)
-        settings.settings_saved.connect(self.update_safe_area_size)
-        settings.settings_saved.connect(self.apply_text_size)
-        self.load_tool(settings)
+        self.load_tool(Settings(parent=self.main_content, back_callback=self.main_menu))
 
     def update_safe_area_size(self):
         self.config = Config()
@@ -211,7 +213,7 @@ class MainWindow(QMainWindow):
         """)
 
     def update_tool_button_visibility(self, event=None):
-        if self.tool_buttons_container:
+        if self.main_menu_active and self.tool_buttons_container:
             container_width = self.tool_buttons_container.width()
             button_width = 220
             visible_buttons = container_width // button_width
