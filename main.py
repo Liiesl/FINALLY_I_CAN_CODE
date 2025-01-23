@@ -138,13 +138,13 @@ class MainWindow(QMainWindow):
 
         name_label = QLabel(tool_name)
         name_label.setFont(QFont("Arial", 26, QFont.Bold))
-        name_label.setStyleSheet("color: #4f86f7;")
+        name_label.setStyleSheet("color: #4f86f7; background-color: transparent;")
         name_label.setWordWrap(True)
         name_label.setAlignment(Qt.AlignCenter)
 
         description_label = QLabel(tool_description)
         description_label.setFont(QFont("Arial", 18))
-        description_label.setStyleSheet("color: white;")
+        description_label.setStyleSheet("color: white; background-color: transparent;")
         description_label.setWordWrap(True)
         description_label.setAlignment(Qt.AlignCenter)
 
