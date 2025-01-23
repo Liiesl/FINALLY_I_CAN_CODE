@@ -175,6 +175,10 @@ class MainWindow(QMainWindow):
         self.main_content_layout.addWidget(tool_widget)
         tool_widget.show()
 
+        # Reconnect the menu button to ensure it works after navigating back
+        self.menu_button.clicked.disconnect()
+        self.menu_button.clicked.connect(self.toggle_side_panel)
+
     def toggle_side_panel(self):
         if self.side_panel.isVisible():
             self.splitter.setSizes([0, 1])
