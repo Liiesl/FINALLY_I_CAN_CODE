@@ -5,6 +5,7 @@ from PyQt5.QtGui import QPalette, QColor, QFont
 from PyQt5.QtCore import Qt, QPropertyAnimation
 
 from tools.subtitle_converter import SubtitleConverter
+from tools.subtitle_shifter import SubtitleShifter
 from side_panel import SidePanel
 from settings import Settings
 from config import Config
@@ -73,6 +74,7 @@ class MainWindow(QMainWindow):
             ("Longer Appearance SRT", "Increase the duration each subtitle appears."),
             ("Merge SRT Files", "Combine multiple SRT files into one."),
             ("Subtitle Converter", "Convert subtitles between different formats."),
+            ("Subtitle Shifter", "Shift subtitles by milliseconds."),
             ("Coming Soon", "New tools will be added here."),
             ("Temporary Tool 1", "Temporary tool for testing."),
             ("Temporary Tool 2", "Temporary tool for testing."),
@@ -179,6 +181,8 @@ class MainWindow(QMainWindow):
             self.load_tool(MergeSRT(parent=self.main_content, back_callback=self.main_menu))
         elif tool_name == "Subtitle Converter":
             self.load_tool(SubtitleConverter(parent=self.main_content, back_callback=self.main_menu))
+        elif tool_name == "Subtitle Shifter":
+            self.load_tool(SubtitleShifter(parent=self.main_content, back_callback=self.main_menu))
         else:
             QMessageBox.information(self, "Coming Soon", "This feature is coming soon!")
 
