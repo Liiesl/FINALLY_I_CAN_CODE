@@ -342,8 +342,22 @@ class MergeSRT(QWidget):
         return None
 
     def save_file(self, dialog_title, default_name):
-        save_path, _ = QFileDialog.getSaveFileName(self, dialog_title, default_name, "Subtitle Files (*.srt)")
-        return save_path
+        while True:
+            save_path, _ = QFileDialog.getSaveFileName(self, dialog_title, default_name, "Subtitle Files (*.srt)")
+            if save_path:
+                # Check if the file already exists
+                if os.path.exists(save_path):
+                    # Prompt the user to confirm overwriting the existing file
+                    reply = QMessageBox.question(self, 'File exists',
+                                                 f'{save_path} already exists. Do you want to overwrite it?',
+                                                 QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+                    if reply == QMessageBox.Yes:
+                        return save_path
+                else:
+                    return save_path
+            else:
+                break
+        return None
 
     def show_error(self, message):
         QMessageBox.critical(self, "Error", message)
