@@ -79,6 +79,9 @@ class MainWindow(QMainWindow):
         # Apply the safe area margins from config
         self.update_safe_area_size()
 
+        # Apply the text size from config
+        self.apply_text_size()
+
         # Add tool buttons
         tools = [
             ("Longer Appearance SRT", "Increase the duration each subtitle appears."),
@@ -163,12 +166,28 @@ class MainWindow(QMainWindow):
     def open_settings(self, item=None):
         settings = Settings(parent=self.main_content, back_callback=self.main_menu)
         settings.settings_saved.connect(self.update_safe_area_size)  # Connect the signal
+        settings.settings_saved.connect(self.apply_text_size)  # Connect the signal for text size
         self.load_tool(settings)
 
     def update_safe_area_size(self):
         self.config = Config()  # Reload the configuration
         safe_area_size = self.config.get_safe_area_size()
         self.main_content_layout.setContentsMargins(safe_area_size, safe_area_size, safe_area_size, safe_area_size)
+
+    def apply_text_size(self):
+        text_size = self.config.get_text_size()
+        font_size = {
+            "small": 10,
+            "default": 12,
+            "large": 14,
+            "huge": 16
+        }.get(text_size, 12)  # Default to 12 if not found
+
+        self.setStyleSheet(f"""
+            * {{
+                font-size: {font_size}px;
+            }}
+        """)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
