@@ -96,10 +96,11 @@ class LongerAppearanceSRT(QWidget):
 
                 updated_srt = re.sub(r"(\d{2}:\d{2}:\d{2},\d{3}) --> (\d{2}:\d{2}:\d{2},\d{3})", adjust_stop_time, srt_data)
 
-                save_path = os.path.join(default_save_directory, f"modified_{os.path.basename(file_path)}")
-                with open(save_path, 'w', encoding='utf-8') as file:
-                    file.write(updated_srt)
-                converted_files += 1
+                save_path, _ = QFileDialog.getSaveFileName(self, "Save Modified File", os.path.join(default_save_directory, f"modified_{os.path.basename(file_path)}"), "Subtitle Files (*.srt)")
+                if save_path:
+                    with open(save_path, 'w', encoding='utf-8') as file:
+                        file.write(updated_srt)
+                    converted_files += 1
 
             except Exception as e:
                 print(f"Failed to process {file_path}: {e}")
