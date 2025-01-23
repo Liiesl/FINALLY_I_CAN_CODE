@@ -108,12 +108,14 @@ class SubtitleShifter(QWidget):
         start_layout = QHBoxLayout()
         self.add_label(start_layout, "Start time (hh:mm:ss,fff):", "color: white; font-size: 14px;")
         self.start_input = self.add_input(start_layout, "00:00:00,000", 150)
+        self.start_input.textChanged.connect(lambda: self.format_time_input(self.start_input))
         partial_layout.addLayout(start_layout)
 
         # End time input
         end_layout = QHBoxLayout()
         self.add_label(end_layout, "End time (hh:mm:ss,fff):", "color: white; font-size: 14px;")
         self.end_input = self.add_input(end_layout, "00:00:00,000", 150)
+        self.end_input.textChanged.connect(lambda: self.format_time_input(self.end_input))
         partial_layout.addLayout(end_layout)
 
         # Milliseconds input
@@ -179,6 +181,18 @@ class SubtitleShifter(QWidget):
         msg_box.setPalette(palette)
 
         msg_box.exec_()
+
+    def format_time_input(self, input_box):
+        text = input_box.text()
+        formatted_text = text[:]
+        if len(text) > 2 and text[2] != ':':
+            formatted_text = text[:2] + ':' + text[2:]
+        if len(text) > 5 and text[5] != ':':
+            formatted_text = text[:5] + ':' + text[5:]
+        if len(text) > 8 and text[8] != ',':
+            formatted_text = text[:8] + ',' + text[8:]
+        if text != formatted_text:
+            input_box.setText(formatted_text)
 
 def shift_subtitle(file_path, ms_shift, save_path):
     with open(file_path, 'r') as file:
