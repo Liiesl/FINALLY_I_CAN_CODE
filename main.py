@@ -99,15 +99,15 @@ class MainWindow(QMainWindow):
         button = QPushButton()
         button.setStyleSheet("""
             QPushButton {
-                border: 2px solid #4f86f7;
+                border: 10px solid #4f86f7; 
                 color: white;
                 border-radius: 10px;
                 padding: 10px;
                 min-width: 150px;
                 min-height: 200px;
                 margin: 10px;
-                background-color: #4f86f7;
-                text-align: center;
+                background-color: #2c2f38; 
+                text-align: center; 
             }
             QPushButton:hover {
                 border-color: #3a6dbf;
