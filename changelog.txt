@@ -108,3 +108,6 @@ alpha 0.1.4.1
 
 alpha 0.1.4.2
 -add text size to the settings.
+
+alpha 0.1.5.0
+-add subtitle shifter tool
