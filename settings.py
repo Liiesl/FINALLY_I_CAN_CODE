@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton, QSlider, QComboBox
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QSlider, QComboBox
 from PyQt5.QtCore import Qt, pyqtSignal
 from config import Config
 
@@ -20,9 +20,10 @@ class Settings(QWidget):
         layout.addWidget(back_button)
 
         # Safe Area Slider
+        safe_area_layout = QHBoxLayout()
         safe_area_label = QLabel("Safe Area Size (px):")
         safe_area_label.setStyleSheet("color: white; font-size: 26px;")
-        layout.addWidget(safe_area_label)
+        safe_area_layout.addWidget(safe_area_label)
 
         self.safe_area_slider = QSlider(Qt.Horizontal)
         self.safe_area_slider.setMinimum(0)
@@ -31,22 +32,27 @@ class Settings(QWidget):
         self.safe_area_slider.setTickInterval(10)
         self.safe_area_slider.setTickPosition(QSlider.TicksBelow)
         self.safe_area_slider.valueChanged.connect(self.update_safe_area)
-        layout.addWidget(self.safe_area_slider)
+        safe_area_layout.addWidget(self.safe_area_slider)
+
+        layout.addLayout(safe_area_layout)
 
         self.safe_area_value_label = QLabel(f"{self.config.get_safe_area_size()} px")
         self.safe_area_value_label.setStyleSheet("color: white;")
         layout.addWidget(self.safe_area_value_label)
 
         # Text Size Dropdown
+        text_size_layout = QHBoxLayout()
         text_size_label = QLabel("Text Size:")
         text_size_label.setStyleSheet("color: white; font-size: 26px;")
-        layout.addWidget(text_size_label)
+        text_size_layout.addWidget(text_size_label)
 
         self.text_size_dropdown = QComboBox()
         self.text_size_dropdown.addItems(["small", "default", "large", "huge"])
         self.text_size_dropdown.setCurrentText(self.config.get_text_size())
         self.text_size_dropdown.currentTextChanged.connect(self.update_text_size)
-        layout.addWidget(self.text_size_dropdown)
+        text_size_layout.addWidget(self.text_size_dropdown)
+
+        layout.addLayout(text_size_layout)
 
         # Save button
         save_button = QPushButton("Save")
