@@ -53,7 +53,7 @@ class MainWindow(QMainWindow):
                 widget.setParent(None)
 
         # Add the side panel toggle button (hamburger menu) if not already created
-        if self.menu_button is None:
+        if (self.menu_button is None):
             self.menu_button = QPushButton()
             menu_icon = qta.icon('fa.bars')
             self.menu_button.setIcon(menu_icon)
@@ -134,12 +134,12 @@ class MainWindow(QMainWindow):
     def tool_selected(self, tool_name):
         if tool_name == "Longer Appearance SRT":
             from tools.longer_appearance import LongerAppearanceSRT
-            self.load_tool(LongerAppearanceSRT())
+            self.load_tool(LongerAppearanceSRT(parent=self.main_content, back_callback=self.main_menu))
         elif tool_name == "Merge SRT Files":
             from tools.merge_srt import MergeSRT
-            self.load_tool(MergeSRT())
+            self.load_tool(MergeSRT(parent=self.main_content, back_callback=self.main_menu))
         elif tool_name == "Subtitle Converter":
-            self.load_tool(SubtitleConverter())
+            self.load_tool(SubtitleConverter(parent=self.main_content, back_callback=self.main_menu))
         else:
             QMessageBox.information(self, "Coming Soon", "This feature is coming soon!")
 
