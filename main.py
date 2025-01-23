@@ -2,12 +2,12 @@ import sys
 import qtawesome as qta
 from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QLabel, QScrollArea, QMessageBox, QSplitter, QFrame
 from PyQt5.QtGui import QPalette, QColor, QFont
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QPropertyAnimation
 
 from tools.subtitle_converter import SubtitleConverter
-from side_panel import SidePanel
-from settings import Settings
-from config import Config
+from side_panel import SidePanel  # Import the SidePanel class
+from settings import Settings  # Import the Settings class
+from config import Config  # Import the Config class
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -98,6 +98,7 @@ class MainWindow(QMainWindow):
         scroll_area.setWidget(self.tool_buttons_container)
         scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.scroll_area = scroll_area
         navigation_layout.addWidget(scroll_area)
 
         self.right_arrow_button = QPushButton()
@@ -222,12 +223,22 @@ class MainWindow(QMainWindow):
                     item.widget().setVisible(False)
 
     def scroll_left(self):
-        scroll_area = self.tool_buttons_container.parent().parent()
-        scroll_area.horizontalScrollBar().setValue(scroll_area.horizontalScrollBar().value() - 220)
+        current_value = self.scroll_area.horizontalScrollBar().value()
+        new_value = max(0, current_value - 220)
+        self.animate_scroll(current_value, new_value)
 
     def scroll_right(self):
-        scroll_area = self.tool_buttons_container.parent().parent()
-        scroll_area.horizontalScrollBar().setValue(scroll_area.horizontalScrollBar().value() + 220)
+        max_value = self.scroll_area.horizontalScrollBar().maximum()
+        current_value = self.scroll_area.horizontalScrollBar().value()
+        new_value = min(max_value, current_value + 220)
+        self.animate_scroll(current_value, new_value)
+
+    def animate_scroll(self, start_value, end_value):
+        animation = QPropertyAnimation(self.scroll_area.horizontalScrollBar(), b"value")
+        animation.setDuration(500)
+        animation.setStartValue(start_value)
+        animation.setEndValue(end_value)
+        animation.start()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
