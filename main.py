@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QLabel, QScrollArea, QMessageBox, QListWidget, QListWidgetItem
-from PyQt5.QtGui import QPalette, QColor, QFont, QPainter, QPolygon, QIcon
+from PyQt5.QtGui import QPalette, QColor, QFont, QPainter, QPolygon, QIcon, QPixmap  # Import QPixmap
 from PyQt5.QtCore import Qt, QPoint
 from tools.subtitle_converter import SubtitleConverter
 from settings import Settings  # Import the Settings class
