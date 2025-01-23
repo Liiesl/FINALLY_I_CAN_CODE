@@ -1,7 +1,7 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QLabel, QScrollArea, QMessageBox, QListWidget, QListWidgetItem
 from PyQt5.QtGui import QPalette, QColor, QFont, QIcon
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QRect, QPoint
 import qtawesome as qta  # Import QtAwesome for icons
 from tools.subtitle_converter import SubtitleConverter
 from settings import Settings  # Import the Settings class
@@ -18,6 +18,7 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.central_widget)
 
         self.side_page = None
+        self.hamburger_button = None
 
         self.init_ui()
 
@@ -44,14 +45,14 @@ class MainWindow(QMainWindow):
         container_layout.setAlignment(Qt.AlignTop | Qt.AlignLeft)  # Align to top-left
 
         # Create the hamburger button
-        hamburger_button = QPushButton()
-        hamburger_button.setFixedSize(30, 30)  # Make the button smaller
-        hamburger_button.setIcon(qta.icon('fa.bars'))  # Use FontAwesome 'bars' icon
-        hamburger_button.setIconSize(hamburger_button.size())
-        hamburger_button.setStyleSheet("border: none; background: transparent;")
-        hamburger_button.clicked.connect(self.show_side_page)
+        self.hamburger_button = QPushButton()
+        self.hamburger_button.setFixedSize(30, 30)  # Make the button smaller
+        self.hamburger_button.setIcon(qta.icon('fa.bars'))  # Use FontAwesome 'bars' icon
+        self.hamburger_button.setIconSize(self.hamburger_button.size())
+        self.hamburger_button.setStyleSheet("border: none; background: transparent;")
+        self.hamburger_button.clicked.connect(self.toggle_side_page)
 
-        container_layout.addWidget(hamburger_button)
+        container_layout.addWidget(self.hamburger_button)
         self.main_layout.addWidget(container, alignment=Qt.AlignTop | Qt.AlignLeft)
 
     def main_menu(self):
@@ -138,10 +139,28 @@ class MainWindow(QMainWindow):
         self.main_layout.addWidget(tool_widget)
         tool_widget.show()
 
+    def toggle_side_page(self):
+        if self.side_page and self.side_page.isVisible():
+            self.side_page.hide()
+        else:
+            self.show_side_page()
+
     def show_side_page(self):
         if self.side_page is None:
             self.side_page = SidePage(self)
+        
+        # Position the side page just below the hamburger button
+        button_pos = self.hamburger_button.mapToGlobal(QPoint(0, 0))
+        button_height = self.hamburger_button.height()
+        self.side_page.move(button_pos.x(), button_pos.y() + button_height)
+        
         self.side_page.show()
+
+    def mousePressEvent(self, event):
+        if self.side_page and self.side_page.isVisible():
+            if not self.side_page.geometry().contains(event.globalPos()) and not self.hamburger_button.geometry().contains(event.pos()):
+                self.side_page.hide()
+        super().mousePressEvent(event)
 
 class SidePage(QWidget):
     def __init__(self, parent=None):
