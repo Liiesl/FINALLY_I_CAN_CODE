@@ -19,12 +19,11 @@ class MainWindow(QMainWindow):
 
         self.side_page = None
         self.hamburger_button = None
-        self.settings_widget = None
+        self.settings_window = None
 
         self.init_ui()
 
     def init_ui(self):
-        print("Initializing UI...")
         # Create a layout for the main content
         self.main_layout = QVBoxLayout()
 
@@ -38,10 +37,8 @@ class MainWindow(QMainWindow):
         if self.central_widget.layout() is not None:
             QWidget().setLayout(self.central_widget.layout())
         self.central_widget.setLayout(self.main_layout)
-        print("UI Initialized.")
 
     def add_hamburger_button(self):
-        print("Adding hamburger button...")
         # Create a container for the hamburger button
         container = QWidget()
         container_layout = QHBoxLayout(container)
@@ -58,16 +55,8 @@ class MainWindow(QMainWindow):
 
         container_layout.addWidget(self.hamburger_button)
         self.main_layout.addWidget(container, alignment=Qt.AlignTop | Qt.AlignLeft)
-        print("Hamburger button added.")
 
     def main_menu(self):
-        print("Setting up main menu...")
-        # Clear the central widget layout
-        for i in reversed(range(self.main_layout.count())):
-            widget = self.main_layout.itemAt(i).widget()
-            if widget is not None:
-                widget.setParent(None)
-
         # Create a scroll area
         scroll = QScrollArea()
         scroll.setWidgetResizable(True)
@@ -82,17 +71,15 @@ class MainWindow(QMainWindow):
             ("Longer Appearance SRT", "Increase the duration each subtitle appears."),
             ("Merge SRT Files", "Combine multiple SRT files into one."),
             ("Subtitle Converter", "Convert subtitles between different formats."),
-            ("Settings", "Configure application settings.")
+            ("Coming Soon", "New tools will be added here.")
         ]
 
         for tool in tools:
             scroll_layout.addWidget(self.create_tool_button(tool[0], tool[1]))
 
         scroll_layout.addStretch()
-        print("Main menu set up.")
 
     def create_tool_button(self, tool_name, tool_description):
-        print(f"Creating tool button: {tool_name}")
         button = QPushButton()
         button.setStyleSheet("""
             QPushButton {
@@ -129,11 +116,9 @@ class MainWindow(QMainWindow):
         button_layout.addWidget(description_label)
 
         button.clicked.connect(lambda: self.tool_selected(tool_name))
-        print(f"{tool_name} button created.")
         return button
 
     def tool_selected(self, tool_name):
-        print(f"Tool selected: {tool_name}")
         if tool_name == "Longer Appearance SRT":
             from tools.longer_appearance import LongerAppearanceSRT
             self.load_tool(LongerAppearanceSRT)
@@ -148,7 +133,6 @@ class MainWindow(QMainWindow):
             QMessageBox.information(self, "Coming Soon", "This feature is coming soon!")
 
     def load_tool(self, tool_class):
-        print(f"Loading tool: {tool_class.__name__}")
         for i in reversed(range(self.main_layout.count())):
             widget = self.main_layout.itemAt(i).widget()
             if widget is not None:
@@ -157,23 +141,19 @@ class MainWindow(QMainWindow):
         tool_widget = tool_class(parent=self.central_widget, back_callback=self.main_menu)
         self.main_layout.addWidget(tool_widget)
         tool_widget.show()
-        print(f"{tool_class.__name__} loaded.")
 
     def toggle_side_page(self):
-        print("Toggling side page...")
         if self.side_page and self.side_page.isVisible():
             self.side_page.hide()
         else:
             self.show_side_page()
 
     def show_side_page(self):
-        print("Showing side page...")
         if self.side_page is None:
             self.side_page = SidePage(self)
         
         self.position_side_page()
         self.side_page.show()
-        print("Side page shown.")
 
     def position_side_page(self):
         # Position the side page just below the hamburger button
@@ -199,7 +179,8 @@ class MainWindow(QMainWindow):
         super().mousePressEvent(event)
 
     def open_settings(self):
-        print("Opening settings...")
+        if self.settings_window is None:
+            self.settings_window = Settings(self, back_callback=self.main_menu)
         self.load_tool(Settings)
 
 class SidePage(QWidget):
@@ -228,7 +209,6 @@ class SidePage(QWidget):
         self.hide()
 
 if __name__ == "__main__":
-    print("Starting application...")
     app = QApplication(sys.argv)
 
     palette = QPalette()
@@ -248,5 +228,4 @@ if __name__ == "__main__":
 
     window = MainWindow()
     window.show()
-    print("Application is running.")
     sys.exit(app.exec_())
