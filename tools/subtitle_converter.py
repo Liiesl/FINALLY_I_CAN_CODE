@@ -11,19 +11,30 @@ from tools.subtitleconverter.usf_converter import convert_to_usf
 from tools.subtitleconverter.lrc_converter import convert_to_lrc
 from tools.subtitleconverter.rt_converter import convert_to_rt
 from tools.subtitleconverter.ttml_converter import convert_to_ttml
-from tools.subtitleconverter.cap_converter import convert_to_cap  # Import CAP converter
+from tools.subtitleconverter.cap_converter import convert_to_cap
+from config import Config
 
 class SubtitleConverter(QWidget):
     def __init__(self, parent=None, back_callback=None):
         super().__init__(parent)
         self.back_callback = back_callback
+        self.config = Config()
         self.init_ui()
 
     def init_ui(self):
         layout = QVBoxLayout()
 
+        text_size = self.config.get_text_size()
+        font_size = {
+            "small": 18,
+            "default": 26,
+            "large": 34,
+            "huge": 42
+        }.get(text_size, 26)
+
         # Back to Home button
         back_button = QPushButton("Back to Home")
+        back_button.setStyleSheet(f"background-color: #4f86f7; color: white; border-radius: 5px; padding: 15px; font-size: {font_size - 12}px;")
         back_button.clicked.connect(self.back_callback)
         layout.addWidget(back_button)
 
@@ -31,10 +42,12 @@ class SubtitleConverter(QWidget):
         file_layout = QHBoxLayout()
 
         self.select_file_button = QPushButton("Select File")
+        self.select_file_button.setStyleSheet(f"background-color: #4f86f7; color: white; border-radius: 5px; padding: 15px; font-size: {font_size - 12}px;")
         self.select_file_button.clicked.connect(self.select_files)
         file_layout.addWidget(self.select_file_button, 1)
 
         self.file_list = QListWidget()
+        self.file_list.setStyleSheet(f"background-color: #3c3f41; color: white; font-size: {font_size - 12}px;")
         file_layout.addWidget(self.file_list, 2)
 
         layout.addLayout(file_layout)
@@ -43,6 +56,7 @@ class SubtitleConverter(QWidget):
         format_layout = QHBoxLayout()
 
         format_label = QLabel("Select Source Format:")
+        format_label.setStyleSheet(f"color: white; font-size: {font_size - 12}px;")
         format_layout.addWidget(format_label)
 
         self.format_dropdown = QComboBox()
@@ -51,6 +65,7 @@ class SubtitleConverter(QWidget):
             "VTT (.vtt)", "SBV (.sbv)", "DFXP (.dfxp)", "STL (.stl)", "IDX (.idx)",
             "MPL (.mpl)", "USF (.usf)", "LRC (.lrc)", "RT (.rt)", "TTML (.ttml)", "CAP (.cap)"
         ])
+        self.format_dropdown.setStyleSheet(f"background-color: #3c3f41; color: white; font-size: {font_size - 12}px;")
         self.format_dropdown.currentIndexChanged.connect(self.update_convert_button)
         format_layout.addWidget(self.format_dropdown)
 
@@ -58,6 +73,7 @@ class SubtitleConverter(QWidget):
 
         # Convert button
         self.convert_button = QPushButton("Convert to CAP")
+        self.convert_button.setStyleSheet(f"background-color: #4f86f7; color: white; border-radius: 5px; padding: 15px; font-size: {font_size - 12}px;")
         self.convert_button.clicked.connect(self.convert_subtitle)
         layout.addWidget(self.convert_button)
 
@@ -85,7 +101,7 @@ class SubtitleConverter(QWidget):
             """)
 
     def select_files(self):
-        file_paths, _ = QFileDialog.getOpenFileNames(self, "Select Subtitle Files", "", "Subtitle Files (*.srt *.ass *.sub *.txt *.ssa *.vtt *.sbv *.dfxp *.stl *.idx *.mpl *.usf *.lrc *.rt *.ttml *.cap)")
+        file_paths, _ = QFileDialog.getOpenFileNames(self, "Select Subtitle Files", "", "Subtitle Files (*.srt *.ass *.sub *.txt *.ssa *.vtt *.sbv *.dfxp *.stl *.idx *.mpl *.usf *.lrc *.rt *.ttml *.ca[...]
         if file_paths:
             self.file_list.clear()
             for file_path in file_paths:
