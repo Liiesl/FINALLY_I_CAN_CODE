@@ -118,9 +118,10 @@ class SubtitleConverter(QWidget):
             return
 
         target_format = self.format_dropdown.currentText().split(' ')[0].lower()  # Extract format (e.g., "srt")
+        default_save_directory = self.config.get_default_save_directory()
         for index in range(self.file_list.count()):
             subtitle_path = self.file_list.file_paths[index]
-            save_path, _ = QFileDialog.getSaveFileName(self, "Save Converted File", "", f"{target_format.upper()} Files (*.{target_format})")
+            save_path, _ = QFileDialog.getSaveFileName(self, "Save Converted File", os.path.join(default_save_directory, f"{os.path.splitext(os.path.basename(subtitle_path))[0]}.{target_format}"), f"{target_format.upper()} Files (*.{target_format})")
             if not save_path:
                 continue
 
@@ -129,7 +130,7 @@ class SubtitleConverter(QWidget):
                     content = file.read()
 
                 # Convert the content to the selected format (example for CAP)
-                converted_content = convert_to_cap(content, target_format)
+                converted_content = globals()[f"convert_to_{target_format}"](content)
 
                 with open(save_path, 'w') as file:
                     file.write(converted_content)
