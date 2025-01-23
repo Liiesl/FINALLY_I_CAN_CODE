@@ -35,6 +35,7 @@ class MainWindow(QMainWindow):
 
         # Create a horizontal layout for the top bar
         self.top_bar = QHBoxLayout()
+        self.top_bar_added = False  # Flag to check if the top bar has been added
 
         # Add the side panel toggle button (hamburger menu)
         self.menu_button = None
@@ -48,7 +49,7 @@ class MainWindow(QMainWindow):
             if widget is not None:
                 widget.setParent(None)
 
-        # Clear the top bar layout
+        # Add the side panel toggle button (hamburger menu) if not already created
         if self.menu_button is None:
             self.menu_button = QPushButton()
             menu_icon = qta.icon('fa.bars')
@@ -59,8 +60,9 @@ class MainWindow(QMainWindow):
             self.top_bar.addWidget(self.menu_button, alignment=Qt.AlignLeft)
 
         # Add the top bar to the main content layout if not already added
-        if self.top_bar not in self.main_content_layout:
-            self.main_content_layout.addLayout(self.top_bar)
+        if not self.top_bar_added:
+            self.main_content_layout.insertLayout(0, self.top_bar)
+            self.top_bar_added = True
 
         # Create a scroll area
         scroll = QScrollArea()
