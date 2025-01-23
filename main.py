@@ -162,8 +162,8 @@ class MainWindow(QMainWindow):
             self.side_panel.setVisible(True)
             self.splitter.setSizes([self.width() // 2, self.width() // 2])
 
-    def open_settings(self, item):
-        settings = Settings(self, back_callback=self.main_menu)
+    def open_settings(self, item=None):
+        settings = Settings(parent=self.main_content, back_callback=self.main_menu)
         self.load_tool(settings)
 
 if __name__ == "__main__":
