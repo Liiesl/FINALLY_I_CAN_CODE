@@ -6,7 +6,8 @@ class Config:
 
     def __init__(self):
         self.data = {
-            "safe_area_size": 0
+            "safe_area_size": 0,
+            "text_size": "small"  # Default text size
         }
         self.load()
 
@@ -24,4 +25,11 @@ class Config:
 
     def set_safe_area_size(self, size):
         self.data["safe_area_size"] = size
+        self.save()
+
+    def get_text_size(self):
+        return self.data.get("text_size", "small")
+
+    def set_text_size(self, size):
+        self.data["text_size"] = size
         self.save()
