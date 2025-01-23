@@ -1,10 +1,10 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QLabel, QScrollArea, QMessageBox, QListWidget, QListWidgetItem
 from PyQt5.QtGui import QPalette, QColor, QFont, QIcon
-from PyQt5.QtCore import Qt, QRect, QPoint
+from PyQt5.QtCore import Qt, QPoint
 import qtawesome as qta  # Import QtAwesome for icons
-from tools.subtitle_converter import SubtitleConverter
 from settings import Settings  # Import the Settings class
+from tools.subtitle_converter import SubtitleConverter
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -156,7 +156,8 @@ class MainWindow(QMainWindow):
         # Position the side page just below the hamburger button
         button_pos = self.hamburger_button.mapToGlobal(QPoint(0, 0))
         button_height = self.hamburger_button.height()
-        self.side_page.move(button_pos.x(), button_pos.y() + button_height)
+        # Glue the left edge of the side page to the left edge of the window
+        self.side_page.move(self.geometry().left(), button_pos.y() + button_height)
 
     def moveEvent(self, event):
         if self.side_page and self.side_page.isVisible():
@@ -196,9 +197,22 @@ class SidePage(QWidget):
 
     def handle_item_clicked(self, item):
         if item.text() == "Settings":
-            self.parent().settings_window = Settings(self)
-            self.parent().settings_window.show()
+            self.parent().open_settings()
         self.hide()
+
+class Settings(QWidget):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle("Settings")
+        self.setGeometry(300, 300, 400, 300)
+        self.setStyleSheet("background-color: #2c2f38;")
+        
+        layout = QVBoxLayout(self)
+        # Add your settings UI elements here
+        label = QLabel("Settings Page", self)
+        label.setFont(QFont("Arial", 14))
+        label.setStyleSheet("color: white;")
+        layout.addWidget(label)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
