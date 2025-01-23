@@ -6,6 +6,7 @@ from PyQt5.QtCore import Qt
 from tools.subtitle_converter import SubtitleConverter
 from side_panel import SidePanel  # Import the SidePanel class
 from settings import Settings  # Import the Settings class
+from config import Config  # Import the Config class
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -17,6 +18,8 @@ class MainWindow(QMainWindow):
         self.central_widget = QWidget()
         self.layout = QHBoxLayout(self.central_widget)
         self.setCentralWidget(self.central_widget)
+
+        self.config = Config()  # Load configuration
 
         self.side_panel = SidePanel(self, self.open_settings)
         self.side_panel.setVisible(False)
@@ -40,7 +43,6 @@ class MainWindow(QMainWindow):
         # Add the side panel toggle button (hamburger menu)
         self.menu_button = None
 
-        self.safe_area_size = 0  # Default safe area size
         self.main_menu()
 
     def main_menu(self):
@@ -74,8 +76,9 @@ class MainWindow(QMainWindow):
 
         self.main_content_layout.addWidget(scroll)
 
-        # Apply the safe area margins
-        self.main_content_layout.setContentsMargins(self.safe_area_size, self.safe_area_size, self.safe_area_size, self.safe_area_size)
+        # Apply the safe area margins from config
+        safe_area_size = self.config.get_safe_area_size()
+        self.main_content_layout.setContentsMargins(safe_area_size, safe_area_size, safe_area_size, safe_area_size)
 
         # Add tool buttons
         tools = [
@@ -160,13 +163,7 @@ class MainWindow(QMainWindow):
             self.splitter.setSizes([self.width() // 2, self.width() // 2])
 
     def open_settings(self):
-        settings = Settings(self, back_callback=self.main_menu)
-        settings.safe_area_changed.connect(self.update_safe_area)
         self.load_tool(Settings)
-
-    def update_safe_area(self, value):
-        self.safe_area_size = value
-        self.main_menu()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
