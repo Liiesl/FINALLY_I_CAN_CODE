@@ -149,3 +149,35 @@ def cap_to_ssa(content):
         ssa_content += f"Dialogue: Marked=0,{start_time},{end_time},Default,,0,0,0,,{text}\n"
 
     return ssa_content
+
+def convert_to_ssa(format, content):
+    if format == "srt":
+        return srt_to_ssa(content)
+    elif format == "vtt":
+        return vtt_to_ssa(content)
+    elif format == "ass":
+        return ass_to_ssa(content)
+    elif format == "sub":
+        return sub_to_ssa(content)
+    elif format == "txt":
+        return txt_to_ssa(content)
+    elif format == "sbv":
+        return sbv_to_ssa(content)
+    elif format == "dfxp":
+        return dfxp_to_ssa(content)
+    elif format == "stl":
+        return stl_to_ssa(content)
+    elif format == "mpl":
+        return mpl_to_ssa(content)
+    elif format == "usf":
+        return usf_to_ssa(content)
+    elif format == "lrc":
+        return lrc_to_ssa(content)
+    elif format == "rt":
+        return rt_to_ssa(content)
+    elif format == "ttml":
+        return ttml_to_ssa(content)
+    elif format == "cap":
+        return cap_to_ssa(content)
+    else:
+        raise ValueError("Unsupported format")
