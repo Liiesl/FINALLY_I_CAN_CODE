@@ -1,6 +1,7 @@
 import sys
+import qtawesome as qta
 from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QLabel, QScrollArea, QMessageBox
-from PyQt5.QtGui import QPalette, QColor, QFont, QIcon
+from PyQt5.QtGui import QPalette, QColor, QFont
 from PyQt5.QtCore import Qt
 from tools.subtitle_converter import SubtitleConverter
 from side_panel import SidePanel  # Import the SidePanel class
@@ -28,17 +29,13 @@ class MainWindow(QMainWindow):
             if widget is not None:
                 widget.setParent(None)
 
-        # Add safe area around the edges
-        self.layout.setContentsMargins(100, 100, 100, 100)
-
         # Create a horizontal layout for the top bar
         top_bar = QHBoxLayout()
         self.layout.addLayout(top_bar)
 
         # Add the side panel toggle button (hamburger menu)
         menu_button = QPushButton()
-        menu_icon = QIcon()
-        menu_icon.addFile("hamburger_icon.png")  # Ensure you have a suitable icon file in your project
+        menu_icon = qta.icon('fa.bars')
         menu_button.setIcon(menu_icon)
         menu_button.setFixedSize(30, 30)
         menu_button.setStyleSheet("background-color: transparent; border: none;")
