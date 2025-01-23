@@ -3,7 +3,6 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout,
 from PyQt5.QtGui import QPalette, QColor, QFont, QIcon
 from PyQt5.QtCore import Qt
 from tools.subtitle_converter import SubtitleConverter
-from settings import Settings  # Import the Settings class
 from side_panel import SidePanel  # Import the SidePanel class
 
 class MainWindow(QMainWindow):
@@ -151,7 +150,11 @@ class MainWindow(QMainWindow):
         self.side_panel.setVisible(not self.side_panel.isVisible())
 
         if self.side_panel.isVisible():
-            self.side_panel.raise_())
+            self.side_panel.raise_()
+
+    def open_settings(self):
+        self.settings_window = Settings(self)
+        self.settings_window.show()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
