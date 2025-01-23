@@ -1,8 +1,10 @@
+import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QLabel, QScrollArea, QMessageBox
-from PyQt5.QtGui import QPalette, QColor, QFont
+from PyQt5.QtGui import QPalette, QColor, QFont, QIcon
 from PyQt5.QtCore import Qt
 from tools.subtitle_converter import SubtitleConverter
 from settings import Settings  # Import the Settings class
+from side_panel import SidePanel  # Import the SidePanel class
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -15,6 +17,9 @@ class MainWindow(QMainWindow):
         self.layout = QVBoxLayout(self.central_widget)
         self.setCentralWidget(self.central_widget)
 
+        self.side_panel = SidePanel(self)
+        self.side_panel.setVisible(False)
+
         self.main_menu()
 
     def main_menu(self):
@@ -26,6 +31,18 @@ class MainWindow(QMainWindow):
 
         # Add safe area around the edges
         self.layout.setContentsMargins(100, 100, 100, 100)
+
+        # Create a horizontal layout for the top bar
+        top_bar = QHBoxLayout()
+        self.layout.addLayout(top_bar)
+
+        # Add the side panel toggle button
+        menu_button = QPushButton()
+        menu_button.setIcon(QIcon.fromTheme("view-list"))  # Using icon from theme
+        menu_button.setFixedSize(30, 30)
+        menu_button.setStyleSheet("background-color: transparent; border: none;")
+        menu_button.clicked.connect(self.toggle_side_panel)
+        top_bar.addWidget(menu_button, alignment=Qt.AlignLeft)
 
         # Create a scroll area
         scroll = QScrollArea()
@@ -129,6 +146,12 @@ class MainWindow(QMainWindow):
         tool_widget = tool_class(parent=self.central_widget, back_callback=self.main_menu)
         self.layout.addWidget(tool_widget)
         tool_widget.show()
+
+    def toggle_side_panel(self):
+        self.side_panel.setVisible(not self.side_panel.isVisible())
+
+        if self.side_panel.isVisible():
+            self.side_panel.raise_()
 
     def open_settings(self):
         self.settings_window = Settings(self)
