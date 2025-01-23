@@ -1,13 +1,12 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton, QSlider, QHBoxLayout
-from PyQt5.QtCore import Qt, pyqtSignal
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton, QSlider
+from PyQt5.QtCore import Qt
+from config import Config
 
 class Settings(QWidget):
-    # Signal to notify the main window of the safe area change
-    safe_area_changed = pyqtSignal(int)
-
     def __init__(self, parent=None, back_callback=None):
         super().__init__(parent)
         self.back_callback = back_callback
+        self.config = Config()
         self.init_ui()
 
     def init_ui(self):
@@ -26,13 +25,13 @@ class Settings(QWidget):
         self.safe_area_slider = QSlider(Qt.Horizontal)
         self.safe_area_slider.setMinimum(0)
         self.safe_area_slider.setMaximum(100)
-        self.safe_area_slider.setValue(0)  # Default value
+        self.safe_area_slider.setValue(self.config.get_safe_area_size())
         self.safe_area_slider.setTickInterval(10)
         self.safe_area_slider.setTickPosition(QSlider.TicksBelow)
         self.safe_area_slider.valueChanged.connect(self.update_safe_area)
         layout.addWidget(self.safe_area_slider)
 
-        self.safe_area_value_label = QLabel("0 px")
+        self.safe_area_value_label = QLabel(f"{self.config.get_safe_area_size()} px")
         self.safe_area_value_label.setStyleSheet("color: white;")
         layout.addWidget(self.safe_area_value_label)
 
@@ -41,4 +40,4 @@ class Settings(QWidget):
 
     def update_safe_area(self, value):
         self.safe_area_value_label.setText(f"{value} px")
-        self.safe_area_changed.emit(value)
+        self.config.set_safe_area_size(value)
