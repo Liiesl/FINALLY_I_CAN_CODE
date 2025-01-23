@@ -1,6 +1,4 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QSlider, QComboBox, QMessageBox
-from PyQt5.QtCore import Qt, pyqtSignal
-from config import Config
+from PyQt5.QtWidgets import QFileDialog
 
 class Settings(QWidget):
     settings_saved = pyqtSignal()  # Define a signal for settings saved
@@ -54,6 +52,22 @@ class Settings(QWidget):
 
         layout.addLayout(text_size_layout)
 
+        # Default Save Directory
+        save_dir_layout = QHBoxLayout()
+        save_dir_label = QLabel("Default Save Directory:")
+        save_dir_label.setStyleSheet("color: white; font-size: 26px;")
+        save_dir_layout.addWidget(save_dir_label)
+
+        self.save_dir_button = QPushButton("Choose Directory")
+        self.save_dir_button.clicked.connect(self.choose_save_directory)
+        save_dir_layout.addWidget(self.save_dir_button)
+
+        self.save_dir_value_label = QLabel(self.config.get_default_save_directory())
+        self.save_dir_value_label.setStyleSheet("color: white;")
+        save_dir_layout.addWidget(self.save_dir_value_label)
+
+        layout.addLayout(save_dir_layout)
+
         # Save button
         save_button = QPushButton("Save")
         save_button.clicked.connect(self.save_settings)
@@ -63,7 +77,7 @@ class Settings(QWidget):
         self.setStyleSheet("background-color: #2c2f38;")
 
         # Apply button styles
-        self.apply_button_styles([back_button, save_button])
+        self.apply_button_styles([back_button, save_button, self.save_dir_button])
 
     def apply_button_styles(self, buttons):
         for button in buttons:
@@ -93,6 +107,12 @@ class Settings(QWidget):
     def apply_text_size_to_all_pages(self):
         # Trigger the text size update in the main window
         self.settings_saved.emit()
+
+    def choose_save_directory(self):
+        directory = QFileDialog.getExistingDirectory(self, "Choose Directory", self.config.get_default_save_directory())
+        if directory:
+            self.config.set_default_save_directory(directory)
+            self.save_dir_value_label.setText(directory)
 
     def save_settings(self):
         self.config.set_safe_area_size(self.safe_area_slider.value())
