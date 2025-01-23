@@ -105,3 +105,6 @@ alpha 0.1.4.0
 
 alpha 0.1.4.1
 -add safe area slider to the settings
+
+alpha 0.1.4.2
+-add text size to the settings.
