@@ -216,13 +216,3 @@ def rt_to_ass(content):
         ass_content += f'Dialogue: 0,{start_time},{end_time},Default,,0,0,0,,{text}\n'
 
     return ass_content
-
-def ttml_to_ass(content):
-    ass_content = "[Script Info]\n"
-    ass_content += "Title: Default ASS\n"
-    ass_content += "ScriptType: v4.00+\n"
-    ass_content += "WrapStyle: 0\n"
-    ass_content += "PlayDepth: 0\n"
-    ass_content += "\n[V4+ Styles]\n"
-    ass_content += "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding\n"
-    ass_content += "Style: Default,Arial,20,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,-1,0,0,0,100,
