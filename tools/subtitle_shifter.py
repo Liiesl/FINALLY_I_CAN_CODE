@@ -157,9 +157,10 @@ class SubtitleShifter(QWidget):
         ms_shift = int(self.ms_input.text())
         if self.subtitle_path:
             default_save_directory = self.config.get_default_save_directory()
-            save_path = os.path.join(default_save_directory, f"shifted_{os.path.basename(self.subtitle_path)}")
-            shift_subtitle(self.subtitle_path, ms_shift, save_path)
-            self.show_success_message("Subtitles shifted successfully!")
+            save_path, _ = QFileDialog.getSaveFileName(self, "Save Shifted Subtitles", os.path.join(default_save_directory, f"shifted_{os.path.basename(self.subtitle_path)}"), "Subtitle Files (*.srt)")
+            if save_path:
+                shift_subtitle(self.subtitle_path, ms_shift, save_path)
+                self.show_success_message("Subtitles shifted successfully!")
 
     def partial_shift(self):
         start_time = self.start_input.text()
@@ -167,9 +168,10 @@ class SubtitleShifter(QWidget):
         ms_shift = int(self.ms_input_partial.text())
         if self.subtitle_path:
             default_save_directory = self.config.get_default_save_directory()
-            save_path = os.path.join(default_save_directory, f"shifted_{os.path.basename(self.subtitle_path)}")
-            shift_subtitle_partial(self.subtitle_path, start_time, end_time, ms_shift, save_path)
-            self.show_success_message("Subtitles shifted successfully!")
+            save_path, _ = QFileDialog.getSaveFileName(self, "Save Shifted Subtitles", os.path.join(default_save_directory, f"shifted_{os.path.basename(self.subtitle_path)}"), "Subtitle Files (*.srt)")
+            if save_path:
+                shift_subtitle_partial(self.subtitle_path, start_time, end_time, ms_shift, save_path)
+                self.show_success_message("Subtitles shifted successfully!")
 
     def show_success_message(self, message):
         msg_box = QMessageBox()
