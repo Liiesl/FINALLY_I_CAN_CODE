@@ -1,6 +1,3 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QComboBox, QLineEdit, QMessageBox
-from PyQt5.QtGui import QFont
-
 class Settings(QWidget):
     def __init__(self, parent=None, back_callback=None):
         super().__init__(parent)
@@ -15,7 +12,7 @@ class Settings(QWidget):
 
         back_button = QPushButton("Back to Main Menu")
         back_button.setStyleSheet("background-color: #4f86f7; color: white; border-radius: 5px; padding: 15px; font-size: 14px;")
-        back_button.clicked.connect(self.back_callback)
+        back_button.clicked.connect(self.back_to_main_menu)
         button_layout.addWidget(back_button)
 
         layout.addLayout(button_layout)
@@ -60,6 +57,12 @@ class Settings(QWidget):
         save_layout.addWidget(cancel_button)
 
         layout.addLayout(save_layout)
+
+    def back_to_main_menu(self):
+        # Close the settings widget and call the back callback to show the main menu
+        self.close()
+        if self.back_callback:
+            self.back_callback()
 
     def save_settings(self):
         selected_theme = self.theme_dropdown.currentText()
