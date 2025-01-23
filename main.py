@@ -116,13 +116,13 @@ class MainWindow(QMainWindow):
         """)
 
         name_label = QLabel(tool_name)
-        name_label.setFont(QFont("Arial", 18, QFont.Bold))
+        name_label.setFont(QFont("Arial", 26, QFont.Bold))
         name_label.setStyleSheet("color: #4f86f7;")
         name_label.setWordWrap(True)
         name_label.setAlignment(Qt.AlignCenter)
 
         description_label = QLabel(tool_description)
-        description_label.setFont(QFont("Arial", 12))
+        description_label.setFont(QFont("Arial", 18))
         description_label.setStyleSheet("color: white;")
         description_label.setWordWrap(True)
         description_label.setAlignment(Qt.AlignCenter)
@@ -177,11 +177,11 @@ class MainWindow(QMainWindow):
     def apply_text_size(self):
         text_size = self.config.get_text_size()
         font_size = {
-            "small": 14,
-            "default": 18,
-            "large": 22,
-            "huge": 26
-        }.get(text_size, 18)  # Default to 18 if not found
+            "small": 18,
+            "default": 26,
+            "large": 34,
+            "huge": 42
+        }.get(text_size, 26)  # Default to 26 if not found
 
         self.setStyleSheet(f"""
             * {{
