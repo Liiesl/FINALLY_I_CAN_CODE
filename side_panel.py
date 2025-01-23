@@ -17,13 +17,16 @@ class SidePanel(QWidget):
 
         # Create a list widget for settings
         self.settings_list = QListWidget()
-        self.settings_list.setStyleSheet("background-color: transparent; border: none; color: #4f86f7; font-size: 16px;")
+        self.settings_list.setStyleSheet("background-color: transparent; border: none; color: white; font-size: 16px;")
 
+        # Add settings item to the list
         settings_item = QListWidgetItem("Settings")
         settings_item.setTextAlignment(Qt.AlignLeft)
         settings_item.setFlags(settings_item.flags() | Qt.ItemIsSelectable | Qt.ItemIsEnabled)
         self.settings_list.addItem(settings_item)
 
+        # Connect the item click event to the callback
         self.settings_list.itemClicked.connect(lambda: open_settings_callback())
 
         self.layout().addWidget(self.settings_list)
+        self.layout().insertWidget(1, self.settings_list)  # Insert the list at the top, below the info label
