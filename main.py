@@ -239,6 +239,8 @@ class MainWindow(QMainWindow):
         animation.setStartValue(start_value)
         animation.setEndValue(end_value)
         animation.start()
+        # Keep a reference to avoid garbage collection
+        self.animation = animation
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
