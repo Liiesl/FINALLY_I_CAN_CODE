@@ -24,6 +24,7 @@ class MainWindow(QMainWindow):
         self.init_ui()
 
     def init_ui(self):
+        print("Initializing UI...")
         # Create a layout for the main content
         self.main_layout = QVBoxLayout()
 
@@ -39,6 +40,7 @@ class MainWindow(QMainWindow):
         self.central_widget.setLayout(self.main_layout)
 
     def add_hamburger_button(self):
+        print("Adding hamburger button...")
         # Create a container for the hamburger button
         container = QWidget()
         container_layout = QHBoxLayout(container)
@@ -57,6 +59,7 @@ class MainWindow(QMainWindow):
         self.main_layout.addWidget(container, alignment=Qt.AlignTop | Qt.AlignLeft)
 
     def main_menu(self):
+        print("Setting up main menu...")
         # Clear the central widget layout
         for i in reversed(range(self.main_layout.count())):
             widget = self.main_layout.itemAt(i).widget()
@@ -86,6 +89,7 @@ class MainWindow(QMainWindow):
         scroll_layout.addStretch()
 
     def create_tool_button(self, tool_name, tool_description):
+        print(f"Creating tool button: {tool_name}")
         button = QPushButton()
         button.setStyleSheet("""
             QPushButton {
@@ -125,6 +129,7 @@ class MainWindow(QMainWindow):
         return button
 
     def tool_selected(self, tool_name):
+        print(f"Tool selected: {tool_name}")
         if tool_name == "Longer Appearance SRT":
             from tools.longer_appearance import LongerAppearanceSRT
             self.load_tool(LongerAppearanceSRT)
@@ -139,6 +144,7 @@ class MainWindow(QMainWindow):
             QMessageBox.information(self, "Coming Soon", "This feature is coming soon!")
 
     def load_tool(self, tool_class):
+        print(f"Loading tool: {tool_class.__name__}")
         for i in reversed(range(self.main_layout.count())):
             widget = self.main_layout.itemAt(i).widget()
             if widget is not None:
@@ -149,12 +155,14 @@ class MainWindow(QMainWindow):
         tool_widget.show()
 
     def toggle_side_page(self):
+        print("Toggling side page...")
         if self.side_page and self.side_page.isVisible():
             self.side_page.hide()
         else:
             self.show_side_page()
 
     def show_side_page(self):
+        print("Showing side page...")
         if self.side_page is None:
             self.side_page = SidePage(self)
         
@@ -185,6 +193,7 @@ class MainWindow(QMainWindow):
         super().mousePressEvent(event)
 
     def open_settings(self):
+        print("Opening settings...")
         self.load_tool(Settings)
 
 class SidePage(QWidget):
@@ -213,6 +222,7 @@ class SidePage(QWidget):
         self.hide()
 
 if __name__ == "__main__":
+    print("Starting application...")
     app = QApplication(sys.argv)
 
     palette = QPalette()
@@ -232,4 +242,5 @@ if __name__ == "__main__":
 
     window = MainWindow()
     window.show()
+    print("Application is running.")
     sys.exit(app.exec_())
