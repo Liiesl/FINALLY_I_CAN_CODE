@@ -5,6 +5,7 @@ from PyQt5.QtGui import QPalette, QColor, QFont
 from PyQt5.QtCore import Qt
 from tools.subtitle_converter import SubtitleConverter
 from side_panel import SidePanel  # Import the SidePanel class
+from settings import Settings  # Import the Settings class
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -17,7 +18,7 @@ class MainWindow(QMainWindow):
         self.layout = QHBoxLayout(self.central_widget)
         self.setCentralWidget(self.central_widget)
 
-        self.side_panel = SidePanel(self)
+        self.side_panel = SidePanel(self, self.open_settings)
         self.side_panel.setVisible(False)
 
         self.main_content = QWidget()
@@ -143,6 +144,9 @@ class MainWindow(QMainWindow):
         else:
             self.side_panel.setVisible(True)
             self.splitter.setSizes([self.width() // 2, self.width() // 2])
+
+    def open_settings(self):
+        self.load_tool(Settings)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
