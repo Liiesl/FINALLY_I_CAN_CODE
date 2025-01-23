@@ -40,6 +40,7 @@ class MainWindow(QMainWindow):
         # Add the side panel toggle button (hamburger menu)
         self.menu_button = None
 
+        self.safe_area_size = 0  # Default safe area size
         self.main_menu()
 
     def main_menu(self):
@@ -72,6 +73,9 @@ class MainWindow(QMainWindow):
         scroll.setWidget(scroll_content)
 
         self.main_content_layout.addWidget(scroll)
+
+        # Apply the safe area margins
+        self.main_content_layout.setContentsMargins(self.safe_area_size, self.safe_area_size, self.safe_area_size, self.safe_area_size)
 
         # Add tool buttons
         tools = [
@@ -156,7 +160,13 @@ class MainWindow(QMainWindow):
             self.splitter.setSizes([self.width() // 2, self.width() // 2])
 
     def open_settings(self):
+        settings = Settings(self, back_callback=self.main_menu)
+        settings.safe_area_changed.connect(self.update_safe_area)
         self.load_tool(Settings)
+
+    def update_safe_area(self, value):
+        self.safe_area_size = value
+        self.main_menu()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
