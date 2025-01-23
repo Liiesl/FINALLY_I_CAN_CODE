@@ -101,7 +101,7 @@ class SubtitleConverter(QWidget):
             """)
 
     def select_files(self):
-file_paths, _ = QFileDialog.getOpenFileNames(self, "Select Subtitle Files", "", "Subtitle Files (*.srt *.ass *.sub *.txt *.ssa *.vtt *.sbv *.dfxp *.stl *.idx *.mpl *.usf *.lrc *.rt *.ttml *.cap)")        if file_paths:
+    file_paths, _ = QFileDialog.getOpenFileNames(self, "Select Subtitle Files", "", "Subtitle Files (*.srt *.ass *.sub *.txt *.ssa *.vtt *.sbv *.dfxp *.stl *.idx *.mpl *.usf *.lrc *.rt *.ttml *.cap)")        if file_paths:
             self.file_list.clear()
             for file_path in file_paths:
                 self.file_list.addItem(os.path.basename(file_path))
