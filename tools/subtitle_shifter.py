@@ -136,6 +136,7 @@ class SubtitleShifter(QWidget):
         button_text_color = palette.color(QPalette.ButtonText).name()
         highlight_color = palette.color(QPalette.Highlight).name()
         hover_color = palette.color(QPalette.Highlight).darker().name()
+        highlight_color = palette.color(QPalette.Highlight).name()
 
         self.setStyleSheet(f"background-color: {background_color};")
         self.file_preview.setStyleSheet(f"color: {text_color};")
@@ -173,9 +174,9 @@ class SubtitleShifter(QWidget):
 
     def get_mode_button_style(self, selected):
         if selected:
-            return "background-color: #3a6dbf; color: white; border-radius: 5px; padding: 10px; font-size: 14px;"
-        return "background-color: #4f86f7; color: white; border-radius: 5px; padding: 10px; font-size: 14px;"
-
+            return f"background-color: {highlight_color}; color: {text_color}; border-radius: 5px; padding: 10px; font-size: {font_size}px;"
+        return f"background-color: {button_color}; color: {text_color}; border-radius: 5px; padding: 10px; font-size: {font_size}px;"    
+       
     def show_whole_shift(self):
         self.stacked_widget.setCurrentWidget(self.whole_shift_widget)
         self.whole_shift_button.setStyleSheet(self.get_mode_button_style(selected=True))
