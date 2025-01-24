@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButt
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QFont
 from config import Config
+from assets.buttons.toggle_switch import ToggleSwitch  # Import the ToggleSwitch class
 
 class Settings(QWidget):
     settings_saved = pyqtSignal()  # Define a signal for settings saved
@@ -56,6 +57,19 @@ class Settings(QWidget):
 
         layout.addLayout(text_size_layout)
 
+        # Theme Toggle Switch
+        theme_layout = QHBoxLayout()
+        theme_label = QLabel("Theme:")
+        theme_label.setStyleSheet("color: white; font-size: 26px;")
+        theme_layout.addWidget(theme_label)
+
+        self.theme_toggle = ToggleSwitch()
+        self.theme_toggle.set_state(self.config.get_theme())
+        self.theme_toggle.mousePressEvent = self.toggle_theme
+        theme_layout.addWidget(self.theme_toggle)
+
+        layout.addLayout(theme_layout)
+
         # Save button
         save_button = QPushButton("Save")
         save_button.clicked.connect(self.save_settings)
@@ -96,9 +110,21 @@ class Settings(QWidget):
         # Trigger the text size update in the main window
         self.settings_saved.emit()
 
+    def toggle_theme(self, event):
+        current_state = self.theme_toggle.get_state()
+        new_state = "light" if current_state == "dark" else "dark"
+        self.theme_toggle.set_state(new_state)
+        self.config.set_theme(new_state)
+        self.apply_theme()
+
+    def apply_theme(self):
+        # Trigger the theme update in the main window
+        self.settings_saved.emit()
+
     def save_settings(self):
         self.config.set_safe_area_size(self.safe_area_slider.value())
         self.config.set_text_size(self.text_size_dropdown.currentText())
+        self.config.set_theme(self.theme_toggle.get_state())
         self.settings_saved.emit()  # Emit the settings_saved signal
         QMessageBox.information(self, "Success", "Settings saved successfully!")
         self.back_callback()
