@@ -11,8 +11,9 @@ from settings import Settings
 from config import Config
 
 class MainWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, app):
         super().__init__()
+        self.app = app  # Store the QApplication instance
         self.setWindowTitle("SRT Editor")
         self.setGeometry(100, 100, 1200, 800)
         self.setStyleSheet("background-color: #2c2f38;")
@@ -55,7 +56,7 @@ class MainWindow(QMainWindow):
 
         # Apply theme on startup
         self.apply_theme()
-
+        
     def main_menu(self):
         self.main_menu_active = True
 
@@ -267,8 +268,8 @@ class MainWindow(QMainWindow):
             palette.setColor(QPalette.Highlight, QColor(75, 110, 175))
             palette.setColor(QPalette.HighlightedText, Qt.black)
 
-        self.qApp.setPalette(palette)
-
+        self.app.setPalette(palette)
+        
     def update_tool_button_visibility(self, event=None):
         if self.main_menu_active and self.tool_buttons_container:
             container_width = self.tool_buttons_container.width()
@@ -319,7 +320,6 @@ if __name__ == "__main__":
     palette.setColor(QPalette.HighlightedText, Qt.white)
     app.setPalette(palette)
 
-    window = MainWindow()
-    window.qApp = app  # Store the QApplication instance in the MainWindow instance
+    window = MainWindow(app)  # Pass the QApplication instance
     window.show()
     sys.exit(app.exec_())
