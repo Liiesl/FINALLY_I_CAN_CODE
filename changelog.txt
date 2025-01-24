@@ -117,6 +117,6 @@ alpha 0.1.5.1
 -add light theme (experimental)
 
 alpha 0.1.5.2
--fix bugs caused by light theme.
+-fix bugs caused by light theme
 -light theme is now stable
--
+-improve merge srt's ui
