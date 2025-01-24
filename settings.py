@@ -146,3 +146,11 @@ class Settings(QWidget):
         self.theme_toggle.set_state(new_state)
         self.config.set_theme(new_state)
         self.apply_theme()  # Apply theme immediately after toggling
+    def save_settings(self):
+        self.config.set_safe_area_size(self.safe_area_slider.value())
+        self.config.set_text_size(self.text_size_dropdown.currentText())
+        self.config.set_theme(self.theme_toggle.get_state())
+        self.apply_theme()  # Apply theme immediately after saving
+        self.settings_saved.emit()  # Emit the settings_saved signal
+        QMessageBox.information(self, "Success", "Settings saved successfully!")
+        self.back_callback()
