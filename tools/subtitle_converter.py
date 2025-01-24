@@ -1,4 +1,5 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QFileDialog, QMessageBox, QListWidget, QComboBox
+from PyQt5.QtGui import QFont
 from tools.subtitleconverter.vtt_converter import convert_to_vtt
 from tools.subtitleconverter.ass_converter import convert_to_ass
 from tools.subtitleconverter.sub_converter import convert_to_sub
@@ -18,6 +19,7 @@ class SubtitleConverter(QWidget):
     def __init__(self, parent=None, back_callback=None):
         super().__init__(parent)
         self.back_callback = back_callback
+        self.setFont(QFont("Inter Regular")
         self.config = Config()
         self.init_ui()
 
