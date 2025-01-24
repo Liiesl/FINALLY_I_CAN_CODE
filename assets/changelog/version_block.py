@@ -25,9 +25,9 @@ class VersionBlock(QWidget):
         self.version_label = QLabel(self.version)
         self.version_label.setFont(QFont("Inter ExtraBold", 20))
 
-        # Create the changes label
-        self.changes_label = QLabel("\n".join(self.changes))
-        self.changes_label.setAlignment(Qt.AlignLeft)
+        # Create the changes label with HTML for center alignment
+        changes_html = "<br>".join(self.changes)
+        self.changes_label = QLabel(f"<div style='text-align: center;'>{changes_html}</div>")
         self.changes_label.setWordWrap(True)
 
         # Add the toggle button and version label to a horizontal layout
