@@ -11,6 +11,7 @@ class SubtitleShifter(QWidget):
         self.back_callback = back_callback
         self.setFont(QFont("Inter Regular"))
         self.subtitle_path = ""
+        self.config = Config()
         self.setup_ui()
         self.apply_theme()
 
