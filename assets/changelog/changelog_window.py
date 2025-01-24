@@ -87,10 +87,39 @@ class ChangelogWindow(QMainWindow):
         palette = QApplication.instance().palette()
         text_color = palette.color(QPalette.WindowText).name()
         background_color = palette.color(QPalette.Window).name()
+        scrollbar_color = palette.color(QPalette.Button).name()
+        handle_color = palette.color(QPalette.Highlight).name()
         
         self.setStyleSheet(f"background-color: {background_color}; color: {text_color};")
         self.title_label.setStyleSheet(f"background-color: {background_color}; color: {text_color};")
         self.scroll_content.setStyleSheet(f"background-color: {background_color}; color: {text_color};")
+        
+        # Apply custom stylesheet for the scrollbar
+        self.scroll_area.setStyleSheet(f"""
+            QScrollArea {{
+                border: none;
+            }}
+            QScrollBar:vertical {{
+                background: {scrollbar_color};
+                width: 12px;
+                border-radius: 6px;
+                margin: 0px;
+            }}
+            QScrollBar::handle:vertical {{
+                background: {handle_color};
+                min-height: 20px;
+                border-radius: 6px;
+            }}
+            QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {{
+                background: none;
+                border: none;
+                width: 0px;
+                height: 0px;
+            }}
+            QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {{
+                background: none;
+            }}
+        """)
 
     def load_changelog(self):
         changelog_path = os.path.join(os.path.dirname(__file__), 'changelog.txt')
