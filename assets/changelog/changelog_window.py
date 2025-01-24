@@ -56,13 +56,14 @@ class ChangelogWindow(QMainWindow):
         version = None
         changes = []
         for line in lines:
-            if line.startswith('version'):
+            stripped_line = line.strip()
+            if stripped_line and not stripped_line.startswith('-'):
                 if version and changes:
                     self.add_version_block(version, changes)
-                version = line
+                version = stripped_line
                 changes = []
-            elif line.startswith('-'):
-                changes.append(line)
+            elif stripped_line.startswith('-'):
+                changes.append(stripped_line)
         if version and changes:
             self.add_version_block(version, changes)
 
