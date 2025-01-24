@@ -90,8 +90,9 @@ class MainWindow(QMainWindow):
         palette.setColor(QPalette.Link, accent_color)
 
         self.setPalette(palette)
+
         self.setStyleSheet(f"""
-            QMainWindow {{
+            QMainWindow, QWidget {{
                 background-color: {palette.color(QPalette.Window).name()};
                 color: {palette.color(QPalette.WindowText).name()};
             }}
@@ -115,10 +116,10 @@ class MainWindow(QMainWindow):
                 background-color: transparent;
             }}
             QScrollArea {{
-                background-color: {palette.color(QPalette.Window).name()};
+                background-color: {palette.color(QPalette.Base).name()};
             }}
             QFrame {{
-                background-color: {palette.color(QPalette.Window).name()};
+                background-color: {palette.color(QPalette.Base).name()};
             }}
         """)
 
@@ -213,7 +214,6 @@ class MainWindow(QMainWindow):
         button.clicked.connect(lambda: self.tool_selected(tool_name))
         return button
 
-
     def tool_selected(self, tool_name):
         if tool_name == "Longer Appearance SRT":
             from tools.longer_appearance import LongerAppearanceSRT
@@ -263,10 +263,10 @@ class MainWindow(QMainWindow):
     def apply_text_size(self):
         text_size = self.config.get_text_size()
         font_size = {
-            "small": 18,   # Updated values
-            "default": 28, # Updated values
-            "large": 38,   # Updated values
-            "huge": 48     # Updated values
+            "small": 18,
+            "default": 28,
+            "large": 38,
+            "huge": 48
         }.get(text_size, 28)
 
         self.setStyleSheet(f"""
