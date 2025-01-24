@@ -165,17 +165,22 @@ class MergeSRT(QWidget):
         label_toggle_layout = QHBoxLayout()
         label_toggle_layout.setSpacing(0)  # Set spacing between widgets to 0
         label_toggle_layout.setContentsMargins(0, 0, 0, 0)  # Set margins to 0
-        
-        self.color_label = self.add_label(label_toggle_layout, "Color the merged subtitles?", f"color: {self.text_color}; font-size: {label_font_size}px;")
     
+        self.color_label = QLabel("Color the merged subtitles?")
+        self.color_label.setStyleSheet(f"color: {self.text_color}; font-size: {label_font_size}px;")
+        
         self.color_toggle = ToggleSwitch()
         self.color_toggle.set_state("light")
         self.color_toggle.stateChanged.connect(self.toggle_color_options)
-        label_toggle_layout.addWidget(self.color_toggle)
-        
-        # Add the horizontal layout to the vertical layout
-        color_layout.addLayout(label_toggle_layout)
     
+        label_toggle_layout.addWidget(self.color_label)
+        label_toggle_layout.addWidget(self.color_toggle)
+        label_toggle_layout.addStretch()  # Add stretch to push the toggle switch to the left
+    
+        # Center the horizontal layout within the main vertical layout
+        color_layout.addLayout(label_toggle_layout)
+        color_layout.setAlignment(label_toggle_layout, Qt.AlignCenter)
+        
         self.color_palette_layout = QHBoxLayout()
         self.color_palette = QComboBox()
         self.add_color_options_to_palette()
