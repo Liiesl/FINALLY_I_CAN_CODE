@@ -72,7 +72,6 @@ class MainWindow(QMainWindow):
             palette.setColor(QPalette.BrightText, Qt.red)
             palette.setColor(QPalette.Highlight, QColor(75, 110, 175))
             palette.setColor(QPalette.HighlightedText, Qt.white)
-            self.setStyleSheet("background-color: #2c2f38; color: #ffffff;")
         else:
             palette.setColor(QPalette.Window, Qt.white)
             palette.setColor(QPalette.WindowText, Qt.black)
@@ -86,9 +85,43 @@ class MainWindow(QMainWindow):
             palette.setColor(QPalette.BrightText, Qt.red)
             palette.setColor(QPalette.Highlight, QColor(75, 110, 175))
             palette.setColor(QPalette.HighlightedText, Qt.white)
-            self.setStyleSheet("background-color: #ffffff; color: #000000;")
+
+        # Add the custom accent color
+        accent_color = QColor("#4f86f7")
+        palette.setColor(QPalette.Link, accent_color)
 
         self.setPalette(palette)
+        self.setStyleSheet(f"""
+            QMainWindow {{
+                background-color: {palette.color(QPalette.Window).name()};
+                color: {palette.color(QPalette.WindowText).name()};
+            }}
+            QPushButton {{
+                border: 5px solid {palette.color(QPalette.Link).name()};
+                color: {palette.color(QPalette.ButtonText).name()};
+                border-radius: 15px;
+                padding: 10px;
+                min-width: 200px;
+                min-height: 400px;
+                margin: 10px;
+                background-color: {palette.color(QPalette.Button).name()};
+                text-align: center;
+            }}
+            QPushButton:hover {{
+                border-color: {palette.color(QPalette.Link).darker().name()};
+                background-color: {palette.color(QPalette.Link).darker().name()};
+            }}
+            QLabel {{
+                color: {palette.color(QPalette.WindowText).name()};
+                background-color: transparent;
+            }}
+            QScrollArea {{
+                background-color: {palette.color(QPalette.Window).name()};
+            }}
+            QFrame {{
+                background-color: {palette.color(QPalette.Window).name()};
+            }}
+        """)
         
     def main_menu(self):
         self.main_menu_active = True
