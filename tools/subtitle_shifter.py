@@ -190,21 +190,21 @@ class SubtitleShifter(QWidget):
 
     def get_mode_button_style(self, selected):
         if selected:
-            return f"background-color: {self.highlight_color}; color: {self.button_text_color}; border-radius: 5px; padding: 10px; font-size: {self.font_size - 12}px;"
-        return f"background-color: {self.button_color}; color: {self.button_text_color}; border-radius: 5px; padding: 10px; font-size: {self.font_size - 12}px;"
+            return f"background-color: {self.highlight_color}; color: {self.button_text_color}; border-radius: 5px; padding: 10px; font-size: {self.font_size}px;"
+        return f"background-color: {self.button_color}; color: {self.button_text_color}; border-radius: 5px; padding: 10px; font-size: {self.font_size}px;"
 
     def show_whole_shift(self):
         self.stacked_widget.setCurrentWidget(self.whole_shift_widget)
         self.partial_shift_button.setStyleSheet(self.get_mode_button_style(
             selected=False, 
-            font_size=self.font_size - 12,
+            font_size=26px,
             button_color=self.button_color,
             text_color=self.button_text_color,
             highlight_color=self.highlight_color
         ))
         self.whole_shift_button.setStyleSheet(self.get_mode_button_style(
             selected=True, 
-            font_size=self.font_size - 12,
+            font_size=self.26px,
             button_color=self.button_color,
             text_color=self.button_text_color,
             highlight_color=self.highlight_color
@@ -214,14 +214,14 @@ class SubtitleShifter(QWidget):
         self.stacked_widget.setCurrentWidget(self.partial_shift_widget)
         self.whole_shift_button.setStyleSheet(self.get_mode_button_style(
             selected=False, 
-            font_size=self.font_size - 12,
+            font_size=self.26px,
             button_color=self.button_color,
             text_color=self.button_text_color,
             highlight_color=self.highlight_color
         ))
         self.partial_shift_button.setStyleSheet(self.get_mode_button_style(
             selected=True, 
-            font_size=self.font_size - 12,
+            font_size=26px,
             button_color=self.button_color,
             text_color=self.button_text_color,
             highlight_color=self.highlight_color
