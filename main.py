@@ -69,8 +69,7 @@ class MainWindow(QMainWindow):
         self.scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
 
         self.custom_scroll_bar = CustomScrollBar()
-        self.custom_scroll_bar.valueChanged.connect(self.scroll_area.horizontalScrollBar().setValue)
-        self.scroll_area.horizontalScrollBar().valueChanged.connect(self.custom_scroll_bar.setValue)
+        self.custom_scroll_bar.valueChanged.connect(self.sync_scroll)
 
         self.main_menu()
 
@@ -292,6 +291,10 @@ class MainWindow(QMainWindow):
         animation.start()
         # Keep a reference to avoid garbage collection
         self.animation = animation
+
+    def sync_scroll(self, value):
+        self.scroll_area.horizontalScrollBar().setValue(value)
+        self.custom_scroll_bar.setValue(value)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
