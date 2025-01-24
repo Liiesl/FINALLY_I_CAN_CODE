@@ -1,7 +1,8 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QSlider, QComboBox, QMessageBox, QCheckBox
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QSlider, QComboBox, QMessageBox
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QFont
 from config import Config
+from toggle_switch import ToggleSwitch  # Import the custom toggle switch
 
 class Settings(QWidget):
     settings_saved = pyqtSignal()  # Define a signal for settings saved
@@ -62,12 +63,10 @@ class Settings(QWidget):
         theme_label.setStyleSheet("color: white; font-size: 26px;")
         theme_layout.addWidget(theme_label)
 
-        self.theme_checkbox = QCheckBox()
-        self.theme_checkbox.setChecked(self.config.get_theme() == "dark")
-        self.theme_checkbox.stateChanged.connect(self.update_theme)
-        theme_layout.addWidget(QLabel("Light"))
-        theme_layout.addWidget(self.theme_checkbox)
-        theme_layout.addWidget(QLabel("Dark"))
+        self.theme_switch = ToggleSwitch()
+        self.theme_switch.set_state(self.config.get_theme())
+        self.theme_switch.mousePressEvent = self.update_theme
+        theme_layout.addWidget(self.theme_switch)
 
         layout.addLayout(theme_layout)
 
@@ -107,8 +106,9 @@ class Settings(QWidget):
         self.config.set_text_size(size)
         self.apply_text_size_to_all_pages()
 
-    def update_theme(self):
-        theme = "dark" if self.theme_checkbox.isChecked() else "light"
+    def update_theme(self, event):
+        self.theme_switch.mousePressEvent(event)
+        theme = self.theme_switch.get_state()
         self.config.set_theme(theme)
         self.apply_theme_to_all_pages()
 
@@ -123,7 +123,7 @@ class Settings(QWidget):
     def save_settings(self):
         self.config.set_safe_area_size(self.safe_area_slider.value())
         self.config.set_text_size(self.text_size_dropdown.currentText())
-        self.config.set_theme("dark" if self.theme_checkbox.isChecked() else "light")
+        self.config.set_theme(self.theme_switch.get_state())
         self.settings_saved.emit()  # Emit the settings_saved signal
         QMessageBox.information(self, "Success", "Settings saved successfully!")
         self.back_callback()
