@@ -1,5 +1,5 @@
-from PyQt5.QtWidgets import QMainWindow, QTextEdit, QVBoxLayout, QWidget, QLabel
-from PyQt5.QtGui import QPalette, QApplication, QFont
+from PyQt5.QtWidgets import QMainWindow, QTextEdit, QVBoxLayout, QWidget, QLabel, QApplication
+from PyQt5.QtGui import QPalette, QFont
 from PyQt5.QtCore import Qt
 import os
 
