@@ -7,6 +7,7 @@ class LongerAppearanceSRT(QWidget):
     def __init__(self, parent=None, back_callback=None):
         super().__init__(parent)
         self.back_callback = back_callback
+        self.setFont(QFont("Inter Regular"))
         self.config = Config()
         self.setup_ui()
 
