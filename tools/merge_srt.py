@@ -76,7 +76,7 @@ class MergeSRT(QWidget):
         layout.addWidget(label)
         return label
 
-    def add_input(self, layout, placeholder="", width=500,):
+    def add_input(self, layout, placeholder="", width=500, style="background-color: {background_color}; color: {text_color}; font-size: 14px; padding: 10px;"):
         input_box = QLineEdit()
         input_box.setPlaceholderText(placeholder)
         input_box.setStyleSheet(style)
