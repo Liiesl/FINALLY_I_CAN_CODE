@@ -16,7 +16,7 @@ class MainWindow(QMainWindow):
         self.app = app
         self.setWindowTitle("SRT Editor")
         self.setGeometry(100, 100, 1200, 800)
-        self.setStyleSheet("background-color: #2c2f38;")
+        self.setStyleSheet("background-color: {background_color};")
 
         QFontDatabase.addApplicationFont("assets/fonts/Inter-Regular.otf")
         QFontDatabase.addApplicationFont("assets/fonts/Inter-ExtraBold.otf")
