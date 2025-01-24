@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QSlider, QComboBox, QMessageBox
 from PyQt5.QtCore import Qt, pyqtSignal
-from PyQt5.QtGui import QFont
+from PyQt5.QtGui import QFont,QPalette
 from config import Config
 from assets.buttons.toggle_switch import ToggleSwitch  # Import the ToggleSwitch class
 
