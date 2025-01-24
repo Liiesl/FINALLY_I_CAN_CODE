@@ -1,5 +1,6 @@
 import os
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QFileDialog, QMessageBox, QLabel, QLineEdit, QStackedWidget, QFrame, QSizePolicy, QComboBox, QListWidget, QSpacerItem
+from PyQt5.QtGui import QFont, QColor, QIcon, QPixmap
 from PyQt5.QtCore import Qt
 from .smprocessing import merge_subtitles, read_file, write_file
 from config import Config
