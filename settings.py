@@ -1,6 +1,5 @@
-import time
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QSlider, QComboBox, QMessageBox
-from PyQt5.QtCore import Qt, pyqtSignal
+from PyQt5.QtCore import Qt, pyqtSignal, QTimer
 from PyQt5.QtGui import QFont, QPalette
 from config import Config
 from assets.buttons.toggle_switch import ToggleSwitch  # Import the ToggleSwitch class
@@ -147,10 +146,13 @@ class Settings(QWidget):
         self.config.set_theme(self.config.data["theme"])  # Save the theme from memory
         
         self.config.save()  # Ensure the config is saved
-        time.sleep(1)  # Add a delay to ensure the config is saved flawlessly
-        self.config.load()  # Reload the configuration to ensure it is applied
         
-        self.apply_theme()  # Apply theme immediately after saving
+        # Use QTimer to introduce a delay before loading the config
+        QTimer.singleShot(1000, self.load_and_apply_config)
+
+    def load_and_apply_config(self):
+        self.config.load()  # Reload the configuration to ensure it is applied
+        self.apply_theme()  # Apply theme immediately after loading
         self.settings_saved.emit()  # Emit the settings_saved signal
-        QMessageBox.information(self, "Success", "Settings saved successfully!")
+        QMessageBox.information(self, "Success", "Settings saved and applied successfully!")
         # Do not call self.back_callback() to keep the settings window open
