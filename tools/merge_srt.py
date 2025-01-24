@@ -9,7 +9,7 @@ class MergeSRT(QWidget):
     def __init__(self, parent=None, back_callback=None):
         super().__init__(parent)
         self.back_callback = back_callback
-        self.setFont(QFont("Inter Regular")
+        self.setFont(QFont("Inter Regular"))
         self.config = Config()
         self.main_subtitle_path = ""
         self.secondary_subtitle_paths = []
