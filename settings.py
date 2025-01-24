@@ -63,10 +63,18 @@ class Settings(QWidget):
         theme_label.setStyleSheet("color: white; font-size: 26px;")
         theme_layout.addWidget(theme_label)
 
+        light_label = QLabel("Light")
+        light_label.setStyleSheet("color: white; font-size: 26px;")
+        theme_layout.addWidget(light_label)
+
         self.theme_switch = ToggleSwitch()
         self.theme_switch.set_state(self.config.get_theme())
         self.theme_switch.mousePressEvent = self.update_theme
         theme_layout.addWidget(self.theme_switch)
+
+        dark_label = QLabel("Dark")
+        dark_label.setStyleSheet("color: white; font-size: 26px;")
+        theme_layout.addWidget(dark_label)
 
         layout.addLayout(theme_layout)
 
