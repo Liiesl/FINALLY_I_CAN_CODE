@@ -305,21 +305,6 @@ class MainWindow(QMainWindow):
 if __name__ == "__main__":
     app = QApplication(sys.argv)
 
-    palette = QPalette()
-    palette.setColor(QPalette.Window, QColor(44, 47, 56))
-    palette.setColor(QPalette.WindowText, Qt.white)
-    palette.setColor(QPalette.Base, QColor(44, 47, 56))
-    palette.setColor(QPalette.AlternateBase, QColor(66, 69, 79))
-    palette.setColor(QPalette.ToolTipBase, Qt.white)
-    palette.setColor(QPalette.ToolTipText, Qt.white)
-    palette.setColor(QPalette.Text, Qt.white)
-    palette.setColor(QPalette.Button, QColor(44, 47, 56))
-    palette.setColor(QPalette.ButtonText, Qt.white)
-    palette.setColor(QPalette.BrightText, Qt.red)
-    palette.setColor(QPalette.Highlight, QColor(75, 110, 175))
-    palette.setColor(QPalette.HighlightedText, Qt.white)
-    app.setPalette(palette)
-
     window = MainWindow(app)  # Pass the QApplication instance
     window.show()
     sys.exit(app.exec_())
