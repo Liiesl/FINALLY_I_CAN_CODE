@@ -90,7 +90,6 @@ class MainWindow(QMainWindow):
         palette.setColor(QPalette.Link, accent_color)
 
         self.setPalette(palette)
-
         self.setStyleSheet(f"""
             QMainWindow, QWidget {{
                 background-color: {palette.color(QPalette.Window).name()};
@@ -115,10 +114,7 @@ class MainWindow(QMainWindow):
                 color: {palette.color(QPalette.WindowText).name()};
                 background-color: transparent;
             }}
-            QScrollArea {{
-                background-color: {palette.color(QPalette.Base).name()};
-            }}
-            QFrame {{
+            QScrollArea, QFrame {{
                 background-color: {palette.color(QPalette.Base).name()};
             }}
         """)
@@ -198,7 +194,7 @@ class MainWindow(QMainWindow):
 
     def create_tool_button(self, tool_name, tool_description):
         button = QPushButton()
-        
+
         # Apply styles directly to the button
         button.setStyleSheet(f"""
             QPushButton {{
@@ -232,6 +228,7 @@ class MainWindow(QMainWindow):
 
         button.clicked.connect(lambda: self.tool_selected(tool_name))
         return button
+
     def tool_selected(self, tool_name):
         if tool_name == "Longer Appearance SRT":
             from tools.longer_appearance import LongerAppearanceSRT
