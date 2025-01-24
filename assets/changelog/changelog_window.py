@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QLa
 from PyQt5.QtGui import QPalette, QFont
 from PyQt5.QtCore import Qt
 import os
-from version_block import VersionBlock
+from .version_block import VersionBlock
 
 class ChangelogWindow(QMainWindow):
     def __init__(self, parent=None):
