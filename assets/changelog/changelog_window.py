@@ -37,13 +37,12 @@ class VersionBlock(QWidget):
         self.header_layout = QHBoxLayout()
         self.header_layout.addWidget(self.toggle_button)
         self.header_layout.addWidget(self.version_label)
-        self.header_layout.addStretch()
+        self.header_layout.setAlignment(Qt.AlignCenter)  # Center align the header layout
 
         # Add the header and changes to the main layout
         self.layout.addLayout(self.header_layout)
         self.layout.addWidget(self.changes_label)
 
-        # Center align the entire block
         self.setLayout(self.layout)
 
     def toggle_changes(self):
