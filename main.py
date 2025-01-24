@@ -13,12 +13,11 @@ from config import Config
 class MainWindow(QMainWindow):
     def __init__(self, app):
         super().__init__()
-        self.app = app  # Store the QApplication instance
+        self.app = app
         self.setWindowTitle("SRT Editor")
         self.setGeometry(100, 100, 1200, 800)
         self.setStyleSheet("background-color: #2c2f38;")
 
-        # Load the Inter fonts
         QFontDatabase.addApplicationFont("assets/fonts/Inter-Regular.otf")
         QFontDatabase.addApplicationFont("assets/fonts/Inter-ExtraBold.otf")
         
@@ -54,7 +53,6 @@ class MainWindow(QMainWindow):
 
         self.main_menu()
 
-        # Apply theme on startup
         self.apply_theme()
         
     def main_menu(self):
@@ -133,7 +131,6 @@ class MainWindow(QMainWindow):
     def create_tool_button(self, tool_name, tool_description):
         button = QPushButton()
 
-        # Retrieve the current palette colors
         palette = self.app.palette()
         background_color = palette.color(QPalette.Button).name()
         border_color = palette.color(QPalette.Highlight).name()
@@ -224,7 +221,7 @@ class MainWindow(QMainWindow):
     def open_settings(self, item=None):
         settings_widget = Settings(parent=self.main_content, back_callback=self.main_menu, main_window=self)
         settings_widget.setFont(self.inter_regular_font)
-        settings_widget.settings_saved.connect(self.apply_theme)  # Connect the settings saved signal to apply theme
+        settings_widget.settings_saved.connect(self.apply_theme)
         self.load_tool(settings_widget)
 
     def update_safe_area_size(self):
@@ -332,6 +329,6 @@ class MainWindow(QMainWindow):
 if __name__ == "__main__":
     app = QApplication(sys.argv)
 
-    window = MainWindow(app)  # Pass the QApplication instance
+    window = MainWindow(app)
     window.show()
     sys.exit(app.exec_())
