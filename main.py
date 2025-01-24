@@ -173,61 +173,6 @@ class MainWindow(QMainWindow):
         self.update_tool_button_visibility()
         self.resizeEvent = self.update_tool_button_visibility
 
-    def create_tool_button(self, tool_name, tool_description):
-        button = QPushButton()
-
-        palette = self.app.palette()
-        background_color = palette.color(QPalette.Button).name()
-        border_color = palette.color(QPalette.Highlight).name()
-        text_color = palette.color(QPalette.ButtonText).name()
-        hover_background_color = palette.color(QPalette.Highlight).name()
-        hover_border_color = palette.color(QPalette.Highlight).darker().name()
-
-        button.setStyleSheet(f"""
-            QPushButton {{
-                border: 5px solid {border_color};
-                color: rgba(255, 255, 255, 0);
-                border-radius: 15px;
-                padding: 10px;
-                min-width: 300px;
-                min-height: 400px;
-                margin: 10px;
-                background-color: {background_color};
-                text-align: center;
-            }}
-            QPushButton:hover {{
-                border-color: {hover_border_color};
-                background-color: {hover_background_color};
-            }}
-        """)
-
-        text_size = self.config.get_text_size()
-        font_size = {
-            "small": 18,
-            "default": 26,
-            "large": 34,
-            "huge": 42
-        }.get(text_size, 26)
-
-        name_label = QLabel(tool_name)
-        name_label.setFont(QFont("Inter ExtraBold", font_size, QFont.Bold))
-        name_label.setStyleSheet(f"color: {border_color}; background-color: transparent;")
-        name_label.setWordWrap(True)
-        name_label.setAlignment(Qt.AlignCenter)
-
-        description_label = QLabel(tool_description)
-        description_label.setFont(QFont("Inter Regular", font_size))
-        description_label.setStyleSheet(f"color: {text_color}; background-color: transparent;")
-        description_label.setWordWrap(True)
-        description_label.setAlignment(Qt.AlignCenter)
-
-        button_layout = QVBoxLayout(button)
-        button_layout.addWidget(name_label)
-        button_layout.addWidget(description_label)
-
-        button.clicked.connect(lambda: self.tool_selected(tool_name))
-        return button
-
     def tool_selected(self, tool_name):
         if tool_name == "Longer Appearance SRT":
             from tools.longer_appearance import LongerAppearanceSRT
@@ -325,6 +270,61 @@ class MainWindow(QMainWindow):
         animation.setEndValue(end_value)
         animation.start()
         self.animation = animation
+
+    def create_tool_button(self, tool_name, tool_description):
+        button = QPushButton()
+
+        palette = self.app.palette()
+        background_color = palette.color(QPalette.Button).name()
+        border_color = palette.color(QPalette.Highlight).name()
+        text_color = palette.color(QPalette.ButtonText).name()
+        hover_background_color = palette.color(QPalette.Highlight).name()
+        hover_border_color = palette.color(QPalette.Highlight).darker().name()
+
+        button.setStyleSheet(f"""
+            QPushButton {{
+                border: 5px solid {border_color};
+                color: rgba(255, 255, 255, 0);
+                border-radius: 15px;
+                padding: 10px;
+                min-width: 300px;
+                min-height: 400px;
+                margin: 10px;
+                background-color: {background_color};
+                text-align: center;
+            }}
+            QPushButton:hover {{
+                border-color: {hover_border_color};
+                background-color: {hover_background_color};
+            }}
+        """)
+
+        text_size = self.config.get_text_size()
+        font_size = {
+            "small": 18,
+            "default": 26,
+            "large": 34,
+            "huge": 42
+        }.get(text_size, 26)
+
+        name_label = QLabel(tool_name)
+        name_label.setFont(QFont("Inter ExtraBold", font_size, QFont.Bold))
+        name_label.setStyleSheet(f"color: {border_color}; background-color: transparent;")
+        name_label.setWordWrap(True)
+        name_label.setAlignment(Qt.AlignCenter)
+
+        description_label = QLabel(tool_description)
+        description_label.setFont(QFont("Inter Regular", font_size))
+        description_label.setStyleSheet(f"color: {text_color}; background-color: transparent;")
+        description_label.setWordWrap(True)
+        description_label.setAlignment(Qt.AlignCenter)
+
+        button_layout = QVBoxLayout(button)
+        button_layout.addWidget(name_label)
+        button_layout.addWidget(description_label)
+
+        button.clicked.connect(lambda: self.tool_selected(tool_name))
+        return button
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
