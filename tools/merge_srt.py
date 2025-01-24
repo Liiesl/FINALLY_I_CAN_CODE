@@ -76,7 +76,7 @@ class MergeSRT(QWidget):
         layout.addWidget(label)
         return label
 
-    def add_input(self, layout, placeholder="", width=500, style="background-color: {background_color}; color: {text_color}; font-size: 14px; padding: 10px;"):
+    def add_input(self, layout, placeholder="", width=500,):
         input_box = QLineEdit()
         input_box.setPlaceholderText(placeholder)
         input_box.setStyleSheet(style)
@@ -163,17 +163,17 @@ class MergeSRT(QWidget):
 
         self.color_combo = QComboBox()
         self.color_combo.addItems(["None", "Color the merged subtitles"])
-        self.color_combo.setStyleSheet(f"background-color: #3c3f41; color: {self.text_color}; font-size: {input_font_size}px;")
+        self.color_combo.setStyleSheet(f"background-color: (self.button_color); color: {self.text_color}; font-size: {input_font_size}px;")
         self.color_combo.currentIndexChanged.connect(self.toggle_color_options)
         color_layout.addWidget(self.color_combo)
 
         self.color_palette_layout = QHBoxLayout()
         self.color_palette = QComboBox()
         self.add_color_options_to_palette()
-        self.color_palette.setStyleSheet(f"background-color: #3c3f41; color: {self.text_color}; font-size: {input_font_size}px;")
+        self.color_palette.setStyleSheet(f"background-color: (self.button_color); color: {self.text_color}; font-size: {input_font_size}px;")
         self.color_palette_layout.addWidget(self.color_palette)
 
-        self.hex_input = self.add_input(self.color_palette_layout, "#000000", 100, f"background-color: #3c3f41; color: {self.text_color}; font-size: {input_font_size}px; padding: 10px;")
+        self.hex_input = self.add_input(self.color_palette_layout, "#000000", 100, f"background-color: (self.button_color); color: {self.text_color}; font-size: {input_font_size}px; padding: 10px;")
         color_layout.addLayout(self.color_palette_layout)
 
         # Initially hide color options
