@@ -105,10 +105,11 @@ class ChangelogWindow(QMainWindow):
         lines = content.split('\n')
         versions = []
         changes = []
+        version = None
         for line in lines:
             stripped_line = line.strip()
             if stripped_line and not stripped_line.startswith('-'):
-                if versions and changes:
+                if version and changes:
                     versions.append((version, changes))
                 version = stripped_line
                 changes = []
