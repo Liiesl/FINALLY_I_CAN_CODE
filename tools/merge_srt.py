@@ -1,9 +1,10 @@
 import os
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QFileDialog, QMessageBox, QLabel, QLineEdit, QStackedWidget, QFrame, QSizePolicy, QComboBox, QListWidget, QSpacerItem
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QFileDialog, QMessageBox, QLabel, QLineEdit, QStackedWidget, QFrame, QSizePolicy, QListWidget, QSpacerItem
 from PyQt5.QtGui import QFont, QColor, QIcon, QPixmap, QPalette
 from PyQt5.QtCore import Qt
 from .smprocessing import merge_subtitles, read_file, write_file
 from config import Config
+from assets.buttons.toggle_switch import ToggleSwitch
 
 class MergeSRT(QWidget):
     def __init__(self, parent=None, back_callback=None):
@@ -159,13 +160,12 @@ class MergeSRT(QWidget):
         
     def setup_color_options(self, layout, input_font_size, label_font_size):
         color_layout = QVBoxLayout()
-        self.color_label = self.add_label(color_layout, "Color options:", f"color: {self.text_color}; font-size: {label_font_size}px;")
+        self.color_label = self.add_label(color_layout, "Color the merged subtitles?", f"color: {self.text_color}; font-size: {label_font_size}px;")
 
-        self.color_combo = QComboBox()
-        self.color_combo.addItems(["None", "Color the merged subtitles"])
-        self.color_combo.setStyleSheet(f"background-color: (self.button_color); color: {self.text_color}; font-size: {input_font_size}px;")
-        self.color_combo.currentIndexChanged.connect(self.toggle_color_options)
-        color_layout.addWidget(self.color_combo)
+        self.color_toggle = ToggleSwitch()
+        self.color_toggle.set_state("light")
+        self.color_toggle.stateChanged.connect(self.toggle_color_options)
+        color_layout.addWidget(self.color_toggle)
 
         self.color_palette_layout = QHBoxLayout()
         self.color_palette = QComboBox()
@@ -313,7 +313,7 @@ class MergeSRT(QWidget):
         return f"{new_hours:02}:{new_minutes:02}:{new_seconds:02},{millis:03}"
 
     def toggle_color_options(self):
-        is_visible = self.color_combo.currentText() == "Color the merged subtitles"
+        is_visible = self.color_toggle.get_state() == "dark"
         self.color_palette.setVisible(is_visible)
         self.hex_input.setVisible(is_visible)
 
@@ -349,7 +349,7 @@ class MergeSRT(QWidget):
             self.show_error(f"An error occurred while merging the files.\n\n{e}")
 
     def get_selected_color(self):
-        if self.color_combo.currentText() == "Color the merged subtitles":
+        if self.color_toggle.get_state() == "dark":
             color_hex = self.hex_input.text().strip()
             if not color_hex:
                 selected_color = self.color_palette.currentText()
