@@ -139,6 +139,18 @@ class SubtitleShifter(QWidget):
         self.highlight_color = palette.color(QPalette.Highlight).name()
         self.hover_color = palette.color(QPalette.Highlight).darker().name()
 
+        text_size = self.config.get_text_size()
+        self.font_size = {
+            "small": 18,
+            "default": 26,
+            "large": 34,
+            "huge": 42
+        }.get(text_size, 26)
+
+        button_font_size = self.font_size - 12
+        label_font_size = self.font_size - 12
+        input_font_size = self.font_size - 12
+
         self.setStyleSheet(f"background-color: {self.background_color};")
         self.file_preview.setStyleSheet(f"color: {self.text_color};")
         self.file_preview_partial.setStyleSheet(f"color: {self.text_color};")
@@ -151,18 +163,6 @@ class SubtitleShifter(QWidget):
         self.ms_input_partial.setStyleSheet(f"background-color: {self.background_color}; color: {self.text_color};")
         self.start_input.setStyleSheet(f"background-color: {self.background_color}; color: {self.text_color};")
         self.end_input.setStyleSheet(f"background-color: {self.background_color}; color: {self.text_color};")
-
-        text_size = self.config.get_text_size()
-        self.font_size = {
-            "small": 18,
-            "default": 26,
-            "large": 34,
-            "huge": 42
-        }.get(text_size, 26)
-
-        button_font_size = self.font_size - 12
-        label_font_size = self.font_size - 12
-        input_font_size = self.font_size - 12
 
         button_style = self.get_button_style()
         self.back_button.setStyleSheet(button_style)
