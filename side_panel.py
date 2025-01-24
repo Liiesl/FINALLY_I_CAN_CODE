@@ -1,7 +1,6 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QListWidget, QListWidgetItem
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QFont
-from config import Config
+from PyQt5.QtGui import QFont, QPalette
 
 class SidePanel(QWidget):
     def __init__(self, parent=None, open_settings_callback=None):
@@ -11,7 +10,14 @@ class SidePanel(QWidget):
         self.setFont(QFont("Inter Regular"))
 
     def setup_ui(self, open_settings_callback):
-        self.setStyleSheet("background-color: #1e1e1e;")
+        # Retrieve the current palette colors
+        palette = self.parent().palette()
+        text_color = palette.color(QPalette.WindowText).name()
+        background_color = palette.color(QPalette.Window).name()
+        highlight_color = palette.color(QPalette.Highlight).name()
+        hover_color = palette.color(QPalette.Highlight).darker().name()
+
+        self.setStyleSheet(f"background-color: {background_color};")
         self.setFixedWidth(self.parent().width() // 2)
         self.setLayout(QVBoxLayout())
 
@@ -24,7 +30,7 @@ class SidePanel(QWidget):
         }.get(text_size, 26)
 
         self.info_label = QLabel("Side Panel Content")
-        self.info_label.setStyleSheet(f"color: white; font-size: {font_size}px; font-weight: bold; background-color: transparent;")
+        self.info_label.setStyleSheet(f"color: {text_color}; font-size: {font_size}px; font-weight: bold; background-color: transparent;")
         self.info_label.setAlignment(Qt.AlignCenter)
 
         self.layout().addWidget(self.info_label)
@@ -32,7 +38,7 @@ class SidePanel(QWidget):
 
         # Create a list widget for settings
         self.settings_list = QListWidget()
-        self.settings_list.setStyleSheet(f"background-color: transparent; border: none; color: white; font-size: {font_size - 2}px;")
+        self.settings_list.setStyleSheet(f"background-color: transparent; border: none; color: {text_color}; font-size: {font_size - 2}px;")
 
         # Add settings item to the list
         settings_item = QListWidgetItem("Settings")
