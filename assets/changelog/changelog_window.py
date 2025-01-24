@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QMainWindow, QApplication, QVBoxLayout, QWidget, QLabel, QScrollArea, QPushButton, QHBoxLayout
+from PyQt5.QtWidgets import QMainWindow, QApplication ,QVBoxLayout, QWidget, QLabel, QScrollArea, QPushButton, QHBoxLayout
 from PyQt5.QtGui import QPalette, QFont
 from PyQt5.QtCore import Qt
 import os
@@ -83,6 +83,9 @@ class ChangelogWindow(QMainWindow):
         self.scroll_area.setWidget(self.scroll_content)
         self.layout.addWidget(self.scroll_area)
 
+        # Apply custom scrollbar styles
+        self.apply_scrollbar_styles()
+
     def apply_palette(self):
         palette = QApplication.instance().palette()
         text_color = palette.color(QPalette.WindowText).name()
@@ -91,6 +94,78 @@ class ChangelogWindow(QMainWindow):
         self.setStyleSheet(f"background-color: {background_color}; color: {text_color};")
         self.title_label.setStyleSheet(f"background-color: {background_color}; color: {text_color};")
         self.scroll_content.setStyleSheet(f"background-color: {background_color}; color: {text_color};")
+
+    def apply_scrollbar_styles(self):
+        self.scroll_area.setStyleSheet("""
+            QScrollBar:vertical {
+                border: none;
+                background: #f0f0f0;
+                width: 14px;
+                margin: 15px 0 15px 0;
+                border-radius: 7px;
+            }
+            QScrollBar::handle:vertical {
+                background: #888;
+                min-height: 20px;
+                border-radius: 7px;
+            }
+            QScrollBar::add-line:vertical {
+                border: none;
+                background: #f0f0f0;
+                height: 15px;
+                subcontrol-position: bottom;
+                subcontrol-origin: margin;
+                border-radius: 7px;
+            }
+            QScrollBar::sub-line:vertical {
+                border: none;
+                background: #f0f0f0;
+                height: 15px;
+                subcontrol-position: top;
+                subcontrol-origin: margin;
+                border-radius: 7px;
+            }
+            QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
+                background: none;
+            }
+            QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+                background: none;
+            }
+            QScrollBar:horizontal {
+                border: none;
+                background: #f0f0f0;
+                height: 14px;
+                margin: 0 15px 0 15px;
+                border-radius: 7px;
+            }
+            QScrollBar::handle:horizontal {
+                background: #888;
+                min-width: 20px;
+                border-radius: 7px;
+            }
+            QScrollBar::add-line:horizontal {
+                border: none;
+                background: #f0f0f0;
+                width: 15px;
+                subcontrol-position: right;
+                subcontrol-origin: margin;
+                border-radius: 7px;
+            }
+            QScrollBar::sub-line:horizontal {
+                border: none;
+                background: #f0f0f0;
+                width: 15px;
+                subcontrol-position: left;
+                subcontrol-origin: margin;
+                border-radius: 7px;
+            }
+            QScrollBar::left-arrow:horizontal, QScrollBar::right-arrow:horizontal {
+                background: none;
+            }
+            QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
+                background: none;
+            }
+        """)
 
     def load_changelog(self):
         changelog_path = os.path.join(os.path.dirname(__file__), 'changelog.txt')
