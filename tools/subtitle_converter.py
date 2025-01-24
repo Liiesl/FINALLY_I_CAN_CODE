@@ -14,6 +14,7 @@ from tools.subtitleconverter.rt_converter import convert_to_rt
 from tools.subtitleconverter.ttml_converter import convert_to_ttml
 from tools.subtitleconverter.cap_converter import convert_to_cap
 from config import Config
+import os
 
 class SubtitleConverter(QWidget):
     def __init__(self, parent=None, back_callback=None):
