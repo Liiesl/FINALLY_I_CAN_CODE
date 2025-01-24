@@ -222,7 +222,7 @@ class MainWindow(QMainWindow):
             self.splitter.setSizes([self.width() // 2, self.width() // 2])
 
     def open_settings(self, item=None):
-        settings_widget = Settings(parent=self.main_content, back_callback=self.main_menu)
+        settings_widget = Settings(parent=self.main_content, back_callback=self.main_menu, main_window=self)
         settings_widget.setFont(self.inter_regular_font)
         settings_widget.settings_saved.connect(self.apply_theme)  # Connect the settings saved signal to apply theme
         self.load_tool(settings_widget)
