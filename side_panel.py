@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QListWidget, QListWidgetItem
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont, QPalette
+from config import Config
 
 class SidePanel(QWidget):
     def __init__(self, parent=None, open_settings_callback=None):
