@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButt
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QFont
 from config import Config
-from toggle_switch import ToggleSwitch  # Import the custom toggle switch
+from assets.buttons.toggle_switch import ToggleSwitch  # Updated import statement
 
 class Settings(QWidget):
     settings_saved = pyqtSignal()  # Define a signal for settings saved
