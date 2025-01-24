@@ -160,6 +160,10 @@ class SubtitleShifter(QWidget):
             "huge": 42
         }.get(text_size, 26)
 
+        button_font_size = self.font_size - 12
+        label_font_size = self.font_size - 12
+        input_font_size = self.font_size - 12
+
         button_style = self.get_button_style()
         self.back_button.setStyleSheet(button_style)
         self.select_file_button.setStyleSheet(button_style)
