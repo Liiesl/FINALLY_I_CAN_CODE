@@ -292,6 +292,11 @@ class MainWindow(QMainWindow):
 
         self.app.setPalette(palette)
 
+    def refresh_settings(self):
+        self.update_safe_area_size()
+        self.apply_text_size()
+        self.apply_theme()
+
     def update_tool_button_visibility(self, event=None):
         if self.main_menu_active and self.tool_buttons_container:
             container_width = self.tool_buttons_container.width()
