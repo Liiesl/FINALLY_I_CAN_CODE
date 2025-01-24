@@ -68,7 +68,7 @@ class ChangelogWindow(QMainWindow):
         # Create a QLabel for the title
         self.title_label = QLabel("What's New")
         self.title_label.setAlignment(Qt.AlignCenter)
-        self.title_label.setFont(QFont("Inter ExtraBold", 50))
+        self.title_label.setFont(QFont("Inter ExtraBold", 100))
         self.layout.addWidget(self.title_label)
         
         # Create a scroll area for the version blocks
