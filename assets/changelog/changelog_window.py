@@ -23,7 +23,6 @@ class ChangelogWindow(QMainWindow):
         # Create a QTextEdit for the changelog content
         self.text_edit = QTextEdit()
         self.text_edit.setReadOnly(True)
-        self.text_edit.setAlignment(Qt.AlignCenter)  # Align the text to center
         self.layout.addWidget(self.text_edit)
         
         self.apply_palette()
@@ -43,6 +42,8 @@ class ChangelogWindow(QMainWindow):
         try:
             with open(changelog_path, 'r') as file:
                 content = file.read()
-                self.text_edit.setPlainText(content)
+                # Use HTML to center-align the text
+                html_content = f"<div style='text-align: center;'>{content.replace('\n', '<br>')}</div>"
+                self.text_edit.setHtml(html_content)
         except FileNotFoundError:
-            self.text_edit.setPlainText("Changelog file not found.")
+            self.text_edit.setHtml("<div style='text-align: center;'>Changelog file not found.</div>")
