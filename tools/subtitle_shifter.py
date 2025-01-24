@@ -136,7 +136,8 @@ class SubtitleShifter(QWidget):
         button_text_color = palette.color(QPalette.ButtonText).name()
         highlight_color = palette.color(QPalette.Highlight).name()
         hover_color = palette.color(QPalette.Highlight).darker().name()
-        highlight_color = palette.color(QPalette.Highlight).name()
+        
+        self.highlight_color = palette.color(QPalette.Highlight).name()
 
         self.setStyleSheet(f"background-color: {background_color};")
         self.file_preview.setStyleSheet(f"color: {text_color};")
