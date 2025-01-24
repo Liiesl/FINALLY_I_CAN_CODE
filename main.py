@@ -126,7 +126,7 @@ class MainWindow(QMainWindow):
                 color: white;
                 border-radius: 15px;
                 padding: 10px;
-                min-width: 300px;
+                min-width: 200px;
                 min-height: 400px;
                 margin: 10px;
                 background-color: #2c2f38;
