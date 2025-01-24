@@ -270,7 +270,7 @@ def shift_subtitle(file_path, ms_shift, save_path):
         file.writelines(shifted_content)
 
 def shift_subtitle_partial(file_path, start_time, end_time, ms_shift, save_path):
-    with open(file_path, 'r') as file):
+    with open(file_path, 'r') as file:
         content = file.readlines()
 
     shifted_content = []
