@@ -134,17 +134,15 @@ class Settings(QWidget):
         new_state = "light" if current_state == "dark" else "dark"
         self.theme_toggle.set_state(new_state)
         self.config.set_theme(new_state)
-        self.apply_theme()
+        self.apply_theme()  # Apply theme immediately after toggling
 
     def apply_theme(self):
         # Trigger the theme update in the main window
         self.settings_saved.emit()
 
-    def save_settings(self):
-        self.config.set_safe_area_size(self.safe_area_slider.value())
-        self.config.set_text_size(self.text_size_dropdown.currentText())
-        self.config.set_theme(self.theme_toggle.get_state())
-        self.apply_theme()  # Apply theme immediately after saving
-        self.settings_saved.emit()  # Emit the settings_saved signal
-        QMessageBox.information(self, "Success", "Settings saved successfully!")
-        self.back_callback()
+    def toggle_theme(self, event):
+        current_state = self.theme_toggle.get_state()
+        new_state = "light" if current_state == "dark" else "dark"
+        self.theme_toggle.set_state(new_state)
+        self.config.set_theme(new_state)
+        self.apply_theme()  # Apply theme immediately after toggling
