@@ -224,7 +224,7 @@ class MainWindow(QMainWindow):
     def open_settings(self, item=None):
         settings_widget = Settings(parent=self.main_content, back_callback=self.main_menu)
         settings_widget.setFont(self.inter_regular_font)
-        settings_widget.settings_saved.connect(self.apply_settings)  # Connect the settings saved signal to apply theme
+        settings_widget.settings_saved.connect(self.apply_theme)  # Connect the settings saved signal to apply theme
         self.load_tool(settings_widget)
 
     def update_safe_area_size(self):
