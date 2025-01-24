@@ -2,12 +2,13 @@ import os
 import re
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QFileDialog, QMessageBox, QLabel, QLineEdit, QStackedWidget, QFrame
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QPalette, QColor
+from PyQt5.QtGui import QPalette, QColor, QFont
 
 class SubtitleShifter(QWidget):
     def __init__(self, parent=None, back_callback=None):
         super().__init__(parent)
         self.back_callback = back_callback
+        self.setFont(QFont("Inter Regular")
         self.subtitle_path = ""
         self.setup_ui()
 
