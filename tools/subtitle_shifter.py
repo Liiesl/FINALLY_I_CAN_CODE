@@ -215,7 +215,7 @@ class SubtitleShifter(QWidget):
             text_color=self.button_text_color,
             highlight_color=self.highlight_color
         ))
-        self.partial_shift_buttonn.setStyleSheet(self.get_mode_button_style(
+        self.partial_shift_button.setStyleSheet(self.get_mode_button_style(
             selected=True, 
             font_size=self.font_size - 12,
             button_color=self.button_color,
