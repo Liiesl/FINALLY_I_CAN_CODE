@@ -263,7 +263,7 @@ class MainWindow(QMainWindow):
             palette.setColor(QPalette.BrightText, Qt.red)
             palette.setColor(QPalette.Highlight, QColor(75, 110, 175))
             palette.setColor(QPalette.HighlightedText, Qt.white)
-        else:
+        elif theme == "light":
             palette.setColor(QPalette.Window, Qt.white)
             palette.setColor(QPalette.WindowText, Qt.black)
             palette.setColor(QPalette.Base, Qt.white)
@@ -276,6 +276,19 @@ class MainWindow(QMainWindow):
             palette.setColor(QPalette.BrightText, Qt.red)
             palette.setColor(QPalette.Highlight, QColor(75, 110, 175))
             palette.setColor(QPalette.HighlightedText, Qt.black)
+        else:
+            palette.setColor(QPalette.Window, QColor(44, 47, 56))
+            palette.setColor(QPalette.WindowText, Qt.white)
+            palette.setColor(QPalette.Base, QColor(44, 47, 56))
+            palette.setColor(QPalette.AlternateBase, QColor(66, 69, 79))
+            palette.setColor(QPalette.ToolTipBase, Qt.white)
+            palette.setColor(QPalette.ToolTipText, Qt.white)
+            palette.setColor(QPalette.Text, Qt.white)
+            palette.setColor(QPalette.Button, QColor(44, 47, 56))
+            palette.setColor(QPalette.ButtonText, Qt.white)
+            palette.setColor(QPalette.BrightText, Qt.red)
+            palette.setColor(QPalette.Highlight, QColor(75, 110, 175))
+            palette.setColor(QPalette.HighlightedText, Qt.white)
 
         self.app.setPalette(palette)
         
