@@ -144,7 +144,7 @@ class MainWindow(QMainWindow):
         button.setStyleSheet(f"""
             QPushButton {{
                 border: 5px solid {border_color};
-                color: {text_color};
+                color: rgba(255, 255, 255, 0);
                 border-radius: 15px;
                 padding: 10px;
                 min-width: 300px;
