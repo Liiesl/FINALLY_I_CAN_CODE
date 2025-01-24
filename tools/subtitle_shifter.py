@@ -50,10 +50,10 @@ class SubtitleShifter(QWidget):
         layout.addWidget(label)
         return label
 
-    def add_input(self, layout, placeholder="", width=500):
+    def add_input(self, layout, placeholder="", width=100):
         input_box = QLineEdit()
         input_box.setPlaceholderText(placeholder)
-        input_box.setFixedWidth(width)
+        input_box.setFixedWidth(width=500)
         layout.addWidget(input_box)
         return input_box
 
