@@ -97,11 +97,11 @@ class MainWindow(QMainWindow):
             }}
             QPushButton {{
                 border: 5px solid {palette.color(QPalette.Link).name()};
-                color: {palette.color(QPalette.ButtonText).name()};
+                color: rgba(0, 0, 0, 0);
                 border-radius: 15px;
                 padding: 10px;
                 min-width: 200px;
-                min-height: 100px;
+                min-height: 400px;
                 margin: 10px;
                 background-color: {palette.color(QPalette.Button).name()};
                 text-align: center;
@@ -199,11 +199,11 @@ class MainWindow(QMainWindow):
         button.setStyleSheet(f"""
             QPushButton {{
                 border: 5px solid {self.palette().color(QPalette.Link).name()};
-                color: {self.palette().color(QPalette.ButtonText).name()};
+                color: rgba(0, 0, 0, 0);
                 border-radius: 15px;
                 padding: 10px;
                 min-width: 200px;
-                min-height: 100px;
+                min-height: 400x;
                 margin: 10px;
                 background-color: {self.palette().color(QPalette.Button).name()};
                 text-align: center;
