@@ -1,6 +1,6 @@
 import sys
 import qtawesome as qta
-from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QLabel, QScrollArea, QMessageBox, QSplitter, QFrame
+from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QLabel, QScrollArea, QMessageBox, QSplitter, QFrame, QScrollBar
 from PyQt5.QtGui import QPalette, QColor, QFont
 from PyQt5.QtCore import Qt, QPropertyAnimation
 
@@ -10,6 +10,26 @@ from side_panel import SidePanel
 from settings import Settings
 from config import Config
 
+class CustomScrollBar(QScrollBar):
+    def __init__(self, parent=None):
+        super().__init__(Qt.Horizontal, parent)
+        self.setFixedHeight(3)
+        self.setStyleSheet("""
+            QScrollBar:horizontal {
+                background: #2c2f38;
+                height: 3px;
+                margin: 0px 20px 0 20px;
+            }
+            QScrollBar::handle:horizontal {
+                background: #4f86f7;
+                min-width: 20px;
+            }
+            QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
+                border: none;
+                background: none;
+            }
+        """)
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -18,7 +38,7 @@ class MainWindow(QMainWindow):
         self.setStyleSheet("background-color: #2c2f38;")
 
         self.central_widget = QWidget()
-        self.layout = QHBoxLayout(self.central_widget)
+        self.layout = QVBoxLayout(self.central_widget)  # Change to QVBoxLayout
         self.setCentralWidget(self.central_widget)
 
         self.config = Config()
@@ -42,6 +62,11 @@ class MainWindow(QMainWindow):
         self.top_bar_added = False
 
         self.menu_button = None
+
+        self.custom_scroll_bar = CustomScrollBar()
+        self.custom_scroll_bar.valueChanged.connect(self.scroll_area.horizontalScrollBar().setValue)
+        self.scroll_area.horizontalScrollBar().valueChanged.connect(self.custom_scroll_bar.setValue)
+        self.layout.addWidget(self.custom_scroll_bar)
 
         self.main_menu()
 
