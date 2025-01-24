@@ -66,7 +66,7 @@ class MainWindow(QMainWindow):
             palette.setColor(QPalette.ToolTipBase, Qt.white)
             palette.setColor(QPalette.ToolTipText, Qt.white)
             palette.setColor(QPalette.Text, Qt.white)
-            palette.setColor(QPalette.Button, QColor(44, 47, 56))
+            palette.setColor(QPalette.Button, QColor(79, 134, 247))
             palette.setColor(QPalette.ButtonText, Qt.white)
             palette.setColor(QPalette.BrightText, Qt.red)
             palette.setColor(QPalette.Highlight, QColor(75, 110, 175))
@@ -86,7 +86,7 @@ class MainWindow(QMainWindow):
             palette.setColor(QPalette.HighlightedText, Qt.white)
 
         # Add the custom accent color
-        accent_color = QColor("#4f86f7")
+        accent_color = QColor(79, 134, 247)
         palette.setColor(QPalette.Link, accent_color)
 
         self.setPalette(palette)
@@ -100,8 +100,8 @@ class MainWindow(QMainWindow):
                 color: rgba(0, 0, 0, 0);
                 border-radius: 15px;
                 padding: 10px;
-                min-width: 200px;
-                min-height: 400px;
+                width: 200px;
+                height: 400px;
                 margin: 10px;
                 background-color: {palette.color(QPalette.Button).name()};
                 text-align: center;
