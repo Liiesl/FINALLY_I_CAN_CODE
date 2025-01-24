@@ -4,22 +4,22 @@ from PyQt5.QtCore import Qt
 import os
 
 class VersionBlock(QWidget):
-    def __init__(self, version, changes, parent=None):
+    def __init__(self, version, changes, parent=None, show_changes=True):
         super().__init__(parent)
         self.version = version
         self.changes = changes
-        self.init_ui()
+        self.init_ui(show_changes)
 
-    def init_ui(self):
+    def init_ui(self, show_changes):
         self.layout = QVBoxLayout()
 
         # Create the toggle button
         self.toggle_button = QPushButton()
         self.toggle_button.setCheckable(True)
-        self.toggle_button.setChecked(True)
+        self.toggle_button.setChecked(show_changes)
         self.toggle_button.setFixedSize(20, 20)
         self.toggle_button.setStyleSheet("QPushButton {border: none;}")
-        self.toggle_button.setText("▼")
+        self.toggle_button.setText("▼" if show_changes else "▶")
         self.toggle_button.clicked.connect(self.toggle_changes)
 
         # Create the version label
@@ -32,6 +32,7 @@ class VersionBlock(QWidget):
         self.changes_label = QLabel(f"<div style='text-align: center;'>{changes_html}</div>")
         self.changes_label.setWordWrap(True)
         self.changes_label.setAlignment(Qt.AlignCenter)
+        self.changes_label.setVisible(show_changes)
 
         # Add the toggle button and version label to a horizontal layout
         self.header_layout = QHBoxLayout()
@@ -102,20 +103,28 @@ class ChangelogWindow(QMainWindow):
 
     def parse_changelog(self, content):
         lines = content.split('\n')
-        version = None
+        versions = []
         changes = []
         for line in lines:
             stripped_line = line.strip()
             if stripped_line and not stripped_line.startswith('-'):
-                if version and changes:
-                    self.add_version_block(version, changes)
+                if versions and changes:
+                    versions.append((version, changes))
                 version = stripped_line
                 changes = []
             elif stripped_line.startswith('-'):
                 changes.append(stripped_line)
         if version and changes:
-            self.add_version_block(version, changes)
+            versions.append((version, changes))
 
-    def add_version_block(self, version, changes):
-        version_block = VersionBlock(version, changes, self)
+        # Reverse the order of versions to show the latest version on top
+        versions.reverse()
+
+        # Add version blocks to layout
+        for index, (version, changes) in enumerate(versions):
+            show_changes = index < 5  # Show changes for the latest 5 versions
+            self.add_version_block(version, changes, show_changes)
+
+    def add_version_block(self, version, changes, show_changes):
+        version_block = VersionBlock(version, changes, self, show_changes)
         self.scroll_layout.addWidget(version_block)
