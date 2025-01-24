@@ -7,6 +7,7 @@ class SidePanel(QWidget):
         super().__init__(parent)
         self.config = Config()
         self.setup_ui(open_settings_callback)
+        self.setFont(QFont("Inter Regular"))
 
     def setup_ui(self, open_settings_callback):
         self.setStyleSheet("background-color: #1e1e1e;")
