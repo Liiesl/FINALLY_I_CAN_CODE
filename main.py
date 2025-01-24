@@ -104,7 +104,7 @@ class MainWindow(QMainWindow):
         button = QPushButton()
 
         palette = self.app.palette()
-        background_color = palette.color(QPalette.Button).name()
+        background_color = palette.color(QPalette.Base).name()
         border_color = palette.color(QPalette.Highlight).name()
         text_color = palette.color(QPalette.ButtonText).name()
         hover_background_color = palette.color(QPalette.Highlight).name()
@@ -119,7 +119,7 @@ class MainWindow(QMainWindow):
                 min-width: 300px;
                 min-height: 400px;
                 margin: 10px;
-                background-color: tansparent;
+                background-color: rgba(255, 255, 255, 0;
                 text-align: center;
             }}
             QPushButton:hover {{
