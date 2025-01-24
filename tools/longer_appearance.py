@@ -1,7 +1,7 @@
 import os
 import re
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QFileDialog, QMessageBox, QListWidget, QLabel, QComboBox
-from PyQt5.QtGui import QFont
+from PyQt5.QtGui import QFont, QPalette
 from config import Config
 
 class LongerAppearanceSRT(QWidget):
@@ -11,6 +11,7 @@ class LongerAppearanceSRT(QWidget):
         self.setFont(QFont("Inter Regular"))
         self.config = Config()
         self.setup_ui()
+        self.apply_theme()
 
     def setup_ui(self):
         layout = QVBoxLayout(self)
@@ -26,40 +27,66 @@ class LongerAppearanceSRT(QWidget):
         # Create a horizontal layout for the back and select files buttons
         button_layout = QHBoxLayout()
 
-        back_button = QPushButton("Back to Main Menu")
-        back_button.setStyleSheet(f"background-color: #4f86f7; color: white; border-radius: 5px; padding: 15px; font-size: {font_size - 12}px;")
-        back_button.clicked.connect(self.back_callback)
-        button_layout.addWidget(back_button)
+        self.back_button = QPushButton("Back to Main Menu")
+        self.back_button.clicked.connect(self.back_callback)
+        button_layout.addWidget(self.back_button)
 
-        file_button = QPushButton("Select Files")
-        file_button.setStyleSheet(f"background-color: #4f86f7; color: white; border-radius: 5px; padding: 15px; font-size: {font_size - 12}px;")
-        file_button.clicked.connect(self.browse_files)
-        button_layout.addWidget(file_button)
+        self.file_button = QPushButton("Select Files")
+        self.file_button.clicked.connect(self.browse_files)
+        button_layout.addWidget(self.file_button)
 
         layout.addLayout(button_layout)
 
         self.file_list = QListWidget()
-        self.file_list.setStyleSheet("background-color: #3c3f41; color: white;")
         layout.addWidget(self.file_list)
 
         # Create a horizontal layout for the dropdown and export button
         dropdown_layout = QHBoxLayout()
 
-        seconds_label = QLabel("Add Seconds:")
-        seconds_label.setStyleSheet(f"color: white; font-size: {font_size - 12}px;")
-        dropdown_layout.addWidget(seconds_label)
+        self.seconds_label = QLabel("Add Seconds:")
+        dropdown_layout.addWidget(self.seconds_label)
 
         self.seconds_dropdown = QComboBox()
         self.seconds_dropdown.addItems([str(i) for i in range(1, 6)])
-        self.seconds_dropdown.setStyleSheet(f"background-color: #3c3f41; color: white; font-size: {font_size - 12}px; padding: 15px;")
         dropdown_layout.addWidget(self.seconds_dropdown)
 
-        export_button = QPushButton("Export")
-        export_button.setStyleSheet(f"background-color: #4f86f7; color: white; border-radius: 5px; padding: 15px; font-size: {font_size - 12}px;")
-        export_button.clicked.connect(self.export_files)
-        dropdown_layout.addWidget(export_button)
+        self.export_button = QPushButton("Export")
+        self.export_button.clicked.connect(self.export_files)
+        dropdown_layout.addWidget(self.export_button)
 
         layout.addLayout(dropdown_layout)
+
+    def apply_theme(self):
+        # Retrieve the current palette colors
+        palette = self.parent().palette()
+        text_color = palette.color(QPalette.WindowText).name()
+        background_color = palette.color(QPalette.Window).name()
+        button_color = palette.color(QPalette.Button).name()
+        button_text_color = palette.color(QPalette.ButtonText).name()
+        highlight_color = palette.color(QPalette.Highlight).name()
+        hover_color = palette.color(QPalette.Highlight).darker().name()
+
+        self.setStyleSheet(f"background-color: {background_color};")
+        self.file_list.setStyleSheet(f"background-color: {background_color}; color: {text_color};")
+        self.seconds_label.setStyleSheet(f"color: {text_color};")
+        self.seconds_dropdown.setStyleSheet(f"background-color: {background_color}; color: {text_color};")
+
+        self.back_button.setStyleSheet(f"""
+            QPushButton {{
+                border: 2px solid {highlight_color};
+                color: {button_text_color};
+                border-radius: 10px;
+                padding: 10px;
+                background-color: {button_color};
+            }}
+            QPushButton:hover {{
+                border-color: {hover_color};
+                background-color: {hover_color};
+            }}
+        """)
+
+        self.file_button.setStyleSheet(self.back_button.styleSheet())
+        self.export_button.setStyleSheet(self.back_button.styleSheet())
 
     def browse_files(self):
         file_paths, _ = QFileDialog.getOpenFileNames(self, "Select Subtitle Files", "", "Subtitle Files (*.srt)")
