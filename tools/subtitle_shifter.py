@@ -160,10 +160,6 @@ class SubtitleShifter(QWidget):
             "huge": 42
         }.get(text_size, 26)
 
-        button_font_size = self.font_size - 12
-        label_font_size = self.font_size - 12
-        input_font_size = self.font_size - 12
-
         button_style = self.get_button_style()
         self.back_button.setStyleSheet(button_style)
         self.select_file_button.setStyleSheet(button_style)
@@ -190,42 +186,18 @@ class SubtitleShifter(QWidget):
 
     def get_mode_button_style(self, selected):
         if selected:
-            return f"background-color: {self.highlight_color}; color: {self.button_text_color}; border-radius: 5px; padding: 10px; font-size: {self.font_size}px;"
-        return f"background-color: {self.button_color}; color: {self.button_text_color}; border-radius: 5px; padding: 10px; font-size: {self.font_size}px;"
+            return f"background-color: {self.highlight_color}; color: {self.button_text_color}; border-radius: 5px; padding: 10px; font-size: {self.font_size - 12}px;"
+        return f"background-color: {self.button_color}; color: {self.button_text_color}; border-radius: 5px; padding: 10px; font-size: {self.font_size - 12}px;"
 
     def show_whole_shift(self):
         self.stacked_widget.setCurrentWidget(self.whole_shift_widget)
-        self.partial_shift_button.setStyleSheet(self.get_mode_button_style(
-            selected=False, 
-            font_size=self.font_size - 12,
-            button_color=self.button_color,
-            text_color=self.button_text_color,
-            highlight_color=self.highlight_color
-        ))
-        self.whole_shift_button.setStyleSheet(self.get_mode_button_style(
-            selected=True, 
-            font_size=self.font_size - 12,
-            button_color=self.button_color,
-            text_color=self.button_text_color,
-            highlight_color=self.highlight_color
-        ))
+        self.whole_shift_button.setStyleSheet(self.get_mode_button_style(selected=True))
+        self.partial_shift_button.setStyleSheet(self.get_mode_button_style(selected=False))
 
     def show_partial_shift(self):
         self.stacked_widget.setCurrentWidget(self.partial_shift_widget)
-        self.whole_shift_button.setStyleSheet(self.get_mode_button_style(
-            selected=False, 
-            font_size=self.font_size - 12,
-            button_color=self.button_color,
-            text_color=self.button_text_color,
-            highlight_color=self.highlight_color
-        ))
-        self.partial_shift_button.setStyleSheet(self.get_mode_button_style(
-            selected=True, 
-            font_size=self.font_size - 12,
-            button_color=self.button_color,
-            text_color=self.button_text_color,
-            highlight_color=self.highlight_color
-        ))
+        self.whole_shift_button.setStyleSheet(self.get_mode_button_style(selected=False))
+        self.partial_shift_button.setStyleSheet(self.get_mode_button_style(selected=True))
 
     def select_subtitle(self):
         file_path, _ = QFileDialog.getOpenFileName(self, "Select Subtitle File", "", "Subtitle Files (*.srt)")
