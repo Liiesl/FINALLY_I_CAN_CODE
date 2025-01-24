@@ -144,7 +144,7 @@ class Settings(QWidget):
         self.config.set_safe_area_size(self.safe_area_slider.value())
         self.config.set_text_size(self.text_size_dropdown.currentText())
         self.config.set_theme(self.config.data["theme"])  # Save the theme from memory
-        self.config.load()  # Reload the configuration
+        self.config.load()  # Reload the configuration to ensure it is applied
         self.apply_theme()  # Apply theme immediately after saving
         self.settings_saved.emit()  # Emit the settings_saved signal
         QMessageBox.information(self, "Success", "Settings saved successfully!")
