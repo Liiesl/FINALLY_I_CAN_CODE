@@ -11,12 +11,13 @@ class SubtitleShifter(QWidget):
         self.setFont(QFont("Inter Regular"))
         self.subtitle_path = ""
         self.setup_ui()
+        self.apply_theme()
 
     def setup_ui(self):
         layout = QVBoxLayout(self)
 
         # Add Back to Home button
-        self.add_button(layout, "Back to Home", self.back_callback, "background-color: #4f86f7; color: white; border-radius: 5px; padding: 10px; font-size: 14px;")
+        self.back_button = self.add_button(layout, "Back to Home", self.back_callback)
 
         # Mode selection
         self.setup_mode_selection(layout)
@@ -37,23 +38,20 @@ class SubtitleShifter(QWidget):
         # Show the Whole Shift mode by default
         self.show_whole_shift()
 
-    def add_button(self, layout, text, callback, style):
+    def add_button(self, layout, text, callback):
         button = QPushButton(text)
-        button.setStyleSheet(style)
         button.clicked.connect(callback)
         layout.addWidget(button)
         return button
 
-    def add_label(self, layout, text, style):
+    def add_label(self, layout, text):
         label = QLabel(text)
-        label.setStyleSheet(style)
         layout.addWidget(label)
         return label
 
-    def add_input(self, layout, placeholder="", width=100, style="background-color: #3c3f41; color: white; font-size: 14px; padding: 10px;"):
+    def add_input(self, layout, placeholder="", width=100):
         input_box = QLineEdit()
         input_box.setPlaceholderText(placeholder)
-        input_box.setStyleSheet(style)
         input_box.setFixedWidth(width)
         layout.addWidget(input_box)
         return input_box
@@ -62,15 +60,14 @@ class SubtitleShifter(QWidget):
         separator = QFrame()
         separator.setFrameShape(QFrame.HLine)
         separator.setFrameShadow(QFrame.Sunken)
-        separator.setStyleSheet("color: #3c3f41;")
         layout.addWidget(separator)
 
     def setup_mode_selection(self, layout):
         mode_layout = QHBoxLayout()
-        self.add_label(mode_layout, "Select Mode:", "color: white; font-size: 14px;")
+        self.mode_label = self.add_label(mode_layout, "Select Mode:")
 
-        self.whole_shift_button = self.add_button(mode_layout, "Whole Shift", self.show_whole_shift, self.get_mode_button_style(selected=True))
-        self.partial_shift_button = self.add_button(mode_layout, "Partial Shift", self.show_partial_shift, self.get_mode_button_style(selected=False))
+        self.whole_shift_button = self.add_button(mode_layout, "Whole Shift", self.show_whole_shift)
+        self.partial_shift_button = self.add_button(mode_layout, "Partial Shift", self.show_partial_shift)
 
         layout.addLayout(mode_layout)
 
@@ -80,18 +77,18 @@ class SubtitleShifter(QWidget):
 
         # Subtitle file selection
         file_layout = QHBoxLayout()
-        self.add_button(file_layout, "Select Subtitle File", self.select_subtitle, "background-color: #4f86f7; color: white; border-radius: 5px; padding: 10px; font-size: 14px;")
-        self.file_preview = self.add_label(file_layout, "", "color: white; font-size: 14px;")
+        self.select_file_button = self.add_button(file_layout, "Select Subtitle File", self.select_subtitle)
+        self.file_preview = self.add_label(file_layout, "")
         whole_layout.addLayout(file_layout)
 
         # Milliseconds input
         ms_layout = QHBoxLayout()
-        self.add_label(ms_layout, "Shift by (milliseconds):", "color: white; font-size: 14px;")
+        self.ms_label = self.add_label(ms_layout, "Shift by (milliseconds):")
         self.ms_input = self.add_input(ms_layout, "1000", 100)
         whole_layout.addLayout(ms_layout)
 
         # Shift button
-        self.add_button(whole_layout, "Shift", self.whole_shift, "background-color: #4f86f7; color: white; border-radius: 5px; padding: 10px; font-size: 14px;")
+        self.shift_button = self.add_button(whole_layout, "Shift", self.whole_shift)
 
         self.stacked_widget.addWidget(self.whole_shift_widget)
 
@@ -101,39 +98,78 @@ class SubtitleShifter(QWidget):
 
         # Subtitle file selection
         file_layout = QHBoxLayout()
-        self.add_button(file_layout, "Select Subtitle File", self.select_subtitle, "background-color: #4f86f7; color: white; border-radius: 5px; padding: 10px; font-size: 14px;")
-        self.file_preview_partial = self.add_label(file_layout, "", "color: white; font-size: 14px;")
+        self.select_file_button_partial = self.add_button(file_layout, "Select Subtitle File", self.select_subtitle)
+        self.file_preview_partial = self.add_label(file_layout, "")
         partial_layout.addLayout(file_layout)
 
         # Start time input
         start_layout = QHBoxLayout()
-        self.add_label(start_layout, "Start time (hh:mm:ss,fff):", "color: white; font-size: 14px;")
+        self.start_label = self.add_label(start_layout, "Start time (hh:mm:ss,fff):")
         self.start_input = self.add_input(start_layout, "00:00:00,000", 150)
         self.start_input.textChanged.connect(lambda: self.format_time_input(self.start_input))
         partial_layout.addLayout(start_layout)
 
         # End time input
         end_layout = QHBoxLayout()
-        self.add_label(end_layout, "End time (hh:mm:ss,fff):", "color: white; font-size: 14px;")
+        self.end_label = self.add_label(end_layout, "End time (hh:mm:ss,fff):")
         self.end_input = self.add_input(end_layout, "00:00:00,000", 150)
         self.end_input.textChanged.connect(lambda: self.format_time_input(self.end_input))
         partial_layout.addLayout(end_layout)
 
         # Milliseconds input
         ms_layout = QHBoxLayout()
-        self.add_label(ms_layout, "Shift by (milliseconds):", "color: white; font-size: 14px;")
+        self.ms_label_partial = self.add_label(ms_layout, "Shift by (milliseconds):")
         self.ms_input_partial = self.add_input(ms_layout, "1000", 100)
         partial_layout.addLayout(ms_layout)
 
         # Shift button
-        self.add_button(partial_layout, "Shift", self.partial_shift, "background-color: #4f86f7; color: white; border-radius: 5px; padding: 10px; font-size: 14px;")
+        self.shift_button_partial = self.add_button(partial_layout, "Shift", self.partial_shift)
 
         self.stacked_widget.addWidget(self.partial_shift_widget)
 
-    def get_mode_button_style(self, selected):
-        if selected:
-            return "background-color: #3a6dbf; color: white; border-radius: 5px; padding: 10px; font-size: 14px;"
-        return "background-color: #4f86f7; color: white; border-radius: 5px; padding: 10px; font-size: 14px;"
+    def apply_theme(self):
+        # Retrieve the current palette colors
+        palette = self.parent().palette()
+        text_color = palette.color(QPalette.WindowText).name()
+        background_color = palette.color(QPalette.Window).name()
+        button_color = palette.color(QPalette.Button).name()
+        button_text_color = palette.color(QPalette.ButtonText).name()
+        highlight_color = palette.color(QPalette.Highlight).name()
+        hover_color = palette.color(QPalette.Highlight).darker().name()
+
+        self.setStyleSheet(f"background-color: {background_color};")
+        self.file_preview.setStyleSheet(f"color: {text_color};")
+        self.file_preview_partial.setStyleSheet(f"color: {text_color};")
+        self.mode_label.setStyleSheet(f"color: {text_color};")
+        self.ms_label.setStyleSheet(f"color: {text_color};")
+        self.ms_label_partial.setStyleSheet(f"color: {text_color};")
+        self.start_label.setStyleSheet(f"color: {text_color};")
+        self.end_label.setStyleSheet(f"color: {text_color};")
+        self.ms_input.setStyleSheet(f"background-color: {background_color}; color: {text_color};")
+        self.ms_input_partial.setStyleSheet(f"background-color: {background_color}; color: {text_color};")
+        self.start_input.setStyleSheet(f"background-color: {background_color}; color: {text_color};")
+        self.end_input.setStyleSheet(f"background-color: {background_color}; color: {text_color};")
+
+        button_style = f"""
+            QPushButton {{
+                border: 2px solid {highlight_color};
+                color: {button_text_color};
+                border-radius: 10px;
+                padding: 10px;
+                background-color: {button_color};
+            }}
+            QPushButton:hover {{
+                border-color: {hover_color};
+                background-color: {hover_color};
+            }}
+        """
+        self.back_button.setStyleSheet(button_style)
+        self.select_file_button.setStyleSheet(button_style)
+        self.select_file_button_partial.setStyleSheet(button_style)
+        self.shift_button.setStyleSheet(button_style)
+        self.shift_button_partial.setStyleSheet(button_style)
+        self.whole_shift_button.setStyleSheet(button_style)
+        self.partial_shift_button.setStyleSheet(button_style)
 
     def show_whole_shift(self):
         self.stacked_widget.setCurrentWidget(self.whole_shift_widget)
