@@ -63,6 +63,11 @@ class MainWindow(QMainWindow):
 
         self.menu_button = None
 
+        self.scroll_area = QScrollArea()  # Define scroll_area before using it
+        self.scroll_area.setWidgetResizable(True)
+        self.scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+
         self.custom_scroll_bar = CustomScrollBar()
         self.custom_scroll_bar.valueChanged.connect(self.scroll_area.horizontalScrollBar().setValue)
         self.scroll_area.horizontalScrollBar().valueChanged.connect(self.custom_scroll_bar.setValue)
@@ -123,13 +128,8 @@ class MainWindow(QMainWindow):
         self.left_arrow_button.clicked.connect(self.scroll_left)
         navigation_layout.addWidget(self.left_arrow_button)
 
-        scroll_area = QScrollArea()
-        scroll_area.setWidgetResizable(True)
-        scroll_area.setWidget(self.tool_buttons_container)
-        scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.scroll_area = scroll_area
-        navigation_layout.addWidget(scroll_area)
+        self.scroll_area.setWidget(self.tool_buttons_container)
+        navigation_layout.addWidget(self.scroll_area)
 
         self.right_arrow_button = QPushButton()
         right_arrow_icon = qta.icon('fa.chevron-right')
