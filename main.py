@@ -20,7 +20,7 @@ class MainWindow(QMainWindow):
         # Load the Inter fonts
         QFontDatabase.addApplicationFont("assets/fonts/Inter-Regular.otf")
         QFontDatabase.addApplicationFont("assets/fonts/Inter-ExtraBold.otf")
-        
+
         self.inter_regular_font = QFont("Inter Regular")
         self.inter_extra_bold_font = QFont("Inter ExtraBold")
 
@@ -134,7 +134,7 @@ class MainWindow(QMainWindow):
                 color: white;
                 border-radius: 15px;
                 padding: 10px;
-                min-width: 300px;
+                min-width: 200px;
                 min-height: 400px;
                 margin: 10px;
                 background-color: #2c2f38;
@@ -146,22 +146,14 @@ class MainWindow(QMainWindow):
             }
         """)
 
-        text_size = self.config.get_text_size()
-        font_size = {
-            "small": 18,
-            "default": 26,
-            "large": 34,
-            "huge": 42
-        }.get(text_size, 26)
-
         name_label = QLabel(tool_name)
-        name_label.setFont(QFont("Inter ExtraBold", font_size, QFont.Bold))
+        name_label.setFont(self.inter_extra_bold_font)
         name_label.setStyleSheet("color: #4f86f7; background-color: transparent;")
         name_label.setWordWrap(True)
         name_label.setAlignment(Qt.AlignCenter)
 
         description_label = QLabel(tool_description)
-        description_label.setFont(QFont("Inter Regular", font_size))
+        description_label.setFont(self.inter_regular_font)
         description_label.setStyleSheet("color: #D3D3D3; background-color: transparent;")
         description_label.setWordWrap(True)
         description_label.setAlignment(Qt.AlignCenter)
@@ -221,11 +213,11 @@ class MainWindow(QMainWindow):
     def apply_text_size(self):
         text_size = self.config.get_text_size()
         font_size = {
-            "small": 18,
-            "default": 26,
-            "large": 34,
-            "huge": 42
-        }.get(text_size, 26)
+            "small": 16,   # Changed values
+            "default": 20, # Changed values
+            "large": 24,   # Changed values
+            "huge": 28     # Changed values
+        }.get(text_size, 20)
 
         self.setStyleSheet(f"""
             * {{
