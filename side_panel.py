@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QListWidget, QListWidg
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont, QPalette
 from config import Config
-from changelog_window import ChangelogWindow
+from assets.changelog.changelog_window import ChangelogWindow  # Update the import path
 
 class SidePanel(QWidget):
     def __init__(self, parent=None, open_settings_callback=None):
