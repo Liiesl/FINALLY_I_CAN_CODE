@@ -163,6 +163,9 @@ class MergeSRT(QWidget):
     
         # Create a horizontal layout for the label and toggle switch
         label_toggle_layout = QHBoxLayout()
+        label_toggle_layout.setSpacing(0)  # Set spacing between widgets to 0
+        label_toggle_layout.setContentsMargins(0, 0, 0, 0)  # Set margins to 0
+        
         self.color_label = self.add_label(label_toggle_layout, "Color the merged subtitles?", f"color: {self.text_color}; font-size: {label_font_size}px;")
     
         self.color_toggle = ToggleSwitch()
