@@ -11,7 +11,7 @@ class Settings(QWidget):
         super().__init__(parent)
         self.back_callback = back_callback
         self.setFont(QFont("Inter Regular"))
-        self.config = Config()
+        self.config = Config(source="Settings")
         self.init_ui()
 
     def init_ui(self):
