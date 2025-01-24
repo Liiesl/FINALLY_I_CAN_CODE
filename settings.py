@@ -107,7 +107,9 @@ class Settings(QWidget):
         self.apply_text_size_to_all_pages()
 
     def update_theme(self, event):
-        self.theme_switch.mousePressEvent(event)
+        # Update the state directly without calling mousePressEvent
+        self.theme_switch._state = not self.theme_switch._state
+        self.theme_switch.animate_circle()
         theme = self.theme_switch.get_state()
         self.config.set_theme(theme)
         self.apply_theme_to_all_pages()
