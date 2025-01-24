@@ -57,8 +57,9 @@ class MainWindow(QMainWindow):
 
     def apply_theme(self):
         theme = self.config.get_theme()
+        palette = QPalette()
+        
         if theme == "dark":
-            palette = QPalette()
             palette.setColor(QPalette.Window, QColor(44, 47, 56))
             palette.setColor(QPalette.WindowText, Qt.white)
             palette.setColor(QPalette.Base, QColor(44, 47, 56))
@@ -71,10 +72,8 @@ class MainWindow(QMainWindow):
             palette.setColor(QPalette.BrightText, Qt.red)
             palette.setColor(QPalette.Highlight, QColor(75, 110, 175))
             palette.setColor(QPalette.HighlightedText, Qt.white)
-            self.setPalette(palette)
-            self.setStyleSheet("background-color: #2c2f38;")
+            self.setStyleSheet("background-color: #2c2f38; color: #ffffff;")
         else:
-            palette = QPalette()
             palette.setColor(QPalette.Window, Qt.white)
             palette.setColor(QPalette.WindowText, Qt.black)
             palette.setColor(QPalette.Base, Qt.white)
@@ -87,9 +86,10 @@ class MainWindow(QMainWindow):
             palette.setColor(QPalette.BrightText, Qt.red)
             palette.setColor(QPalette.Highlight, QColor(75, 110, 175))
             palette.setColor(QPalette.HighlightedText, Qt.white)
-            self.setPalette(palette)
             self.setStyleSheet("background-color: #ffffff; color: #000000;")
 
+        self.setPalette(palette)
+        
     def main_menu(self):
         self.main_menu_active = True
 
