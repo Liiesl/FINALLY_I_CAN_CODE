@@ -33,3 +33,10 @@ class Config:
     def set_text_size(self, size):
         self.data["text_size"] = size
         self.save()
+        
+    def get_theme(self):
+        return self.data.get("theme", "dark")
+
+    def set_theme(self, theme):
+        self.data["theme"] = theme
+        self.save()
