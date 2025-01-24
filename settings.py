@@ -148,4 +148,4 @@ class Settings(QWidget):
         self.apply_theme()  # Apply theme immediately after saving
         self.settings_saved.emit()  # Emit the settings_saved signal
         QMessageBox.information(self, "Success", "Settings saved successfully!")
-        self.back_callback()
+        # Do not call self.back_callback() to keep the settings window open
