@@ -7,7 +7,8 @@ class Config:
     def __init__(self):
         self.data = {
             "safe_area_size": 0,
-            "text_size": "small"  # Default text size
+            "text_size": "small",  # Default text size
+            "theme": "dark"  # Default theme
         }
         self.load()
 
@@ -32,4 +33,11 @@ class Config:
 
     def set_text_size(self, size):
         self.data["text_size"] = size
+        self.save()
+
+    def get_theme(self):
+        return self.data.get("theme", "dark")
+
+    def set_theme(self, theme):
+        self.data["theme"] = theme
         self.save()
