@@ -198,34 +198,13 @@ class MainWindow(QMainWindow):
 
     def create_tool_button(self, tool_name, tool_description):
         button = QPushButton()
-        button.setStyleSheet("""
-            QPushButton {
-                border: 5px solid #4f86f7;
-                color: white;
-                border-radius: 15px;
-                padding: 10px;
-                min-width: 200px;
-                min-height: 400px;
-                margin: 10px;
-                background-color: #2c2f38;
-                text-align: center;
-            }
-            QPushButton:hover {
-                border-color: #3a6dbf;
-                background-color: #3a6dbf;
-            }
-        """)
 
         name_label = QLabel(tool_name)
         name_label.setFont(self.inter_extra_bold_font)
-        name_label.setStyleSheet("color: #4f86f7; background-color: transparent;")
-        name_label.setWordWrap(True)
         name_label.setAlignment(Qt.AlignCenter)
 
         description_label = QLabel(tool_description)
         description_label.setFont(self.inter_regular_font)
-        description_label.setStyleSheet("color: #adadad; background-color: transparent;")
-        description_label.setWordWrap(True)
         description_label.setAlignment(Qt.AlignCenter)
 
         button_layout = QVBoxLayout(button)
@@ -234,7 +213,7 @@ class MainWindow(QMainWindow):
 
         button.clicked.connect(lambda: self.tool_selected(tool_name))
         return button
-
+        
     def tool_selected(self, tool_name):
         if tool_name == "Longer Appearance SRT":
             from tools.longer_appearance import LongerAppearanceSRT
