@@ -20,14 +20,14 @@ class MergeSRT(QWidget):
     
         # Retrieve the current palette colors
         palette = self.parent().palette()
-        text_color = palette.color(QPalette.WindowText).name()
-        background_color = palette.color(QPalette.Window).name()
-        button_color = palette.color(QPalette.Button).name()
-        button_text_color = palette.color(QPalette.ButtonText).name()
-        highlight_color = palette.color(QPalette.Highlight).name()
-        hover_color = palette.color(QPalette.Highlight).darker().name()
+        self.text_color = palette.color(QPalette.WindowText).name()
+        self.background_color = palette.color(QPalette.Window).name()
+        self.button_color = palette.color(QPalette.Button).name()
+        self.button_text_color = palette.color(QPalette.ButtonText).name()
+        self.highlight_color = palette.color(QPalette.Highlight).name()
+        self.hover_color = palette.color(QPalette.Highlight).darker().name()
     
-        self.setStyleSheet(f"background-color: {background_color};")
+        self.setStyleSheet(f"background-color: {self.background_color};")
         
         text_size = self.config.get_text_size()
         self.font_size = {
@@ -42,10 +42,10 @@ class MergeSRT(QWidget):
         input_font_size = self.font_size - 12
     
         # Back to Home button
-        self.add_button(layout, "Back to Home", self.back_callback, f"background-color: {button_color}; color: {button_text_color}; border-radius: 5px; padding: 10px; font-size: {button_font_size}px;")
+        self.add_button(layout, "Back to Home", self.back_callback, f"background-color: {self.button_color}; color: {self.button_text_color}; border-radius: 5px; padding: 10px; font-size: {button_font_size}px;")
     
         # Mode selection
-        self.setup_mode_selection(layout, button_font_size, label_font_size, button_color, button_text_color, highlight_color, hover_color)
+        self.setup_mode_selection(layout, button_font_size, label_font_size, self.button_color, self.button_text_color, self.highlight_color, self.hover_color)
     
         # Separator line
         self.add_separator(layout)
@@ -55,10 +55,10 @@ class MergeSRT(QWidget):
         layout.addWidget(self.stacked_widget)
     
         # Glue End to End mode
-        self.setup_glue_end_to_end_mode(button_font_size, label_font_size, input_font_size, button_color, button_text_color, highlight_color, hover_color, text_color)
+        self.setup_glue_end_to_end_mode(button_font_size, label_font_size, input_font_size, self.button_color, self.button_text_color, self.highlight_color, self.hover_color, self.text_color)
     
         # Stacked Merge mode
-        self.setup_stacked_merge_mode(button_font_size, label_font_size, input_font_size, button_color, button_text_color, highlight_color, hover_color, text_color)
+        self.setup_stacked_merge_mode(button_font_size, label_font_size, input_font_size, self.button_color, self.button_text_color, self.highlight_color, self.hover_color, self.text_color)
     
         # Show the Glue End to End mode by default
         self.show_glue_end_to_end()
@@ -159,21 +159,21 @@ class MergeSRT(QWidget):
         
     def setup_color_options(self, layout, input_font_size, label_font_size):
         color_layout = QVBoxLayout()
-        self.color_label = self.add_label(color_layout, "Color options:", f"color: white; font-size: {label_font_size}px;")
+        self.color_label = self.add_label(color_layout, "Color options:", f"color: {self.text_color}; font-size: {label_font_size}px;")
 
         self.color_combo = QComboBox()
         self.color_combo.addItems(["None", "Color the merged subtitles"])
-        self.color_combo.setStyleSheet(f"background-color: #3c3f41; color: white; font-size: {input_font_size}px;")
+        self.color_combo.setStyleSheet(f"background-color: #3c3f41; color: {self.text_color}; font-size: {input_font_size}px;")
         self.color_combo.currentIndexChanged.connect(self.toggle_color_options)
         color_layout.addWidget(self.color_combo)
 
         self.color_palette_layout = QHBoxLayout()
         self.color_palette = QComboBox()
         self.add_color_options_to_palette()
-        self.color_palette.setStyleSheet(f"background-color: #3c3f41; color: white; font-size: {input_font_size}px;")
+        self.color_palette.setStyleSheet(f"background-color: #3c3f41; color: {self.text_color}; font-size: {input_font_size}px;")
         self.color_palette_layout.addWidget(self.color_palette)
 
-        self.hex_input = self.add_input(self.color_palette_layout, "#000000", 100, f"background-color: #3c3f41; color: white; font-size: {input_font_size}px; padding: 10px;")
+        self.hex_input = self.add_input(self.color_palette_layout, "#000000", 100, f"background-color: #3c3f41; color: {self.text_color}; font-size: {input_font_size}px; padding: 10px;")
         color_layout.addLayout(self.color_palette_layout)
 
         # Initially hide color options
@@ -188,13 +188,37 @@ class MergeSRT(QWidget):
        
     def show_glue_end_to_end(self):
         self.stacked_widget.setCurrentWidget(self.glue_end_to_end_widget)
-        self.glue_end_to_end_button.setStyleSheet(self.get_mode_button_style(selected=True, font_size=self.font_size - 12))
-        self.stacked_merge_button.setStyleSheet(self.get_mode_button_style(selected=False, font_size=self.font_size - 12))
+        self.glue_end_to_end_button.setStyleSheet(self.get_mode_button_style(
+            selected=True, 
+            font_size=self.font_size - 12,
+            button_color=self.button_color,
+            text_color=self.button_text_color,
+            highlight_color=self.highlight_color
+        ))
+        self.stacked_merge_button.setStyleSheet(self.get_mode_button_style(
+            selected=False, 
+            font_size=self.font_size - 12,
+            button_color=self.button_color,
+            text_color=self.button_text_color,
+            highlight_color=self.highlight_color
+        ))
 
     def show_stacked_merge(self):
         self.stacked_widget.setCurrentWidget(self.stacked_merge_widget)
-        self.glue_end_to_end_button.setStyleSheet(self.get_mode_button_style(selected=False, font_size=self.font_size - 12))
-        self.stacked_merge_button.setStyleSheet(self.get_mode_button_style(selected=True, font_size=self.font_size - 12))
+        self.glue_end_to_end_button.setStyleSheet(self.get_mode_button_style(
+            selected=False, 
+            font_size=self.font_size - 12,
+            button_color=self.button_color,
+            text_color=self.button_text_color,
+            highlight_color=self.highlight_color
+        ))
+        self.stacked_merge_button.setStyleSheet(self.get_mode_button_style(
+            selected=True, 
+            font_size=self.font_size - 12,
+            button_color=self.button_color,
+            text_color=self.button_text_color,
+            highlight_color=self.highlight_color
+        ))
 
     def select_main_subtitle(self):
         file_path = self.select_subtitle_file()
