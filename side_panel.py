@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QListWidget, QListWidgetItem
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QListWidget, QListWidgetItem, QPushButton
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont, QPalette
 from config import Config
@@ -46,7 +46,6 @@ class SidePanel(QWidget):
         # Add settings item to the list
         settings_item = QListWidgetItem("Settings")
         settings_item.setTextAlignment(Qt.AlignLeft)
-        self.info_label.setStyleSheet(f"color: {text_color}; font-size: {font_size}px; font-weight: bold; background-color: none;")
         settings_item.setFlags(settings_item.flags() | Qt.ItemIsSelectable | Qt.ItemIsEnabled)
         self.settings_list.addItem(settings_item)
 
@@ -71,8 +70,13 @@ class SidePanel(QWidget):
             self.open_changelog_window()
 
     def open_changelog_window(self):
-        self.changelog_window = ChangelogWindow(self)
-        self.changelog_window.show()
+        # Check if changelog window is already open
+        if not hasattr(self, 'changelog_window') or not self.changelog_window.isVisible():
+            self.changelog_window = ChangelogWindow(self)
+            self.changelog_window.show()
+        else:
+            self.changelog_window.raise_()
+            self.changelog_window.activateWindow()
 
     def apply_theme(self):
         # Retrieve the current palette colors
