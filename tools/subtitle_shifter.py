@@ -131,26 +131,25 @@ class SubtitleShifter(QWidget):
     def apply_theme(self):
         # Retrieve the current palette colors
         palette = self.parent().palette()
-        text_color = palette.color(QPalette.WindowText).name()
-        background_color = palette.color(QPalette.Window).name()
-        button_color = palette.color(QPalette.Button).name()
-        button_text_color = palette.color(QPalette.ButtonText).name()
-        highlight_color = palette.color(QPalette.Highlight).name()
-        hover_color = palette.color(QPalette.Highlight).darker().name()
-        highlight_color = palette.color(QPalette.Highlight).name()
+        self.text_color = palette.color(QPalette.WindowText).name()
+        self.background_color = palette.color(QPalette.Window).name()
+        self.button_color = palette.color(QPalette.Button).name()
+        self.button_text_color = palette.color(QPalette.ButtonText).name()
+        self.highlight_color = palette.color(QPalette.Highlight).name()
+        self.hover_color = palette.color(QPalette.Highlight).darker().name()
 
-        self.setStyleSheet(f"background-color: {background_color};")
-        self.file_preview.setStyleSheet(f"color: {text_color};")
-        self.file_preview_partial.setStyleSheet(f"color: {text_color};")
-        self.mode_label.setStyleSheet(f"color: {text_color};")
-        self.ms_label.setStyleSheet(f"color: {text_color};")
-        self.ms_label_partial.setStyleSheet(f"color: {text_color};")
-        self.start_label.setStyleSheet(f"color: {text_color};")
-        self.end_label.setStyleSheet(f"color: {text_color};")
-        self.ms_input.setStyleSheet(f"background-color: {background_color}; color: {text_color};")
-        self.ms_input_partial.setStyleSheet(f"background-color: {background_color}; color: {text_color};")
-        self.start_input.setStyleSheet(f"background-color: {background_color}; color: {text_color};")
-        self.end_input.setStyleSheet(f"background-color: {background_color}; color: {text_color};")
+        self.setStyleSheet(f"background-color: {self.background_color};")
+        self.file_preview.setStyleSheet(f"color: {self.text_color};")
+        self.file_preview_partial.setStyleSheet(f"color: {self.text_color};")
+        self.mode_label.setStyleSheet(f"color: {self.text_color};")
+        self.ms_label.setStyleSheet(f"color: {self.text_color};")
+        self.ms_label_partial.setStyleSheet(f"color: {self.text_color};")
+        self.start_label.setStyleSheet(f"color: {self.text_color};")
+        self.end_label.setStyleSheet(f"color: {self.text_color};")
+        self.ms_input.setStyleSheet(f"background-color: {self.background_color}; color: {self.text_color};")
+        self.ms_input_partial.setStyleSheet(f"background-color: {self.background_color}; color: {self.text_color};")
+        self.start_input.setStyleSheet(f"background-color: {self.background_color}; color: {self.text_color};")
+        self.end_input.setStyleSheet(f"background-color: {self.background_color}; color: {self.text_color};")
 
         text_size = self.config.get_text_size()
         self.font_size = {
@@ -160,19 +159,7 @@ class SubtitleShifter(QWidget):
             "huge": 42
         }.get(text_size, 26)
 
-        button_style = f"""
-            QPushButton {{
-                border: 2px solid {highlight_color};
-                color: {button_text_color};
-                border-radius: 10px;
-                padding: 10px;
-                background-color: {button_color};
-            }}
-            QPushButton:hover {{
-                border-color: {hover_color};
-                background-color: {hover_color};
-            }}
-        """
+        button_style = self.get_button_style()
         self.back_button.setStyleSheet(button_style)
         self.select_file_button.setStyleSheet(button_style)
         self.select_file_button_partial.setStyleSheet(button_style)
@@ -181,11 +168,26 @@ class SubtitleShifter(QWidget):
         self.whole_shift_button.setStyleSheet(self.get_mode_button_style(selected=True))
         self.partial_shift_button.setStyleSheet(self.get_mode_button_style(selected=False))
 
+    def get_button_style(self):
+        return f"""
+            QPushButton {{
+                border: 2px solid {self.highlight_color};
+                color: {self.button_text_color};
+                border-radius: 10px;
+                padding: 10px;
+                background-color: {self.button_color};
+            }}
+            QPushButton:hover {{
+                border-color: {self.hover_color};
+                background-color: {self.hover_color};
+            }}
+        """
+
     def get_mode_button_style(self, selected):
         if selected:
-            return f"background-color: {highlight_color}; color: {text_color}; border-radius: 5px; padding: 10px; font-size: {font_size}px;"
-        return f"background-color: {button_color}; color: {text_color}; border-radius: 5px; padding: 10px; font-size: {font_size}px;"    
-       
+            return f"background-color: {self.highlight_color}; color: {self.button_text_color}; border-radius: 5px; padding: 10px; font-size: {self.font_size}px;"
+        return f"background-color: {self.button_color}; color: {self.button_text_color}; border-radius: 5px; padding: 10px; font-size: {self.font_size}px;"
+
     def show_whole_shift(self):
         self.stacked_widget.setCurrentWidget(self.whole_shift_widget)
         self.whole_shift_button.setStyleSheet(self.get_mode_button_style(selected=True))
