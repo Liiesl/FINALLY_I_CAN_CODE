@@ -75,10 +75,7 @@ class MainWindow(QMainWindow):
             ("Merge SRT Files", "Combine multiple SRT files into one."),
             ("Subtitle Converter", "Convert subtitles between different formats."),
             ("Subtitle Shifter", "Shift subtitles by milliseconds."),
-            ("Coming Soon", "New tools will be added here."),
-            ("Temporary Tool 1", "Temporary tool for testing."),
-            ("Temporary Tool 2", "Temporary tool for testing."),
-            ("Temporary Tool 3", "Temporary tool for testing.")
+            ("Coming Soon", "More tools will be added in the future.")
         ]
 
         for tool in tools:
