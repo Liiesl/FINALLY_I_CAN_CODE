@@ -12,8 +12,10 @@ class SubtitleShifter(QWidget):
         self.setFont(QFont("Inter Regular"))
         self.subtitle_path = ""
         self.config = Config()
+        self.font_size = None  # Initialize font_size attribute
         self.setup_ui()
-        self.apply_theme()
+        self.apply_theme()  # Ensure apply_theme is called before show_whole_shift
+        self.show_whole_shift()  # Move show_whole_shift here
 
     def setup_ui(self):
         layout = QVBoxLayout(self)
@@ -36,9 +38,6 @@ class SubtitleShifter(QWidget):
 
         # Partial Shift mode
         self.setup_partial_shift_mode()
-
-        # Show the Whole Shift mode by default
-        self.show_whole_shift()
 
     def add_button(self, layout, text, callback):
         button = QPushButton(text)
