@@ -22,7 +22,7 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.central_widget)
 
         self.config = Config()
-        self.main_menu_active = True  # Track if the main menu is active
+        self.main_menu_active = True
 
         self.side_panel = SidePanel(self, self.open_settings)
         self.side_panel.setVisible(False)
@@ -46,7 +46,7 @@ class MainWindow(QMainWindow):
         self.main_menu()
 
     def main_menu(self):
-        self.main_menu_active = True  # Set flag to indicate main menu is active
+        self.main_menu_active = True
 
         for i in reversed(range(self.main_content_layout.count())):
             widget = self.main_content_layout.itemAt(i).widget()
@@ -122,15 +122,15 @@ class MainWindow(QMainWindow):
         button = QPushButton()
         button.setStyleSheet("""
             QPushButton {
-                border: 5px solid #4f86f7; 
+                border: 5px solid #4f86f7;
                 color: white;
-                border-radius: 15px; /* Increased corner radius */
+                border-radius: 15px;
                 padding: 10px;
-                min-width: 300px; /* Increased width */
-                min-height: 400px; /* Increased height */
+                min-width: 300px;
+                min-height: 400px;
                 margin: 10px;
-                background-color: #2c2f38; 
-                text-align: center; 
+                background-color: #2c2f38;
+                text-align: center;
             }
             QPushButton:hover {
                 border-color: #3a6dbf;
@@ -138,7 +138,6 @@ class MainWindow(QMainWindow):
             }
         """)
 
-        # Get the current text size and calculate the adjusted sizes
         text_size = self.config.get_text_size()
         font_size = {
             "small": 18,
@@ -184,7 +183,7 @@ class MainWindow(QMainWindow):
             QMessageBox.information(self, "Coming Soon", "This feature is coming soon!")
 
     def load_tool(self, tool_widget):
-        self.main_menu_active = False  # Set flag to indicate main menu is not active
+        self.main_menu_active = False
 
         for i in reversed(range(self.main_content_layout.count())):
             widget = self.main_content_layout.itemAt(i).widget()
@@ -255,7 +254,6 @@ class MainWindow(QMainWindow):
         animation.setStartValue(start_value)
         animation.setEndValue(end_value)
         animation.start()
-        # Keep a reference to avoid garbage collection
         self.animation = animation
 
 if __name__ == "__main__":
