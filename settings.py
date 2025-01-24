@@ -17,15 +17,39 @@ class Settings(QWidget):
     def init_ui(self):
         layout = QVBoxLayout()
 
+        # Retrieve the current palette colors
+        palette = self.parent().palette()
+        text_color = palette.color(QPalette.WindowText).name()
+        background_color = palette.color(QPalette.Window).name()
+        button_color = palette.color(QPalette.Button).name()
+        button_text_color = palette.color(QPalette.ButtonText).name()
+        highlight_color = palette.color(QPalette.Highlight).name()
+        hover_color = palette.color(QPalette.Highlight).darker().name()
+
         # Back to Home button
         back_button = QPushButton("Back to Home")
+        back_button.setStyleSheet(f"""
+            QPushButton {{
+                border: 2px solid {highlight_color};
+                color: {button_text_color};
+                border-radius: 10px;
+                padding: 10px;
+                min-height: 40px;
+                background-color: {button_color};
+                text-align: center;
+            }}
+            QPushButton:hover {{
+                border-color: {hover_color};
+                background-color: {hover_color};
+            }}
+        """)
         back_button.clicked.connect(self.back_callback)
         layout.addWidget(back_button)
 
         # Safe Area Slider
         safe_area_layout = QHBoxLayout()
         safe_area_label = QLabel("Safe Area Size (px):")
-        safe_area_label.setStyleSheet("color: white; font-size: 26px;")
+        safe_area_label.setStyleSheet(f"color: {text_color}; font-size: 26px;")
         safe_area_layout.addWidget(safe_area_label)
 
         self.safe_area_slider = QSlider(Qt.Horizontal)
@@ -38,7 +62,7 @@ class Settings(QWidget):
         safe_area_layout.addWidget(self.safe_area_slider)
 
         self.safe_area_value_label = QLabel(f"{self.config.get_safe_area_size()} px")
-        self.safe_area_value_label.setStyleSheet("color: white;")
+        self.safe_area_value_label.setStyleSheet(f"color: {text_color};")
         safe_area_layout.addWidget(self.safe_area_value_label)
 
         layout.addLayout(safe_area_layout)
@@ -46,13 +70,14 @@ class Settings(QWidget):
         # Text Size Dropdown
         text_size_layout = QHBoxLayout()
         text_size_label = QLabel("Text Size:")
-        text_size_label.setStyleSheet("color: white; font-size: 26px;")
+        text_size_label.setStyleSheet(f"color: {text_color}; font-size: 26px;")
         text_size_layout.addWidget(text_size_label)
 
         self.text_size_dropdown = QComboBox()
         self.text_size_dropdown.addItems(["small", "default", "large", "huge"])
         self.text_size_dropdown.setCurrentText(self.config.get_text_size())
         self.text_size_dropdown.currentTextChanged.connect(self.update_text_size)
+        self.text_size_dropdown.setStyleSheet(f"background-color: {background_color}; color: {text_color};")
         text_size_layout.addWidget(self.text_size_dropdown)
 
         layout.addLayout(text_size_layout)
@@ -60,7 +85,7 @@ class Settings(QWidget):
         # Theme Toggle Switch
         theme_layout = QHBoxLayout()
         theme_label = QLabel("Theme:")
-        theme_label.setStyleSheet("color: white; font-size: 26px;")
+        theme_label.setStyleSheet(f"color: {text_color}; font-size: 26px;")
         theme_layout.addWidget(theme_label)
 
         self.theme_toggle = ToggleSwitch()
@@ -72,32 +97,26 @@ class Settings(QWidget):
 
         # Save button
         save_button = QPushButton("Save")
+        save_button.setStyleSheet(f"""
+            QPushButton {{
+                border: 2px solid {highlight_color};
+                color: {button_text_color};
+                border-radius: 10px;
+                padding: 10px;
+                min-height: 40px;
+                background-color: {button_color};
+                text-align: center;
+            }}
+            QPushButton:hover {{
+                border-color: {hover_color};
+                background-color: {hover_color};
+            }}
+        """)
         save_button.clicked.connect(self.save_settings)
         layout.addWidget(save_button)
 
         self.setLayout(layout)
-        self.setStyleSheet("background-color: #2c2f38;")
-
-        # Apply button styles
-        self.apply_button_styles([back_button, save_button])
-
-    def apply_button_styles(self, buttons):
-        for button in buttons:
-            button.setStyleSheet("""
-                QPushButton {
-                    border: 2px solid #4f86f7; /* Thicker edge line */
-                    color: white;
-                    border-radius: 10px;
-                    padding: 10px;
-                    min-height: 40px;
-                    background-color: #4f86f7; /* Accented blue color */
-                    text-align: center; /* Center align text */
-                }
-                QPushButton:hover {
-                    border-color: #3a6dbf;
-                    background-color: #3a6dbf; /* Darker blue on hover */
-                }
-            """)
+        self.setStyleSheet(f"background-color: {background_color};")
 
     def update_safe_area(self, value):
         self.safe_area_value_label.setText(f"{value} px")
