@@ -146,17 +146,14 @@ class MainWindow(QMainWindow):
             "huge": 42
         }.get(text_size, 26)
 
-        name_font_size = font_size + 2
-        description_font_size = font_size - 3
-
         name_label = QLabel(tool_name)
-        name_label.setFont(QFont("Arial", name_font_size, QFont.Bold))
+        name_label.setFont(QFont("Arial", font_size, QFont.Bold))
         name_label.setStyleSheet("color: #4f86f7; background-color: transparent;")
         name_label.setWordWrap(True)
         name_label.setAlignment(Qt.AlignCenter)
 
         description_label = QLabel(tool_description)
-        description_label.setFont(QFont("Arial", description_font_size))
+        description_label.setFont(QFont("Arial", font_size))
         description_label.setStyleSheet("color: #D3D3D3; background-color: transparent;")
         description_label.setWordWrap(True)
         description_label.setAlignment(Qt.AlignCenter)
