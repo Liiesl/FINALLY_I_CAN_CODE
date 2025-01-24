@@ -1,7 +1,8 @@
-from PyQt5.QtWidgets import QMainWindow, QTextEdit, QVBoxLayout, QWidget, QLabel, QApplication
-from PyQt5.QtGui import QPalette, QFont
+from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QLabel, QScrollArea
+from PyQt5.QtGui import QPalette, QApplication, QFont
 from PyQt5.QtCore import Qt
 import os
+from version_block import VersionBlock
 
 class ChangelogWindow(QMainWindow):
     def __init__(self, parent=None):
@@ -20,13 +21,17 @@ class ChangelogWindow(QMainWindow):
         self.title_label.setFont(QFont("Inter ExtraBold", 50))
         self.layout.addWidget(self.title_label)
         
-        # Create a QTextEdit for the changelog content
-        self.text_edit = QTextEdit()
-        self.text_edit.setReadOnly(True)
-        self.layout.addWidget(self.text_edit)
+        # Create a scroll area for the version blocks
+        self.scroll_area = QScrollArea()
+        self.scroll_area.setWidgetResizable(True)
+        self.scroll_content = QWidget()
+        self.scroll_layout = QVBoxLayout(self.scroll_content)
         
         self.apply_palette()
         self.load_changelog()
+        
+        self.scroll_area.setWidget(self.scroll_content)
+        self.layout.addWidget(self.scroll_area)
 
     def apply_palette(self):
         palette = QApplication.instance().palette()
@@ -35,15 +40,32 @@ class ChangelogWindow(QMainWindow):
         
         self.setStyleSheet(f"background-color: {background_color}; color: {text_color};")
         self.title_label.setStyleSheet(f"background-color: {background_color}; color: {text_color};")
-        self.text_edit.setStyleSheet(f"background-color: {background_color}; color: {text_color};")
+        self.scroll_content.setStyleSheet(f"background-color: {background_color}; color: {text_color};")
 
     def load_changelog(self):
         changelog_path = os.path.join(os.path.dirname(__file__), 'changelog.txt')
         try:
             with open(changelog_path, 'r') as file:
                 content = file.read()
-                # Use HTML to center-align the text
-                html_content = f"<div style='text-align: center;'>{content.replace('\n', '<br>')}</div>"
-                self.text_edit.setHtml(html_content)
+                self.parse_changelog(content)
         except FileNotFoundError:
-            self.text_edit.setHtml("<div style='text-align: center;'>Changelog file not found.</div>")
+            self.scroll_layout.addWidget(QLabel("Changelog file not found."))
+
+    def parse_changelog(self, content):
+        lines = content.split('\n')
+        version = None
+        changes = []
+        for line in lines:
+            if line.startswith('version'):
+                if version and changes:
+                    self.add_version_block(version, changes)
+                version = line
+                changes = []
+            elif line.startswith('-'):
+                changes.append(line)
+        if version and changes:
+            self.add_version_block(version, changes)
+
+    def add_version_block(self, version, changes):
+        version_block = VersionBlock(version, changes, self)
+        self.scroll_layout.addWidget(version_block)
