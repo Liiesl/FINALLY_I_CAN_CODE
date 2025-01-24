@@ -52,3 +52,14 @@ class SidePanel(QWidget):
 
         self.layout().addWidget(self.settings_list)
         self.layout().insertWidget(1, self.settings_list)  # Insert the list at the top, below the info label
+
+    def apply_theme(self):
+        # Retrieve the current palette colors
+        palette = self.parent().palette()
+        text_color = palette.color(QPalette.WindowText).name()
+        background_color = palette.color(QPalette.Window).name()
+
+        self.setStyleSheet(f"background-color: {background_color};")
+        self.info_label.setStyleSheet(f"color: {text_color};")
+
+        self.settings_list.setStyleSheet(f"background-color: transparent; border: none; color: {text_color};")
