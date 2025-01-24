@@ -71,7 +71,6 @@ class MainWindow(QMainWindow):
         self.custom_scroll_bar = CustomScrollBar()
         self.custom_scroll_bar.valueChanged.connect(self.scroll_area.horizontalScrollBar().setValue)
         self.scroll_area.horizontalScrollBar().valueChanged.connect(self.custom_scroll_bar.setValue)
-        self.layout.addWidget(self.custom_scroll_bar)
 
         self.main_menu()
 
@@ -117,8 +116,14 @@ class MainWindow(QMainWindow):
         self.tool_buttons_layout.addStretch()
 
         navigation_frame = QFrame()
-        navigation_layout = QHBoxLayout(navigation_frame)
+        navigation_layout = QVBoxLayout(navigation_frame)
         navigation_layout.setContentsMargins(0, 0, 0, 0)
+
+        navigation_layout.addWidget(self.custom_scroll_bar)  # Add custom scroll bar to the navigation layout
+
+        tool_buttons_frame = QFrame()
+        tool_buttons_layout = QHBoxLayout(tool_buttons_frame)
+        tool_buttons_layout.setContentsMargins(0, 0, 0, 0)
 
         self.left_arrow_button = QPushButton()
         left_arrow_icon = qta.icon('fa.chevron-left')
@@ -126,10 +131,10 @@ class MainWindow(QMainWindow):
         self.left_arrow_button.setFixedSize(50, 300)
         self.left_arrow_button.setStyleSheet("background-color: #4f86f7; border: none;")
         self.left_arrow_button.clicked.connect(self.scroll_left)
-        navigation_layout.addWidget(self.left_arrow_button)
+        tool_buttons_layout.addWidget(self.left_arrow_button)
 
         self.scroll_area.setWidget(self.tool_buttons_container)
-        navigation_layout.addWidget(self.scroll_area)
+        tool_buttons_layout.addWidget(self.scroll_area)
 
         self.right_arrow_button = QPushButton()
         right_arrow_icon = qta.icon('fa.chevron-right')
@@ -137,7 +142,9 @@ class MainWindow(QMainWindow):
         self.right_arrow_button.setFixedSize(50, 300)
         self.right_arrow_button.setStyleSheet("background-color: #4f86f7; border: none;")
         self.right_arrow_button.clicked.connect(self.scroll_right)
-        navigation_layout.addWidget(self.right_arrow_button)
+        tool_buttons_layout.addWidget(self.right_arrow_button)
+
+        navigation_layout.addWidget(tool_buttons_frame)
 
         self.main_content_layout.addWidget(navigation_frame)
 
