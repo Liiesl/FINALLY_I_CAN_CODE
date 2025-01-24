@@ -8,7 +8,7 @@ class SubtitleShifter(QWidget):
     def __init__(self, parent=None, back_callback=None):
         super().__init__(parent)
         self.back_callback = back_callback
-        self.setFont(QFont("Inter Regular")
+        self.setFont(QFont("Inter Regular"))
         self.subtitle_path = ""
         self.setup_ui()
 
