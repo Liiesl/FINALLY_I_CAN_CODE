@@ -1,6 +1,7 @@
 import os
 import re
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QFileDialog, QMessageBox, QListWidget, QLabel, QComboBox
+from PyQt5.QtGui import QFont
 from config import Config
 
 class LongerAppearanceSRT(QWidget):
