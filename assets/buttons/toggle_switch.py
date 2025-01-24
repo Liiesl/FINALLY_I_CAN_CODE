@@ -1,8 +1,10 @@
 from PyQt5.QtWidgets import QWidget
-from PyQt5.QtCore import Qt, QPropertyAnimation, QRect, pyqtProperty
+from PyQt5.QtCore import Qt, QPropertyAnimation, QRect, pyqtProperty, pyqtSignal
 from PyQt5.QtGui import QColor, QPainter, QBrush
 
 class ToggleSwitch(QWidget):
+    stateChanged = pyqtSignal()
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setFixedSize(60, 30)
@@ -39,6 +41,7 @@ class ToggleSwitch(QWidget):
     def mousePressEvent(self, event):
         self._state = not self._state
         self.animate_circle()
+        self.stateChanged.emit()  # Emit the custom signal when state changes
 
     def animate_circle(self):
         start_value = 0 if self._state else 30
