@@ -154,7 +154,7 @@ class MainWindow(QMainWindow):
 
         description_label = QLabel(tool_description)
         description_label.setFont(self.inter_regular_font)
-        description_label.setStyleSheet("color: #D3D3D3; background-color: transparent;")
+        description_label.setStyleSheet("color: #adadad; background-color: transparent;")
         description_label.setWordWrap(True)
         description_label.setAlignment(Qt.AlignCenter)
 
