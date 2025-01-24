@@ -57,23 +57,23 @@ class MainWindow(QMainWindow):
     def apply_theme(self):
         theme = self.config.get_theme()
         palette = QPalette()
-        
+    
         if theme == "dark":
-            palette.setColor(QPalette.Window, QColor(44, 47, 56))
-            palette.setColor(QPalette.WindowText, Qt.white)
+            palette.setColor(QPalette.Window, QColor(44, 47, 56))  # Dark theme background color
+            palette.setColor(QPalette.WindowText, Qt.white)  # Text color for dark theme
             palette.setColor(QPalette.Base, QColor(44, 47, 56))
             palette.setColor(QPalette.AlternateBase, QColor(66, 69, 79))
             palette.setColor(QPalette.ToolTipBase, Qt.white)
             palette.setColor(QPalette.ToolTipText, Qt.white)
             palette.setColor(QPalette.Text, Qt.white)
-            palette.setColor(QPalette.Button, QColor(79, 134, 247))
+            palette.setColor(QPalette.Button, QColor(44, 47, 56))
             palette.setColor(QPalette.ButtonText, Qt.white)
             palette.setColor(QPalette.BrightText, Qt.red)
             palette.setColor(QPalette.Highlight, QColor(75, 110, 175))
             palette.setColor(QPalette.HighlightedText, Qt.white)
         else:
-            palette.setColor(QPalette.Window, Qt.white)
-            palette.setColor(QPalette.WindowText, Qt.black)
+            palette.setColor(QPalette.Window, Qt.white)  # Light theme background color
+            palette.setColor(QPalette.WindowText, Qt.black)  # Text color for light theme
             palette.setColor(QPalette.Base, Qt.white)
             palette.setColor(QPalette.AlternateBase, QColor(240, 240, 240))
             palette.setColor(QPalette.ToolTipBase, Qt.black)
@@ -118,7 +118,6 @@ class MainWindow(QMainWindow):
                 background-color: {palette.color(QPalette.Base).name()};
             }}
         """)
-
     def main_menu(self):
         self.main_menu_active = True
 
