@@ -121,3 +121,4 @@ alpha 0.1.5.2
 -light theme is now stable
 -fix bugs caused by light theme
 -improve merge srt's ui
+-improve subtitle converter's ui
