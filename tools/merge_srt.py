@@ -159,27 +159,27 @@ class MergeSRT(QWidget):
         self.stacked_widget.addWidget(self.stacked_merge_widget)
         
     def setup_color_options(self, layout, input_font_size, label_font_size):
-    color_layout = QVBoxLayout()
-    self.color_label = self.add_label(color_layout, "Color the merged subtitles?", f"color: {self.text_color}; font-size: {label_font_size}px;")
-
-    self.color_toggle = ToggleSwitch()
-    self.color_toggle.set_state("light")
-    self.color_toggle.stateChanged.connect(self.toggle_color_options)
-    color_layout.addWidget(self.color_toggle)
-
-    self.color_palette_layout = QHBoxLayout()
-    self.color_palette = QComboBox()
-    self.add_color_options_to_palette()
-    self.color_palette.setStyleSheet(f"background-color: (self.button_color); color: {self.text_color}; font-size: {input_font_size}px;")
-    self.color_palette_layout.addWidget(self.color_palette)
-
-    self.hex_input = self.add_input(self.color_palette_layout, "#000000", 100, f"background-color: (self.button_color); color: {self.text_color}; font-size: {input_font_size}px; padding: 10px;")
-    color_layout.addLayout(self.color_palette_layout)
-
-    # Initially hide color options
-    self.toggle_color_options()
-
-    layout.addLayout(color_layout)
+        color_layout = QVBoxLayout()
+        self.color_label = self.add_label(color_layout, "Color the merged subtitles?", f"color: {self.text_color}; font-size: {label_font_size}px;")
+    
+        self.color_toggle = ToggleSwitch()
+        self.color_toggle.set_state("light")
+        self.color_toggle.stateChanged.connect(self.toggle_color_options)
+        color_layout.addWidget(self.color_toggle)
+    
+        self.color_palette_layout = QHBoxLayout()
+        self.color_palette = QComboBox()
+        self.add_color_options_to_palette()
+        self.color_palette.setStyleSheet(f"background-color: (self.button_color); color: {self.text_color}; font-size: {input_font_size}px;")
+        self.color_palette_layout.addWidget(self.color_palette)
+    
+        self.hex_input = self.add_input(self.color_palette_layout, "#000000", 100, f"background-color: (self.button_color); color: {self.text_color}; font-size: {input_font_size}px; padding: 10px;")
+        color_layout.addLayout(self.color_palette_layout)
+    
+        # Initially hide color options
+        self.toggle_color_options()
+    
+        layout.addLayout(color_layout)
     
     def get_mode_button_style(self, selected, font_size, button_color, text_color, highlight_color):
         if selected:
