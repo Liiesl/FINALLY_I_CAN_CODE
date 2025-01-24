@@ -31,7 +31,7 @@ class SidePanel(QWidget):
         }.get(text_size, 26)
 
         self.info_label = QLabel("Side Panel Content")
-        self.info_label.setStyleSheet(f"color: {text_color}; font-size: {font_size}px; font-weight: bold; background-color: transparent;")
+        self.info_label.setStyleSheet(f"color: {text_color}; font-size: {font_size}px; font-weight: bold; background-color: none;")
         self.info_label.setAlignment(Qt.AlignCenter)
 
         self.layout().addWidget(self.info_label)
@@ -44,6 +44,7 @@ class SidePanel(QWidget):
         # Add settings item to the list
         settings_item = QListWidgetItem("Settings")
         settings_item.setTextAlignment(Qt.AlignLeft)
+        self.info_label.setStyleSheet(f"color: {text_color}; font-size: {font_size}px; font-weight: bold; background-color: none;")
         settings_item.setFlags(settings_item.flags() | Qt.ItemIsSelectable | Qt.ItemIsEnabled)
         self.settings_list.addItem(settings_item)
 
