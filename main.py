@@ -1,3 +1,15 @@
+import sys
+import qtawesome as qta
+from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QLabel, QScrollArea, QMessageBox, QSplitter, QFrame
+from PyQt5.QtGui import QPalette, QColor, QFont, QFontDatabase
+from PyQt5.QtCore import Qt, QPropertyAnimation
+
+from tools.subtitle_converter import SubtitleConverter
+from tools.subtitle_shifter import SubtitleShifter
+from side_panel import SidePanel
+from settings import Settings
+from config import Config
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
