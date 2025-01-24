@@ -147,9 +147,9 @@ class SubtitleShifter(QWidget):
             "huge": 42
         }.get(text_size, 26)
 
-        button_font_size = self.font_size - 12
-        label_font_size = self.font_size - 12
-        input_font_size = self.font_size - 12
+        button_font_size = self.font_size
+        label_font_size = self.font_size
+        input_font_size = self.font_size
 
         self.setStyleSheet(f"background-color: {self.background_color};")
         self.file_preview.setStyleSheet(f"color: {self.text_color};")
@@ -197,14 +197,14 @@ class SubtitleShifter(QWidget):
         self.stacked_widget.setCurrentWidget(self.whole_shift_widget)
         self.partial_shift_button.setStyleSheet(self.get_mode_button_style(
             selected=False, 
-            font_size=26px,
+            font_size=self.font_size,
             button_color=self.button_color,
             text_color=self.button_text_color,
             highlight_color=self.highlight_color
         ))
         self.whole_shift_button.setStyleSheet(self.get_mode_button_style(
             selected=True, 
-            font_size=self.26px,
+            font_size=self.font_size,
             button_color=self.button_color,
             text_color=self.button_text_color,
             highlight_color=self.highlight_color
@@ -214,14 +214,14 @@ class SubtitleShifter(QWidget):
         self.stacked_widget.setCurrentWidget(self.partial_shift_widget)
         self.whole_shift_button.setStyleSheet(self.get_mode_button_style(
             selected=False, 
-            font_size=self.26px,
+            font_size=self.font_size,
             button_color=self.button_color,
             text_color=self.button_text_color,
             highlight_color=self.highlight_color
         ))
         self.partial_shift_button.setStyleSheet(self.get_mode_button_style(
             selected=True, 
-            font_size=26px,
+            font_size=self.font_size,
             button_color=self.button_color,
             text_color=self.button_text_color,
             highlight_color=self.highlight_color
