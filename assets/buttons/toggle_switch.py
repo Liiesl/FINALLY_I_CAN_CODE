@@ -1,6 +1,6 @@
-from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel
-from PyQt5.QtCore import Qt, QPropertyAnimation, QRect
-from PyQt5.QtGui import QColor, QPainter, QPen, QBrush
+from PyQt5.QtWidgets import QWidget
+from PyQt5.QtCore import Qt, QPropertyAnimation, QRect, pyqtProperty
+from PyQt5.QtGui import QColor, QPainter, QBrush
 
 class ToggleSwitch(QWidget):
     def __init__(self, parent=None):
@@ -8,8 +8,8 @@ class ToggleSwitch(QWidget):
         self.setFixedSize(60, 30)
         self.setCursor(Qt.PointingHandCursor)
 
-        self.state = False  # Default state (False for "light", True for "dark")
-        self.circle_position = 0  # Position of the circle
+        self._state = False  # Default state (False for "light", True for "dark")
+        self._circle_position = 0  # Position of the circle
 
         self.animation = QPropertyAnimation(self, b"circle_position")
         self.animation.setDuration(200)
@@ -24,7 +24,7 @@ class ToggleSwitch(QWidget):
         painter.setRenderHint(QPainter.Antialiasing)
 
         # Draw background
-        background_color = QColor('#4f86f7') if self.state else QColor('#cccccc')
+        background_color = QColor('#4f86f7') if self._state else QColor('#cccccc')
         painter.setBrush(QBrush(background_color))
         painter.setPen(Qt.NoPen)
         painter.drawRoundedRect(self.rect(), 15, 15)
@@ -33,34 +33,34 @@ class ToggleSwitch(QWidget):
         circle_color = QColor('#ffffff')
         painter.setBrush(QBrush(circle_color))
         painter.setPen(Qt.NoPen)
-        circle_rect = QRect(self.circle_position, 0, 30, 30)
+        circle_rect = QRect(self._circle_position, 0, 30, 30)
         painter.drawEllipse(circle_rect)
 
     def mousePressEvent(self, event):
-        self.state = not self.state
+        self._state = not self._state
         self.animate_circle()
 
     def animate_circle(self):
-        start_value = 0 if self.state else 30
-        end_value = 30 if self.state else 0
+        start_value = 0 if self._state else 30
+        end_value = 30 if self._state else 0
 
         self.animation.setStartValue(start_value)
         self.animation.setEndValue(end_value)
         self.animation.start()
 
     def get_state(self):
-        return "dark" if self.state else "light"
+        return "dark" if self._state else "light"
 
     def set_state(self, state):
-        self.state = (state == "dark")
-        self.circle_position = 30 if self.state else 0
+        self._state = (state == "dark")
+        self._circle_position = 30 if self._state else 0
         self.update()
 
-    def get_circle_position(self):
-        return self.circle_position
+    @pyqtProperty(int)
+    def circle_position(self):
+        return self._circle_position
 
-    def set_circle_position(self, pos):
-        self.circle_position = pos
+    @circle_position.setter
+    def circle_position(self, pos):
+        self._circle_position = pos
         self.update()
-
-    circle_position = Qt.Property(int, get_circle_position, set_circle_position)
