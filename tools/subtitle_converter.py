@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QFileDialog, QMessageBox, QListWidget, QComboBox
-from PyQt5.QtGui import QFont
+from PyQt5.QtGui import QFont, QPalette
 from tools.subtitleconverter.vtt_converter import convert_to_vtt
 from tools.subtitleconverter.ass_converter import convert_to_ass
 from tools.subtitleconverter.sub_converter import convert_to_sub
@@ -22,6 +22,7 @@ class SubtitleConverter(QWidget):
         self.setFont(QFont("Inter Regular"))
         self.config = Config()
         self.init_ui()
+        self.apply_theme()
 
     def init_ui(self):
         layout = QVBoxLayout()
@@ -35,21 +36,18 @@ class SubtitleConverter(QWidget):
         }.get(text_size, 26)
 
         # Back to Home button
-        back_button = QPushButton("Back to Home")
-        back_button.setStyleSheet(f"background-color: #4f86f7; color: white; border-radius: 5px; padding: 15px; font-size: {font_size - 12}px;")
-        back_button.clicked.connect(self.back_callback)
-        layout.addWidget(back_button)
+        self.back_button = QPushButton("Back to Home")
+        self.back_button.clicked.connect(self.back_callback)
+        layout.addWidget(self.back_button)
 
         # File selection section
         file_layout = QHBoxLayout()
 
         self.select_file_button = QPushButton("Select File")
-        self.select_file_button.setStyleSheet(f"background-color: #4f86f7; color: white; border-radius: 5px; padding: 15px; font-size: {font_size - 12}px;")
         self.select_file_button.clicked.connect(self.select_files)
         file_layout.addWidget(self.select_file_button, 1)
 
         self.file_list = QListWidget()
-        self.file_list.setStyleSheet(f"background-color: #3c3f41; color: white; font-size: {font_size - 12}px;")
         file_layout.addWidget(self.file_list, 2)
 
         layout.addLayout(file_layout)
@@ -57,9 +55,8 @@ class SubtitleConverter(QWidget):
         # Target format dropdown
         format_layout = QHBoxLayout()
 
-        format_label = QLabel("Select Source Format:")
-        format_label.setStyleSheet(f"color: white; font-size: {font_size - 12}px;")
-        format_layout.addWidget(format_label)
+        self.format_label = QLabel("Select Source Format:")
+        format_layout.addWidget(self.format_label)
 
         self.format_dropdown = QComboBox()
         self.format_dropdown.addItems([
@@ -67,7 +64,6 @@ class SubtitleConverter(QWidget):
             "VTT (.vtt)", "SBV (.sbv)", "DFXP (.dfxp)", "STL (.stl)", "IDX (.idx)",
             "MPL (.mpl)", "USF (.usf)", "LRC (.lrc)", "RT (.rt)", "TTML (.ttml)", "CAP (.cap)"
         ])
-        self.format_dropdown.setStyleSheet(f"background-color: #3c3f41; color: white; font-size: {font_size - 12}px;")
         self.format_dropdown.currentIndexChanged.connect(self.update_convert_button)
         format_layout.addWidget(self.format_dropdown)
 
@@ -75,32 +71,49 @@ class SubtitleConverter(QWidget):
 
         # Convert button
         self.convert_button = QPushButton("Convert to CAP")
-        self.convert_button.setStyleSheet(f"background-color: #4f86f7; color: white; border-radius: 5px; padding: 15px; font-size: {font_size - 12}px;")
         self.convert_button.clicked.connect(self.convert_subtitle)
         layout.addWidget(self.convert_button)
 
         self.setLayout(layout)
 
         # Apply the same style to all buttons
-        self.apply_button_styles([back_button, self.select_file_button, self.convert_button])
+        self.apply_button_styles([self.back_button, self.select_file_button, self.convert_button])
+
+    def apply_theme(self):
+        # Retrieve the current palette colors
+        palette = self.parent().palette()
+        text_color = palette.color(QPalette.WindowText).name()
+        background_color = palette.color(QPalette.Window).name()
+        button_color = palette.color(QPalette.Button).name()
+        button_text_color = palette.color(QPalette.ButtonText).name()
+        highlight_color = palette.color(QPalette.Highlight).name()
+        hover_color = palette.color(QPalette.Highlight).darker().name()
+
+        self.setStyleSheet(f"background-color: {background_color};")
+        self.file_list.setStyleSheet(f"background-color: {background_color}; color: {text_color};")
+        self.format_label.setStyleSheet(f"color: {text_color};")
+        self.format_dropdown.setStyleSheet(f"background-color: {background_color}; color: {text_color};")
+
+        self.back_button.setStyleSheet(f"""
+            QPushButton {{
+                border: 2px solid {highlight_color};
+                color: {button_text_color};
+                border-radius: 10px;
+                padding: 10px;
+                background-color: {button_color};
+            }}
+            QPushButton:hover {{
+                border-color: {hover_color};
+                background-color: {hover_color};
+            }}
+        """)
+
+        self.select_file_button.setStyleSheet(self.back_button.styleSheet())
+        self.convert_button.setStyleSheet(self.back_button.styleSheet())
 
     def apply_button_styles(self, buttons):
         for button in buttons:
-            button.setStyleSheet("""
-                QPushButton {
-                    border: 2px solid #4f86f7; /* Thicker edge line */
-                    color: white;
-                    border-radius: 10px;
-                    padding: 10px;
-                    min-height: 40px;
-                    background-color: #4f86f7; /* Accented blue color */
-                    text-align: center; /* Center align text */
-                }
-                QPushButton:hover {
-                    border-color: #3a6dbf;
-                    background-color: #3a6dbf; /* Darker blue on hover */
-                }
-            """)
+            button.setStyleSheet(self.back_button.styleSheet())
 
     def select_files(self):
         file_paths, _ = QFileDialog.getOpenFileNames(self, "Select Subtitle Files", "", "Subtitle Files (*.srt *.ass *.sub *.txt *.ssa *.vtt *.sbv *.dfxp *.stl *.idx *.mpl *.usf *.lrc *.rt *.ttml *.cap)")
