@@ -95,11 +95,11 @@ class MergeSRT(QWidget):
         mode_layout = QHBoxLayout()
         self.add_label(mode_layout, "Select Mode:", f"color: {button_text_color}; font-size: {label_font_size}px;")
     
-        self.glue_end_to_end_button = self.add_button(mode_layout, "Glue End to End", self.show_glue_end_to_end, self.get_mode_button_style(selected=False, font_size=button_font_size, button_color=button_color, text_color=button_text_color))
-        self.stacked_merge_button = self.add_button(mode_layout, "Stacked Merge", self.show_stacked_merge, self.get_mode_button_style(selected=True, font_size=button_font_size, button_color=button_color, text_color=button_text_color))
+        self.glue_end_to_end_button = self.add_button(mode_layout, "Glue End to End", self.show_glue_end_to_end, self.get_mode_button_style(selected=False, font_size=button_font_size, button_color=button_color, text_color=button_text_color, highlight_color=highlight_color))
+        self.stacked_merge_button = self.add_button(mode_layout, "Stacked Merge", self.show_stacked_merge, self.get_mode_button_style(selected=True, font_size=button_font_size, button_color=button_color, text_color=button_text_color, highlight_color=highlight_color))
     
         layout.addLayout(mode_layout)
-    
+        
     def setup_glue_end_to_end_mode(self, button_font_size, label_font_size, input_font_size, button_color, button_text_color, highlight_color, hover_color, text_color):
         self.glue_end_to_end_widget = QWidget()
         glue_layout = QVBoxLayout(self.glue_end_to_end_widget)
@@ -156,6 +156,7 @@ class MergeSRT(QWidget):
         stacked_layout.addWidget(self.stacked_export_button, alignment=Qt.AlignRight)
     
         self.stacked_widget.addWidget(self.stacked_merge_widget)
+        
     def setup_color_options(self, layout, input_font_size, label_font_size):
         color_layout = QVBoxLayout()
         self.color_label = self.add_label(color_layout, "Color options:", f"color: white; font-size: {label_font_size}px;")
@@ -180,11 +181,11 @@ class MergeSRT(QWidget):
 
         layout.addLayout(color_layout)
 
-    def get_mode_button_style(self, selected, font_size, button_color, text_color):
+    def get_mode_button_style(self, selected, font_size, button_color, text_color, highlight_color):
         if selected:
             return f"background-color: {highlight_color}; color: {text_color}; border-radius: 5px; padding: 10px; font-size: {font_size}px;"
-        return f"background-color: {button_color}; color: {text_color}; border-radius: 5px; padding: 10px; font-size: {font_size}px;"
-        
+        return f"background-color: {button_color}; color: {text_color}; border-radius: 5px; padding: 10px; font-size: {font_size}px;"    
+       
     def show_glue_end_to_end(self):
         self.stacked_widget.setCurrentWidget(self.glue_end_to_end_widget)
         self.glue_end_to_end_button.setStyleSheet(self.get_mode_button_style(selected=True, font_size=self.font_size - 12))
