@@ -168,8 +168,13 @@ class SubtitleShifter(QWidget):
         self.select_file_button_partial.setStyleSheet(button_style)
         self.shift_button.setStyleSheet(button_style)
         self.shift_button_partial.setStyleSheet(button_style)
-        self.whole_shift_button.setStyleSheet(button_style)
-        self.partial_shift_button.setStyleSheet(button_style)
+        self.whole_shift_button.setStyleSheet(self.get_mode_button_style(selected=True))
+        self.partial_shift_button.setStyleSheet(self.get_mode_button_style(selected=False))
+
+    def get_mode_button_style(self, selected):
+        if selected:
+            return "background-color: #3a6dbf; color: white; border-radius: 5px; padding: 10px; font-size: 14px;"
+        return "background-color: #4f86f7; color: white; border-radius: 5px; padding: 10px; font-size: 14px;"
 
     def show_whole_shift(self):
         self.stacked_widget.setCurrentWidget(self.whole_shift_widget)
