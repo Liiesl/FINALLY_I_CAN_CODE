@@ -54,7 +54,52 @@ class MainWindow(QMainWindow):
         self.main_menu()
 
         self.apply_theme()
-        
+
+    def apply_theme(self):
+        theme = self.config.get_theme()
+        palette = QPalette()
+        if theme == "dark":
+            palette.setColor(QPalette.Window, QColor(44, 47, 56))
+            palette.setColor(QPalette.WindowText, Qt.white)
+            palette.setColor(QPalette.Base, QColor(44, 47, 56))
+            palette.setColor(QPalette.AlternateBase, QColor(66, 69, 79))
+            palette.setColor(QPalette.ToolTipBase, Qt.white)
+            palette.setColor(QPalette.ToolTipText, Qt.white)
+            palette.setColor(QPalette.Text, Qt.white)
+            palette.setColor(QPalette.Button, QColor(44, 47, 56))
+            palette.setColor(QPalette.ButtonText, Qt.white)
+            palette.setColor(QPalette.BrightText, Qt.red)
+            palette.setColor(QPalette.Highlight, QColor(75, 110, 175))
+            palette.setColor(QPalette.HighlightedText, Qt.white)
+        elif theme == "light":
+            palette.setColor(QPalette.Window, Qt.white)
+            palette.setColor(QPalette.WindowText, Qt.black)
+            palette.setColor(QPalette.Base, Qt.white)
+            palette.setColor(QPalette.AlternateBase, QColor(240, 240, 240))
+            palette.setColor(QPalette.ToolTipBase, Qt.black)
+            palette.setColor(QPalette.ToolTipText, Qt.black)
+            palette.setColor(QPalette.Text, Qt.black)
+            palette.setColor(QPalette.Button, QColor(220, 220, 220))
+            palette.setColor(QPalette.ButtonText, Qt.black)
+            palette.setColor(QPalette.BrightText, Qt.red)
+            palette.setColor(QPalette.Highlight, QColor(75, 110, 175))
+            palette.setColor(QPalette.HighlightedText, Qt.black)
+        else:
+            palette.setColor(QPalette.Window, QColor(44, 47, 56))
+            palette.setColor(QPalette.WindowText, Qt.white)
+            palette.setColor(QPalette.Base, QColor(44, 47, 56))
+            palette.setColor(QPalette.AlternateBase, QColor(66, 69, 79))
+            palette.setColor(QPalette.ToolTipBase, Qt.white)
+            palette.setColor(QPalette.ToolTipText, Qt.white)
+            palette.setColor(QPalette.Text, Qt.white)
+            palette.setColor(QPalette.Button, QColor(44, 47, 56))
+            palette.setColor(QPalette.ButtonText, Qt.white)
+            palette.setColor(QPalette.BrightText, Qt.red)
+            palette.setColor(QPalette.Highlight, QColor(75, 110, 175))
+            palette.setColor(QPalette.HighlightedText, Qt.white)
+
+        self.app.setPalette(palette)
+
     def main_menu(self):
         self.main_menu_active = True
 
@@ -141,7 +186,7 @@ class MainWindow(QMainWindow):
         button.setStyleSheet(f"""
             QPushButton {{
                 border: 5px solid {border_color};
-                color: {background_color};
+                color: rgba(255, 255, 255, 0);
                 border-radius: 15px;
                 padding: 10px;
                 min-width: 300px;
@@ -243,51 +288,6 @@ class MainWindow(QMainWindow):
                 font-size: {font_size}px;
             }}
         """)
-
-    def apply_theme(self):
-        theme = self.config.get_theme()
-        palette = QPalette()
-        if theme == "dark":
-            palette.setColor(QPalette.Window, QColor(44, 47, 56))
-            palette.setColor(QPalette.WindowText, Qt.white)
-            palette.setColor(QPalette.Base, QColor(44, 47, 56))
-            palette.setColor(QPalette.AlternateBase, QColor(66, 69, 79))
-            palette.setColor(QPalette.ToolTipBase, Qt.white)
-            palette.setColor(QPalette.ToolTipText, Qt.white)
-            palette.setColor(QPalette.Text, Qt.white)
-            palette.setColor(QPalette.Button, QColor(44, 47, 56))
-            palette.setColor(QPalette.ButtonText, Qt.white)
-            palette.setColor(QPalette.BrightText, Qt.red)
-            palette.setColor(QPalette.Highlight, QColor(75, 110, 175))
-            palette.setColor(QPalette.HighlightedText, Qt.white)
-        elif theme == "light":
-            palette.setColor(QPalette.Window, Qt.white)
-            palette.setColor(QPalette.WindowText, Qt.black)
-            palette.setColor(QPalette.Base, Qt.white)
-            palette.setColor(QPalette.AlternateBase, QColor(240, 240, 240))
-            palette.setColor(QPalette.ToolTipBase, Qt.black)
-            palette.setColor(QPalette.ToolTipText, Qt.black)
-            palette.setColor(QPalette.Text, Qt.black)
-            palette.setColor(QPalette.Button, QColor(220, 220, 220))
-            palette.setColor(QPalette.ButtonText, Qt.black)
-            palette.setColor(QPalette.BrightText, Qt.red)
-            palette.setColor(QPalette.Highlight, QColor(75, 110, 175))
-            palette.setColor(QPalette.HighlightedText, Qt.black)
-        else:
-            palette.setColor(QPalette.Window, QColor(44, 47, 56))
-            palette.setColor(QPalette.WindowText, Qt.white)
-            palette.setColor(QPalette.Base, QColor(44, 47, 56))
-            palette.setColor(QPalette.AlternateBase, QColor(66, 69, 79))
-            palette.setColor(QPalette.ToolTipBase, Qt.white)
-            palette.setColor(QPalette.ToolTipText, Qt.white)
-            palette.setColor(QPalette.Text, Qt.white)
-            palette.setColor(QPalette.Button, QColor(44, 47, 56))
-            palette.setColor(QPalette.ButtonText, Qt.white)
-            palette.setColor(QPalette.BrightText, Qt.red)
-            palette.setColor(QPalette.Highlight, QColor(75, 110, 175))
-            palette.setColor(QPalette.HighlightedText, Qt.white)
-
-        self.app.setPalette(palette)
 
     def refresh_settings(self):
         self.update_safe_area_size()
