@@ -1,6 +1,6 @@
 import sys
 import qtawesome as qta
-from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QLabel, QScrollArea, QMessageBox, QSplitter, QFrame, QScrollBar
+from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QLabel, QScrollArea, QMessageBox, QSplitter, QFrame
 from PyQt5.QtGui import QPalette, QColor, QFont
 from PyQt5.QtCore import Qt, QPropertyAnimation
 
@@ -10,26 +10,6 @@ from side_panel import SidePanel
 from settings import Settings
 from config import Config
 
-class CustomScrollBar(QScrollBar):
-    def __init__(self, parent=None):
-        super().__init__(Qt.Horizontal, parent)
-        self.setFixedHeight(3)
-        self.setStyleSheet("""
-            QScrollBar:horizontal {
-                background: #2c2f38;
-                height: 3px;
-                margin: 0px 20px 0 20px;
-            }
-            QScrollBar::handle:horizontal {
-                background: #4f86f7;
-                min-width: 20px;
-            }
-            QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
-                border: none;
-                background: none;
-            }
-        """)
-
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -38,7 +18,7 @@ class MainWindow(QMainWindow):
         self.setStyleSheet("background-color: #2c2f38;")
 
         self.central_widget = QWidget()
-        self.layout = QVBoxLayout(self.central_widget)  # Change to QVBoxLayout
+        self.layout = QHBoxLayout(self.central_widget)
         self.setCentralWidget(self.central_widget)
 
         self.config = Config()
@@ -62,14 +42,6 @@ class MainWindow(QMainWindow):
         self.top_bar_added = False
 
         self.menu_button = None
-
-        self.scroll_area = QScrollArea()  # Define scroll_area before using it
-        self.scroll_area.setWidgetResizable(True)
-        self.scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-
-        self.custom_scroll_bar = CustomScrollBar()
-        self.custom_scroll_bar.valueChanged.connect(self.sync_scroll)
 
         self.main_menu()
 
@@ -115,14 +87,8 @@ class MainWindow(QMainWindow):
         self.tool_buttons_layout.addStretch()
 
         navigation_frame = QFrame()
-        navigation_layout = QVBoxLayout(navigation_frame)
+        navigation_layout = QHBoxLayout(navigation_frame)
         navigation_layout.setContentsMargins(0, 0, 0, 0)
-
-        navigation_layout.addWidget(self.custom_scroll_bar)  # Add custom scroll bar to the navigation layout
-
-        tool_buttons_frame = QFrame()
-        tool_buttons_layout = QHBoxLayout(tool_buttons_frame)
-        tool_buttons_layout.setContentsMargins(0, 0, 0, 0)
 
         self.left_arrow_button = QPushButton()
         left_arrow_icon = qta.icon('fa.chevron-left')
@@ -130,10 +96,15 @@ class MainWindow(QMainWindow):
         self.left_arrow_button.setFixedSize(50, 300)
         self.left_arrow_button.setStyleSheet("background-color: #4f86f7; border: none;")
         self.left_arrow_button.clicked.connect(self.scroll_left)
-        tool_buttons_layout.addWidget(self.left_arrow_button)
+        navigation_layout.addWidget(self.left_arrow_button)
 
-        self.scroll_area.setWidget(self.tool_buttons_container)
-        tool_buttons_layout.addWidget(self.scroll_area)
+        scroll_area = QScrollArea()
+        scroll_area.setWidgetResizable(True)
+        scroll_area.setWidget(self.tool_buttons_container)
+        scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.scroll_area = scroll_area
+        navigation_layout.addWidget(scroll_area)
 
         self.right_arrow_button = QPushButton()
         right_arrow_icon = qta.icon('fa.chevron-right')
@@ -141,9 +112,7 @@ class MainWindow(QMainWindow):
         self.right_arrow_button.setFixedSize(50, 300)
         self.right_arrow_button.setStyleSheet("background-color: #4f86f7; border: none;")
         self.right_arrow_button.clicked.connect(self.scroll_right)
-        tool_buttons_layout.addWidget(self.right_arrow_button)
-
-        navigation_layout.addWidget(tool_buttons_frame)
+        navigation_layout.addWidget(self.right_arrow_button)
 
         self.main_content_layout.addWidget(navigation_frame)
 
@@ -291,10 +260,6 @@ class MainWindow(QMainWindow):
         animation.start()
         # Keep a reference to avoid garbage collection
         self.animation = animation
-
-    def sync_scroll(self, value):
-        self.scroll_area.horizontalScrollBar().setValue(value)
-        self.custom_scroll_bar.setValue(value)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
