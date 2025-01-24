@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QSlider, QComboBox, QMessageBox
 from PyQt5.QtCore import Qt, pyqtSignal
-from PyQt5.QtGui import QFont,QPalette
+from PyQt5.QtGui import QFont, QPalette
 from config import Config
 from assets.buttons.toggle_switch import ToggleSwitch  # Import the ToggleSwitch class
 
@@ -144,6 +144,7 @@ class Settings(QWidget):
         self.config.set_safe_area_size(self.safe_area_slider.value())
         self.config.set_text_size(self.text_size_dropdown.currentText())
         self.config.set_theme(self.theme_toggle.get_state())
+        self.apply_theme()  # Apply theme immediately after saving
         self.settings_saved.emit()  # Emit the settings_saved signal
         QMessageBox.information(self, "Success", "Settings saved successfully!")
         self.back_callback()
