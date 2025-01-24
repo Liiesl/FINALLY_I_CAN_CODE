@@ -1,8 +1,8 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QListWidget, QListWidgetItem
-from PyQt5.QtCore import Qt, QUrl
-from PyQt5.QtGui import QFont, QPalette, QDesktopServices
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QFont, QPalette
 from config import Config
-import os
+from changelog_window import ChangelogWindow
 
 class SidePanel(QWidget):
     def __init__(self, parent=None, open_settings_callback=None):
@@ -68,8 +68,11 @@ class SidePanel(QWidget):
             self.open_settings_callback()
         elif item.text() == "Changelog":
             # Handle the changelog click event
-            changelog_path = os.path.join(os.path.dirname(__file__), 'assets', 'changelog.txt')
-            QDesktopServices.openUrl(QUrl.fromLocalFile(changelog_path))
+            self.open_changelog_window()
+
+    def open_changelog_window(self):
+        self.changelog_window = ChangelogWindow(self)
+        self.changelog_window.show()
 
     def apply_theme(self):
         # Retrieve the current palette colors
