@@ -20,7 +20,7 @@ class MainWindow(QMainWindow):
         # Load the Inter fonts
         QFontDatabase.addApplicationFont("assets/fonts/Inter-Regular.otf")
         QFontDatabase.addApplicationFont("assets/fonts/Inter-ExtraBold.otf")
-
+        
         self.inter_regular_font = QFont("Inter Regular")
         self.inter_extra_bold_font = QFont("Inter ExtraBold")
 
@@ -134,7 +134,7 @@ class MainWindow(QMainWindow):
                 color: white;
                 border-radius: 15px;
                 padding: 10px;
-                min-width: 200px;
+                min-width: 300px;
                 min-height: 400px;
                 margin: 10px;
                 background-color: #2c2f38;
