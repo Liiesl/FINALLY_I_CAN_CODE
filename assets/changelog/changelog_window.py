@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import QMainWindow, QTextEdit, QVBoxLayout, QWidget
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QPalette, QApplication
 import os
 
 class ChangelogWindow(QMainWindow):
@@ -17,7 +18,16 @@ class ChangelogWindow(QMainWindow):
         self.text_edit.setReadOnly(True)
         self.layout.addWidget(self.text_edit)
         
+        self.apply_palette()
         self.load_changelog()
+
+    def apply_palette(self):
+        palette = QApplication.instance().palette()
+        text_color = palette.color(QPalette.WindowText).name()
+        background_color = palette.color(QPalette.Window).name()
+        
+        self.setStyleSheet(f"background-color: {background_color}; color: {text_color};")
+        self.text_edit.setStyleSheet(f"background-color: {background_color}; color: {text_color};")
 
     def load_changelog(self):
         changelog_path = os.path.join(os.path.dirname(__file__), 'changelog.txt')
