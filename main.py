@@ -119,7 +119,7 @@ class MainWindow(QMainWindow):
                 min-width: 300px;
                 min-height: 400px;
                 margin: 10px;
-                background-color: {background_color};
+                background-color: tansparent;
                 text-align: center;
             }}
             QPushButton:hover {{
@@ -200,7 +200,7 @@ class MainWindow(QMainWindow):
         self.left_arrow_button = QPushButton()
         left_arrow_icon = qta.icon('fa.chevron-left')
         self.left_arrow_button.setIcon(left_arrow_icon)
-        self.left_arrow_button.setFixedSize(50, 300)
+        self.left_arrow_button.setFixedSize(50, 75)
         self.left_arrow_button.setStyleSheet("background-color: #4f86f7; border: none;")
         self.left_arrow_button.clicked.connect(self.scroll_left)
         navigation_layout.addWidget(self.left_arrow_button)
@@ -216,7 +216,7 @@ class MainWindow(QMainWindow):
         self.right_arrow_button = QPushButton()
         right_arrow_icon = qta.icon('fa.chevron-right')
         self.right_arrow_button.setIcon(right_arrow_icon)
-        self.right_arrow_button.setFixedSize(50, 300)
+        self.right_arrow_button.setFixedSize(50, 75)
         self.right_arrow_button.setStyleSheet("background-color: #4f86f7; border: none;")
         self.right_arrow_button.clicked.connect(self.scroll_right)
         navigation_layout.addWidget(self.right_arrow_button)
