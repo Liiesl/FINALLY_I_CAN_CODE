@@ -1,7 +1,7 @@
 import sys
 import qtawesome as qta
 from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QLabel, QScrollArea, QMessageBox, QSplitter, QFrame
-from PyQt5.QtGui import QPalette, QColor, QFont
+from PyQt5.QtGui import QPalette, QColor, QFont, QFontDatabase
 from PyQt5.QtCore import Qt, QPropertyAnimation
 
 from tools.subtitle_converter import SubtitleConverter
@@ -146,14 +146,18 @@ class MainWindow(QMainWindow):
             "huge": 42
         }.get(text_size, 26)
 
+        # Load the Inter fonts
+        QFontDatabase.addApplicationFont("assets/fonts/Inter-Regular.otf")
+        QFontDatabase.addApplicationFont("assets/fonts/Inter-ExtraBold.otf")
+
         name_label = QLabel(tool_name)
-        name_label.setFont(QFont("Arial", font_size, QFont.Bold))
+        name_label.setFont(QFont("Inter ExtraBold", font_size, QFont.Bold))
         name_label.setStyleSheet("color: #4f86f7; background-color: transparent;")
         name_label.setWordWrap(True)
         name_label.setAlignment(Qt.AlignCenter)
 
         description_label = QLabel(tool_description)
-        description_label.setFont(QFont("Arial", font_size))
+        description_label.setFont(QFont("Inter Regular", font_size))
         description_label.setStyleSheet("color: #D3D3D3; background-color: transparent;")
         description_label.setWordWrap(True)
         description_label.setAlignment(Qt.AlignCenter)
