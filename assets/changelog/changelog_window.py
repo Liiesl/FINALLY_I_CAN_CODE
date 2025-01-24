@@ -8,9 +8,11 @@ class VersionBlock(QWidget):
         super().__init__(parent)
         self.version = version
         self.changes = changes
+        print(f"Initializing VersionBlock: {version}")
         self.init_ui(show_changes)
 
     def init_ui(self, show_changes):
+        print("Setting up UI for VersionBlock")
         self.layout = QVBoxLayout()
 
         # Create the toggle button
@@ -45,14 +47,17 @@ class VersionBlock(QWidget):
         self.layout.addWidget(self.changes_label)
 
         self.setLayout(self.layout)
+        print("UI setup for VersionBlock complete")
 
     def toggle_changes(self):
         if self.toggle_button.isChecked():
             self.changes_label.show()
             self.toggle_button.setText("▼")
+            print("Changes shown for VersionBlock")
         else:
             self.changes_label.hide()
             self.toggle_button.setText("▶")
+            print("Changes hidden for VersionBlock")
 
 class ChangelogWindow(QMainWindow):
     def __init__(self, parent=None):
@@ -82,8 +87,10 @@ class ChangelogWindow(QMainWindow):
         
         self.scroll_area.setWidget(self.scroll_content)
         self.layout.addWidget(self.scroll_area)
+        print("ChangelogWindow initialized")
 
     def apply_palette(self):
+        print("Applying palette")
         palette = QApplication.instance().palette()
         text_color = palette.color(QPalette.WindowText).name()
         background_color = palette.color(QPalette.Window).name()
@@ -120,17 +127,22 @@ class ChangelogWindow(QMainWindow):
                 background: none;
             }}
         """)
+        print("Palette applied")
 
     def load_changelog(self):
         changelog_path = os.path.join(os.path.dirname(__file__), 'changelog.txt')
+        print(f"Loading changelog from {changelog_path}")
         try:
             with open(changelog_path, 'r') as file:
                 content = file.read()
                 self.parse_changelog(content)
+                print("Changelog loaded")
         except FileNotFoundError:
             self.scroll_layout.addWidget(QLabel("Changelog file not found."))
+            print("Changelog file not found")
 
     def parse_changelog(self, content):
+        print("Parsing changelog")
         lines = content.split('\n')
         versions = []
         changes = []
@@ -154,7 +166,18 @@ class ChangelogWindow(QMainWindow):
         for index, (version, changes) in enumerate(versions):
             show_changes = index < 5  # Show changes for the latest 5 versions
             self.add_version_block(version, changes, show_changes)
+        print("Changelog parsed")
 
     def add_version_block(self, version, changes, show_changes):
+        print(f"Adding version block: {version}")
         version_block = VersionBlock(version, changes, self, show_changes)
         self.scroll_layout.addWidget(version_block)
+        print(f"Version block added: {version}")
+
+# Example usage
+if __name__ == "__main__":
+    import sys
+    app = QApplication(sys.argv)
+    window = ChangelogWindow()
+    window.show()
+    sys.exit(app.exec_())
