@@ -119,7 +119,7 @@ class MainWindow(QMainWindow):
                 min-width: 300px;
                 min-height: 400px;
                 margin: 10px;
-                background-color: rgba(255, 255, 255, 0;
+                background-color: {background_color};
                 text-align: center;
             }}
             QPushButton:hover {{
