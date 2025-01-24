@@ -3,6 +3,7 @@ import re
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QFileDialog, QMessageBox, QLabel, QLineEdit, QStackedWidget, QFrame
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPalette, QColor, QFont
+from config import Config
 
 class SubtitleShifter(QWidget):
     def __init__(self, parent=None, back_callback=None):
@@ -151,6 +152,14 @@ class SubtitleShifter(QWidget):
         self.ms_input_partial.setStyleSheet(f"background-color: {background_color}; color: {text_color};")
         self.start_input.setStyleSheet(f"background-color: {background_color}; color: {text_color};")
         self.end_input.setStyleSheet(f"background-color: {background_color}; color: {text_color};")
+
+        text_size = self.config.get_text_size()
+        self.font_size = {
+            "small": 18,
+            "default": 26,
+            "large": 34,
+            "huge": 42
+        }.get(text_size, 26)
 
         button_style = f"""
             QPushButton {{
