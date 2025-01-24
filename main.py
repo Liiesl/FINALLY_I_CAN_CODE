@@ -15,6 +15,7 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.setWindowTitle("SRT Editor")
         self.setGeometry(100, 100, 1200, 800)
+        self.setStyleSheet("background-color: #2c2f38;")
 
         # Load the Inter fonts
         QFontDatabase.addApplicationFont("assets/fonts/Inter-Regular.otf")
@@ -51,73 +52,7 @@ class MainWindow(QMainWindow):
         self.menu_button = None
 
         self.main_menu()
-        
-        self.apply_theme()
 
-    def apply_theme(self):
-        theme = self.config.get_theme()
-        palette = QPalette()
-    
-        if theme == "dark":
-            palette.setColor(QPalette.Window, QColor(44, 47, 56))  # Dark theme background color
-            palette.setColor(QPalette.WindowText, Qt.white)  # Text color for dark theme
-            palette.setColor(QPalette.Base, QColor(44, 47, 56))
-            palette.setColor(QPalette.AlternateBase, QColor(66, 69, 79))
-            palette.setColor(QPalette.ToolTipBase, Qt.white)
-            palette.setColor(QPalette.ToolTipText, Qt.white)
-            palette.setColor(QPalette.Text, Qt.white)
-            palette.setColor(QPalette.Button, QColor(44, 47, 56))
-            palette.setColor(QPalette.ButtonText, Qt.white)
-            palette.setColor(QPalette.BrightText, Qt.red)
-            palette.setColor(QPalette.Highlight, QColor(75, 110, 175))
-            palette.setColor(QPalette.HighlightedText, Qt.white)
-        else:
-            palette.setColor(QPalette.Window, Qt.white)  # Light theme background color
-            palette.setColor(QPalette.WindowText, Qt.black)  # Text color for light theme
-            palette.setColor(QPalette.Base, Qt.white)
-            palette.setColor(QPalette.AlternateBase, QColor(240, 240, 240))
-            palette.setColor(QPalette.ToolTipBase, Qt.black)
-            palette.setColor(QPalette.ToolTipText, Qt.black)
-            palette.setColor(QPalette.Text, Qt.black)
-            palette.setColor(QPalette.Button, Qt.white)
-            palette.setColor(QPalette.ButtonText, Qt.black)
-            palette.setColor(QPalette.BrightText, Qt.red)
-            palette.setColor(QPalette.Highlight, QColor(75, 110, 175))
-            palette.setColor(QPalette.HighlightedText, Qt.white)
-
-        # Add the custom accent color
-        accent_color = QColor(79, 134, 247)
-        palette.setColor(QPalette.Link, accent_color)
-
-        self.setPalette(palette)
-        self.setStyleSheet(f"""
-            QMainWindow, QWidget {{
-                background-color: {palette.color(QPalette.Window).name()};
-                color: {palette.color(QPalette.WindowText).name()};
-            }}
-            QPushButton {{
-                border: 5px solid {palette.color(QPalette.Link).name()};
-                color: rgba(0, 0, 0, 0);
-                border-radius: 15px;
-                padding: 10px;
-                width: 200px;
-                height: 400px;
-                margin: 10px;
-                background-color: {palette.color(QPalette.Button).name()};
-                text-align: center;
-            }}
-            QPushButton:hover {{
-                border-color: {palette.color(QPalette.Link).darker().name()};
-                background-color: {palette.color(QPalette.Link).darker().name()};
-            }}
-            QLabel {{
-                color: {palette.color(QPalette.WindowText).name()};
-                background-color: transparent;
-            }}
-            QScrollArea, QFrame {{
-                background-color: {palette.color(QPalette.Base).name()};
-            }}
-        """)
     def main_menu(self):
         self.main_menu_active = True
 
@@ -164,7 +99,7 @@ class MainWindow(QMainWindow):
         left_arrow_icon = qta.icon('fa.chevron-left')
         self.left_arrow_button.setIcon(left_arrow_icon)
         self.left_arrow_button.setFixedSize(50, 300)
-        self.left_arrow_button.setStyleSheet(f"background-color: {self.palette().color(QPalette.Link).name()}; border: none;")
+        self.left_arrow_button.setStyleSheet("background-color: #4f86f7; border: none;")
         self.left_arrow_button.clicked.connect(self.scroll_left)
         navigation_layout.addWidget(self.left_arrow_button)
 
@@ -180,7 +115,7 @@ class MainWindow(QMainWindow):
         right_arrow_icon = qta.icon('fa.chevron-right')
         self.right_arrow_button.setIcon(right_arrow_icon)
         self.right_arrow_button.setFixedSize(50, 300)
-        self.right_arrow_button.setStyleSheet(f"background-color: {self.palette().color(QPalette.Link).name()}; border: none;")
+        self.right_arrow_button.setStyleSheet("background-color: #4f86f7; border: none;")
         self.right_arrow_button.clicked.connect(self.scroll_right)
         navigation_layout.addWidget(self.right_arrow_button)
 
@@ -193,32 +128,34 @@ class MainWindow(QMainWindow):
 
     def create_tool_button(self, tool_name, tool_description):
         button = QPushButton()
-
-        # Apply styles directly to the button
-        button.setStyleSheet(f"""
-            QPushButton {{
-                border: 5px solid {self.palette().color(QPalette.Link).name()};
-                color: rgba(0, 0, 0, 0);
+        button.setStyleSheet("""
+            QPushButton {
+                border: 5px solid #4f86f7;
+                color: white;
                 border-radius: 15px;
                 padding: 10px;
                 min-width: 200px;
-                min-height: 400x;
+                min-height: 400px;
                 margin: 10px;
-                background-color: {self.palette().color(QPalette.Button).name()};
+                background-color: #2c2f38;
                 text-align: center;
-            }}
-            QPushButton:hover {{
-                border-color: {self.palette().color(QPalette.Link).darker().name()};
-                background-color: {self.palette().color(QPalette.Link).darker().name()};
-            }}
+            }
+            QPushButton:hover {
+                border-color: #3a6dbf;
+                background-color: #3a6dbf;
+            }
         """)
 
         name_label = QLabel(tool_name)
         name_label.setFont(self.inter_extra_bold_font)
+        name_label.setStyleSheet("color: #4f86f7; background-color: transparent;")
+        name_label.setWordWrap(True)
         name_label.setAlignment(Qt.AlignCenter)
 
         description_label = QLabel(tool_description)
         description_label.setFont(self.inter_regular_font)
+        description_label.setStyleSheet("color: #adadad; background-color: transparent;")
+        description_label.setWordWrap(True)
         description_label.setAlignment(Qt.AlignCenter)
 
         button_layout = QVBoxLayout(button)
@@ -266,7 +203,6 @@ class MainWindow(QMainWindow):
     def open_settings(self, item=None):
         settings_widget = Settings(parent=self.main_content, back_callback=self.main_menu)
         settings_widget.setFont(self.inter_regular_font)
-        settings_widget.settings_saved.connect(self.apply_theme)
         self.load_tool(settings_widget)
 
     def update_safe_area_size(self):
@@ -277,10 +213,10 @@ class MainWindow(QMainWindow):
     def apply_text_size(self):
         text_size = self.config.get_text_size()
         font_size = {
-            "small": 18,
-            "default": 28,
-            "large": 38,
-            "huge": 48
+            "small": 18,   # Updated values
+            "default": 28, # Updated values
+            "large": 38,   # Updated values
+            "huge": 48     # Updated values
         }.get(text_size, 28)
 
         self.setStyleSheet(f"""
@@ -323,6 +259,21 @@ class MainWindow(QMainWindow):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+
+    palette = QPalette()
+    palette.setColor(QPalette.Window, QColor(44, 47, 56))
+    palette.setColor(QPalette.WindowText, Qt.white)
+    palette.setColor(QPalette.Base, QColor(44, 47, 56))
+    palette.setColor(QPalette.AlternateBase, QColor(66, 69, 79))
+    palette.setColor(QPalette.ToolTipBase, Qt.white)
+    palette.setColor(QPalette.ToolTipText, Qt.white)
+    palette.setColor(QPalette.Text, Qt.white)
+    palette.setColor(QPalette.Button, QColor(44, 47, 56))
+    palette.setColor(QPalette.ButtonText, Qt.white)
+    palette.setColor(QPalette.BrightText, Qt.red)
+    palette.setColor(QPalette.Highlight, QColor(75, 110, 175))
+    palette.setColor(QPalette.HighlightedText, Qt.white)
+    app.setPalette(palette)
 
     window = MainWindow()
     window.show()
