@@ -198,6 +198,25 @@ class MainWindow(QMainWindow):
 
     def create_tool_button(self, tool_name, tool_description):
         button = QPushButton()
+        
+        # Apply styles directly to the button
+        button.setStyleSheet(f"""
+            QPushButton {{
+                border: 5px solid {self.palette().color(QPalette.Link).name()};
+                color: {self.palette().color(QPalette.ButtonText).name()};
+                border-radius: 15px;
+                padding: 10px;
+                min-width: 200px;
+                min-height: 100px;
+                margin: 10px;
+                background-color: {self.palette().color(QPalette.Button).name()};
+                text-align: center;
+            }}
+            QPushButton:hover {{
+                border-color: {self.palette().color(QPalette.Link).darker().name()};
+                background-color: {self.palette().color(QPalette.Link).darker().name()};
+            }}
+        """)
 
         name_label = QLabel(tool_name)
         name_label.setFont(self.inter_extra_bold_font)
@@ -213,7 +232,6 @@ class MainWindow(QMainWindow):
 
         button.clicked.connect(lambda: self.tool_selected(tool_name))
         return button
-
     def tool_selected(self, tool_name):
         if tool_name == "Longer Appearance SRT":
             from tools.longer_appearance import LongerAppearanceSRT
