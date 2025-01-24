@@ -21,8 +21,8 @@ class VersionBlock(QWidget):
         self.toggle_button.setText("▼")
         self.toggle_button.clicked.connect(self.toggle_changes)
 
-        # Create the version label
-        self.version_label = QLabel(self.version)
+        # Create the version label with HTML for center alignment
+        self.version_label = QLabel(f"<div style='text-align: center;'>{self.version}</div>")
         self.version_label.setFont(QFont("Inter ExtraBold", 20))
 
         # Create the changes label with HTML for center alignment
