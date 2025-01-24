@@ -1,5 +1,5 @@
-from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget, QLabel, QScrollArea
-from PyQt5.QtGui import QPalette, QApplication, QFont
+from PyQt5.QtWidgets import QMainWindow, QApplication, QVBoxLayout, QWidget, QLabel, QScrollArea
+from PyQt5.QtGui import QPalette, QFont
 from PyQt5.QtCore import Qt
 import os
 from .version_block import VersionBlock
