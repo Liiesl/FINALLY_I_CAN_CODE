@@ -1,3 +1,4 @@
+import time
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QSlider, QComboBox, QMessageBox
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QFont, QPalette
@@ -144,7 +145,11 @@ class Settings(QWidget):
         self.config.set_safe_area_size(self.safe_area_slider.value())
         self.config.set_text_size(self.text_size_dropdown.currentText())
         self.config.set_theme(self.config.data["theme"])  # Save the theme from memory
+        
+        self.config.save()  # Ensure the config is saved
+        time.sleep(1)  # Add a delay to ensure the config is saved flawlessly
         self.config.load()  # Reload the configuration to ensure it is applied
+        
         self.apply_theme()  # Apply theme immediately after saving
         self.settings_saved.emit()  # Emit the settings_saved signal
         QMessageBox.information(self, "Success", "Settings saved successfully!")
