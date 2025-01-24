@@ -327,6 +327,6 @@ class MainWindow(QMainWindow):
     if __name__ == "__main__":
         app = QApplication(sys.argv)
     
-        window = MainWindow(app)  # Pass the QApplication instance
+        window = MainWindow()  # Pass the QApplication instance
         window.show()
         sys.exit(app.exec_())
