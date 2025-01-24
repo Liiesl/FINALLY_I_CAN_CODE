@@ -194,37 +194,13 @@ class SubtitleShifter(QWidget):
 
     def show_whole_shift(self):
         self.stacked_widget.setCurrentWidget(self.whole_shift_widget)
-        self.partial_shift_button.setStyleSheet(self.get_mode_button_style(
-            selected=False, 
-            font_size=self.font_size,
-            button_color=self.button_color,
-            text_color=self.button_text_color,
-            highlight_color=self.highlight_color
-        ))
-        self.whole_shift_button.setStyleSheet(self.get_mode_button_style(
-            selected=True, 
-            font_size=self.font_size,
-            button_color=self.button_color,
-            text_color=self.button_text_color,
-            highlight_color=self.highlight_color
-        ))
+        self.partial_shift_button.setStyleSheet(self.get_mode_button_style(selected=False))
+        self.whole_shift_button.setStyleSheet(self.get_mode_button_style(selected=True))
 
     def show_partial_shift(self):
         self.stacked_widget.setCurrentWidget(self.partial_shift_widget)
-        self.whole_shift_button.setStyleSheet(self.get_mode_button_style(
-            selected=False, 
-            font_size=self.font_size,
-            button_color=self.button_color,
-            text_color=self.button_text_color,
-            highlight_color=self.highlight_color
-        ))
-        self.partial_shift_button.setStyleSheet(self.get_mode_button_style(
-            selected=True, 
-            font_size=self.font_size,
-            button_color=self.button_color,
-            text_color=self.button_text_color,
-            highlight_color=self.highlight_color
-        ))
+        self.whole_shift_button.setStyleSheet(self.get_mode_button_style(selected=False))
+        self.partial_shift_button.setStyleSheet(self.get_mode_button_style(selected=True))
         
     def select_subtitle(self):
         file_path, _ = QFileDialog.getOpenFileName(self, "Select Subtitle File", "", "Subtitle Files (*.srt)")
@@ -294,7 +270,7 @@ def shift_subtitle(file_path, ms_shift, save_path):
         file.writelines(shifted_content)
 
 def shift_subtitle_partial(file_path, start_time, end_time, ms_shift, save_path):
-    with open(file_path, 'r') as file:
+    with open(file_path, 'r') as file):
         content = file.readlines()
 
     shifted_content = []
