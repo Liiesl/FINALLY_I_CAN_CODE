@@ -17,6 +17,13 @@ class MainWindow(QMainWindow):
         self.setGeometry(100, 100, 1200, 800)
         self.setStyleSheet("background-color: #2c2f38;")
 
+        # Load the Inter fonts
+        QFontDatabase.addApplicationFont("assets/fonts/Inter-Regular.otf")
+        QFontDatabase.addApplicationFont("assets/fonts/Inter-ExtraBold.otf")
+
+        self.inter_regular_font = QFont("Inter Regular")
+        self.inter_extra_bold_font = QFont("Inter ExtraBold")
+
         self.central_widget = QWidget()
         self.layout = QHBoxLayout(self.central_widget)
         self.setCentralWidget(self.central_widget)
@@ -26,6 +33,7 @@ class MainWindow(QMainWindow):
 
         self.side_panel = SidePanel(self, self.open_settings)
         self.side_panel.setVisible(False)
+        self.side_panel.setFont(self.inter_regular_font)
 
         self.main_content = QWidget()
         self.main_content_layout = QVBoxLayout(self.main_content)
@@ -146,10 +154,6 @@ class MainWindow(QMainWindow):
             "huge": 42
         }.get(text_size, 26)
 
-        # Load the Inter fonts
-        QFontDatabase.addApplicationFont("assets/fonts/Inter-Regular.otf")
-        QFontDatabase.addApplicationFont("assets/fonts/Inter-ExtraBold.otf")
-
         name_label = QLabel(tool_name)
         name_label.setFont(QFont("Inter ExtraBold", font_size, QFont.Bold))
         name_label.setStyleSheet("color: #4f86f7; background-color: transparent;")
@@ -172,7 +176,9 @@ class MainWindow(QMainWindow):
     def tool_selected(self, tool_name):
         if tool_name == "Longer Appearance SRT":
             from tools.longer_appearance import LongerAppearanceSRT
-            self.load_tool(LongerAppearanceSRT(parent=self.main_content, back_callback=self.main_menu))
+            tool_widget = LongerAppearanceSRT(parent=self.main_content, back_callback=self.main_menu)
+            tool_widget.setFont(self.inter_regular_font)
+            self.load_tool(tool_widget)
         elif tool_name == "Merge SRT Files":
             from tools.merge_srt import MergeSRT
             self.load_tool(MergeSRT(parent=self.main_content, back_callback=self.main_menu))
@@ -203,7 +209,9 @@ class MainWindow(QMainWindow):
             self.splitter.setSizes([self.width() // 2, self.width() // 2])
 
     def open_settings(self, item=None):
-        self.load_tool(Settings(parent=self.main_content, back_callback=self.main_menu))
+        settings_widget = Settings(parent=self.main_content, back_callback=self.main_menu)
+        settings_widget.setFont(self.inter_regular_font)
+        self.load_tool(settings_widget)
 
     def update_safe_area_size(self):
         self.config = Config()
