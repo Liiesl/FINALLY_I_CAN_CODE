@@ -1,6 +1,6 @@
-from PyQt5.QtWidgets import QMainWindow, QTextEdit, QVBoxLayout, QWidget
+from PyQt5.QtWidgets import QMainWindow, QTextEdit, QVBoxLayout, QWidget, QApplication
+from PyQt5.QtGui import QPalette
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QPalette, QApplication
 import os
 
 class ChangelogWindow(QMainWindow):
