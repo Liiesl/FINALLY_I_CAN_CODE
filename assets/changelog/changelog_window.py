@@ -20,7 +20,7 @@ class ChangelogWindow(QMainWindow):
         self.load_changelog()
 
     def load_changelog(self):
-        changelog_path = os.path.join(os.path.dirname(__file__), 'assets', 'changelog', 'changelog.txt')
+        changelog_path = os.path.join(os.path.dirname(__file__), 'changelog.txt')
         try:
             with open(changelog_path, 'r') as file:
                 content = file.read()
