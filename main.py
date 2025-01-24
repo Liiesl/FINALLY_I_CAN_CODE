@@ -289,9 +289,9 @@ class MainWindow(QMainWindow):
             palette.setColor(QPalette.BrightText, Qt.red)
             palette.setColor(QPalette.Highlight, QColor(75, 110, 175))
             palette.setColor(QPalette.HighlightedText, Qt.white)
-    
+
         self.app.setPalette(palette)
-    
+
     def update_tool_button_visibility(self, event=None):
         if self.main_menu_active and self.tool_buttons_container:
             container_width = self.tool_buttons_container.width()
@@ -304,18 +304,18 @@ class MainWindow(QMainWindow):
                         item.widget().setVisible(True)
                     else:
                         item.widget().setVisible(False)
-    
+
     def scroll_left(self):
         current_value = self.scroll_area.horizontalScrollBar().value()
         new_value = max(0, current_value - 220)
         self.animate_scroll(current_value, new_value)
-    
+
     def scroll_right(self):
         max_value = self.scroll_area.horizontalScrollBar().maximum()
         current_value = self.scroll_area.horizontalScrollBar().value()
         new_value = min(max_value, current_value + 220)
         self.animate_scroll(current_value, new_value)
-    
+
     def animate_scroll(self, start_value, end_value):
         animation = QPropertyAnimation(self.scroll_area.horizontalScrollBar(), b"value")
         animation.setDuration(500)
@@ -323,10 +323,10 @@ class MainWindow(QMainWindow):
         animation.setEndValue(end_value)
         animation.start()
         self.animation = animation
-    
-    if __name__ == "__main__":
-        app = QApplication(sys.argv)
-    
-        window = MainWindow()  # Pass the QApplication instance
-        window.show()
-        sys.exit(app.exec_())
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+
+    window = MainWindow(app)  # Pass the QApplication instance
+    window.show()
+    sys.exit(app.exec_())
