@@ -2,7 +2,6 @@ from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButt
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QFont
 from config import Config
-from assets.buttons.toggle_switch import ToggleSwitch
 
 class Settings(QWidget):
     settings_saved = pyqtSignal()  # Define a signal for settings saved
@@ -57,27 +56,6 @@ class Settings(QWidget):
 
         layout.addLayout(text_size_layout)
 
-        # Theme Switch
-        theme_layout = QHBoxLayout()
-        theme_label = QLabel("Theme:")
-        theme_label.setStyleSheet("color: white; font-size: 26px;")
-        theme_layout.addWidget(theme_label)
-
-        light_label = QLabel("Light")
-        light_label.setStyleSheet("color: white; font-size: 26px;")
-        theme_layout.addWidget(light_label)
-
-        self.theme_switch = ToggleSwitch()
-        self.theme_switch.set_state(self.config.get_theme())
-        self.theme_switch.mousePressEvent = self.update_theme
-        theme_layout.addWidget(self.theme_switch)
-
-        dark_label = QLabel("Dark")
-        dark_label.setStyleSheet("color: white; font-size: 26px;")
-        theme_layout.addWidget(dark_label)
-
-        layout.addLayout(theme_layout)
-
         # Save button
         save_button = QPushButton("Save")
         save_button.clicked.connect(self.save_settings)
@@ -114,26 +92,13 @@ class Settings(QWidget):
         self.config.set_text_size(size)
         self.apply_text_size_to_all_pages()
 
-    def update_theme(self, event):
-        # Update the state directly without calling mousePressEvent
-        self.theme_switch._state = not self.theme_switch._state
-        self.theme_switch.animate_circle()
-        theme = self.theme_switch.get_state()
-        self.config.set_theme(theme)
-        self.apply_theme_to_all_pages()
-
     def apply_text_size_to_all_pages(self):
         # Trigger the text size update in the main window
-        self.settings_saved.emit()
-
-    def apply_theme_to_all_pages(self):
-        # Trigger the theme update in the main window
         self.settings_saved.emit()
 
     def save_settings(self):
         self.config.set_safe_area_size(self.safe_area_slider.value())
         self.config.set_text_size(self.text_size_dropdown.currentText())
-        self.config.set_theme(self.theme_switch.get_state())
         self.settings_saved.emit()  # Emit the settings_saved signal
         QMessageBox.information(self, "Success", "Settings saved successfully!")
         self.back_callback()
