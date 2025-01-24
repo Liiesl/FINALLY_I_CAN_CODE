@@ -7,9 +7,10 @@ from assets.buttons.toggle_switch import ToggleSwitch  # Import the ToggleSwitch
 class Settings(QWidget):
     settings_saved = pyqtSignal()  # Define a signal for settings saved
 
-    def __init__(self, parent=None, back_callback=None):
+    def __init__(self, parent=None, back_callback=None, main_window=None):
         super().__init__(parent)
         self.back_callback = back_callback
+        self.main_window = main_window
         self.setFont(QFont("Inter Regular"))
         self.config = Config(source="Settings")
         self.init_ui()
@@ -149,8 +150,8 @@ class Settings(QWidget):
         
         # Load the configuration and refresh the main window settings
         self.config.load()
-        main_window = self.parent().parent()  # Assuming the MainWindow is the grandparent of Settings
-        main_window.refresh_settings()  # Refresh the settings to apply the new configuration
+        if self.main_window:
+            self.main_window.refresh_settings()  # Refresh the settings to apply the new configuration
         
         QMessageBox.information(self, "Success", "Settings saved and applied successfully!")
         # Do not call self.back_callback() to keep the settings window open
