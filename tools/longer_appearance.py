@@ -2,7 +2,7 @@ import os
 import re
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QFileDialog, QMessageBox, QListWidget, QLabel, QComboBox
 from PyQt5.QtGui import QFont, QPalette
-from config import Config
+from assets.modules.config import Config
 
 class LongerAppearanceSRT(QWidget):
     def __init__(self, parent=None, back_callback=None):
