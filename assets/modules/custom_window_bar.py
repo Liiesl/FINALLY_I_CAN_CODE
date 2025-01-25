@@ -1,7 +1,7 @@
 # assets/modules/custom_window_bar.py
-from PyQt5.QtWidgets import QFrame, QHBoxLayout, QLabel, QPushButton, QTabWidget, QVBoxLayout, QWidget
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QColor, QPalette, QFont
+from PyQt5.QtWidgets import QFrame, QHBoxLayout, QLabel, QPushButton, QTabWidget, QVBoxLayout
+from PyQt5.QtCore import Qt, QPoint
+from PyQt5.QtGui import QPalette
 
 class CustomWindowBar(QFrame):
     def __init__(self, parent=None):
@@ -10,13 +10,11 @@ class CustomWindowBar(QFrame):
         self.setWindowFlags(Qt.FramelessWindowHint)
         self.setObjectName("CustomWindowBar")
         
+        self._startPos = None
+        self._startMovePos = None
+        
         self.layout = QHBoxLayout(self)
         self.layout.setContentsMargins(0, 0, 0, 0)
-        
-        self.title_label = QLabel("SRT Editor")
-        self.title_label.setAlignment(Qt.AlignCenter)
-        
-        self.layout.addWidget(self.title_label)
         
         self.tab_widget = QTabWidget()
         self.tab_widget.setTabsClosable(True)
@@ -90,3 +88,22 @@ class CustomWindowBar(QFrame):
                 background-color: {palette.color(QPalette.Highlight).name()};
             }}
         """)
+
+    def mousePressEvent(self, event):
+        if event.button() == Qt.LeftButton:
+            self._startPos = event.pos()
+            self._startMovePos = self.mapToGlobal(event.pos())
+            event.accept()
+
+    def mouseMoveEvent(self, event):
+        if event.buttons() == Qt.LeftButton:
+            self._startMovePos = self.mapToGlobal(event.pos())
+            self.window().move(self.window().pos() + self._startMovePos - self._startPos)
+            self._startMovePos = self.mapToGlobal(event.pos())
+            event.accept()
+
+    def mouseReleaseEvent(self, event):
+        if event.button() == Qt.LeftButton:
+            self._startPos = None
+            self._startMovePos = None
+            event.accept()
