@@ -1,5 +1,5 @@
 # assets/modules/custom_window_bar.py
-from PyQt5.QtWidgets import QFrame, QHBoxLayout, QLabel, QPushButton, QTabWidget, QVBoxLayout, QWidget
+from PyQt5.QtWidgets import QFrame, QHBoxLayout, QLabel, QPushButton, QTabBar, QTabWidget, QVBoxLayout, QWidget
 from PyQt5.QtCore import Qt, QPoint
 from PyQt5.QtGui import QPalette
 
@@ -16,12 +16,15 @@ class CustomWindowBar(QFrame):
         self.layout = QHBoxLayout(self)
         self.layout.setContentsMargins(0, 0, 0, 0)
         
-        self.tab_widget = QTabWidget()
-        self.tab_widget.setTabsClosable(True)
-        self.tab_widget.tabCloseRequested.connect(self.remove_tab)
-        self.tab_widget.setMovable(True)
+        self.tab_bar = QTabBar()
+        self.tab_bar.setTabsClosable(True)
+        self.tab_bar.tabCloseRequested.connect(self.remove_tab)
+        self.tab_bar.setMovable(True)
         
-        self.layout.addWidget(self.tab_widget, 1)
+        # Add initial tab with application name
+        self.tab_bar.addTab("SRT Editor")
+        
+        self.layout.addWidget(self.tab_bar, 1)
         
         self.add_tab_button = QPushButton("+")
         self.add_tab_button.setFixedSize(30, 30)
@@ -60,6 +63,18 @@ class CustomWindowBar(QFrame):
             QPushButton:hover {
                 background-color: #555;
             }
+            QTabBar::tab {
+                background: #444;
+                color: white;
+                padding: 5px 10px;
+            }
+            QTabBar::tab:selected {
+                background: #666;
+            }
+            QTabBar::close-button {
+                image: url(close-icon.png);
+                subcontrol-position: right;
+            }
         """)
     
     def minimize_window(self):
@@ -74,11 +89,11 @@ class CustomWindowBar(QFrame):
     def close_window(self):
         self.window().close()
 
-    def add_tab(self, content_widget, title):
-        self.tab_widget.addTab(content_widget, title)
+    def add_tab(self, title):
+        self.tab_bar.addTab(title)
         
     def remove_tab(self, index):
-        self.tab_widget.removeTab(index)
+        self.tab_bar.removeTab(index)
 
     def apply_palette(self, palette):
         self.setStyleSheet(f"""
@@ -93,6 +108,14 @@ class CustomWindowBar(QFrame):
             }}
             QPushButton:hover {{
                 background-color: {palette.color(QPalette.Highlight).name()};
+            }}
+            QTabBar::tab {{
+                background: {palette.color(QPalette.Button).name()};
+                color: {palette.color(QPalette.ButtonText).name()};
+                padding: 5px 10px;
+            }}
+            QTabBar::tab:selected {{
+                background: {palette.color(QPalette.Highlight).name()};
             }}
         """)
 
@@ -115,5 +138,5 @@ class CustomWindowBar(QFrame):
             event.accept()
 
     def on_add_tab_button_clicked(self):
-        new_tab = QWidget()  # Placeholder widget for the new tab
-        self.add_tab(new_tab, "New Tab")
+        new_tab_title = "New Tab"
+        self.add_tab(new_tab_title)
