@@ -2,7 +2,7 @@ import json
 import os
 
 class Config:
-    CONFIG_FILE = "config.json"
+    CONFIG_FILE = os.path.join(os.path.dirname(__file__), "config.json")
 
     def __init__(self, source=None):
         self.data = {
