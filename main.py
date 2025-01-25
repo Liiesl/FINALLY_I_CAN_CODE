@@ -39,7 +39,7 @@ class MainWindow(QMainWindow):
         self.side_panel.setFont(self.inter_regular_font)
 
         self.main_content = QWidget()
-        self.main_content_layout = QVBoxLayout(self.main_content)
+        self.main_content_layout = QVBoxLayout(self.main_content)  # Ensure main_content_layout is initialized correctly
         self.main_content.setLayout(self.main_content_layout)
 
         self.splitter = QSplitter(Qt.Horizontal)
