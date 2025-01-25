@@ -1,5 +1,5 @@
 # assets/modules/custom_window_bar.py
-from PyQt5.QtWidgets import QFrame, QHBoxLayout, QLabel, QPushButton, QTabBar, QTabWidget, QVBoxLayout, QWidget
+from PyQt5.QtWidgets import QFrame, QHBoxLayout, QLabel, QPushButton, QTabWidget, QVBoxLayout, QWidget
 from PyQt5.QtCore import Qt, QPoint
 from PyQt5.QtGui import QPalette
 
@@ -19,6 +19,7 @@ class CustomWindowBar(QFrame):
         self.tab_widget = QTabWidget()
         self.tab_widget.setTabsClosable(True)
         self.tab_widget.tabCloseRequested.connect(self.remove_tab)
+        self.tab_widget.currentChanged.connect(self.tab_changed)
         self.tab_widget.setMovable(True)
         
         # Add initial tab with application name
@@ -141,3 +142,7 @@ class CustomWindowBar(QFrame):
     def on_add_tab_button_clicked(self):
         new_tab = QWidget()  # Placeholder widget for the new tab
         self.add_tab(new_tab, "New Tab")
+
+    def tab_changed(self, index):
+        # Notify the main window to update the central widget
+        self.parent().update_central_widget(index)
