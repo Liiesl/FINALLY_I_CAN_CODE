@@ -335,6 +335,10 @@ class MainWindow(QMainWindow):
         self.animation = animation
 
     def update_central_widget(self, index):
+        # Ensure main_content_layout is initialized
+        if not hasattr(self, 'main_content_layout'):
+            raise AttributeError("MainWindow object has no attribute 'main_content_layout'")
+
         # Clear the current main content layout
         for i in reversed(range(self.main_content_layout.count())):
             widget = self.main_content_layout.itemAt(i).widget()
