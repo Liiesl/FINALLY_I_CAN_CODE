@@ -1,148 +1,73 @@
-# assets/modules/custom_window_bar.py
-from PyQt5.QtWidgets import QFrame, QHBoxLayout, QLabel, QPushButton, QTabWidget, QVBoxLayout, QWidget
+from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel, QPushButton, QTabBar, QVBoxLayout
 from PyQt5.QtCore import Qt, QPoint
-from PyQt5.QtGui import QPalette
+from PyQt5.QtGui import QPalette, QColor, QFont
 
-class CustomWindowBar(QFrame):
-    def __init__(self, parent=None):
+class CustomWindowBar(QWidget):
+    def __init__(self, parent=None, app=None):
         super().__init__(parent)
+        self.parent = parent
+        self.app = app
+        self.init_ui()
+        self.start = QPoint(0, 0)
+
+    def init_ui(self):
         self.setFixedHeight(30)
-        self.setWindowFlags(Qt.FramelessWindowHint)
-        self.setObjectName("CustomWindowBar")
-        
-        self._startPos = None
-        self._startMovePos = None
-        
+        self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
+        self.setAttribute(Qt.WA_TranslucentBackground)
+
         self.layout = QHBoxLayout(self)
         self.layout.setContentsMargins(0, 0, 0, 0)
-        
-        self.tab_widget = QTabWidget()
-        self.tab_widget.setTabsClosable(True)
-        self.tab_widget.tabCloseRequested.connect(self.remove_tab)
-        self.tab_widget.currentChanged.connect(self.tab_changed)
-        self.tab_widget.setMovable(True)
-        
-        # Add initial tab with application name
-        self.content_widget = QWidget()
-        self.tab_widget.addTab(self.content_widget, "SRT Editor")
-        
-        self.layout.addWidget(self.tab_widget, 1)
-        
-        self.add_tab_button = QPushButton("+")
-        self.add_tab_button.setFixedSize(30, 30)
-        self.add_tab_button.clicked.connect(self.on_add_tab_button_clicked)
-        
-        self.layout.addWidget(self.add_tab_button)
-        
-        self.minimize_button = QPushButton("-")
-        self.minimize_button.setFixedSize(30, 30)
-        self.minimize_button.clicked.connect(self.minimize_window)
-        
-        self.maximize_button = QPushButton("□")
-        self.maximize_button.setFixedSize(30, 30)
-        self.maximize_button.clicked.connect(self.maximize_window)
-        
-        self.close_button = QPushButton("X")
-        self.close_button.setFixedSize(30, 30)
-        self.close_button.clicked.connect(self.close_window)
-        
-        self.layout.addWidget(self.minimize_button)
-        self.layout.addWidget(self.maximize_button)
-        self.layout.addWidget(self.close_button)
-        
-        self.setStyleSheet("""
-            QFrame#CustomWindowBar {
-                background-color: #333;
-            }
-            QLabel {
-                color: white;
-            }
-            QPushButton {
-                border: none;
-                color: white;
-                background-color: transparent;
-            }
-            QPushButton:hover {
-                background-color: #555;
-            }
-            QTabBar::tab {
-                background: #444;
-                color: white;
-                padding: 5px 10px;
-            }
-            QTabBar::tab:selected {
-                background: #666;
-            }
-            QTabBar::close-button {
-                image: url(close-icon.png);
-                subcontrol-position: right;
-            }
-        """)
-    
-    def minimize_window(self):
-        self.window().showMinimized()
-        
-    def maximize_window(self):
-        if self.window().isMaximized():
-            self.window().showNormal()
-        else:
-            self.window().showMaximized()
-        
-    def close_window(self):
-        self.window().close()
+        self.setLayout(self.layout)
 
-    def add_tab(self, content_widget, title):
-        self.tab_widget.addTab(content_widget, title)
-        
-    def remove_tab(self, index):
-        self.tab_widget.removeTab(index)
+        self.tab_bar = QTabBar(self)
+        self.tab_bar.setMovable(True)
+        self.tab_bar.setTabsClosable(True)
+        self.tab_bar.tabCloseRequested.connect(self.close_tab)
+        self.tab_bar.currentChanged.connect(self.change_tab)
 
-    def apply_palette(self, palette):
-        self.setStyleSheet(f"""
-            QFrame#CustomWindowBar {{
-                background-color: {palette.color(QPalette.Window).name()};
-            }}
-            QLabel {{
-                color: {palette.color(QPalette.WindowText).name()};
-            }}
-            QPushButton {{
-                color: {palette.color(QPalette.WindowText).name()};
-            }}
-            QPushButton:hover {{
-                background-color: {palette.color(QPalette.Highlight).name()};
-            }}
-            QTabBar::tab {{
-                background: {palette.color(QPalette.Button).name()};
-                color: {palette.color(QPalette.ButtonText).name()};
-                padding: 5px 10px;
-            }}
-            QTabBar::tab:selected {{
-                background: {palette.color(QPalette.Highlight).name()};
-            }}
-        """)
+        self.layout.addWidget(self.tab_bar)
+
+        self.add_tab("SRT Editor")
 
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
-            self._startPos = event.globalPos()
-            self._startMovePos = self.window().pos()
-            event.accept()
+            self.start = event.globalPos()
+            self.pressing = True
 
     def mouseMoveEvent(self, event):
-        if event.buttons() == Qt.LeftButton:
-            delta = event.globalPos() - self._startPos
-            self.window().move(self._startMovePos + delta)
-            event.accept()
+        if event.buttons() == Qt.LeftButton and self.pressing:
+            diff = event.globalPos() - self.start
+            self.parent.move(self.parent.pos() + diff)
+            self.start = event.globalPos()
 
     def mouseReleaseEvent(self, event):
-        if event.button() == Qt.LeftButton:
-            self._startPos = None
-            self._startMovePos = None
-            event.accept()
+        self.pressing = False
 
-    def on_add_tab_button_clicked(self):
-        new_tab = QWidget()  # Placeholder widget for the new tab
-        self.add_tab(new_tab, "New Tab")
+    def add_tab(self, title):
+        self.tab_bar.addTab(title)
+        self.tab_bar.setCurrentIndex(self.tab_bar.count() - 1)
 
-    def tab_changed(self, index):
-        # Notify the main window to update the central widget
-        self.parent().update_central_widget(index)
+    def close_tab(self, index):
+        self.tab_bar.removeTab(index)
+        if self.tab_bar.count() == 0:
+            self.add_tab("SRT Editor")
+
+    def change_tab(self, index):
+        pass  # Handle tab change if necessary
+
+    def apply_theme(self, theme):
+        palette = self.app.palette()
+        background_color = palette.color(QPalette.Window).name()
+        text_color = palette.color(QPalette.WindowText).name()
+
+        self.setStyleSheet(f"""
+            CustomWindowBar {{
+                background-color: {background_color};
+                color: {text_color};
+            }}
+
+            QTabBar::tab {{
+                background-color: {background_color};
+                color: {text_color};
+            }}
+        """)
