@@ -53,7 +53,7 @@ class MainWindow(QMainWindow):
         self.splitter.addWidget(self.main_content)
         self.splitter.setSizes([0, 1])
 
-        self.content_layout.addWidget(self.splitter)
+        self.layout.addWidget(self.splitter)
 
         self.top_bar = QHBoxLayout()
         self.top_bar_added = False
