@@ -16,15 +16,16 @@ class CustomWindowBar(QFrame):
         self.layout = QHBoxLayout(self)
         self.layout.setContentsMargins(0, 0, 0, 0)
         
-        self.tab_bar = QTabBar()
-        self.tab_bar.setTabsClosable(True)
-        self.tab_bar.tabCloseRequested.connect(self.remove_tab)
-        self.tab_bar.setMovable(True)
+        self.tab_widget = QTabWidget()
+        self.tab_widget.setTabsClosable(True)
+        self.tab_widget.tabCloseRequested.connect(self.remove_tab)
+        self.tab_widget.setMovable(True)
         
         # Add initial tab with application name
-        self.tab_bar.addTab("SRT Editor")
+        self.content_widget = QWidget()
+        self.tab_widget.addTab(self.content_widget, "SRT Editor")
         
-        self.layout.addWidget(self.tab_bar, 1)
+        self.layout.addWidget(self.tab_widget, 1)
         
         self.add_tab_button = QPushButton("+")
         self.add_tab_button.setFixedSize(30, 30)
@@ -89,11 +90,11 @@ class CustomWindowBar(QFrame):
     def close_window(self):
         self.window().close()
 
-    def add_tab(self, title):
-        self.tab_bar.addTab(title)
+    def add_tab(self, content_widget, title):
+        self.tab_widget.addTab(content_widget, title)
         
     def remove_tab(self, index):
-        self.tab_bar.removeTab(index)
+        self.tab_widget.removeTab(index)
 
     def apply_palette(self, palette):
         self.setStyleSheet(f"""
@@ -138,5 +139,5 @@ class CustomWindowBar(QFrame):
             event.accept()
 
     def on_add_tab_button_clicked(self):
-        new_tab_title = "New Tab"
-        self.add_tab(new_tab_title)
+        new_tab = QWidget()  # Placeholder widget for the new tab
+        self.add_tab(new_tab, "New Tab")
