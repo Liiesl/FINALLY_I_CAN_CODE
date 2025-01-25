@@ -19,13 +19,7 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("SRT Editor")
         self.setGeometry(100, 100, 1200, 800)
         self.setWindowFlags(Qt.FramelessWindowHint)
-
-        QFontDatabase.addApplicationFont("assets/fonts/Inter-Regular.otf")
-        QFontDatabase.addApplicationFont("assets/fonts/Inter-ExtraBold.otf")
         
-        self.inter_regular_font = QFont("Inter Regular")
-        self.inter_extra_bold_font = QFont("Inter ExtraBold")
-
         self.central_widget = QWidget()
         self.layout = QVBoxLayout(self.central_widget)
         self.setCentralWidget(self.central_widget)
@@ -53,7 +47,7 @@ class MainWindow(QMainWindow):
         self.splitter.addWidget(self.main_content)
         self.splitter.setSizes([0, 1])
 
-        self.layout.addWidget(self.splitter)
+        self.content_layout.addWidget(self.splitter)
 
         self.top_bar = QHBoxLayout()
         self.top_bar_added = False
@@ -336,6 +330,18 @@ class MainWindow(QMainWindow):
         animation.setEndValue(end_value)
         animation.start()
         self.animation = animation
+
+    def update_central_widget(self, index):
+        # Clear the current main content layout
+        for i in reversed(range(self.main_content_layout.count())):
+            widget = self.main_content_layout.itemAt(i).widget()
+            if widget is not None:
+                widget.setParent(None)
+
+        # Get the new content widget from the tab
+        new_content_widget = self.custom_window_bar.tab_widget.widget(index)
+        self.main_content_layout.addWidget(new_content_widget)
+        new_content_widget.show()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
