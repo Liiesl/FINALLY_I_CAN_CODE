@@ -84,11 +84,11 @@ class MainWindow(QMainWindow):
     def remove_tab_content(self, index):
         widget = self.tab_contents.widget(index)
         if widget:
-            self.tab_contents.removeWidget(widget)
+            self.tab_widget.removeWidget(widget)
             widget.deleteLater()
 
     def display_tab_content(self, index):
-        self.tab_contents.setCurrentIndex(index)
+        self.tab_widget.setCurrentIndex(index)
 
     def apply_theme(self):
         theme = self.config.get_theme()
