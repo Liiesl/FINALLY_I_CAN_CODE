@@ -9,7 +9,7 @@
 - **Longer Appearance**: Extend the duration of your `.srt` subtitles to ensure they stay on screen longer.
 - **Merge SRT**: Combine multiple `.srt` files into a single subtitle file.
 - **Subtitle Converter**: Convert subtitles from any format to another format seamlessly.
-- **Subtitle Shifter**: Shift subtitles either entirely or partially to sync them perfectly with your video.
+- **Subtitle Shifter**: Shift `.srt` subtitles either entirely or partially to sync them perfectly with your video.
 
 ## Installation
 
