@@ -1,3 +1,4 @@
+# main.py
 import sys
 import qtawesome as qta
 from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QLabel, QScrollArea, QMessageBox, QSplitter, QFrame
@@ -9,6 +10,7 @@ from tools.subtitle_shifter import SubtitleShifter
 from assets.modules.side_panel import SidePanel
 from assets.modules.settings import Settings
 from assets.modules.config import Config
+from assets.modules.custom_window_bar import CustomWindowBar  # Import the custom window bar
 
 class MainWindow(QMainWindow):
     def __init__(self, app):
@@ -16,20 +18,21 @@ class MainWindow(QMainWindow):
         self.app = app
         self.setWindowTitle("SRT Editor")
         self.setGeometry(100, 100, 1200, 800)
-        self.setStyleSheet("background-color: {background_color};")
-
-        QFontDatabase.addApplicationFont("assets/fonts/Inter-Regular.otf")
-        QFontDatabase.addApplicationFont("assets/fonts/Inter-ExtraBold.otf")
+        self.setWindowFlags(Qt.FramelessWindowHint)
         
-        self.inter_regular_font = QFont("Inter Regular")
-        self.inter_extra_bold_font = QFont("Inter ExtraBold")
-
         self.central_widget = QWidget()
-        self.layout = QHBoxLayout(self.central_widget)
+        self.layout = QVBoxLayout(self.central_widget)
         self.setCentralWidget(self.central_widget)
 
         self.config = Config(source="MainWindow")
         self.main_menu_active = True
+
+        self.custom_window_bar = CustomWindowBar(self)
+        self.layout.addWidget(self.custom_window_bar)
+        
+        self.content_widget = QWidget()
+        self.content_layout = QHBoxLayout(self.content_widget)
+        self.layout.addWidget(self.content_widget)
 
         self.side_panel = SidePanel(self, self.open_settings)
         self.side_panel.setVisible(False)
@@ -44,7 +47,7 @@ class MainWindow(QMainWindow):
         self.splitter.addWidget(self.main_content)
         self.splitter.setSizes([0, 1])
 
-        self.layout.addWidget(self.splitter)
+        self.content_layout.addWidget(self.splitter)
 
         self.top_bar = QHBoxLayout()
         self.top_bar_added = False
@@ -99,6 +102,7 @@ class MainWindow(QMainWindow):
             palette.setColor(QPalette.HighlightedText, Qt.white)
 
         self.app.setPalette(palette)
+        self.custom_window_bar.apply_palette(palette)
 
     def create_tool_button(self, tool_name, tool_description):
         button = QPushButton()
@@ -254,6 +258,7 @@ class MainWindow(QMainWindow):
 
         self.main_content_layout.addWidget(tool_widget)
         tool_widget.show()
+        self.custom_window_bar.add_tab(tool_widget, tool_widget.windowTitle())
 
     def toggle_side_panel(self):
         if self.side_panel.isVisible():
