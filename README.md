@@ -18,12 +18,10 @@
 2. Run the installer and follow the on-screen instructions.
 
 ### macOS
-1. Download the latest release from the [Releases](https://github.com/yourusername/Subtl/releases) page.
-2. Open the `.dmg` file and drag Subtl to your Applications folder.
+Coming soon
 
 ### Linux
-1. Download the latest release from the [Releases](https://github.com/yourusername/Subtl/releases) page.
-2. Extract the `.tar.gz` file and run the executable.
+Coming soon
 
 ## Usage
 
@@ -34,7 +32,7 @@
 
 ## Supported Subtitle Formats
 
-Subtl supports a wide range of subtitle formats for conversion using the **Subtitle Converter** tool:
+Subtl supports a wide range of subtitle formats including:
 
 - SubRip (`.srt`)
 - MicroDVD (`.sub`)
