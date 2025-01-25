@@ -15,7 +15,6 @@ class MainWindow(QMainWindow):
     def __init__(self, app):
         super().__init__()
         self.app = app
-        self.tab_contents = []
         self.init_ui()
 
     def init_ui(self):
