@@ -1,5 +1,5 @@
 # assets/modules/custom_window_bar.py
-from PyQt5.QtWidgets import QFrame, QHBoxLayout, QLabel, QPushButton, QTabWidget, QVBoxLayout
+from PyQt5.QtWidgets import QFrame, QHBoxLayout, QLabel, QPushButton, QTabWidget, QVBoxLayout, QWidget
 from PyQt5.QtCore import Qt, QPoint
 from PyQt5.QtGui import QPalette
 
@@ -19,8 +19,14 @@ class CustomWindowBar(QFrame):
         self.tab_widget = QTabWidget()
         self.tab_widget.setTabsClosable(True)
         self.tab_widget.tabCloseRequested.connect(self.remove_tab)
+        self.tab_widget.setMovable(True)
+        
+        self.add_tab_button = QPushButton("+")
+        self.add_tab_button.setFixedSize(30, 30)
+        self.add_tab_button.clicked.connect(self.add_tab)
         
         self.layout.addWidget(self.tab_widget, 1)
+        self.layout.addWidget(self.add_tab_button)
         
         self.minimize_button = QPushButton("-")
         self.minimize_button.setFixedSize(30, 30)
@@ -67,7 +73,9 @@ class CustomWindowBar(QFrame):
     def close_window(self):
         self.window().close()
 
-    def add_tab(self, content_widget, title):
+    def add_tab(self, content_widget=None, title="New Tab"):
+        if content_widget is None:
+            content_widget = QWidget()  # Placeholder widget for the new tab
         self.tab_widget.addTab(content_widget, title)
         
     def remove_tab(self, index):
@@ -91,15 +99,14 @@ class CustomWindowBar(QFrame):
 
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
-            self._startPos = event.pos()
-            self._startMovePos = self.mapToGlobal(event.pos())
+            self._startPos = event.globalPos()
+            self._startMovePos = self.window().pos()
             event.accept()
 
     def mouseMoveEvent(self, event):
         if event.buttons() == Qt.LeftButton:
-            self._startMovePos = self.mapToGlobal(event.pos())
-            self.window().move(self.window().pos() + self._startMovePos - self._startPos)
-            self._startMovePos = self.mapToGlobal(event.pos())
+            delta = event.globalPos() - self._startPos
+            self.window().move(self._startMovePos + delta)
             event.accept()
 
     def mouseReleaseEvent(self, event):
