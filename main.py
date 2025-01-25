@@ -20,6 +20,7 @@ class MainWindow(QMainWindow):
         self.setGeometry(100, 100, 1200, 800)
         self.setWindowFlags(Qt.FramelessWindowHint)
         
+        # Initialize central widget and layout
         self.central_widget = QWidget()
         self.layout = QVBoxLayout(self.central_widget)
         self.setCentralWidget(self.central_widget)
@@ -251,11 +252,13 @@ class MainWindow(QMainWindow):
     def load_tool(self, tool_widget):
         self.main_menu_active = False
 
+        # Clear current widgets from main_content_layout
         for i in reversed(range(self.main_content_layout.count())):
             widget = self.main_content_layout.itemAt(i).widget()
             if widget is not None:
                 widget.setParent(None)
 
+        # Add new tool widget to main_content_layout
         self.main_content_layout.addWidget(tool_widget)
         tool_widget.show()
         self.custom_window_bar.add_tab(tool_widget, tool_widget.windowTitle())
