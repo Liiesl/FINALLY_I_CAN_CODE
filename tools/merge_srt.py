@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import QWidget, QComboBox, QVBoxLayout, QHBoxLayout, QPushB
 from PyQt5.QtGui import QFont, QColor, QIcon, QPixmap, QPalette
 from PyQt5.QtCore import Qt
 from .smprocessing import merge_subtitles, read_file, write_file
-from config import Config
+from assets.modules.config import Config
 from assets.buttons.toggle_switch import ToggleSwitch
 
 class MergeSRT(QWidget):
