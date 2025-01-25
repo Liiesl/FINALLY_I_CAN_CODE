@@ -77,8 +77,9 @@ class MainWindow(QMainWindow):
         new_splitter.addWidget(new_main_content)
         new_splitter.setSizes([0, 1])
 
-        self.tab_contents.addWidget(new_splitter)
-        self.tab_contents.setCurrentWidget(new_splitter)
+        self.tab_contents.append(splitter)
+        self.tab_widget.addWidget(splitter)
+        self.tab_widget.setCurrentWidget(splitter)
 
     def remove_tab_content(self, index):
         widget = self.tab_contents.widget(index)
