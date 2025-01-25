@@ -7,8 +7,8 @@ class CustomWindowBar(QWidget):
         super().__init__(parent)
         self.parent = parent
         self.app = app
-        self.init_ui()
         self.start = QPoint(0, 0)
+        self.init_ui()
 
     def init_ui(self):
         self.setFixedHeight(30)
@@ -19,6 +19,31 @@ class CustomWindowBar(QWidget):
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.setLayout(self.layout)
 
+        self.create_buttons()
+        self.create_tab_bar()
+
+    def create_buttons(self):
+        self.min_button = QPushButton('-')
+        self.min_button.setFixedSize(30, 30)
+        self.min_button.clicked.connect(self.parent.showMinimized)
+        self.layout.addWidget(self.min_button)
+
+        self.max_button = QPushButton('□')
+        self.max_button.setFixedSize(30, 30)
+        self.max_button.clicked.connect(self.toggle_maximize_restore)
+        self.layout.addWidget(self.max_button)
+
+        self.close_button = QPushButton('x')
+        self.close_button.setFixedSize(30, 30)
+        self.close_button.clicked.connect(self.parent.close)
+        self.layout.addWidget(self.close_button)
+
+        self.new_tab_button = QPushButton('+')
+        self.new_tab_button.setFixedSize(30, 30)
+        self.new_tab_button.clicked.connect(self.add_new_tab)
+        self.layout.addWidget(self.new_tab_button)
+
+    def create_tab_bar(self):
         self.tab_bar = QTabBar(self)
         self.tab_bar.setMovable(True)
         self.tab_bar.setTabsClosable(True)
@@ -54,6 +79,15 @@ class CustomWindowBar(QWidget):
 
     def change_tab(self, index):
         pass  # Handle tab change if necessary
+
+    def toggle_maximize_restore(self):
+        if self.parent.isMaximized():
+            self.parent.showNormal()
+        else:
+            self.parent.showMaximized()
+
+    def add_new_tab(self):
+        self.add_tab("New Tab")
 
     def apply_theme(self, theme):
         palette = self.app.palette()
