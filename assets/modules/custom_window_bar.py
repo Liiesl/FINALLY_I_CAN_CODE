@@ -1,6 +1,6 @@
-from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel, QPushButton, QTabBar, QVBoxLayout
+from PyQt5.QtWidgets import QWidget, QHBoxLayout, QPushButton, QTabBar, QVBoxLayout
 from PyQt5.QtCore import Qt, QPoint
-from PyQt5.QtGui import QPalette, QColor, QFont
+from PyQt5.QtGui import QPalette
 
 class CustomWindowBar(QWidget):
     def __init__(self, parent=None, app=None):
@@ -19,10 +19,26 @@ class CustomWindowBar(QWidget):
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.setLayout(self.layout)
 
-        self.create_buttons()
         self.create_tab_bar()
+        self.create_buttons()
+
+    def create_tab_bar(self):
+        self.tab_bar = QTabBar(self)
+        self.tab_bar.setMovable(True)
+        self.tab_bar.setTabsClosable(True)
+        self.tab_bar.tabCloseRequested.connect(self.close_tab)
+        self.tab_bar.currentChanged.connect(self.change_tab)
+
+        self.layout.addWidget(self.tab_bar)
+
+        self.add_tab("SRT Editor")
 
     def create_buttons(self):
+        self.new_tab_button = QPushButton('+')
+        self.new_tab_button.setFixedSize(30, 30)
+        self.new_tab_button.clicked.connect(self.add_new_tab)
+        self.layout.addWidget(self.new_tab_button)
+
         self.min_button = QPushButton('-')
         self.min_button.setFixedSize(30, 30)
         self.min_button.clicked.connect(self.parent.showMinimized)
@@ -37,22 +53,6 @@ class CustomWindowBar(QWidget):
         self.close_button.setFixedSize(30, 30)
         self.close_button.clicked.connect(self.parent.close)
         self.layout.addWidget(self.close_button)
-
-        self.new_tab_button = QPushButton('+')
-        self.new_tab_button.setFixedSize(30, 30)
-        self.new_tab_button.clicked.connect(self.add_new_tab)
-        self.layout.addWidget(self.new_tab_button)
-
-    def create_tab_bar(self):
-        self.tab_bar = QTabBar(self)
-        self.tab_bar.setMovable(True)
-        self.tab_bar.setTabsClosable(True)
-        self.tab_bar.tabCloseRequested.connect(self.close_tab)
-        self.tab_bar.currentChanged.connect(self.change_tab)
-
-        self.layout.addWidget(self.tab_bar)
-
-        self.add_tab("SRT Editor")
 
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
@@ -87,7 +87,7 @@ class CustomWindowBar(QWidget):
             self.parent.showMaximized()
 
     def add_new_tab(self):
-        self.add_tab("New Tab")
+        self.parent.add_new_tab()
 
     def apply_theme(self, theme):
         palette = self.app.palette()
