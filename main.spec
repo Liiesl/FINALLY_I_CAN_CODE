@@ -5,9 +5,9 @@ a = Analysis(
     pathex=[],
     binaries=[],
     datas=[
-        ('config.json', '.'),  # Include config.json in the main directory
-        ('custom_font.ttf', '.'),  # Include custom font in the main directory
-        ('app_icon.ico', '.'),  # Include icon in the main directory
+        ('assets/config/config.json', 'assets/config'),  # Include config.json in the main directory
+        ('assets/fonts/Inter-ExtraBold.otf', 'assets/fonts'),  # Include custom font in the main directory
+        ('assets/fonts/Inter-Regular.otf', 'assets/fonts'),  # Include icon in the main directory
     ],
     hiddenimports=[],
     hookspath=[],
