@@ -1,4 +1,3 @@
-# main.py
 import sys
 import qtawesome as qta
 from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QLabel, QScrollArea, QMessageBox, QSplitter, QFrame
@@ -10,7 +9,6 @@ from tools.subtitle_shifter import SubtitleShifter
 from assets.modules.side_panel import SidePanel
 from assets.modules.settings import Settings
 from assets.modules.config import Config
-from assets.modules.custom_window_bar import CustomWindowBar  # Import the custom window bar
 
 class MainWindow(QMainWindow):
     def __init__(self, app):
@@ -18,29 +16,27 @@ class MainWindow(QMainWindow):
         self.app = app
         self.setWindowTitle("SRT Editor")
         self.setGeometry(100, 100, 1200, 800)
-        self.setWindowFlags(Qt.FramelessWindowHint)
+        self.setStyleSheet("background-color: {background_color};")
+
+        QFontDatabase.addApplicationFont("assets/fonts/Inter-Regular.otf")
+        QFontDatabase.addApplicationFont("assets/fonts/Inter-ExtraBold.otf")
         
-        # Initialize central widget and layout
+        self.inter_regular_font = QFont("Inter Regular")
+        self.inter_extra_bold_font = QFont("Inter ExtraBold")
+
         self.central_widget = QWidget()
-        self.layout = QVBoxLayout(self.central_widget)
+        self.layout = QHBoxLayout(self.central_widget)
         self.setCentralWidget(self.central_widget)
 
         self.config = Config(source="MainWindow")
         self.main_menu_active = True
-
-        self.custom_window_bar = CustomWindowBar(self)
-        self.layout.addWidget(self.custom_window_bar)
-        
-        self.content_widget = QWidget()
-        self.content_layout = QHBoxLayout(self.content_widget)
-        self.layout.addWidget(self.content_widget)
 
         self.side_panel = SidePanel(self, self.open_settings)
         self.side_panel.setVisible(False)
         self.side_panel.setFont(self.inter_regular_font)
 
         self.main_content = QWidget()
-        self.main_content_layout = QVBoxLayout(self.main_content)  # Ensure main_content_layout is initialized correctly
+        self.main_content_layout = QVBoxLayout(self.main_content)
         self.main_content.setLayout(self.main_content_layout)
 
         self.splitter = QSplitter(Qt.Horizontal)
@@ -48,7 +44,7 @@ class MainWindow(QMainWindow):
         self.splitter.addWidget(self.main_content)
         self.splitter.setSizes([0, 1])
 
-        self.content_layout.addWidget(self.splitter)
+        self.layout.addWidget(self.splitter)
 
         self.top_bar = QHBoxLayout()
         self.top_bar_added = False
@@ -103,7 +99,6 @@ class MainWindow(QMainWindow):
             palette.setColor(QPalette.HighlightedText, Qt.white)
 
         self.app.setPalette(palette)
-        self.custom_window_bar.apply_palette(palette)
 
     def create_tool_button(self, tool_name, tool_description):
         button = QPushButton()
@@ -252,16 +247,13 @@ class MainWindow(QMainWindow):
     def load_tool(self, tool_widget):
         self.main_menu_active = False
 
-        # Clear current widgets from main_content_layout
         for i in reversed(range(self.main_content_layout.count())):
             widget = self.main_content_layout.itemAt(i).widget()
             if widget is not None:
                 widget.setParent(None)
 
-        # Add new tool widget to main_content_layout
         self.main_content_layout.addWidget(tool_widget)
         tool_widget.show()
-        self.custom_window_bar.add_tab(tool_widget, tool_widget.windowTitle())
 
     def toggle_side_panel(self):
         if self.side_panel.isVisible():
@@ -333,22 +325,6 @@ class MainWindow(QMainWindow):
         animation.setEndValue(end_value)
         animation.start()
         self.animation = animation
-
-    def update_central_widget(self, index):
-        # Ensure main_content_layout is initialized
-        if not hasattr(self, 'main_content_layout'):
-            raise AttributeError("MainWindow object has no attribute 'main_content_layout'")
-
-        # Clear the current main content layout
-        for i in reversed(range(self.main_content_layout.count())):
-            widget = self.main_content_layout.itemAt(i).widget()
-            if widget is not None:
-                widget.setParent(None)
-
-        # Get the new content widget from the tab
-        new_content_widget = self.custom_window_bar.tab_widget.widget(index)
-        self.main_content_layout.addWidget(new_content_widget)
-        new_content_widget.show()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
