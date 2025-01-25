@@ -47,6 +47,10 @@ class MainWindow(QMainWindow):
         index = self.tab_widget.addTab(new_tab, title)
         self.tab_widget.setCurrentIndex(index)
 
+    def change_tab(self, index):
+        # Add logic to change the content based on the selected tab
+        pass
+
     def apply_theme(self):
         theme = self.config.get_theme()
         palette = QPalette()
