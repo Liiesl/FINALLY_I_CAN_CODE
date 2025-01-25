@@ -21,11 +21,12 @@ class CustomWindowBar(QFrame):
         self.tab_widget.tabCloseRequested.connect(self.remove_tab)
         self.tab_widget.setMovable(True)
         
+        self.layout.addWidget(self.tab_widget, 1)
+        
         self.add_tab_button = QPushButton("+")
         self.add_tab_button.setFixedSize(30, 30)
-        self.add_tab_button.clicked.connect(self.add_tab)
+        self.add_tab_button.clicked.connect(self.on_add_tab_button_clicked)
         
-        self.layout.addWidget(self.tab_widget, 1)
         self.layout.addWidget(self.add_tab_button)
         
         self.minimize_button = QPushButton("-")
@@ -73,9 +74,7 @@ class CustomWindowBar(QFrame):
     def close_window(self):
         self.window().close()
 
-    def add_tab(self, content_widget=None, title="New Tab"):
-        if content_widget is None:
-            content_widget = QWidget()  # Placeholder widget for the new tab
+    def add_tab(self, content_widget, title):
         self.tab_widget.addTab(content_widget, title)
         
     def remove_tab(self, index):
@@ -114,3 +113,7 @@ class CustomWindowBar(QFrame):
             self._startPos = None
             self._startMovePos = None
             event.accept()
+
+    def on_add_tab_button_clicked(self):
+        new_tab = QWidget()  # Placeholder widget for the new tab
+        self.add_tab(new_tab, "New Tab")
