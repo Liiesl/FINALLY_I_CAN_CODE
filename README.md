@@ -9,7 +9,7 @@
 - **Longer Appearance**: Extend the duration of your `.srt` subtitles to ensure they stay on screen longer.
 - **Merge SRT**: Combine multiple `.srt` files into a single subtitle file.
 - **Subtitle Converter**: Convert subtitles from any format to another format seamlessly.
-- **Subtitle Shifter**: Shift `.srt` subtitles either entirely or partially to sync them perfectly with your video.
+- **Subtitle Shifter**: Shift subtitles either entirely or partially to sync them perfectly with your video.
 
 ## Installation
 
@@ -34,12 +34,26 @@
 
 ## Supported Subtitle Formats
 
+Subtl supports a wide range of subtitle formats for conversion using the **Subtitle Converter** tool:
+
 - SubRip (`.srt`)
-- WebVTT (`.vtt`)
+- MicroDVD (`.sub`)
+- Plain Text (`.txt`)
 - Advanced SubStation Alpha (`.ass`)
 - SubStation Alpha (`.ssa`)
-- MicroDVD (`.sub`)
-- And more!
+- WebVTT (`.vtt`)
+- YouTube (`.sbv`)
+- DFXP (`.dfxp`)
+- Spruce Subtitle Format (`.stl`)
+- VobSub (`.idx`)
+- MPlayer (`.mpl`)
+- Universal Subtitle Format (`.usf`)
+- Lyric (`.lrc`)
+- RealText (`.rt`)
+- Timed Text Markup Language (`.ttml`)
+- Captions (`.cap`)
+
+**Note**: If you want to edit subtitles in formats other than `.srt` using tools like **Longer Appearance**, **Merge SRT**, or **Subtitle Shifter**, you must first convert them to `.srt` using the **Subtitle Converter** tool.
 
 ## Contributing
 
