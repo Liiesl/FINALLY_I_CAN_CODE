@@ -6,9 +6,9 @@ from PyQt5.QtCore import Qt, QPropertyAnimation
 
 from tools.subtitle_converter import SubtitleConverter
 from tools.subtitle_shifter import SubtitleShifter
-from side_panel import SidePanel
-from settings import Settings
-from config import Config
+from assets.modules.side_panel import SidePanel
+from assets.modules.settings import Settings
+from assets.modules.config import Config
 
 class MainWindow(QMainWindow):
     def __init__(self, app):
