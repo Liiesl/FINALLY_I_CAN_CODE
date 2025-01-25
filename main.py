@@ -1,6 +1,6 @@
 import sys
 import qtawesome as qta
-from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QLabel, QScrollArea, QMessageBox, QSplitter, QFrame
+from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QLabel, QScrollArea, QMessageBox, QSplitter, QFrame, QStackedWidget
 from PyQt5.QtGui import QPalette, QColor, QFont, QFontDatabase
 from PyQt5.QtCore import Qt, QPropertyAnimation
 
@@ -36,6 +36,9 @@ class MainWindow(QMainWindow):
         self.custom_window_bar = CustomWindowBar(self, self.app)
         self.layout.addWidget(self.custom_window_bar)
 
+        self.tab_contents = QStackedWidget()
+        self.layout.addWidget(self.tab_contents)
+
         self.side_panel = SidePanel(self, self.open_settings)
         self.side_panel.setVisible(False)
         self.side_panel.setFont(self.inter_regular_font)
@@ -49,7 +52,7 @@ class MainWindow(QMainWindow):
         self.splitter.addWidget(self.main_content)
         self.splitter.setSizes([0, 1])
 
-        self.layout.addWidget(self.splitter)
+        self.tab_contents.addWidget(self.splitter)
 
         self.top_bar = QHBoxLayout()
         self.top_bar_added = False
@@ -60,13 +63,31 @@ class MainWindow(QMainWindow):
 
         self.apply_theme()
 
-    def add_new_tab(self):
-        new_tab = MainWindow(self.app)
-        self.custom_window_bar.add_tab("New Tab")
+    def create_new_tab_content(self):
+        new_splitter = QSplitter(Qt.Horizontal)
+        new_side_panel = SidePanel(self, self.open_settings)
+        new_side_panel.setVisible(False)
+        new_side_panel.setFont(self.inter_regular_font)
 
-    def change_tab(self, index):
-        # Handle tab change if necessary
-        pass
+        new_main_content = QWidget()
+        new_main_content_layout = QVBoxLayout(new_main_content)
+        new_main_content.setLayout(new_main_content_layout)
+
+        new_splitter.addWidget(new_side_panel)
+        new_splitter.addWidget(new_main_content)
+        new_splitter.setSizes([0, 1])
+
+        self.tab_contents.addWidget(new_splitter)
+        self.tab_contents.setCurrentWidget(new_splitter)
+
+    def remove_tab_content(self, index):
+        widget = self.tab_contents.widget(index)
+        if widget:
+            self.tab_contents.removeWidget(widget)
+            widget.deleteLater()
+
+    def display_tab_content(self, index):
+        self.tab_contents.setCurrentIndex(index)
 
     def apply_theme(self):
         theme = self.config.get_theme()
