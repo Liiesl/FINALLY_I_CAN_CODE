@@ -3,7 +3,7 @@ import re
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QFileDialog, QMessageBox, QLabel, QLineEdit, QStackedWidget, QFrame
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPalette, QColor, QFont
-from config import Config
+from assets.modules.config import Config
 
 class SubtitleShifter(QWidget):
     def __init__(self, parent=None, back_callback=None):
