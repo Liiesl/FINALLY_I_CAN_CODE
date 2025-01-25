@@ -1,6 +1,6 @@
 import sys
 import qtawesome as qta
-from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QLabel, QScrollArea, QMessageBox, QSplitter, QFrame
+from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QLabel, QScrollArea, QMessageBox, QSplitter, QFrame, QTabWidget
 from PyQt5.QtGui import QPalette, QColor, QFont, QFontDatabase
 from PyQt5.QtCore import Qt, QPropertyAnimation
 
@@ -12,8 +12,8 @@ from assets.modules.config import Config
 from assets.modules.custom_window_bar import CustomWindowBar  # Import the CustomWindowBar
 
 class MainWindow(QMainWindow):
-    def __init__(self, app):
-        super().__init__()
+    def __init__(self, app, parent=None):
+        super().__init__(parent)
         self.app = app
         self.setWindowTitle("SRT Editor")
         self.setGeometry(100, 100, 1200, 800)
@@ -36,29 +36,16 @@ class MainWindow(QMainWindow):
         self.custom_window_bar = CustomWindowBar(self, self.app)
         self.layout.addWidget(self.custom_window_bar)
 
-        self.side_panel = SidePanel(self, self.open_settings)
-        self.side_panel.setVisible(False)
-        self.side_panel.setFont(self.inter_regular_font)
+        self.tab_widget = QTabWidget()
+        self.tab_widget.setMovable(True)
+        self.layout.addWidget(self.tab_widget)
 
-        self.main_content = QWidget()
-        self.main_content_layout = QVBoxLayout(self.main_content)
-        self.main_content.setLayout(self.main_content_layout)
+        self.add_tab("SRT Editor")
 
-        self.splitter = QSplitter(Qt.Horizontal)
-        self.splitter.addWidget(self.side_panel)
-        self.splitter.addWidget(self.main_content)
-        self.splitter.setSizes([0, 1])
-
-        self.layout.addWidget(self.splitter)
-
-        self.top_bar = QHBoxLayout()
-        self.top_bar_added = False
-
-        self.menu_button = None
-
-        self.main_menu()
-
-        self.apply_theme()
+    def add_tab(self, title):
+        new_tab = MainWindow(self.app, parent=self)
+        index = self.tab_widget.addTab(new_tab, title)
+        self.tab_widget.setCurrentIndex(index)
 
     def apply_theme(self):
         theme = self.config.get_theme()
