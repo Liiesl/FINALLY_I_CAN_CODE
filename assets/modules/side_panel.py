@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel, QListWidget, QListWidgetItem, QPushButton
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont, QPalette
-from config import Config
+from assets.modules.config import Config
 from assets.changelog.changelog_window import ChangelogWindow
 
 class SidePanel(QWidget):
