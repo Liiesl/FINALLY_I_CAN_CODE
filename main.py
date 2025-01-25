@@ -19,7 +19,13 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("SRT Editor")
         self.setGeometry(100, 100, 1200, 800)
         self.setWindowFlags(Qt.FramelessWindowHint)
+
+        QFontDatabase.addApplicationFont("assets/fonts/Inter-Regular.otf")
+        QFontDatabase.addApplicationFont("assets/fonts/Inter-ExtraBold.otf")
         
+        self.inter_regular_font = QFont("Inter Regular")
+        self.inter_extra_bold_font = QFont("Inter ExtraBold")
+
         self.central_widget = QWidget()
         self.layout = QVBoxLayout(self.central_widget)
         self.setCentralWidget(self.central_widget)
