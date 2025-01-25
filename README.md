@@ -1,6 +1,6 @@
 # Subtl
 
-![Subtl Logo](https://via.placeholder.com/150) <!-- Replace with your logo -->
+![Subtl Logo](https://imgur.com/a/68ggd9i) <!-- Replace with your logo -->
 
 **Subtl** is a powerful desktop application designed to help you edit, change, and modify elements of your subtitles with ease. Whether you're a video editor, content creator, or just someone who loves watching movies with subtitles, Subtl provides a suite of tools to make subtitle editing a breeze.
 
