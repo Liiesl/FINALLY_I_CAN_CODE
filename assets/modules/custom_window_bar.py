@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QWidget, QHBoxLayout, QPushButton, QTabBar, QVBoxLayout
+from PyQt5.QtWidgets import QWidget, QHBoxLayout, QPushButton, QTabBar
 from PyQt5.QtCore import Qt, QPoint
 from PyQt5.QtGui import QPalette
 
@@ -71,23 +71,22 @@ class CustomWindowBar(QWidget):
     def add_tab(self, title):
         self.tab_bar.addTab(title)
         self.tab_bar.setCurrentIndex(self.tab_bar.count() - 1)
+        self.parent.create_new_tab_content()
 
     def close_tab(self, index):
         self.tab_bar.removeTab(index)
+        self.parent.remove_tab_content(index)
         if self.tab_bar.count() == 0:
             self.add_tab("SRT Editor")
 
     def change_tab(self, index):
-        pass  # Handle tab change if necessary
+        self.parent.display_tab_content(index)
 
     def toggle_maximize_restore(self):
         if self.parent.isMaximized():
             self.parent.showNormal()
         else:
             self.parent.showMaximized()
-
-    def add_new_tab(self):
-        self.parent.add_new_tab()
 
     def apply_theme(self, theme):
         palette = self.app.palette()
