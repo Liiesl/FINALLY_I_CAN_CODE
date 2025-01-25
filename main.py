@@ -15,6 +15,10 @@ class MainWindow(QMainWindow):
     def __init__(self, app):
         super().__init__()
         self.app = app
+        self.tab_contents = []
+        self.init_ui()
+
+    def init_ui(self):
         self.setWindowTitle("SRT Editor")
         self.setGeometry(100, 100, 1200, 800)
         self.setWindowFlags(Qt.FramelessWindowHint)  # Remove native window bar
@@ -77,15 +81,14 @@ class MainWindow(QMainWindow):
         new_splitter.addWidget(new_main_content)
         new_splitter.setSizes([0, 1])
 
-        self.tab_contents.append(splitter)
-        self.tab_widget.addWidget(splitter)
-        self.tab_widget.setCurrentWidget(splitter)
+        self.tab_contents.append(new_splitter)
+        self.tab_widget.addWidget(new_splitter)
+        self.tab_widget.setCurrentWidget(new_splitter)
 
     def remove_tab_content(self, index):
-        widget = self.tab_contents.widget(index)
-        if widget:
-            self.tab_widget.removeWidget(widget)
-            widget.deleteLater()
+        widget = self.tab_contents.pop(index)
+        self.tab_widget.removeWidget(widget)
+        widget.deleteLater()
 
     def display_tab_content(self, index):
         self.tab_widget.setCurrentIndex(index)
