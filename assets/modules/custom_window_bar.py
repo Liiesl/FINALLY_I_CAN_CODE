@@ -33,7 +33,7 @@ class CustomWindowBar(QWidget):
         self.init_ui()
 
     def init_ui(self):
-        self.setFixedHeight(100)
+        self.setFixedHeight(50)
         self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
         
         self.setStyleSheet(f"""
@@ -84,7 +84,7 @@ class CustomWindowBar(QWidget):
                 color: {self.button_text_color};  /* Use the button text color */
                 background: transparent;  /* Make the background transparent */
                 border: none;  /* Remove border */
-                font-size: 16px;  /* Increase font size for better visibility */
+                font-size: 40px;  /* Increase font size for better visibility */
             }
             QPushButton:hover {
                 background: rgba(255, 255, 255, 0.2);  /* Add a hover effect */
@@ -100,7 +100,7 @@ class CustomWindowBar(QWidget):
 
     def create_buttons(self):
         self.min_button = QPushButton('-')
-        self.min_button.setFixedSize(100, 100)
+        self.min_button.setFixedSize(50, 50)
         self.min_button.clicked.connect(self.parent.showMinimized)
 
         # Set the minimize button style
@@ -109,7 +109,7 @@ class CustomWindowBar(QWidget):
                 color: {self.button_text_color};  /* Use the button text color */
                 background: transparent;  /* Make the background transparent */
                 border: none;  /* Remove border */
-                font-size: 16px;  /* Increase font size for better visibility */
+                font-size: 40px;  /* Increase font size for better visibility */
             }
             QPushButton:hover {
                 background: rgba(255, 255, 255, 0.2);  /* Add a hover effect */
@@ -118,7 +118,7 @@ class CustomWindowBar(QWidget):
         self.layout.addWidget(self.min_button)
 
         self.max_button = QPushButton('□')
-        self.max_button.setFixedSize(100, 100)
+        self.max_button.setFixedSize(50, 50)
         self.max_button.clicked.connect(self.toggle_maximize_restore)
 
         # Set the maximize button style
@@ -127,7 +127,7 @@ class CustomWindowBar(QWidget):
                 color: {self.button_text_color};  /* Use the button text color */
                 background: transparent;  /* Make the background transparent */
                 border: none;  /* Remove border */
-                font-size: 16px;  /* Increase font size for better visibility */
+                font-size: 40px;  /* Increase font size for better visibility */
             }
             QPushButton:hover {
                 background: rgba(255, 255, 255, 0.2);  /* Add a hover effect */
@@ -136,7 +136,7 @@ class CustomWindowBar(QWidget):
         self.layout.addWidget(self.max_button)
 
         self.close_button = QPushButton('x')
-        self.close_button.setFixedSize(100, 100)
+        self.close_button.setFixedSize(50, 50)
         self.close_button.clicked.connect(self.parent.close)
 
         # Set the close button style
@@ -145,7 +145,7 @@ class CustomWindowBar(QWidget):
                 color: {self.button_text_color};  
                 background: transparent;  
                 border: none;  
-                font-size: 16px;  
+                font-size: 40px;  
             }
             QPushButton:hover {
                 background: rgba(255, 255, 255, 0.2);  /* Add a hover effect */
