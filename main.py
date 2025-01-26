@@ -224,7 +224,9 @@ class MainWindow(QMainWindow):
                     widget.setParent(None)
 
             # Add the top bar with the menu button
-            if self.menu_button is None:
+            if not self.top_bar_added:
+                # Add the top bar with the menu button
+                self.top_bar = QHBoxLayout()
                 self.menu_button = QPushButton()
                 menu_icon = qta.icon('fa.bars')
                 self.menu_button.setIcon(menu_icon)
@@ -232,10 +234,8 @@ class MainWindow(QMainWindow):
                 self.menu_button.setStyleSheet("color: {button_text_color}; background-color:{button_color}; border: none; border-radius: 3px;")
                 self.menu_button.clicked.connect(self.toggle_side_panel)
                 self.top_bar.addWidget(self.menu_button, alignment=Qt.AlignLeft)
-    
-            if not self.top_bar_added:
-                target_layout.insertLayout(0, self.top_bar)
-                self.top_bar_added = True
+                main_content_layout.addLayout(self.top_bar)
+                self.top_bar_added = True  # Mark the top bar as added
                 
             # Add the tool buttons
             self.tool_buttons_container = QWidget()
