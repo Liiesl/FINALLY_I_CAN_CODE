@@ -230,7 +230,7 @@ class MainWindow(QMainWindow):
             self.top_bar.addWidget(self.menu_button, alignment=Qt.AlignLeft)
 
         if not self.top_bar_added:
-            target_layout.insertLayout(0, top_bar)
+            target_layout.insertLayout(0, self.top_bar)
             if layout is not None:
                 layout.parent().top_bar_added = True
             else:
