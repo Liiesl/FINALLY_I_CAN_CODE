@@ -150,6 +150,7 @@ class MainWindow(QMainWindow):
             palette.setColor(QPalette.HighlightedText, Qt.white)
 
         self.app.setPalette(palette)
+        self.setPalette(palette)
         self.custom_window_bar.apply_theme(theme)
         self.update()
 
