@@ -212,7 +212,7 @@ class MainWindow(QMainWindow):
 
         target_layout = layout if layout is not None else self.main_content_layout
 
-        for i in reversed(rangetarget_layout.count())):
+        for i in reversed(range(target_layout.count())):
             widget = self.main_content_layout.itemAt(i).widget()
             if widget is not None:
                 widget.setParent(None)
