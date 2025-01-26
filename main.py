@@ -62,7 +62,7 @@ class MainWindow(QMainWindow):
 
         self.tab_contents.addWidget(self.splitter)
 
-        self.main_menu()
+        self.create_new_tab_content()
 
         self.apply_theme()
 
