@@ -9,7 +9,6 @@ a = Analysis(
         ('assets/fonts/Inter-ExtraBold.otf', 'assets/fonts'), 
         ('assets/fonts/Inter-Regular.otf', 'assets/fonts'), 
         ('assets/changelog/changelog.txt', 'assets/changelog'),
-        ('version.rc', '.'),
         ('Subtle.ico', '.'),
     ],
     hiddenimports=[],
