@@ -75,7 +75,7 @@ class CustomWindowBar(QWidget):
 
         # Add the "add tab" button directly to the right of the tabs
         self.new_tab_button = QPushButton('+')
-        self.new_tab_button.setFixedSize(30, 30)
+        self.new_tab_button.setFixedSize(100, 100)
         self.new_tab_button.clicked.connect(lambda: self.add_tab("Subtl"))  # Change tab name to "Subtl"
 
         # Set the "+" button style
@@ -100,7 +100,7 @@ class CustomWindowBar(QWidget):
 
     def create_buttons(self):
         self.min_button = QPushButton('-')
-        self.min_button.setFixedSize(30, 30)
+        self.min_button.setFixedSize(100, 100)
         self.min_button.clicked.connect(self.parent.showMinimized)
 
         # Set the minimize button style
@@ -118,7 +118,7 @@ class CustomWindowBar(QWidget):
         self.layout.addWidget(self.min_button)
 
         self.max_button = QPushButton('□')
-        self.max_button.setFixedSize(30, 30)
+        self.max_button.setFixedSize(100, 100)
         self.max_button.clicked.connect(self.toggle_maximize_restore)
 
         # Set the maximize button style
@@ -136,7 +136,7 @@ class CustomWindowBar(QWidget):
         self.layout.addWidget(self.max_button)
 
         self.close_button = QPushButton('x')
-        self.close_button.setFixedSize(30, 30)
+        self.close_button.setFixedSize(100, 100)
         self.close_button.clicked.connect(self.parent.close)
 
         # Set the close button style
