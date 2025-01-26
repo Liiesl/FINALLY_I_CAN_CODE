@@ -89,4 +89,4 @@ If you encounter any issues or have any questions, please open an issue on our [
 
 ---
 
-**Subtl** is developed with ❤️ by [Your Name/Team Name]. Happy editing!
+**Subtl** is developed with ❤️ by SubtlDevTeams(myself). Happy editing!
