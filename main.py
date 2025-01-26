@@ -85,7 +85,7 @@ class MainWindow(QMainWindow):
         self.tab_contents.setCurrentWidget(new_splitter)
 
     def remove_tab_content(self, index):
-        widget = self.tab_contents.pop(index)
+        widget = self.tab_contents.widget(index)
         if widget is not None:
             self.tab_contents.removeWidget(widget)
             widget.deleteLater()  # Clean up the widget
