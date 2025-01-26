@@ -282,30 +282,42 @@ class MainWindow(QMainWindow):
             main_content_layout.addWidget(navigation_frame)
 
     def tool_selected(self, tool_name):
-        if tool_name == "Longer Appearance SRT":
-            from tools.longer_appearance import LongerAppearanceSRT
-            tool_widget = LongerAppearanceSRT(parent=self.main_content, back_callback=self.main_menu)
-            tool_widget.setFont(self.inter_regular_font)
-            self.load_tool(tool_widget)
-        elif tool_name == "Merge SRT Files":
-            from tools.merge_srt import MergeSRT
-            self.load_tool(MergeSRT(parent=self.main_content, back_callback=self.main_menu))
-        elif tool_name == "Subtitle Converter":
-            self.load_tool(SubtitleConverter(parent=self.main_content, back_callback=self.main_menu))
-        elif tool_name == "Subtitle Shifter":
-            self.load_tool(SubtitleShifter(parent=self.main_content, back_callback=self.main_menu))
-        else:
-            QMessageBox.information(self, "Coming Soon", "This feature is coming soon!")
-
-    def load_tool(self, tool_widget):
+        # Get the current splitter for the active tab
+        current_splitter = self.tab_contents.currentWidget()
+        if current_splitter is not None:
+            # Get the main content widget for the current tab
+            main_content = current_splitter.widget(1)  # Main content is the second widget in the splitter
+            main_content_layout = main_content.layout()
+    
+            if tool_name == "Longer Appearance SRT":
+                from tools.longer_appearance import LongerAppearanceSRT
+                tool_widget = LongerAppearanceSRT(parent=main_content, back_callback=self.main_menu)
+                tool_widget.setFont(self.inter_regular_font)
+                self.load_tool(tool_widget, main_content_layout)
+            elif tool_name == "Merge SRT Files":
+                from tools.merge_srt import MergeSRT
+                tool_widget = MergeSRT(parent=main_content, back_callback=self.main_menu)
+                self.load_tool(tool_widget, main_content_layout)
+            elif tool_name == "Subtitle Converter":
+                tool_widget = SubtitleConverter(parent=main_content, back_callback=self.main_menu)
+                self.load_tool(tool_widget, main_content_layout)
+            elif tool_name == "Subtitle Shifter":
+                tool_widget = SubtitleShifter(parent=main_content, back_callback=self.main_menu)
+                self.load_tool(tool_widget, main_content_layout)
+            else:
+                QMessageBox.information(self, "Coming Soon", "This feature is coming soon!")
+    
+    def load_tool(self, tool_widget, layout):
         self.main_menu_active = False
-
-        for i in reversed(range(self.main_content_layout.count())):
-            widget = self.main_content_layout.itemAt(i).widget()
+    
+        # Clear the existing layout
+        for i in reversed(range(layout.count())):
+            widget = layout.itemAt(i).widget()
             if widget is not None:
                 widget.setParent(None)
-
-        self.main_content_layout.addWidget(tool_widget)
+    
+        # Add the tool widget to the layout
+        layout.addWidget(tool_widget)
         tool_widget.show()
 
     def toggle_side_panel(self):
