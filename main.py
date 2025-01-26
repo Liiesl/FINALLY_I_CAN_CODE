@@ -94,7 +94,7 @@ class MainWindow(QMainWindow):
         self.tab_contents.setCurrentWidget(new_splitter)
     
         # Replicate the main menu layout in the new tab
-        self.main_menu(self, layout)
+        self.main_menu(new_main_content_layout)
 
     def remove_tab_content(self, index):
         widget = self.tab_contents.widget(index)
