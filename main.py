@@ -215,6 +215,10 @@ class MainWindow(QMainWindow):
 
         target_layout = layout if layout is not None else self.main_content_layout
 
+        if not hasattr(self, 'top_bar') or self.top_bar is None:
+            print("Reinitializing self.top_bar")
+            self.top_bar = QHBoxLayout()
+
         for i in reversed(range(target_layout.count())):
             widget = self.main_content_layout.itemAt(i).widget()
             if widget is not None and item.layout() is not self.top_bar:
@@ -222,10 +226,6 @@ class MainWindow(QMainWindow):
                 if widget is not None:
                     widget.setParent(None)
                     
-        if not hasattr(self, 'top_bar') or self.top_bar is None:
-            print("Reinitializing self.top_bar")
-            self.top_bar = QHBoxLayout()
-
         if self.menu_button is None:
             self.menu_button = QPushButton()
             menu_icon = qta.icon('fa.bars')
@@ -236,6 +236,7 @@ class MainWindow(QMainWindow):
             self.top_bar.addWidget(self.menu_button, alignment=Qt.AlignLeft)
 
         if not self.top_bar_added:
+            print("Inserting self.top_bar into target_layout")
             target_layout.insertLayout(0, self.top_bar)
             if layout is not None:
                 layout.parent().top_bar_added = True
