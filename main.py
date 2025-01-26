@@ -225,6 +225,8 @@ class MainWindow(QMainWindow):
                 widget = item.widget()
                 if widget is not None:
                     widget.setParent(None)
+                else:
+                    target_layout.removeItem(item)
                     
         if self.menu_button is None:
             self.menu_button = QPushButton()
