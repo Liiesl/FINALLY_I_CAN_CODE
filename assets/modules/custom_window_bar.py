@@ -73,48 +73,48 @@ class CustomWindowBar(QWidget):
         self.tab_bar = CustomTabBar(self)  # Use the custom tab bar
         self.tab_bar.setMovable(True)
         self.tab_bar.setTabsClosable(True)  # Enable close buttons on tabs
-
+    
         # Set the tab bar style
-        self.tab_bar.setStyleSheet("""
-            QTabBar::tab {
+        self.tab_bar.setStyleSheet(f"""
+            QTabBar::tab {{
                 padding: 2px 10px;  /* Adjust padding to fit the title */
                 margin: 0;          
                 border: none;      
                 background: {self.button_color};  /* Make the tab background transparent */
                 color: {self.button_text_color};  /* Use the button text color */
-            }
-            QTabBar::tab:selected {
+            }}
+            QTabBar::tab:selected {{
                 background: {self.background_color};  /* Use the background color for the selected tab */
-            }
-        """.format(self=self))
-
+            }}
+        """)
+    
         self.tab_bar.tabCloseRequested.connect(self.close_tab)  # Connect the close button signal
-
+    
         self.layout.addWidget(self.tab_bar)
-
+    
         # Add the "add tab" button directly to the right of the tabs
         self.new_tab_button = QPushButton('+')
         self.new_tab_button.setFixedSize(30, 30)
         self.new_tab_button.clicked.connect(lambda: self.add_tab("Subtl"))  # Change tab name to "Subtl"
-
+    
         # Set the "+" button style
-        self.new_tab_button.setStyleSheet("""
-            QPushButton {
+        self.new_tab_button.setStyleSheet(f"""
+            QPushButton {{
                 color: {self.button_text_color};  /* Use the button text color */
                 background: transparent;  /* Make the background transparent */
                 border: none;  /* Remove border */
                 font-size: 16px;  /* Increase font size for better visibility */
-            }
-            QPushButton:hover {
+            }}
+            QPushButton:hover {{
                 background: rgba(255, 255, 255, 0.2);  /* Add a hover effect */
-            }
-        """.format(self=self))
+            }}
+        """)
         self.layout.addWidget(self.new_tab_button)
-
+    
         # Add a spacer to leave space between the tabs and the window buttons
         self.spacer = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
         self.layout.addItem(self.spacer)
-
+    
         self.add_tab("Subtl")  # Change the first tab name to "Subtl"
 
     def create_buttons(self):
