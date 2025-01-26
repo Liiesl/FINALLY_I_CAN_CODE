@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QWidget, QHBoxLayout, QPushButton, QTabBar
+from PyQt5.QtWidgets import QWidget, QHBoxLayout, QPushButton, QTabBar, QApplication
 from PyQt5.QtCore import Qt, QPoint
 from PyQt5.QtGui import QPalette
 
@@ -8,7 +8,9 @@ class CustomWindowBar(QWidget):
         self.parent = parent
         self.app = app
         self.start = QPoint(0, 0)
-        self.pressing = False
+        self.pressing = False  # Initialize pressing attribute
+        self.resize_edge = None  # Track which edge is being resized
+        self.resize_handle_size = 8  # Size of the resize handle
         self.init_ui()
 
     def init_ui(self):
@@ -29,6 +31,15 @@ class CustomWindowBar(QWidget):
         self.tab_bar.setTabsClosable(True)
         self.tab_bar.tabCloseRequested.connect(self.close_tab)
         self.tab_bar.currentChanged.connect(self.change_tab)
+
+        # Adjust tab bar styling to fit the title
+        self.tab_bar.setStyleSheet("""
+            QTabBar::tab {
+                padding: 2px 10px;  /* Adjust padding to fit the title */
+                margin: 0;          /* Remove extra margin */
+                border: none;       /* Remove border */
+            }
+        """)
 
         self.layout.addWidget(self.tab_bar)
 
@@ -59,15 +70,51 @@ class CustomWindowBar(QWidget):
         if event.button() == Qt.LeftButton:
             self.start = event.globalPos()
             self.pressing = True
+            self.resize_edge = self.get_resize_edge(event.pos())
 
     def mouseMoveEvent(self, event):
-        if event.buttons() == Qt.LeftButton and self.pressing:
+        if self.pressing and self.resize_edge:
+            self.resize_window(event)
+        elif event.buttons() == Qt.LeftButton and self.pressing:
             diff = event.globalPos() - self.start
             self.parent.move(self.parent.pos() + diff)
             self.start = event.globalPos()
+        else:
+            # Change cursor when near the edges
+            edge = self.get_resize_edge(event.pos())
+            if edge == 'left':
+                self.setCursor(Qt.SizeHorCursor)
+            elif edge == 'top':
+                self.setCursor(Qt.SizeVerCursor)
+            else:
+                self.setCursor(Qt.ArrowCursor)
 
     def mouseReleaseEvent(self, event):
         self.pressing = False
+        self.resize_edge = None
+        self.setCursor(Qt.ArrowCursor)
+
+    def get_resize_edge(self, pos):
+        if pos.x() < self.resize_handle_size:
+            return 'left'
+        elif pos.y() < self.resize_handle_size:
+            return 'top'
+        else:
+            return None
+
+    def resize_window(self, event):
+        if self.resize_edge == 'left':
+            diff = event.globalPos() - self.start
+            new_width = self.parent.width() - diff.x()
+            if new_width > self.parent.minimumWidth():
+                self.parent.resize(new_width, self.parent.height())
+                self.start = event.globalPos()
+        elif self.resize_edge == 'top':
+            diff = event.globalPos() - self.start
+            new_height = self.parent.height() - diff.y()
+            if new_height > self.parent.minimumHeight():
+                self.parent.resize(self.parent.width(), new_height)
+                self.start = event.globalPos()
 
     def add_tab(self, title):
         self.tab_bar.addTab(title)
@@ -103,50 +150,8 @@ class CustomWindowBar(QWidget):
             QTabBar::tab {{
                 background-color: {background_color};
                 color: {text_color};
+                padding: 2px 10px;  /* Adjust padding to fit the title */
+                margin: 0;          /* Remove extra margin */
+                border: none;       /* Remove border */
             }}
         """)
-    def resizeEvent(self, event):
-        self.resize_handle_size = 8
-        self.setMouseTracking(True)
-
-    def mouseMoveEvent(self, event):
-        if not self.pressing:
-            if event.pos().x() < self.resize_handle_size:
-                self.setCursor(Qt.SizeHorCursor)
-            elif event.pos().y() < self.resize_handle_size:
-                self.setCursor(Qt.SizeVerCursor)
-            else:
-                self.setCursor(Qt.ArrowCursor)
-        super().mouseMoveEvent(event)
-
-    def mousePressEvent(self, event):
-        if event.button() == Qt.LeftButton:
-            self.start = event.globalPos()
-            self.pressing = True
-            self.resize_edge = self.get_resize_edge(event.pos())
-
-    def mouseReleaseEvent(self, event):
-        self.pressing = False
-        self.resize_edge = None
-
-    def get_resize_edge(self, pos):
-        if pos.x() < self.resize_handle_size:
-            return 'left'
-        elif pos.y() < self.resize_handle_size:
-            return 'top'
-        else:
-            return None
-
-    def resize_window(self, event):
-        if self.resize_edge == 'left':
-            diff = event.globalPos() - self.start
-            new_width = self.parent.width() - diff.x()
-            if new_width > self.parent.minimumWidth():
-                self.parent.resize(new_width, self.parent.height())
-                self.start = event.globalPos()
-        elif self.resize_edge == 'top':
-            diff = event.globalPos() - self.start
-            new_height = self.parent.height() - diff.y()
-            if new_height > self.parent.minimumHeight():
-                self.parent.resize(self.parent.width(), new_height)
-                self.start = event.globalPos()
