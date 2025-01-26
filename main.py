@@ -76,7 +76,6 @@ class MainWindow(QMainWindow):
         new_side_panel.setFont(self.inter_regular_font)
         
         self.top_bar = QHBoxLayout()
-        self.top_bar_added = False
         self.menu_button = None
     
         # Create a new main content widget for the tab
