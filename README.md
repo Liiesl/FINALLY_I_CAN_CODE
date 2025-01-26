@@ -72,7 +72,7 @@ We welcome contributions from the community! If you'd like to contribute to Subt
 4. Push to the branch (`git push origin feature/YourFeatureName`).
 5. Open a pull request.
 
-Please make sure to follow our [Code of Conduct](CODE_OF_CONDUCT.md).
+Please make sure to follow our [Code of Conduct](assets/CODE_OF_CONDUCT.md).
 
 ## License
 
