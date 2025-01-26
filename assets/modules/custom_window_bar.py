@@ -5,31 +5,12 @@ from PyQt5.QtGui import QPalette, QColor, QCursor
 class CustomTabBar(QTabBar):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setTabsClosable(True)  # Enable close buttons on tabs
 
     def tabButton(self, index, button_type):
         # Override to remove the close button for the first tab
         if index == 0 and button_type == QTabBar.RightSide:
             return None
         return super().tabButton(index, button_type)
-
-    def tabLayoutChange(self):
-        super().tabLayoutChange()
-        # Ensure the close button is styled correctly
-        for index in range(self.count()):
-            close_button = self.tabButton(index, QTabBar.RightSide)
-            if close_button:
-                close_button.setStyleSheet(f"""
-                    QPushButton {{
-                        color: {self.parent().button_text_color};  
-                        background: transparent;  
-                        border: none;  
-                        font-size: 16px;  
-                    }}
-                    QPushButton:hover {{
-                        background: rgba(255, 255, 255, 0.2);  /* Add a hover effect */
-                    }}
-                """)
 
 class CustomWindowBar(QWidget):
     def __init__(self, parent=None, app=None):
@@ -66,29 +47,29 @@ class CustomWindowBar(QWidget):
         self.layout.setSpacing(0)  # Remove spacing between widgets
         self.setLayout(self.layout)
 
-        self.create_tab_bar()  # Ensure this method is called
+        self.create_tab_bar()
         self.create_buttons()
 
     def create_tab_bar(self):
         self.tab_bar = CustomTabBar(self)  # Use the custom tab bar
         self.tab_bar.setMovable(True)
-        self.tab_bar.setTabsClosable(True)  # Enable close buttons on tabs
+        self.tab_bar.setTabsClosable(True)
+        self.tab_bar.tabCloseRequested.connect(self.close_tab)
+        self.tab_bar.currentChanged.connect(self.change_tab)
 
         # Set the tab bar style
-        self.tab_bar.setStyleSheet(f"""
-            QTabBar::tab {{
+        self.tab_bar.setStyleSheet("""
+            QTabBar::tab {
                 padding: 2px 10px;  /* Adjust padding to fit the title */
                 margin: 0;          
                 border: none;      
                 background: {self.button_color};  /* Make the tab background transparent */
                 color: {self.button_text_color};  /* Use the button text color */
-            }}
-            QTabBar::tab:selected {{
+            }
+            QTabBar::tab:selected {
                 background: {self.background_color};  /* Use the background color for the selected tab */
-            }}
+            }
         """)
-
-        self.tab_bar.tabCloseRequested.connect(self.close_tab)  # Connect the close button signal
 
         self.layout.addWidget(self.tab_bar)
 
@@ -98,16 +79,16 @@ class CustomWindowBar(QWidget):
         self.new_tab_button.clicked.connect(lambda: self.add_tab("Subtl"))  # Change tab name to "Subtl"
 
         # Set the "+" button style
-        self.new_tab_button.setStyleSheet(f"""
-            QPushButton {{
+        self.new_tab_button.setStyleSheet("""
+            QPushButton {
                 color: {self.button_text_color};  /* Use the button text color */
                 background: transparent;  /* Make the background transparent */
                 border: none;  /* Remove border */
                 font-size: 16px;  /* Increase font size for better visibility */
-            }}
-            QPushButton:hover {{
+            }
+            QPushButton:hover {
                 background: rgba(255, 255, 255, 0.2);  /* Add a hover effect */
-            }}
+            }
         """)
         self.layout.addWidget(self.new_tab_button)
 
@@ -123,16 +104,16 @@ class CustomWindowBar(QWidget):
         self.min_button.clicked.connect(self.parent.showMinimized)
 
         # Set the minimize button style
-        self.min_button.setStyleSheet(f"""
-            QPushButton {{
+        self.min_button.setStyleSheet("""
+            QPushButton {
                 color: {self.button_text_color};  /* Use the button text color */
                 background: transparent;  /* Make the background transparent */
                 border: none;  /* Remove border */
                 font-size: 16px;  /* Increase font size for better visibility */
-            }}
-            QPushButton:hover {{
+            }
+            QPushButton:hover {
                 background: rgba(255, 255, 255, 0.2);  /* Add a hover effect */
-            }}
+            }
         """)
         self.layout.addWidget(self.min_button)
 
@@ -141,16 +122,16 @@ class CustomWindowBar(QWidget):
         self.max_button.clicked.connect(self.toggle_maximize_restore)
 
         # Set the maximize button style
-        self.max_button.setStyleSheet(f"""
-            QPushButton {{
+        self.max_button.setStyleSheet("""
+            QPushButton {
                 color: {self.button_text_color};  /* Use the button text color */
                 background: transparent;  /* Make the background transparent */
                 border: none;  /* Remove border */
                 font-size: 16px;  /* Increase font size for better visibility */
-            }}
-            QPushButton:hover {{
+            }
+            QPushButton:hover {
                 background: rgba(255, 255, 255, 0.2);  /* Add a hover effect */
-            }}
+            }
         """)
         self.layout.addWidget(self.max_button)
 
@@ -159,22 +140,18 @@ class CustomWindowBar(QWidget):
         self.close_button.clicked.connect(self.parent.close)
 
         # Set the close button style
-        self.close_button.setStyleSheet(f"""
-            QPushButton {{
+        self.close_button.setStyleSheet("""
+            QPushButton {
                 color: {self.button_text_color};  
                 background: transparent;  
                 border: none;  
                 font-size: 16px;  
-            }}
-            QPushButton:hover {{
+            }
+            QPushButton:hover {
                 background: rgba(255, 255, 255, 0.2);  /* Add a hover effect */
-            }}
+            }
         """)
         self.layout.addWidget(self.close_button)
-
-    def close_tab(self, index):
-        self.tab_bar.removeTab(index)
-        self.parent.remove_tab_content(index)
 
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
@@ -307,6 +284,15 @@ class CustomWindowBar(QWidget):
         self.tab_bar.addTab(title)
         self.tab_bar.setCurrentIndex(self.tab_bar.count() - 1)
         self.parent.create_new_tab_content()
+
+    def close_tab(self, index):
+        # Prevent closing the first tab
+        if index == 0:
+            return
+        self.tab_bar.removeTab(index)
+        self.parent.remove_tab_content(index)
+        if self.tab_bar.count() == 0:
+            self.add_tab("Subtl")  # Ensure at least one tab exists
 
     def change_tab(self, index):
         self.parent.display_tab_content(index)
