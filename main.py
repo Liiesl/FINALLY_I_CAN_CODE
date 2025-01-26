@@ -352,6 +352,23 @@ class MainWindow(QMainWindow):
     
             # Load the settings widget into the current tab's main content layout
             self.load_tool(settings_widget, main_content_layout)
+        def update_safe_area_size(self):
+            """
+            Update the safe area size for all tabs and their main content layouts.
+            """
+            safe_area_size = self.config.get_safe_area_size()
+    
+            # Iterate through all tabs and update their main content layouts
+            for i in range(self.tab_contents.count()):
+                tab_widget = self.tab_contents.widget(i)
+                if tab_widget:
+                    main_content = tab_widget.widget(1)  # Main content is the second widget in the splitter
+                    if main_content:
+                        main_content_layout = main_content.layout()
+                        if main_content_layout:
+                            main_content_layout.setContentsMargins(
+                                safe_area_size, safe_area_size, safe_area_size, safe_area_size
+                            )
             
     def apply_text_size(self):
         text_size = self.config.get_text_size()
