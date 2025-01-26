@@ -348,6 +348,7 @@ class MainWindow(QMainWindow):
     
             # Load the settings widget into the current tab's main content layout
             self.load_tool(settings_widget, main_content_layout)
+            
         def update_safe_area_size(self):
             """
             Update the safe area size for all tabs and their main content layouts.
