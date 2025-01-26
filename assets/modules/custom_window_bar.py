@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QWidget, QHBoxLayout, QPushButton, QTabBar, QApplication, QSpacerItem, QSizePolicy
-from PyQt5.QtCore import Qt, QPoint, QRect
+from PyQt5.QtCore import Qt, QPoint
 from PyQt5.QtGui import QPalette, QColor, QCursor
 
 class CustomWindowBar(QWidget):
@@ -8,10 +8,9 @@ class CustomWindowBar(QWidget):
         self.parent = parent
         self.app = app
         self.start = QPoint(0, 0)
-        self.pressing = False
-        self.resize_edge = None
-        self.resize_handle_size = 5
-        self.prev_geometry = QRect()  # Store geometry for restore after maximization
+        self.pressing = False  # Track if the mouse is pressed
+        self.resize_edge = None  # Track which edge is being resized
+        self.resize_handle_size = 5  # Size of the resize handle (smaller for better sensitivity)
         self.init_ui()
 
     def init_ui(self):
@@ -21,7 +20,7 @@ class CustomWindowBar(QWidget):
 
         self.layout = QHBoxLayout(self)
         self.layout.setContentsMargins(0, 0, 0, 0)
-        self.layout.setSpacing(0)
+        self.layout.setSpacing(0)  # Remove spacing between widgets
         self.setLayout(self.layout)
 
         self.create_tab_bar()
@@ -33,24 +32,28 @@ class CustomWindowBar(QWidget):
         self.tab_bar.setTabsClosable(True)
         self.tab_bar.tabCloseRequested.connect(self.close_tab)
         self.tab_bar.currentChanged.connect(self.change_tab)
+
+        # Adjust tab bar styling to fit the title
         self.tab_bar.setStyleSheet("""
             QTabBar::tab {
-                padding: 2px 10px;
-                margin: 0;
-                border: none;
+                padding: 2px 10px;  /* Adjust padding to fit the title */
+                margin: 0;          /* Remove extra margin */
+                border: none;       /* Remove border */
             }
             QTabBar {
-                background: transparent;
+                background: transparent;  /* Make the tab bar background transparent */
             }
         """)
-        
+
         self.layout.addWidget(self.tab_bar)
 
+        # Add the "add tab" button directly to the right of the tabs
         self.new_tab_button = QPushButton('+')
         self.new_tab_button.setFixedSize(30, 30)
         self.new_tab_button.clicked.connect(lambda: self.add_tab("New Tab"))
         self.layout.addWidget(self.new_tab_button)
 
+        # Add a spacer to leave space between the tabs and the window buttons
         self.spacer = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
         self.layout.addItem(self.spacer)
 
@@ -77,19 +80,17 @@ class CustomWindowBar(QWidget):
             self.start = event.globalPos()
             self.pressing = True
             self.resize_edge = self.get_resize_edge(event.globalPos())
-            if not self.resize_edge:
-                # Save geometry before moving
-                self.prev_geometry = self.parent.geometry()
 
     def mouseMoveEvent(self, event):
         if self.pressing and self.resize_edge:
             self.resize_window(event)
-        elif event.buttons() == Qt.LeftButton and self.pressing and not self.resize_edge:
+        elif event.buttons() == Qt.LeftButton and self.pressing:
             # Move the window
             diff = event.globalPos() - self.start
             self.parent.move(self.parent.pos() + diff)
             self.start = event.globalPos()
         else:
+            # Change cursor when near the edges or corners of the window
             self.update_cursor(event.globalPos())
 
     def mouseReleaseEvent(self, event):
@@ -98,12 +99,15 @@ class CustomWindowBar(QWidget):
         self.setCursor(Qt.ArrowCursor)
 
     def enterEvent(self, event):
-        self.update_cursor(QCursor.pos())
+        # Update cursor when the mouse enters the widget
+        self.update_cursor(QCursor.pos())  # Use global mouse position
 
     def leaveEvent(self, event):
+        # Reset cursor when the mouse leaves the widget
         self.setCursor(Qt.ArrowCursor)
 
     def update_cursor(self, global_pos):
+        # Change cursor based on the mouse position relative to the window's absolute edges
         edge = self.get_resize_edge(global_pos)
         if edge == 'left' or edge == 'right':
             self.setCursor(Qt.SizeHorCursor)
@@ -117,7 +121,10 @@ class CustomWindowBar(QWidget):
             self.setCursor(Qt.ArrowCursor)
 
     def get_resize_edge(self, global_pos):
+        # Get the parent window's geometry
         window_rect = self.parent.geometry()
+
+        # Check if the mouse is near the edges or corners of the window
         if (global_pos.x() <= window_rect.left() + self.resize_handle_size and
             global_pos.y() <= window_rect.top() + self.resize_handle_size):
             return 'top-left'
@@ -142,66 +149,58 @@ class CustomWindowBar(QWidget):
             return None
 
     def resize_window(self, event):
-        diff = event.globalPos() - self.start
-        window_rect = self.parent.geometry()
-
         if self.resize_edge == 'left':
-            new_width = window_rect.width() - diff.x()
+            diff = event.globalPos() - self.start
+            new_width = self.parent.width() - diff.x()
             if new_width > self.parent.minimumWidth():
-                self.parent.setGeometry(
-                    window_rect.x() + diff.x(), window_rect.y(), new_width, window_rect.height())
+                self.parent.resize(new_width, self.parent.height())
                 self.start = event.globalPos()
         elif self.resize_edge == 'right':
-            new_width = window_rect.width() + diff.x()
+            diff = event.globalPos() - self.start
+            new_width = self.parent.width() + diff.x()
             if new_width > self.parent.minimumWidth():
-                self.parent.resize(new_width, window_rect.height())
+                self.parent.resize(new_width, self.parent.height())
                 self.start = event.globalPos()
         elif self.resize_edge == 'top':
-            new_height = window_rect.height() - diff.y()
+            diff = event.globalPos() - self.start
+            new_height = self.parent.height() - diff.y()
             if new_height > self.parent.minimumHeight():
-                self.parent.setGeometry(
-                    window_rect.x(), window_rect.y() + diff.y(), window_rect.width(), new_height)
+                self.parent.resize(self.parent.width(), new_height)
                 self.start = event.globalPos()
         elif self.resize_edge == 'bottom':
-            new_height = window_rect.height() + diff.y()
+            diff = event.globalPos() - self.start
+            new_height = self.parent.height() + diff.y()
             if new_height > self.parent.minimumHeight():
-                self.parent.resize(window_rect.width(), new_height)
+                self.parent.resize(self.parent.width(), new_height)
                 self.start = event.globalPos()
         elif self.resize_edge == 'top-left':
-            new_width = window_rect.width() - diff.x()
-            new_height = window_rect.height() - diff.y()
-            if new_width > self.parent.minimumWidth() and new_height > self.parent.minimumHeight():
-                self.parent.setGeometry(
-                    window_rect.x() + diff.x(), window_rect.y() + diff.y(), new_width, new_height)
-                self.start = event.globalPos()
-        elif self.resize_edge == 'top-right':
-            new_width = window_rect.width() + diff.x()
-            new_height = window_rect.height() - diff.y()
-            if new_width > self.parent.minimumWidth() and new_height > self.parent.minimumHeight():
-                self.parent.setGeometry(
-                    window_rect.x(), window_rect.y() + diff.y(), new_width, new_height)
-                self.start = event.globalPos()
-        elif self.resize_edge == 'bottom-left':
-            new_width = window_rect.width() - diff.x()
-            new_height = window_rect.height() + diff.y()
-            if new_width > self.parent.minimumWidth() and new_height > self.parent.minimumHeight():
-                self.parent.setGeometry(
-                    window_rect.x() + diff.x(), window_rect.y(), new_width, new_height)
-                self.start = event.globalPos()
-        elif self.resize_edge == 'bottom-right':
-            new_width = window_rect.width() + diff.x()
-            new_height = window_rect.height() + diff.y()
+            diff = event.globalPos() - self.start
+            new_width = self.parent.width() - diff.x()
+            new_height = self.parent.height() - diff.y()
             if new_width > self.parent.minimumWidth() and new_height > self.parent.minimumHeight():
                 self.parent.resize(new_width, new_height)
                 self.start = event.globalPos()
-
-    def toggle_maximize_restore(self):
-        if self.parent.isMaximized():
-            self.parent.setGeometry(self.prev_geometry)
-            self.parent.showNormal()
-        else:
-            self.prev_geometry = self.parent.geometry()
-            self.parent.showMaximized()
+        elif self.resize_edge == 'top-right':
+            diff = event.globalPos() - self.start
+            new_width = self.parent.width() + diff.x()
+            new_height = self.parent.height() - diff.y()
+            if new_width > self.parent.minimumWidth() and new_height > self.parent.minimumHeight():
+                self.parent.resize(new_width, new_height)
+                self.start = event.globalPos()
+        elif self.resize_edge == 'bottom-left':
+            diff = event.globalPos() - self.start
+            new_width = self.parent.width() - diff.x()
+            new_height = self.parent.height() + diff.y()
+            if new_width > self.parent.minimumWidth() and new_height > self.parent.minimumHeight():
+                self.parent.resize(new_width, new_height)
+                self.start = event.globalPos()
+        elif self.resize_edge == 'bottom-right':
+            diff = event.globalPos() - self.start
+            new_width = self.parent.width() + diff.x()
+            new_height = self.parent.height() + diff.y()
+            if new_width > self.parent.minimumWidth() and new_height > self.parent.minimumHeight():
+                self.parent.resize(new_width, new_height)
+                self.start = event.globalPos()
 
     def add_tab(self, title):
         self.tab_bar.addTab(title)
@@ -216,7 +215,13 @@ class CustomWindowBar(QWidget):
 
     def change_tab(self, index):
         self.parent.display_tab_content(index)
-        
+
+    def toggle_maximize_restore(self):
+        if self.parent.isMaximized():
+            self.parent.showNormal()
+        else:
+            self.parent.showMaximized()
+
     def apply_theme(self, theme):
         palette = QApplication.instance().palette()
         background_color = palette.color(QPalette.Window).name()
