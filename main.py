@@ -92,67 +92,10 @@ class MainWindow(QMainWindow):
     
         # Replicate the main menu layout in the new tab
         self.replicate_main_menu(new_main_content_layout)
-
+    
     def replicate_main_menu(self, layout):
-        # Clear any existing widgets in the layout
-        for i in reversed(range(layout.count())):
-            widget = layout.itemAt(i).widget()
-            if widget is not None:
-                widget.setParent(None)
-    
-        # Create the tool buttons container
-        tool_buttons_container = QWidget()
-        tool_buttons_layout = QHBoxLayout(tool_buttons_container)
-        tool_buttons_layout.setContentsMargins(0, 0, 0, 0)
-    
-        # Define the tools
-        tools = [
-            ("Longer Appearance SRT", "Increase the duration each subtitle appears."),
-            ("Merge SRT Files", "Combine multiple SRT files into one."),
-            ("Subtitle Converter", "Convert subtitles between different formats."),
-            ("Subtitle Shifter", "Shift subtitles by milliseconds."),
-            ("Coming Soon", "More tools will be added in the future.")
-        ]
-    
-        # Add tool buttons to the layout
-        for tool in tools:
-            tool_buttons_layout.addWidget(self.create_tool_button(tool[0], tool[1]))
-    
-        tool_buttons_layout.addStretch()
-    
-        # Create the navigation frame
-        navigation_frame = QFrame()
-        navigation_layout = QHBoxLayout(navigation_frame)
-        navigation_layout.setContentsMargins(0, 0, 0, 0)
-    
-        # Add left arrow button
-        left_arrow_button = QPushButton()
-        left_arrow_icon = qta.icon('fa.chevron-left')
-        left_arrow_button.setIcon(left_arrow_icon)
-        left_arrow_button.setFixedSize(50, 75)
-        left_arrow_button.setStyleSheet("background-color: #4f86f7; border: none;")
-        left_arrow_button.clicked.connect(self.scroll_left)
-        navigation_layout.addWidget(left_arrow_button)
-    
-        # Add scroll area
-        scroll_area = QScrollArea()
-        scroll_area.setWidgetResizable(True)
-        scroll_area.setWidget(tool_buttons_container)
-        scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        navigation_layout.addWidget(scroll_area)
-    
-        # Add right arrow button
-        right_arrow_button = QPushButton()
-        right_arrow_icon = qta.icon('fa.chevron-right')
-        right_arrow_button.setIcon(right_arrow_icon)
-        right_arrow_button.setFixedSize(50, 75)
-        right_arrow_button.setStyleSheet("background-color: #4f86f7; border: none;")
-        right_arrow_button.clicked.connect(self.scroll_right)
-        navigation_layout.addWidget(right_arrow_button)
-    
-        # Add the navigation frame to the layout
-        layout.addWidget(navigation_frame)
+        # Use the new method to create the main menu layout
+        self.create_main_menu_layout(layout)
 
     def remove_tab_content(self, index):
         widget = self.tab_contents.widget(index)
