@@ -11,6 +11,15 @@ class CustomWindowBar(QWidget):
         self.pressing = False  # Track if the mouse is pressed
         self.resize_edge = None  # Track which edge is being resized
         self.resize_handle_size = 5  # Size of the resize handle (smaller for better sensitivity)
+
+        self.palette = QApplication.instance().palette()
+        self.text_color = self.palette.color(QPalette.WindowText).name()
+        self.background_color = self.palette.color(QPalette.Window).name()
+        self.button_color = self.palette.color(QPalette.Button).name()
+        self.button_text_color = self.palette.color(QPalette.ButtonText).name()
+        self.highlight_color = self.palette.color(QPalette.Highlight).name()
+        self.hover_color = self.palette.color(QPalette.Highlight).darker().name()
+        
         self.init_ui()
 
     def init_ui(self):
@@ -25,8 +34,6 @@ class CustomWindowBar(QWidget):
 
         self.create_tab_bar()
         self.create_buttons()
-        
-        self.apply_theme()
 
     def create_tab_bar(self):
         self.tab_bar = QTabBar(self)
@@ -35,7 +42,7 @@ class CustomWindowBar(QWidget):
         self.tab_bar.tabCloseRequested.connect(self.close_tab)
         self.tab_bar.currentChanged.connect(self.change_tab)
 
-        # Explicitly set the tab bar style
+        # Set the tab bar style
         self.tab_bar.setStyleSheet("""
             QTabBar::tab {
                 padding: 2px 10px;  /* Adjust padding to fit the title */
@@ -56,7 +63,7 @@ class CustomWindowBar(QWidget):
         self.new_tab_button.setFixedSize(30, 30)
         self.new_tab_button.clicked.connect(lambda: self.add_tab("New Tab"))
 
-        # Explicitly set the "+" button style
+        # Set the "+" button style
         self.new_tab_button.setStyleSheet("""
             QPushButton {
                 color: palette(ButtonText);  /* Use the button text color */
@@ -75,15 +82,13 @@ class CustomWindowBar(QWidget):
         self.layout.addItem(self.spacer)
 
         self.add_tab("SRT Editor")
-        
-        self.apply_theme()
 
     def create_buttons(self):
         self.min_button = QPushButton('-')
         self.min_button.setFixedSize(30, 30)
         self.min_button.clicked.connect(self.parent.showMinimized)
 
-        # Explicitly set the minimize button style
+        # Set the minimize button style
         self.min_button.setStyleSheet("""
             QPushButton {
                 color: palette(ButtonText);  /* Use the button text color */
@@ -101,7 +106,7 @@ class CustomWindowBar(QWidget):
         self.max_button.setFixedSize(30, 30)
         self.max_button.clicked.connect(self.toggle_maximize_restore)
 
-        # Explicitly set the maximize button style
+        # Set the maximize button style
         self.max_button.setStyleSheet("""
             QPushButton {
                 color: palette(ButtonText);  /* Use the button text color */
@@ -119,7 +124,7 @@ class CustomWindowBar(QWidget):
         self.close_button.setFixedSize(30, 30)
         self.close_button.clicked.connect(self.parent.close)
 
-        # Explicitly set the close button style
+        # Set the close button style
         self.close_button.setStyleSheet("""
             QPushButton {
                 color: palette(ButtonText);  /* Use the button text color */
@@ -132,7 +137,7 @@ class CustomWindowBar(QWidget):
             }
         """)
         self.layout.addWidget(self.close_button)
-    
+
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
             self.start = event.globalPos()
@@ -279,47 +284,3 @@ class CustomWindowBar(QWidget):
             self.parent.showNormal()
         else:
             self.parent.showMaximized()
-
-    def apply_theme(self):
-        # Retrieve the current palette colors
-        palette = QApplication.instance().palette()
-        text_color = palette.color(QPalette.WindowText).name()
-        background_color = palette.color(QPalette.Window).name()
-        button_color = palette.color(QPalette.Button).name()
-        button_text_color = palette.color(QPalette.ButtonText).name()
-        highlight_color = palette.color(QPalette.Highlight).name()
-        hover_color = palette.color(QPalette.Highlight).darker().name()
-
-        # Apply the colors to the custom window bar
-        self.setStyleSheet(f"background-color: {background_color};")
-
-        # Apply the colors to the tab bar
-        self.tab_bar.setStyleSheet(f"""
-            QTabBar::tab {{
-                padding: 2px 10px;  /* Adjust padding to fit the title */
-                margin: 0;          /* Remove extra margin */
-                border: none;       /* Remove border */
-                background: transparent;  /* Make the tab background transparent */
-                color: {button_text_color};  /* Use the button text color */
-            }}
-            QTabBar::tab:selected {{
-                background: {background_color};  /* Use the background color for the selected tab */
-            }}
-        """)
-
-        # Apply the colors to the buttons
-        button_style = f"""
-            QPushButton {{
-                color: {button_text_color};
-                background: transparent;
-                border: none;
-                font-size: 16px;
-            }}
-            QPushButton:hover {{
-                background: rgba(255, 255, 255, 0.2);
-            }}
-        """
-        self.new_tab_button.setStyleSheet(button_style)
-        self.min_button.setStyleSheet(button_style)
-        self.max_button.setStyleSheet(button_style)
-        self.close_button.setStyleSheet(button_style)
