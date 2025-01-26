@@ -45,14 +45,14 @@ class CustomWindowBar(QWidget):
         # Set the tab bar style
         self.tab_bar.setStyleSheet("""
             QTabBar::tab {
-                padding: 2px 10px;  /* Adjust padding to fit the title */
-                margin: 0;          /* Remove extra margin */
-                border: none;       /* Remove border */
-                background: transparent;  /* Make the tab background transparent */
-                color: palette(ButtonText);  /* Use the button text color */
+                padding: 2px 10px;  /* Adjust padding to fit the title *
+                margin: 0;          
+                border: none;      
+                background: (button_color);  /* Make the tab background transparent */
+                color: (button_text_color);  /* Use the button text color */
             }
             QTabBar::tab:selected {
-                background: palette(Window);  /* Use the background color for the selected tab */
+                background: palette(background_color);  /* Use the background color for the selected tab */
             }
         """)
 
