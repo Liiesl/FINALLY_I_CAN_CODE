@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QWidget, QHBoxLayout, QPushButton, QTabBar, QApplication, QSpacerItem, QSizePolicy
 from PyQt5.QtCore import Qt, QPoint
-from PyQt5.QtGui import QPalette, QColor
+from PyQt5.QtGui import QPalette, QColor, QCursor  # Import QCursor
 
 class CustomWindowBar(QWidget):
     def __init__(self, parent=None, app=None):
@@ -107,7 +107,7 @@ class CustomWindowBar(QWidget):
 
     def enterEvent(self, event):
         # Update cursor when the mouse enters the widget
-        self.update_cursor(self.mapFromGlobal(QApplication.mousePos()))
+        self.update_cursor(self.mapFromGlobal(QCursor.pos()))  # Use QCursor.pos() to get global mouse position
 
     def leaveEvent(self, event):
         # Reset cursor when the mouse leaves the widget
