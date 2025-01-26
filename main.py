@@ -151,7 +151,6 @@ class MainWindow(QMainWindow):
 
         self.app.setPalette(palette)
         self.setPalette(palette)
-        self.custom_window_bar.apply_theme(theme)
         self.update()
 
     def create_tool_button(self, tool_name, tool_description):
