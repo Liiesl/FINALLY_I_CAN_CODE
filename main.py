@@ -86,8 +86,9 @@ class MainWindow(QMainWindow):
 
     def remove_tab_content(self, index):
         widget = self.tab_contents.pop(index)
-        self.tab_contents.removeWidget(widget)
-        widget.deleteLater()
+        if widget is not None:
+            self.tab_contents.removeWidget(widget)
+            widget.deleteLater()  # Clean up the widget
 
     def display_tab_content(self, index):
         self.tab_contents.setCurrentIndex(index)
