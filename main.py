@@ -38,9 +38,7 @@ class MainWindow(QMainWindow):
         self.main_menu_active = True
 
         self.custom_window_bar = CustomWindowBar(self, self.app)
-        self.layout.addWidget(self.custom_window_bar)
-
-        self.layout.setContentsMargins(0, self.custom_window_bar.height(), 0, 0)
+        self.layout.addWidget(self.custom_window_bar))
 
         self.tab_contents = QStackedWidget()
         self.layout.addWidget(self.tab_contents)
@@ -420,24 +418,6 @@ class MainWindow(QMainWindow):
         current_value = self.scroll_area.horizontalScrollBar().value()
         new_value = min(max_value, current_value + 220)
         self.animate_scroll(current_value, new_value)
-        
-    def resizeEvent(self, event):
-        # Call the parent class's resizeEvent
-        super().resizeEvent(event)
-        
-        # Update any child widgets or layouts if needed
-        if hasattr(self, 'custom_window_bar'):
-            self.custom_window_bar.resize(self.width(), self.custom_window_bar.height())
-
-    def changeEvent(self, event):
-        if event.type() == event.WindowStateChange:
-            if self.isMaximized():
-                # Handle maximize logic
-                pass
-            else:
-                # Handle restore logic
-                pass
-        super().changeEvent(event)
 
     def animate_scroll(self, start_value, end_value):
         animation = QPropertyAnimation(self.scroll_area.horizontalScrollBar(), b"value")
