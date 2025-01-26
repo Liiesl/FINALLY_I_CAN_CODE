@@ -226,7 +226,7 @@ class MainWindow(QMainWindow):
             self.top_bar.addWidget(self.menu_button, alignment=Qt.AlignLeft)
 
         if not self.top_bar_added:
-            target_layout.insertLayout(0, top_bar)
+            target_layout.insertLayout(0, self.top_bar)
             top_bar_added = True
 
         self.tool_buttons_container = QWidget()
