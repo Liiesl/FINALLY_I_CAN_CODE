@@ -26,6 +26,12 @@ class CustomWindowBar(QWidget):
         self.setFixedHeight(30)
         self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
         self.setAttribute(Qt.WA_TranslucentBackground)
+        
+        self.setStyleSheet(f"""
+            CustomWindowBar {{
+                background-color: {self.button_color}; 
+            }}
+        """)
 
         self.layout = QHBoxLayout(self)
         self.layout.setContentsMargins(0, 0, 0, 0)
