@@ -48,11 +48,11 @@ class CustomWindowBar(QWidget):
                 padding: 2px 10px;  /* Adjust padding to fit the title *
                 margin: 0;          
                 border: none;      
-                background: (button_color);  /* Make the tab background transparent */
-                color: (button_text_color);  /* Use the button text color */
+                background: {self.button_color};  /* Make the tab background transparent */
+                color: {self.button_text_color};  /* Use the button text color */
             }
             QTabBar::tab:selected {
-                background: palette(background_color);  /* Use the background color for the selected tab */
+                background: {self.background_color};  /* Use the background color for the selected tab */
             }
         """)
 
@@ -66,7 +66,7 @@ class CustomWindowBar(QWidget):
         # Set the "+" button style
         self.new_tab_button.setStyleSheet("""
             QPushButton {
-                color: palette(ButtonText);  /* Use the button text color */
+                color: {self.button_text_color};  /* Use the button text color */
                 background: transparent;  /* Make the background transparent */
                 border: none;  /* Remove border */
                 font-size: 16px;  /* Increase font size for better visibility */
@@ -91,7 +91,7 @@ class CustomWindowBar(QWidget):
         # Set the minimize button style
         self.min_button.setStyleSheet("""
             QPushButton {
-                color: palette(ButtonText);  /* Use the button text color */
+                color: {self.button_text_color};  /* Use the button text color */
                 background: transparent;  /* Make the background transparent */
                 border: none;  /* Remove border */
                 font-size: 16px;  /* Increase font size for better visibility */
@@ -109,7 +109,7 @@ class CustomWindowBar(QWidget):
         # Set the maximize button style
         self.max_button.setStyleSheet("""
             QPushButton {
-                color: palette(ButtonText);  /* Use the button text color */
+                color: {self.button_text_color};  /* Use the button text color */
                 background: transparent;  /* Make the background transparent */
                 border: none;  /* Remove border */
                 font-size: 16px;  /* Increase font size for better visibility */
@@ -127,7 +127,7 @@ class CustomWindowBar(QWidget):
         # Set the close button style
         self.close_button.setStyleSheet("""
             QPushButton {
-                color: palette(ButtonText);  /* Use the button text color */
+                color: {self.button_text_color});  /* Use the button text color */
                 background: transparent;  /* Make the background transparent */
                 border: none;  /* Remove border */
                 font-size: 16px;  /* Increase font size for better visibility */
