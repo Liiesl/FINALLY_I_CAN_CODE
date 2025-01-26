@@ -95,7 +95,7 @@ class MainWindow(QMainWindow):
     
     def replicate_main_menu(self, layout):
         # Use the new method to create the main menu layout
-        self.create_main_menu_layout(layout)
+        self.main_menu(layout)
 
     def remove_tab_content(self, index):
         widget = self.tab_contents.widget(index)
@@ -210,6 +210,8 @@ class MainWindow(QMainWindow):
     def main_menu(self):
         self.main_menu_active = True
 
+        target_layout = layout if layout is not None else self.main_content_layout
+
         for i in reversed(range(self.main_content_layout.count())):
             widget = self.main_content_layout.itemAt(i).widget()
             if widget is not None:
@@ -273,12 +275,13 @@ class MainWindow(QMainWindow):
         self.right_arrow_button.clicked.connect(self.scroll_right)
         navigation_layout.addWidget(self.right_arrow_button)
 
-        self.main_content_layout.addWidget(navigation_frame)
+        target_layout.addWidget(navigation_frame)
 
-        self.update_safe_area_size()
-        self.apply_text_size()
-        self.update_tool_button_visibility()
-        self.resizeEvent = self.update_tool_button_visibility
+        if layout is None:
+            self.update_safe_area_size()
+            self.apply_text_size()
+            self.update_tool_button_visibility()
+            self.resizeEvent = self.update_tool_button_visibility
 
     def tool_selected(self, tool_name):
         if tool_name == "Longer Appearance SRT":
