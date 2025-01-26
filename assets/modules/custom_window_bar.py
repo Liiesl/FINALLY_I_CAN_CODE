@@ -50,7 +50,7 @@ class CustomWindowBar(QWidget):
         # Set the tab bar style
         self.tab_bar.setStyleSheet("""
             QTabBar::tab {
-                padding: 2px 10px;  /* Adjust padding to fit the title *
+                padding: 2px 10px;  /* Adjust padding to fit the title */
                 margin: 0;          
                 border: none;      
                 background: {self.button_color};  /* Make the tab background transparent */
@@ -66,7 +66,7 @@ class CustomWindowBar(QWidget):
         # Add the "add tab" button directly to the right of the tabs
         self.new_tab_button = QPushButton('+')
         self.new_tab_button.setFixedSize(30, 30)
-        self.new_tab_button.clicked.connect(lambda: self.add_tab("New Tab"))
+        self.new_tab_button.clicked.connect(lambda: self.add_tab("Subtl"))  # Change tab name to "Subtl"
 
         # Set the "+" button style
         self.new_tab_button.setStyleSheet("""
@@ -86,7 +86,7 @@ class CustomWindowBar(QWidget):
         self.spacer = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
         self.layout.addItem(self.spacer)
 
-        self.add_tab("SRT Editor")
+        self.add_tab("Subtl")  # Change the first tab name to "Subtl"
 
     def create_buttons(self):
         self.min_button = QPushButton('-')
@@ -276,10 +276,13 @@ class CustomWindowBar(QWidget):
         self.parent.create_new_tab_content()
 
     def close_tab(self, index):
+        # Prevent closing the first tab
+        if index == 0:
+            return
         self.tab_bar.removeTab(index)
         self.parent.remove_tab_content(index)
         if self.tab_bar.count() == 0:
-            self.add_tab("SRT Editor")
+            self.add_tab("Subtl")  # Ensure at least one tab exists
 
     def change_tab(self, index):
         self.parent.display_tab_content(index)
