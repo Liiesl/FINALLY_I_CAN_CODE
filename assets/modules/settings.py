@@ -132,6 +132,7 @@ class Settings(QWidget):
         new_state = "light" if current_state == "dark" else "dark"
         self.theme_toggle.set_state(new_state)
         self.config.data["theme"] = new_state
+        self.apply_theme()
 
     def apply_theme(self):
         self.settings_saved.emit()
@@ -146,6 +147,5 @@ class Settings(QWidget):
         self.config.load()
         if self.main_window:
             self.main_window.refresh_settings()
-            self.apply_theme()
         
         QMessageBox.information(self, "Success", "Settings saved and applied successfully!")
