@@ -26,13 +26,6 @@ class CustomWindowBar(QWidget):
         self.create_tab_bar()
         self.create_buttons()
 
-        # Add a tiny border around the window for resize behavior
-        self.parent.setStyleSheet("""
-            QWidget {
-                border: 2px solid #333333;  /* Tiny border for resize behavior */
-            }
-        """)
-
     def create_tab_bar(self):
         self.tab_bar = QTabBar(self)
         self.tab_bar.setMovable(True)
