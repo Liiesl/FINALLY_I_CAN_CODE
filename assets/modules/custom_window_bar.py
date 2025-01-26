@@ -117,7 +117,7 @@ class CustomWindowBar(QWidget):
         """)
         self.layout.addWidget(self.min_button)
 
-        self.max_button = QPushButton('□')
+        self.max_button = QPushButton('❏')
         self.max_button.setFixedSize(50, 50)
         self.max_button.clicked.connect(self.toggle_maximize_restore)
 
