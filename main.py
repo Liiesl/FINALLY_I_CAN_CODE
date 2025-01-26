@@ -224,20 +224,22 @@ class MainWindow(QMainWindow):
                     widget.setParent(None)
 
             # Add the top bar with the menu button
-            top_bar = QHBoxLayout()
-            menu_button = QPushButton()
-            menu_icon = qta.icon('fa.bars')
-            menu_button.setIcon(menu_icon)
-            menu_button.setFixedSize(30, 30)
-            menu_button.setStyleSheet("color: {button_text_color}; background-color:{button_color}; border: none; border-radius: 3px;")
-            menu_button.clicked.connect(self.toggle_side_panel)
-            top_bar.addWidget(menu_button, alignment=Qt.AlignLeft)
-            main_content_layout.addLayout(top_bar)
+            if self.top_bar is None:
+                top_bar = QHBoxLayout()
+                menu_button = QPushButton()
+                menu_icon = qta.icon('fa.bars')
+                menu_button.setIcon(menu_icon)
+                menu_button.setFixedSize(30, 30)
+                menu_button.setStyleSheet("color: {button_text_color}; background-color:{button_color}; border: none; border-radius: 3px;")
+                menu_button.clicked.connect(self.toggle_side_panel)
+                top_bar.addWidget(menu_button, alignment=Qt.AlignLeft)
+                main_content_layout.addLayout(top_bar)
 
             # Add the tool buttons
-            self.tool_buttons_container = QWidget()
-            self.tool_buttons_layout = QHBoxLayout(self.tool_buttons_container)
-            self.tool_buttons_layout.setContentsMargins(0, 0, 0, 0)
+            if not self.top_bar_added:
+                self.tool_buttons_container = QWidget()
+                self.tool_buttons_layout = QHBoxLayout(self.tool_buttons_container)
+                self.tool_buttons_layout.setContentsMargins(0, 0, 0, 0)
 
             tools = [
                 ("Longer Appearance SRT", "Increase the duration each subtitle appears."),
