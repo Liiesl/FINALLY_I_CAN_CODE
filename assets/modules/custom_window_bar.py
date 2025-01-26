@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QWidget, QHBoxLayout, QPushButton, QTabBar, QApplication, QSpacerItem, QSizePolicy
 from PyQt5.QtCore import Qt, QPoint
-from PyQt5.QtGui import QPalette, QColor, QCursor  # Import QCursor
+from PyQt5.QtGui import QPalette, QColor, QCursor
 
 class CustomWindowBar(QWidget):
     def __init__(self, parent=None, app=None):
@@ -86,7 +86,7 @@ class CustomWindowBar(QWidget):
         if event.button() == Qt.LeftButton:
             self.start = event.globalPos()
             self.pressing = True
-            self.resize_edge = self.get_resize_edge(event.pos())
+            self.resize_edge = self.get_resize_edge(event.globalPos())
 
     def mouseMoveEvent(self, event):
         if self.pressing and self.resize_edge:
@@ -98,7 +98,7 @@ class CustomWindowBar(QWidget):
             self.start = event.globalPos()
         else:
             # Change cursor when near the edges or corners of the window
-            self.update_cursor(event.pos())
+            self.update_cursor(event.globalPos())
 
     def mouseReleaseEvent(self, event):
         self.pressing = False
@@ -107,15 +107,15 @@ class CustomWindowBar(QWidget):
 
     def enterEvent(self, event):
         # Update cursor when the mouse enters the widget
-        self.update_cursor(self.mapFromGlobal(QCursor.pos()))  # Use QCursor.pos() to get global mouse position
+        self.update_cursor(QCursor.pos())  # Use global mouse position
 
     def leaveEvent(self, event):
         # Reset cursor when the mouse leaves the widget
         self.setCursor(Qt.ArrowCursor)
 
-    def update_cursor(self, pos):
-        # Change cursor based on the mouse position
-        edge = self.get_resize_edge(pos)
+    def update_cursor(self, global_pos):
+        # Change cursor based on the mouse position relative to the window's absolute edges
+        edge = self.get_resize_edge(global_pos)
         if edge == 'left' or edge == 'right':
             self.setCursor(Qt.SizeHorCursor)
         elif edge == 'top' or edge == 'bottom':
@@ -127,23 +127,30 @@ class CustomWindowBar(QWidget):
         else:
             self.setCursor(Qt.ArrowCursor)
 
-    def get_resize_edge(self, pos):
+    def get_resize_edge(self, global_pos):
+        # Get the parent window's geometry
+        window_rect = self.parent.geometry()
+
         # Check if the mouse is near the edges or corners of the window
-        if pos.x() < self.resize_handle_size and pos.y() < self.resize_handle_size:
+        if (global_pos.x() <= window_rect.left() + self.resize_handle_size and
+            global_pos.y() <= window_rect.top() + self.resize_handle_size):
             return 'top-left'
-        elif pos.x() > self.width() - self.resize_handle_size and pos.y() < self.resize_handle_size:
+        elif (global_pos.x() >= window_rect.right() - self.resize_handle_size and
+              global_pos.y() <= window_rect.top() + self.resize_handle_size):
             return 'top-right'
-        elif pos.x() < self.resize_handle_size and pos.y() > self.height() - self.resize_handle_size:
+        elif (global_pos.x() <= window_rect.left() + self.resize_handle_size and
+              global_pos.y() >= window_rect.bottom() - self.resize_handle_size):
             return 'bottom-left'
-        elif pos.x() > self.width() - self.resize_handle_size and pos.y() > self.height() - self.resize_handle_size:
+        elif (global_pos.x() >= window_rect.right() - self.resize_handle_size and
+              global_pos.y() >= window_rect.bottom() - self.resize_handle_size):
             return 'bottom-right'
-        elif pos.x() < self.resize_handle_size:
+        elif global_pos.x() <= window_rect.left() + self.resize_handle_size:
             return 'left'
-        elif pos.x() > self.width() - self.resize_handle_size:
+        elif global_pos.x() >= window_rect.right() - self.resize_handle_size:
             return 'right'
-        elif pos.y() < self.resize_handle_size:
+        elif global_pos.y() <= window_rect.top() + self.resize_handle_size:
             return 'top'
-        elif pos.y() > self.height() - self.resize_handle_size:
+        elif global_pos.y() >= window_rect.bottom() - self.resize_handle_size:
             return 'bottom'
         else:
             return None
