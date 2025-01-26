@@ -222,38 +222,42 @@ class CustomWindowBar(QWidget):
         else:
             self.parent.showMaximized()
 
-    def apply_theme(self, theme):
+    def apply_theme(self):
         palette = QApplication.instance().palette()
-        background_color = palette.color(QPalette.Window).name()
-        text_color = palette.color(QPalette.WindowText).name()
-
-        # Slightly darker background for the window/tab bar
-        darker_background = QColor(background_color).darker(110).name()
-
+        button_color = palette.color(QPalette.Button).name()  # Get the button color
+        button_text_color = palette.color(QPalette.ButtonText).name()  # Get the button text color
+        background_color = palette.color(QPalette.Window).name()  # Get the background color
+    
         # Set styles for the window bar, tab bar, and buttons
         self.setStyleSheet(f"""
             CustomWindowBar {{
-                background-color: {darker_background};
-                color: {text_color};
+                background-color: {button_color};  /* Use button color for the window bar */
+                color: {button_text_color};
             }}
-
+    
             QTabBar::tab {{
-                background-color: {darker_background};
-                color: {text_color};
+                background-color: transparent;  /* Make tabs transparent */
+                color: {button_text_color};
                 padding: 2px 10px;  /* Adjust padding to fit the title */
                 margin: 0;          /* Remove extra margin */
                 border: none;       /* Remove border */
             }}
-
+    
+            QTabBar::tab:selected {{
+                background-color: {background_color};  /* Use background color for the selected tab */
+                color: {button_text_color};
+            }}
+    
             QPushButton {{
-                background-color: {darker_background};
-                color: {text_color};
+                background-color: transparent;  /* Remove background rectangle */
+                color: {button_text_color};
                 border: none;
                 padding: 0;
                 margin: 0;
+                font-size: 16px;  /* Adjust font size as needed */
             }}
-
+    
             QPushButton:hover {{
-                background-color: {QColor(darker_background).darker(120).name()};
+                color: {QColor(button_text_color).darker(120).name()};  /* Darken text color on hover */
             }}
         """)
