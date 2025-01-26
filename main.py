@@ -342,7 +342,7 @@ class MainWindow(QMainWindow):
             main_content_layout = main_content.layout()
     
             # Create the settings widget
-            settings_widget = Settings(parent=main_content, back_callback=self.main_menu, main_window=self)
+            settings_widget = Settings(parent=self.main_content, back_callback=self.main_menu, main_window=self)
             settings_widget.setFont(self.inter_regular_font)
             settings_widget.settings_saved.connect(self.apply_theme)
     
