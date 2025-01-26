@@ -81,8 +81,8 @@ class MainWindow(QMainWindow):
         new_main_content.setLayout(new_main_content_layout)
 
         # Initialize top_bar and menu_button for the new tab
-        new_main_content.top_bar = QHBoxLayout()
-        new_main_content.top_bar_added = False
+        self.top_bar = QHBoxLayout()
+        self.top_bar_added = False
     
         # Add the side panel and main content to the splitter
         new_splitter.addWidget(new_side_panel)
@@ -214,6 +214,10 @@ class MainWindow(QMainWindow):
         self.main_menu_active = True
 
         target_layout = layout if layout is not None else self.main_content_layout
+
+        if not hasattr(self, 'top_bar') or self.top_bar is None:
+            print("Reinitializing self.top_bar")
+            self.top_bar = QHBoxLayout()
 
         for i in reversed(range(target_layout.count())):
             widget = self.main_content_layout.itemAt(i).widget()
