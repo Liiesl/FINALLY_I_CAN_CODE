@@ -25,7 +25,6 @@ class CustomWindowBar(QWidget):
     def init_ui(self):
         self.setFixedHeight(30)
         self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
-        self.setAttribute(Qt.WA_TranslucentBackground)
         
         self.setStyleSheet(f"""
             CustomWindowBar {{
