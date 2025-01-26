@@ -37,10 +37,6 @@ class MainWindow(QMainWindow):
         self.config = Config(source="MainWindow")
         self.main_menu_active = True
 
-        self.menu_button = None
-        self.top_bar = QHBoxLayout()
-        self.top_bar_added = False
-
         self.custom_window_bar = CustomWindowBar(self, self.app)
         self.layout.addWidget(self.custom_window_bar)
 
@@ -64,9 +60,8 @@ class MainWindow(QMainWindow):
         
         self.top_bar = QHBoxLayout()
         self.top_bar_added = False
-
         self.menu_button = None
-
+        
         self.create_new_tab_content()
 
         self.apply_theme()
@@ -99,7 +94,11 @@ class MainWindow(QMainWindow):
     
     def replicate_main_menu(self, layout):
         # Use the new method to create the main menu layout
+        self.top_bar = QHBoxLayout()
         self.top_bar_added = False
+
+        self.menu_button = None
+        
         self.main_menu(layout)
 
     def remove_tab_content(self, index):
