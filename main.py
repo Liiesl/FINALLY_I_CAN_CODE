@@ -281,10 +281,6 @@ class MainWindow(QMainWindow):
 
             main_content_layout.addWidget(navigation_frame)
             
-            self.update_safe_area_size()
-            self.apply_text_size()
-            self.update_tool_button_visibility()
-            self.resizeEvent = self.update_tool_button_visibility
 
     def tool_selected(self, tool_name):
         # Get the current splitter for the active tab
