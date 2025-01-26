@@ -8,6 +8,7 @@ class CustomWindowBar(QWidget):
         self.parent = parent
         self.app = app
         self.start = QPoint(0, 0)
+        self.pressing = False
         self.init_ui()
 
     def init_ui(self):
@@ -104,3 +105,48 @@ class CustomWindowBar(QWidget):
                 color: {text_color};
             }}
         """)
+    def resizeEvent(self, event):
+        self.resize_handle_size = 8
+        self.setMouseTracking(True)
+
+    def mouseMoveEvent(self, event):
+        if not self.pressing:
+            if event.pos().x() < self.resize_handle_size:
+                self.setCursor(Qt.SizeHorCursor)
+            elif event.pos().y() < self.resize_handle_size:
+                self.setCursor(Qt.SizeVerCursor)
+            else:
+                self.setCursor(Qt.ArrowCursor)
+        super().mouseMoveEvent(event)
+
+    def mousePressEvent(self, event):
+        if event.button() == Qt.LeftButton:
+            self.start = event.globalPos()
+            self.pressing = True
+            self.resize_edge = self.get_resize_edge(event.pos())
+
+    def mouseReleaseEvent(self, event):
+        self.pressing = False
+        self.resize_edge = None
+
+    def get_resize_edge(self, pos):
+        if pos.x() < self.resize_handle_size:
+            return 'left'
+        elif pos.y() < self.resize_handle_size:
+            return 'top'
+        else:
+            return None
+
+    def resize_window(self, event):
+        if self.resize_edge == 'left':
+            diff = event.globalPos() - self.start
+            new_width = self.parent.width() - diff.x()
+            if new_width > self.parent.minimumWidth():
+                self.parent.resize(new_width, self.parent.height())
+                self.start = event.globalPos()
+        elif self.resize_edge == 'top':
+            diff = event.globalPos() - self.start
+            new_height = self.parent.height() - diff.y()
+            if new_height > self.parent.minimumHeight():
+                self.parent.resize(self.parent.width(), new_height)
+                self.start = event.globalPos()
