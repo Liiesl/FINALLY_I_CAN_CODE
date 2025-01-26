@@ -133,10 +133,10 @@ class CustomWindowBar(QWidget):
         # Set the close button style
         self.close_button.setStyleSheet("""
             QPushButton {
-                color: {self.button_text_color});  /* Use the button text color */
-                background: transparent;  /* Make the background transparent */
-                border: none;  /* Remove border */
-                font-size: 16px;  /* Increase font size for better visibility */
+                color: {self.button_text_color};  
+                background: transparent;  
+                border: none;  
+                font-size: 16px;  
             }
             QPushButton:hover {
                 background: rgba(255, 255, 255, 0.2);  /* Add a hover effect */
