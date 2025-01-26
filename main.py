@@ -106,6 +106,7 @@ class MainWindow(QMainWindow):
         self.tab_contents.setCurrentIndex(index)
 
     def apply_theme(self):
+        self.config = Config(source="MainWindow")
         theme = self.config.get_theme()
         print(f"Applying theme: {theme}")
         palette = QPalette()
@@ -374,6 +375,7 @@ class MainWindow(QMainWindow):
                         )
             
     def apply_text_size(self):
+        self.config = Config(source="MainWindow")
         text_size = self.config.get_text_size()
         font_size = {
             "small": 18,
