@@ -2,6 +2,16 @@ from PyQt5.QtWidgets import QWidget, QHBoxLayout, QPushButton, QTabBar, QApplica
 from PyQt5.QtCore import Qt, QPoint
 from PyQt5.QtGui import QPalette, QColor, QCursor
 
+class CustomTabBar(QTabBar):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+    def tabButton(self, index, button_type):
+        # Override to remove the close button for the first tab
+        if index == 0 and button_type == QTabBar.RightSide:
+            return None
+        return super().tabButton(index, button_type)
+
 class CustomWindowBar(QWidget):
     def __init__(self, parent=None, app=None):
         super().__init__(parent)
@@ -41,7 +51,7 @@ class CustomWindowBar(QWidget):
         self.create_buttons()
 
     def create_tab_bar(self):
-        self.tab_bar = QTabBar(self)
+        self.tab_bar = CustomTabBar(self)  # Use the custom tab bar
         self.tab_bar.setMovable(True)
         self.tab_bar.setTabsClosable(True)
         self.tab_bar.tabCloseRequested.connect(self.close_tab)
