@@ -39,9 +39,18 @@ class CustomWindowBar(QWidget):
                 padding: 2px 10px;  /* Adjust padding to fit the title */
                 margin: 0;          /* Remove extra margin */
                 border: none;       /* Remove border */
+                background: transparent;  /* Make the tab background transparent */
+                color: palette(ButtonText);  /* Use the button text color */
+            }
+            QTabBar::tab:selected {
+                background: palette(Window);  /* Use the background color for the selected tab */
+            }
+            QTabBar::close-button {
+                color: palette(ButtonText);  /* Use the button text color for the close button */
+                background: transparent;  /* Make the close button background transparent */
             }
             QTabBar {
-                background: transparent;  /* Make the tab bar background transparent */
+                background: palette(Button);  /* Use the button color for the tab bar background */
             }
         """)
 
@@ -51,6 +60,13 @@ class CustomWindowBar(QWidget):
         self.new_tab_button = QPushButton('+')
         self.new_tab_button.setFixedSize(30, 30)
         self.new_tab_button.clicked.connect(lambda: self.add_tab("New Tab"))
+        self.new_tab_button.setStyleSheet("""
+            QPushButton {
+                color: palette(ButtonText);  /* Use the button text color */
+                background: transparent;  /* Make the background transparent */
+                border: none;  /* Remove border */
+            }
+        """)
         self.layout.addWidget(self.new_tab_button)
 
         # Add a spacer to leave space between the tabs and the window buttons
@@ -65,16 +81,37 @@ class CustomWindowBar(QWidget):
         self.min_button = QPushButton('-')
         self.min_button.setFixedSize(30, 30)
         self.min_button.clicked.connect(self.parent.showMinimized)
+        self.min_button.setStyleSheet("""
+            QPushButton {
+                color: palette(ButtonText);  /* Use the button text color */
+                background: transparent;  /* Make the background transparent */
+                border: none;  /* Remove border */
+            }
+        """)
         self.layout.addWidget(self.min_button)
 
         self.max_button = QPushButton('□')
         self.max_button.setFixedSize(30, 30)
         self.max_button.clicked.connect(self.toggle_maximize_restore)
+        self.max_button.setStyleSheet("""
+            QPushButton {
+                color: palette(ButtonText);  /* Use the button text color */
+                background: transparent;  /* Make the background transparent */
+                border: none;  /* Remove border */
+            }
+        """)
         self.layout.addWidget(self.max_button)
 
         self.close_button = QPushButton('x')
         self.close_button.setFixedSize(30, 30)
         self.close_button.clicked.connect(self.parent.close)
+        self.close_button.setStyleSheet("""
+            QPushButton {
+                color: palette(ButtonText);  /* Use the button text color */
+                background: transparent;  /* Make the background transparent */
+                border: none;  /* Remove border */
+            }
+        """)
         self.layout.addWidget(self.close_button)
     
     def mousePressEvent(self, event):
@@ -228,4 +265,4 @@ class CustomWindowBar(QWidget):
         palette = QApplication.instance().palette()
         button_color = palette.color(QPalette.Button).name()  # Get the button color
         button_text_color = palette.color(QPalette.ButtonText).name()  # Get the button text color
-        background_color = palette.color(QPalette.Window).name()  # Get the background colo
+        background_color = palette.color(QPalette.Window).name()  # Get the background color
