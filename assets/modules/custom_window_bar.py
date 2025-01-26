@@ -10,7 +10,7 @@ class CustomWindowBar(QWidget):
         self.start = QPoint(0, 0)
         self.pressing = False  # Track if the mouse is pressed
         self.resize_edge = None  # Track which edge is being resized
-        self.resize_handle_size = 8  # Size of the resize handle
+        self.resize_handle_size = 5  # Size of the resize handle (smaller for better sensitivity)
         self.init_ui()
 
     def init_ui(self):
@@ -92,11 +92,12 @@ class CustomWindowBar(QWidget):
         if self.pressing and self.resize_edge:
             self.resize_window(event)
         elif event.buttons() == Qt.LeftButton and self.pressing:
+            # Move the window
             diff = event.globalPos() - self.start
             self.parent.move(self.parent.pos() + diff)
             self.start = event.globalPos()
         else:
-            # Change cursor when near the edges or corners of the entire window
+            # Change cursor when near the edges or corners of the window
             edge = self.get_resize_edge(event.pos())
             if edge == 'left' or edge == 'right':
                 self.setCursor(Qt.SizeHorCursor)
@@ -119,7 +120,7 @@ class CustomWindowBar(QWidget):
             self.toggle_maximize_restore()
 
     def get_resize_edge(self, pos):
-        # Check if the mouse is near the edges or corners of the entire window
+        # Check if the mouse is near the edges or corners of the window
         if pos.x() < self.resize_handle_size and pos.y() < self.resize_handle_size:
             return 'top-left'
         elif pos.x() > self.width() - self.resize_handle_size and pos.y() < self.resize_handle_size:
@@ -143,57 +144,53 @@ class CustomWindowBar(QWidget):
         if self.resize_edge == 'left':
             diff = event.globalPos() - self.start
             new_width = self.parent.width() - diff.x()
-            if self.parent.minimumWidth() < new_width < self.parent.maximumWidth():
+            if new_width > self.parent.minimumWidth():
                 self.parent.resize(new_width, self.parent.height())
                 self.start = event.globalPos()
         elif self.resize_edge == 'right':
             diff = event.globalPos() - self.start
             new_width = self.parent.width() + diff.x()
-            if self.parent.minimumWidth() < new_width < self.parent.maximumWidth():
+            if new_width > self.parent.minimumWidth():
                 self.parent.resize(new_width, self.parent.height())
                 self.start = event.globalPos()
         elif self.resize_edge == 'top':
             diff = event.globalPos() - self.start
             new_height = self.parent.height() - diff.y()
-            if self.parent.minimumHeight() < new_height < self.parent.maximumHeight():
+            if new_height > self.parent.minimumHeight():
                 self.parent.resize(self.parent.width(), new_height)
                 self.start = event.globalPos()
         elif self.resize_edge == 'bottom':
             diff = event.globalPos() - self.start
             new_height = self.parent.height() + diff.y()
-            if self.parent.minimumHeight() < new_height < self.parent.maximumHeight():
+            if new_height > self.parent.minimumHeight():
                 self.parent.resize(self.parent.width(), new_height)
                 self.start = event.globalPos()
         elif self.resize_edge == 'top-left':
             diff = event.globalPos() - self.start
             new_width = self.parent.width() - diff.x()
             new_height = self.parent.height() - diff.y()
-            if (self.parent.minimumWidth() < new_width < self.parent.maximumWidth() and
-                self.parent.minimumHeight() < new_height < self.parent.maximumHeight()):
+            if new_width > self.parent.minimumWidth() and new_height > self.parent.minimumHeight():
                 self.parent.resize(new_width, new_height)
                 self.start = event.globalPos()
         elif self.resize_edge == 'top-right':
             diff = event.globalPos() - self.start
             new_width = self.parent.width() + diff.x()
             new_height = self.parent.height() - diff.y()
-            if (self.parent.minimumWidth() < new_width < self.parent.maximumWidth() and
-                self.parent.minimumHeight() < new_height < self.parent.maximumHeight()):
+            if new_width > self.parent.minimumWidth() and new_height > self.parent.minimumHeight():
                 self.parent.resize(new_width, new_height)
                 self.start = event.globalPos()
         elif self.resize_edge == 'bottom-left':
             diff = event.globalPos() - self.start
             new_width = self.parent.width() - diff.x()
             new_height = self.parent.height() + diff.y()
-            if (self.parent.minimumWidth() < new_width < self.parent.maximumWidth() and
-                self.parent.minimumHeight() < new_height < self.parent.maximumHeight()):
+            if new_width > self.parent.minimumWidth() and new_height > self.parent.minimumHeight():
                 self.parent.resize(new_width, new_height)
                 self.start = event.globalPos()
         elif self.resize_edge == 'bottom-right':
             diff = event.globalPos() - self.start
             new_width = self.parent.width() + diff.x()
             new_height = self.parent.height() + diff.y()
-            if (self.parent.minimumWidth() < new_width < self.parent.maximumWidth() and
-                self.parent.minimumHeight() < new_height < self.parent.maximumHeight()):
+            if new_width > self.parent.minimumWidth() and new_height > self.parent.minimumHeight():
                 self.parent.resize(new_width, new_height)
                 self.start = event.globalPos()
 
