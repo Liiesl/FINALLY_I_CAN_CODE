@@ -360,12 +360,8 @@ class MainWindow(QMainWindow):
             self.load_tool(settings_widget, main_content_layout)
             
     def update_safe_area_size(self):
-        """
-        Update the safe area size for all tabs and their main content layouts.
-        """
+        self.config = Config(source="MainWindow")
         safe_area_size = self.config.get_safe_area_size()
-
-        # Iterate through all tabs and update their main content layouts
         for i in range(self.tab_contents.count()):
             tab_widget = self.tab_contents.widget(i)
             if tab_widget:
