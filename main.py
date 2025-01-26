@@ -333,21 +333,21 @@ class MainWindow(QMainWindow):
                 current_splitter.setSizes([self.width() // 2, self.width() // 2])  # Show the side panel
 
     def open_settings(self, item=None):
-    # Get the current splitter for the active tab
-    current_splitter = self.tab_contents.currentWidget()
-    if current_splitter is not None:
-        # Get the main content widget for the current tab
-        main_content = current_splitter.widget(1)  # Main content is the second widget in the splitter
-        main_content_layout = main_content.layout()
-
-        # Create the settings widget
-        settings_widget = Settings(parent=main_content, back_callback=self.main_menu, main_window=self)
-        settings_widget.setFont(self.inter_regular_font)
-        settings_widget.settings_saved.connect(self.apply_theme)
-
-        # Load the settings widget into the current tab's main content layout
-        self.load_tool(settings_widget, main_content_layout)
-        
+        # Get the current splitter for the active tab
+        current_splitter = self.tab_contents.currentWidget()
+        if current_splitter is not None:
+            # Get the main content widget for the current tab
+            main_content = current_splitter.widget(1)  # Main content is the second widget in the splitter
+            main_content_layout = main_content.layout()
+    
+            # Create the settings widget
+            settings_widget = Settings(parent=main_content, back_callback=self.main_menu, main_window=self)
+            settings_widget.setFont(self.inter_regular_font)
+            settings_widget.settings_saved.connect(self.apply_theme)
+    
+            # Load the settings widget into the current tab's main content layout
+            self.load_tool(settings_widget, main_content_layout)
+            
     def apply_text_size(self):
         text_size = self.config.get_text_size()
         font_size = {
