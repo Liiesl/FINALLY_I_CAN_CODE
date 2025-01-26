@@ -96,12 +96,16 @@ class CustomWindowBar(QWidget):
             self.parent.move(self.parent.pos() + diff)
             self.start = event.globalPos()
         else:
-            # Change cursor when near the edges of the entire window
+            # Change cursor when near the edges or corners of the entire window
             edge = self.get_resize_edge(event.pos())
             if edge == 'left' or edge == 'right':
                 self.setCursor(Qt.SizeHorCursor)
             elif edge == 'top' or edge == 'bottom':
                 self.setCursor(Qt.SizeVerCursor)
+            elif edge == 'top-left' or edge == 'bottom-right':
+                self.setCursor(Qt.SizeFDiagCursor)
+            elif edge == 'top-right' or edge == 'bottom-left':
+                self.setCursor(Qt.SizeBDiagCursor)
             else:
                 self.setCursor(Qt.ArrowCursor)
 
@@ -110,9 +114,21 @@ class CustomWindowBar(QWidget):
         self.resize_edge = None
         self.setCursor(Qt.ArrowCursor)
 
+    def mouseDoubleClickEvent(self, event):
+        if event.button() == Qt.LeftButton:
+            self.toggle_maximize_restore()
+
     def get_resize_edge(self, pos):
-        # Check if the mouse is near the edges of the entire window
-        if pos.x() < self.resize_handle_size:
+        # Check if the mouse is near the edges or corners of the entire window
+        if pos.x() < self.resize_handle_size and pos.y() < self.resize_handle_size:
+            return 'top-left'
+        elif pos.x() > self.width() - self.resize_handle_size and pos.y() < self.resize_handle_size:
+            return 'top-right'
+        elif pos.x() < self.resize_handle_size and pos.y() > self.height() - self.resize_handle_size:
+            return 'bottom-left'
+        elif pos.x() > self.width() - self.resize_handle_size and pos.y() > self.height() - self.resize_handle_size:
+            return 'bottom-right'
+        elif pos.x() < self.resize_handle_size:
             return 'left'
         elif pos.x() > self.width() - self.resize_handle_size:
             return 'right'
@@ -127,26 +143,58 @@ class CustomWindowBar(QWidget):
         if self.resize_edge == 'left':
             diff = event.globalPos() - self.start
             new_width = self.parent.width() - diff.x()
-            if new_width > self.parent.minimumWidth():
+            if self.parent.minimumWidth() < new_width < self.parent.maximumWidth():
                 self.parent.resize(new_width, self.parent.height())
                 self.start = event.globalPos()
         elif self.resize_edge == 'right':
             diff = event.globalPos() - self.start
             new_width = self.parent.width() + diff.x()
-            if new_width > self.parent.minimumWidth():
+            if self.parent.minimumWidth() < new_width < self.parent.maximumWidth():
                 self.parent.resize(new_width, self.parent.height())
                 self.start = event.globalPos()
         elif self.resize_edge == 'top':
             diff = event.globalPos() - self.start
             new_height = self.parent.height() - diff.y()
-            if new_height > self.parent.minimumHeight():
+            if self.parent.minimumHeight() < new_height < self.parent.maximumHeight():
                 self.parent.resize(self.parent.width(), new_height)
                 self.start = event.globalPos()
         elif self.resize_edge == 'bottom':
             diff = event.globalPos() - self.start
             new_height = self.parent.height() + diff.y()
-            if new_height > self.parent.minimumHeight():
+            if self.parent.minimumHeight() < new_height < self.parent.maximumHeight():
                 self.parent.resize(self.parent.width(), new_height)
+                self.start = event.globalPos()
+        elif self.resize_edge == 'top-left':
+            diff = event.globalPos() - self.start
+            new_width = self.parent.width() - diff.x()
+            new_height = self.parent.height() - diff.y()
+            if (self.parent.minimumWidth() < new_width < self.parent.maximumWidth() and
+                self.parent.minimumHeight() < new_height < self.parent.maximumHeight()):
+                self.parent.resize(new_width, new_height)
+                self.start = event.globalPos()
+        elif self.resize_edge == 'top-right':
+            diff = event.globalPos() - self.start
+            new_width = self.parent.width() + diff.x()
+            new_height = self.parent.height() - diff.y()
+            if (self.parent.minimumWidth() < new_width < self.parent.maximumWidth() and
+                self.parent.minimumHeight() < new_height < self.parent.maximumHeight()):
+                self.parent.resize(new_width, new_height)
+                self.start = event.globalPos()
+        elif self.resize_edge == 'bottom-left':
+            diff = event.globalPos() - self.start
+            new_width = self.parent.width() - diff.x()
+            new_height = self.parent.height() + diff.y()
+            if (self.parent.minimumWidth() < new_width < self.parent.maximumWidth() and
+                self.parent.minimumHeight() < new_height < self.parent.maximumHeight()):
+                self.parent.resize(new_width, new_height)
+                self.start = event.globalPos()
+        elif self.resize_edge == 'bottom-right':
+            diff = event.globalPos() - self.start
+            new_width = self.parent.width() + diff.x()
+            new_height = self.parent.height() + diff.y()
+            if (self.parent.minimumWidth() < new_width < self.parent.maximumWidth() and
+                self.parent.minimumHeight() < new_height < self.parent.maximumHeight()):
+                self.parent.resize(new_width, new_height)
                 self.start = event.globalPos()
 
     def add_tab(self, title):
