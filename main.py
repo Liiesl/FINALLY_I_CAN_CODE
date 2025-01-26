@@ -224,7 +224,7 @@ class MainWindow(QMainWindow):
                     widget.setParent(None)
 
             # Add the top bar with the menu button
-            if self.menu_button is None:
+            if not self.top_bar_added:
                 menu_button = QPushButton()
                 menu_icon = qta.icon('fa.bars')
                 menu_button.setIcon(menu_icon)
