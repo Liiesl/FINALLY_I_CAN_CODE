@@ -18,10 +18,16 @@
 2. Run the installer and follow the on-screen instructions.
 
 ### macOS
-Coming soon
+Installer coming soon
+or you could use pyinstaller on your own.
+1. Download source code
+2. Run .spec file provided
 
 ### Linux
 Coming soon
+or you could use pyinstaller on your own.
+1. Download source code
+2. Run .spec file provided
 
 ## Usage
 
@@ -71,7 +77,7 @@ Subtl is licensed under the MIT License. See the [LICENSE](LICENSE) file for mor
 
 ## Support
 
-If you encounter any issues or have any questions, please open an issue on our [GitHub Issues](https://github.com/yourusername/Subtl/issues) page.
+If you encounter any issues or have any questions, please open an issue on our [GitHub Issues](https://github.com/Liiesl/Subtl/issues) page.
 
 ## Acknowledgments
 
