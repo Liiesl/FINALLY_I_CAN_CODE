@@ -79,6 +79,10 @@ class MainWindow(QMainWindow):
         new_main_content = QWidget()
         new_main_content_layout = QVBoxLayout(new_main_content)
         new_main_content.setLayout(new_main_content_layout)
+
+        # Initialize top_bar and menu_button for the new tab
+        new_main_content.top_bar = QHBoxLayout()
+        new_main_content.top_bar_added = False
     
         # Add the side panel and main content to the splitter
         new_splitter.addWidget(new_side_panel)
@@ -226,8 +230,11 @@ class MainWindow(QMainWindow):
             self.top_bar.addWidget(self.menu_button, alignment=Qt.AlignLeft)
 
         if not self.top_bar_added:
-            target_layout.insertLayout(0, self.top_bar)
-            top_bar_added = True
+            target_layout.insertLayout(0, top_bar)
+            if layout is not None:
+                layout.parent().top_bar_added = True
+            else:
+                self.top_bar_added = True
 
         self.tool_buttons_container = QWidget()
         self.tool_buttons_layout = QHBoxLayout(self.tool_buttons_container)
