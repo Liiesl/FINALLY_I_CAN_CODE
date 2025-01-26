@@ -76,31 +76,6 @@ class CustomWindowBar(QWidget):
         self.close_button.setFixedSize(30, 30)
         self.close_button.clicked.connect(self.parent.close)
         self.layout.addWidget(self.close_button)
-
-    def update_button_styles(self):
-        palette = QApplication.instance().palette()
-        button_text_color = palette.color(QPalette.ButtonText).name()  # Get the button text color
-    
-        # Style for all buttons
-        button_style = f"""
-            QPushButton {{
-                background-color: transparent;  /* Remove background rectangle */
-                color: {button_text_color};
-                border: none;
-                padding: 0;
-                margin: 0;
-                font-size: 16px;  /* Adjust font size as needed */
-            }}
-            QPushButton:hover {{
-                color: {QColor(button_text_color).darker(120).name()};  /* Darken text color on hover */
-            }}
-        """
-    
-        # Apply the style to all buttons
-        self.min_button.setStyleSheet(button_style)
-        self.max_button.setStyleSheet(button_style)
-        self.close_button.setStyleSheet(button_style)
-        self.new_tab_button.setStyleSheet(button_style)  # Style the "+" button for new tabs
     
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
@@ -253,42 +228,4 @@ class CustomWindowBar(QWidget):
         palette = QApplication.instance().palette()
         button_color = palette.color(QPalette.Button).name()  # Get the button color
         button_text_color = palette.color(QPalette.ButtonText).name()  # Get the button text color
-        background_color = palette.color(QPalette.Window).name()  # Get the background color
-    
-        # Set styles for the window bar, tab bar, and buttons
-        self.setStyleSheet(f"""
-            CustomWindowBar {{
-                background-color: {button_color};  /* Use button color for the window bar */
-                color: {button_text_color};
-            }}
-    
-            QTabBar::tab {{
-                background-color: transparent;  /* Make tabs transparent */
-                color: {button_text_color};
-                padding: 2px 10px;  /* Adjust padding to fit the title */
-                margin: 0;          /* Remove extra margin */
-                border: none;       /* Remove border */
-            }}
-    
-            QTabBar::tab:selected {{
-                background-color: {background_color};  /* Use background color for the selected tab */
-                color: {button_text_color};
-                border-radius: 3px;  /* Optional: Add rounded corners for the selected tab */
-            }}
-    
-            QPushButton {{
-                background-color: transparent;  /* Remove background rectangle */
-                color: {button_text_color};
-                border: none;
-                padding: 0;
-                margin: 0;
-                font-size: 16px;  /* Adjust font size as needed */
-            }}
-    
-            QPushButton:hover {{
-                color: {QColor(button_text_color).darker(120).name()};  /* Darken text color on hover */
-            }}
-        """)
-    
-        # Update button styles
-        self.update_button_styles()
+        background_color = palette.color(QPalette.Window).name()  # Get the background colo
