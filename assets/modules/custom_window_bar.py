@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QWidget, QHBoxLayout, QPushButton, QTabBar, QApplication, QSpacerItem, QSizePolicy
+from PyQt5.QtWidgets import QWidget, QHBoxLayout, QPushButton, QTabBar, QApplication, QSpacerItem, QSizePolicy, QLabel
 from PyQt5.QtCore import Qt, QPoint, QRect
 from PyQt5.QtGui import QPalette, QColor, QCursor
 
@@ -74,7 +74,7 @@ class CustomWindowBar(QWidget):
 
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
-            self.start = event.globalPos()
+            self.start = self.mapToGlobal(event.pos())
             self.pressing = True
             self.resize_edge = self.get_resize_edge(event.globalPos())
             if not self.resize_edge:
@@ -85,10 +85,16 @@ class CustomWindowBar(QWidget):
         if self.pressing and self.resize_edge:
             self.resize_window(event)
         elif event.buttons() == Qt.LeftButton and self.pressing and not self.resize_edge:
-            # Move the window
-            diff = event.globalPos() - self.start
-            self.parent.move(self.parent.pos() + diff)
-            self.start = event.globalPos()
+            # Move the window (logic from StackOverflow)
+            self.end = self.mapToGlobal(event.pos())
+            self.movement = self.end - self.start
+            self.parent.setGeometry(
+                self.mapToGlobal(self.movement).x(),
+                self.mapToGlobal(self.movement).y(),
+                self.parent.width(),
+                self.parent.height()
+            )
+            self.start = self.end
         else:
             self.update_cursor(event.globalPos())
 
