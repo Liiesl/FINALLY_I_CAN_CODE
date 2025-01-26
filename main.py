@@ -207,84 +207,79 @@ class MainWindow(QMainWindow):
         return button
     
     def main_menu(self, layout=None):
-        self.main_menu_active = True
+        # Get the current main content layout for the active tab
+        current_splitter = self.tab_contents.currentWidget()
+        if current_splitter is not None:
+            main_content = current_splitter.widget(1)  # Main content is the second widget in the splitter
+            main_content_layout = main_content.layout()
 
-        target_layout = layout if layout is not None else self.main_content_layout
+            self.main_menu_active = True
 
-        for i in reversed(range(target_layout.count())):
-            widget = self.main_content_layout.itemAt(i).widget()
-            if widget is not None and item.layout() is not self.top_bar:
-                widget = item.widget()
+            # Clear the existing layout
+            for i in reversed(range(main_content_layout.count())):
+                widget = main_content_layout.itemAt(i).widget()
                 if widget is not None:
                     widget.setParent(None)
-                else:
-                    target_layout.removeItem(item)
-                    
-        if self.menu_button is None:
-            self.menu_button = QPushButton()
+
+            # Add the top bar with the menu button
+            top_bar = QHBoxLayout()
+            menu_button = QPushButton()
             menu_icon = qta.icon('fa.bars')
-            self.menu_button.setIcon(menu_icon)
-            self.menu_button.setFixedSize(30, 30)
-            self.menu_button.setStyleSheet("color: {button_text_color}; background-color:{button_color}; border: none; border-radius: 3px;")
-            self.menu_button.clicked.connect(self.toggle_side_panel)
-            self.top_bar.addWidget(self.menu_button, alignment=Qt.AlignLeft)
+            menu_button.setIcon(menu_icon)
+            menu_button.setFixedSize(30, 30)
+            menu_button.setStyleSheet("color: {button_text_color}; background-color:{button_color}; border: none; border-radius: 3px;")
+            menu_button.clicked.connect(self.toggle_side_panel)
+            top_bar.addWidget(menu_button, alignment=Qt.AlignLeft)
+            main_content_layout.addLayout(top_bar)
 
-        if not self.top_bar_added:
-            target_layout.insertLayout(0, self.top_bar)
-            self.top_bar_added = True
+            # Add the tool buttons
+            self.tool_buttons_container = QWidget()
+            self.tool_buttons_layout = QHBoxLayout(self.tool_buttons_container)
+            self.tool_buttons_layout.setContentsMargins(0, 0, 0, 0)
 
-        self.tool_buttons_container = QWidget()
-        self.tool_buttons_layout = QHBoxLayout(self.tool_buttons_container)
-        self.tool_buttons_layout.setContentsMargins(0, 0, 0, 0)
+            tools = [
+                ("Longer Appearance SRT", "Increase the duration each subtitle appears."),
+                ("Merge SRT Files", "Combine multiple SRT files into one."),
+                ("Subtitle Converter", "Convert subtitles between different formats."),
+                ("Subtitle Shifter", "Shift subtitles by milliseconds."),
+                ("Coming Soon", "More tools will be added in the future.")
+            ]
 
-        tools = [
-            ("Longer Appearance SRT", "Increase the duration each subtitle appears."),
-            ("Merge SRT Files", "Combine multiple SRT files into one."),
-            ("Subtitle Converter", "Convert subtitles between different formats."),
-            ("Subtitle Shifter", "Shift subtitles by milliseconds."),
-            ("Coming Soon", "More tools will be added in the future.")
-        ]
+            for tool in tools:
+                self.tool_buttons_layout.addWidget(self.create_tool_button(tool[0], tool[1]))
 
-        for tool in tools:
-            self.tool_buttons_layout.addWidget(self.create_tool_button(tool[0], tool[1]))
+            self.tool_buttons_layout.addStretch()
 
-        self.tool_buttons_layout.addStretch()
+            # Add navigation arrows
+            navigation_frame = QFrame()
+            navigation_layout = QHBoxLayout(navigation_frame)
+            navigation_layout.setContentsMargins(0, 0, 0, 0)
 
-        navigation_frame = QFrame()
-        navigation_layout = QHBoxLayout(navigation_frame)
-        navigation_layout.setContentsMargins(0, 0, 0, 0)
+            left_arrow_button = QPushButton()
+            left_arrow_icon = qta.icon('fa.chevron-left')
+            left_arrow_button.setIcon(left_arrow_icon)
+            left_arrow_button.setFixedSize(50, 75)
+            left_arrow_button.setStyleSheet("background-color: #4f86f7; border: none;")
+            left_arrow_button.clicked.connect(self.scroll_left)
+            navigation_layout.addWidget(left_arrow_button)
 
-        self.left_arrow_button = QPushButton()
-        left_arrow_icon = qta.icon('fa.chevron-left')
-        self.left_arrow_button.setIcon(left_arrow_icon)
-        self.left_arrow_button.setFixedSize(50, 75)
-        self.left_arrow_button.setStyleSheet("background-color: #4f86f7; border: none;")
-        self.left_arrow_button.clicked.connect(self.scroll_left)
-        navigation_layout.addWidget(self.left_arrow_button)
+            scroll_area = QScrollArea()
+            scroll_area.setWidgetResizable(True)
+            scroll_area.setWidget(self.tool_buttons_container)
+            scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+            scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+            self.scroll_area = scroll_area
+            navigation_layout.addWidget(scroll_area)
 
-        scroll_area = QScrollArea()
-        scroll_area.setWidgetResizable(True)
-        scroll_area.setWidget(self.tool_buttons_container)
-        scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.scroll_area = scroll_area
-        navigation_layout.addWidget(scroll_area)
+            right_arrow_button = QPushButton()
+            right_arrow_icon = qta.icon('fa.chevron-right')
+            right_arrow_button.setIcon(right_arrow_icon)
+            right_arrow_button.setFixedSize(50, 75)
+            right_arrow_button.setStyleSheet("background-color: #4f86f7; border: none;")
+            right_arrow_button.clicked.connect(self.scroll_right)
+            navigation_layout.addWidget(right_arrow_button)
 
-        self.right_arrow_button = QPushButton()
-        right_arrow_icon = qta.icon('fa.chevron-right')
-        self.right_arrow_button.setIcon(right_arrow_icon)
-        self.right_arrow_button.setFixedSize(50, 75)
-        self.right_arrow_button.setStyleSheet("background-color: #4f86f7; border: none;")
-        self.right_arrow_button.clicked.connect(self.scroll_right)
-        navigation_layout.addWidget(self.right_arrow_button)
-
-        target_layout.addWidget(navigation_frame)
-
-        if layout is None:
-            self.update_safe_area_size()
-            self.apply_text_size()
-            self.update_tool_button_visibility()
-            self.resizeEvent = self.update_tool_button_visibility
+            main_content_layout.addWidget(navigation_frame)
 
     def tool_selected(self, tool_name):
         if tool_name == "Longer Appearance SRT":
@@ -314,18 +309,24 @@ class MainWindow(QMainWindow):
         tool_widget.show()
 
     def toggle_side_panel(self):
-        if self.side_panel.isVisible():
-            self.splitter.setSizes([0, 1])
-            self.side_panel.setVisible(False)
-        else:
-            self.side_panel.setVisible(True)
-            self.splitter.setSizes([self.width() // 2, self.width() // 2])
+        current_splitter = self.tab_contents.currentWidget()
+        if current_splitter is not None:
+            side_panel = current_splitter.widget(0)
+            if self.side_panel.isVisible():
+                self.splitter.setSizes([0, 1])
+                self.side_panel.setVisible(False)
+            else:
+                self.side_panel.setVisible(True)
+                self.splitter.setSizes([self.width() // 2, self.width() // 2])
 
     def open_settings(self, item=None):
-        settings_widget = Settings(parent=self.main_content, back_callback=self.main_menu, main_window=self)
-        settings_widget.setFont(self.inter_regular_font)
-        settings_widget.settings_saved.connect(self.apply_theme)
-        self.load_tool(settings_widget)
+        current_splitter = self.tab_contents.currentWidget()
+        if current_splitter is not None:
+            main_content = current_splitter.widget(1)
+            settings_widget = Settings(parent=self.main_content, back_callback=self.main_menu, main_window=self)
+            settings_widget.setFont(self.inter_regular_font)
+            settings_widget.settings_saved.connect(self.apply_theme)
+            self.load_tool(settings_widget)
 
     def update_safe_area_size(self):
         self.config = Config(source="MainWindow")
