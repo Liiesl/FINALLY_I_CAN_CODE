@@ -382,9 +382,12 @@ class MainWindow(QMainWindow):
         """)
 
     def refresh_settings(self):
-        self.update_safe_area_size()
-        self.apply_text_size()
-        self.apply_theme()
+        """
+        Refresh all settings, including safe area size, text size, and theme.
+        """
+        self.update_safe_area_size()  # Update safe area size
+        self.apply_text_size()  # Update text size
+        self.apply_theme()  # Update theme
 
     def update_tool_button_visibility(self, event=None):
         if self.main_menu_active and self.tool_buttons_container:
