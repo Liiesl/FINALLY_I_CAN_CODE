@@ -12,7 +12,6 @@ class CustomWindowBar(QWidget):
         self.resize_edge = None  # Track which edge is being resized
         self.resize_handle_size = 5  # Size of the resize handle (smaller for better sensitivity)
         self.init_ui()
-        self.apply_theme()
 
     def init_ui(self):
         self.setFixedHeight(30)
@@ -26,6 +25,8 @@ class CustomWindowBar(QWidget):
 
         self.create_tab_bar()
         self.create_buttons()
+        
+        self.apply_theme()
 
     def create_tab_bar(self):
         self.tab_bar = QTabBar(self)
