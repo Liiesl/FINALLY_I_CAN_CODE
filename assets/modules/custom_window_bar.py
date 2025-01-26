@@ -54,18 +54,19 @@ class CustomWindowBar(QWidget):
 
         self.layout.addWidget(self.tab_bar)
 
-        # Add a spacer to leave space between the tabs and the buttons
+        # Add the "add tab" button directly to the right of the tabs
+        self.new_tab_button = QPushButton('+')
+        self.new_tab_button.setFixedSize(30, 30)
+        self.new_tab_button.clicked.connect(lambda: self.add_tab("New Tab"))
+        self.layout.addWidget(self.new_tab_button)
+
+        # Add a spacer to leave space between the tabs and the window buttons
         self.spacer = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
         self.layout.addItem(self.spacer)
 
         self.add_tab("SRT Editor")
 
     def create_buttons(self):
-        self.new_tab_button = QPushButton('+')
-        self.new_tab_button.setFixedSize(30, 30)
-        self.new_tab_button.clicked.connect(lambda: self.add_tab("New Tab"))
-        self.layout.addWidget(self.new_tab_button)
-
         self.min_button = QPushButton('-')
         self.min_button.setFixedSize(30, 30)
         self.min_button.clicked.connect(self.parent.showMinimized)
@@ -180,6 +181,7 @@ class CustomWindowBar(QWidget):
         # Slightly darker background for the window/tab bar
         darker_background = QColor(background_color).darker(110).name()
 
+        # Set styles for the window bar, tab bar, and buttons
         self.setStyleSheet(f"""
             CustomWindowBar {{
                 background-color: {darker_background};
@@ -192,5 +194,17 @@ class CustomWindowBar(QWidget):
                 padding: 2px 10px;  /* Adjust padding to fit the title */
                 margin: 0;          /* Remove extra margin */
                 border: none;       /* Remove border */
+            }}
+
+            QPushButton {{
+                background-color: {darker_background};
+                color: {text_color};
+                border: none;
+                padding: 0;
+                margin: 0;
+            }}
+
+            QPushButton:hover {{
+                background-color: {QColor(darker_background).darker(120).name()};
             }}
         """)
