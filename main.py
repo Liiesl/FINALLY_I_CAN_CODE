@@ -76,6 +76,7 @@ class MainWindow(QMainWindow):
         new_side_panel.setFont(self.inter_regular_font)
         
         self.top_bar = QHBoxLayout()
+        self.top_bar_added = False
         self.menu_button = None
     
         # Create a new main content widget for the tab
@@ -223,7 +224,8 @@ class MainWindow(QMainWindow):
                     widget.setParent(None)
 
             # Add the top bar with the menu button
-            if self.menu_button is None:
+            if self.top_bar is None:
+                top_bar = QHBoxLayout()
                 menu_button = QPushButton()
                 menu_icon = qta.icon('fa.bars')
                 menu_button.setIcon(menu_icon)
