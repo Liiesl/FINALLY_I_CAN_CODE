@@ -207,7 +207,7 @@ class MainWindow(QMainWindow):
         button.clicked.connect(lambda: self.tool_selected(tool_name))
         return button
     
-    def main_menu(self):
+    def main_menu(self, layout=None):
         self.main_menu_active = True
 
         target_layout = layout if layout is not None else self.main_content_layout
