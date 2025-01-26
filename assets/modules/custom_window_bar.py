@@ -135,7 +135,7 @@ class CustomWindowBar(QWidget):
         """)
         self.layout.addWidget(self.max_button)
 
-        self.close_button = QPushButton('x')
+        self.close_button = QPushButton('✖')
         self.close_button.setFixedSize(50, 50)
         self.close_button.clicked.connect(self.parent.close)
 
