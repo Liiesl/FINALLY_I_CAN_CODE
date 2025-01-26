@@ -97,14 +97,10 @@ class CustomWindowBar(QWidget):
             self.start = event.globalPos()
         else:
             # Change cursor when near the edges of the entire window
-            edge = self.get_resize_edge(event.globalPos() - self.parent.pos())
-            if edge == 'left':
+            edge = self.get_resize_edge(event.pos())
+            if edge == 'left' or edge == 'right':
                 self.setCursor(Qt.SizeHorCursor)
-            elif edge == 'right':
-                self.setCursor(Qt.SizeHorCursor)
-            elif edge == 'top':
-                self.setCursor(Qt.SizeVerCursor)
-            elif edge == 'bottom':
+            elif edge == 'top' or edge == 'bottom':
                 self.setCursor(Qt.SizeVerCursor)
             else:
                 self.setCursor(Qt.ArrowCursor)
@@ -118,11 +114,11 @@ class CustomWindowBar(QWidget):
         # Check if the mouse is near the edges of the entire window
         if pos.x() < self.resize_handle_size:
             return 'left'
-        elif pos.x() > self.parent.width() - self.resize_handle_size:
+        elif pos.x() > self.width() - self.resize_handle_size:
             return 'right'
         elif pos.y() < self.resize_handle_size:
             return 'top'
-        elif pos.y() > self.parent.height() - self.resize_handle_size:
+        elif pos.y() > self.height() - self.resize_handle_size:
             return 'bottom'
         else:
             return None
