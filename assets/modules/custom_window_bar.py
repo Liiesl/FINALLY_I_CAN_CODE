@@ -143,27 +143,56 @@ class CustomWindowBar(QWidget):
 
     def resize_window(self, event):
         diff = event.globalPos() - self.start
+        window_rect = self.parent.geometry()
+
         if self.resize_edge == 'left':
-            new_width = self.parent.width() - diff.x()
+            new_width = window_rect.width() - diff.x()
             if new_width > self.parent.minimumWidth():
                 self.parent.setGeometry(
-                    self.parent.x() + diff.x(), self.parent.y(), new_width, self.parent.height())
+                    window_rect.x() + diff.x(), window_rect.y(), new_width, window_rect.height())
                 self.start = event.globalPos()
         elif self.resize_edge == 'right':
-            new_width = self.parent.width() + diff.x()
+            new_width = window_rect.width() + diff.x()
             if new_width > self.parent.minimumWidth():
-                self.parent.resize(new_width, self.parent.height())
+                self.parent.resize(new_width, window_rect.height())
                 self.start = event.globalPos()
         elif self.resize_edge == 'top':
-            new_height = self.parent.height() - diff.y()
+            new_height = window_rect.height() - diff.y()
             if new_height > self.parent.minimumHeight():
                 self.parent.setGeometry(
-                    self.parent.x(), self.parent.y() + diff.y(), self.parent.width(), new_height)
+                    window_rect.x(), window_rect.y() + diff.y(), window_rect.width(), new_height)
                 self.start = event.globalPos()
         elif self.resize_edge == 'bottom':
-            new_height = self.parent.height() + diff.y()
+            new_height = window_rect.height() + diff.y()
             if new_height > self.parent.minimumHeight():
-                self.parent.resize(self.parent.width(), new_height)
+                self.parent.resize(window_rect.width(), new_height)
+                self.start = event.globalPos()
+        elif self.resize_edge == 'top-left':
+            new_width = window_rect.width() - diff.x()
+            new_height = window_rect.height() - diff.y()
+            if new_width > self.parent.minimumWidth() and new_height > self.parent.minimumHeight():
+                self.parent.setGeometry(
+                    window_rect.x() + diff.x(), window_rect.y() + diff.y(), new_width, new_height)
+                self.start = event.globalPos()
+        elif self.resize_edge == 'top-right':
+            new_width = window_rect.width() + diff.x()
+            new_height = window_rect.height() - diff.y()
+            if new_width > self.parent.minimumWidth() and new_height > self.parent.minimumHeight():
+                self.parent.setGeometry(
+                    window_rect.x(), window_rect.y() + diff.y(), new_width, new_height)
+                self.start = event.globalPos()
+        elif self.resize_edge == 'bottom-left':
+            new_width = window_rect.width() - diff.x()
+            new_height = window_rect.height() + diff.y()
+            if new_width > self.parent.minimumWidth() and new_height > self.parent.minimumHeight():
+                self.parent.setGeometry(
+                    window_rect.x() + diff.x(), window_rect.y(), new_width, new_height)
+                self.start = event.globalPos()
+        elif self.resize_edge == 'bottom-right':
+            new_width = window_rect.width() + diff.x()
+            new_height = window_rect.height() + diff.y()
+            if new_width > self.parent.minimumWidth() and new_height > self.parent.minimumHeight():
+                self.parent.resize(new_width, new_height)
                 self.start = event.globalPos()
 
     def toggle_maximize_restore(self):
