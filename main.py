@@ -217,8 +217,10 @@ class MainWindow(QMainWindow):
 
         for i in reversed(range(target_layout.count())):
             widget = self.main_content_layout.itemAt(i).widget()
-            if widget is not None:
-                widget.setParent(None)
+            if widget is not None and item.layout() is not self.top_bar:
+                widget = item.widget()
+                if widget is not None:
+                    widget.setParent(None)
 
         if self.menu_button is None:
             self.menu_button = QPushButton()
