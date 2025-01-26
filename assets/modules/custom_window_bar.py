@@ -36,7 +36,7 @@ class CustomWindowBar(QWidget):
     def create_buttons(self):
         self.new_tab_button = QPushButton('+')
         self.new_tab_button.setFixedSize(30, 30)
-        self.new_tab_button.clicked.connect(self.add_new_tab)
+        self.new_tab_button.clicked.connect(self.add_tab)
         self.layout.addWidget(self.new_tab_button)
 
         self.min_button = QPushButton('-')
