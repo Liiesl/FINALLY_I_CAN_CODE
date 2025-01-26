@@ -97,7 +97,6 @@ class MainWindow(QMainWindow):
     
     def replicate_main_menu(self, layout):
         # Use the new method to create the main menu layout
-        self.top_bar_added = False
         self.main_menu(layout)
 
     def remove_tab_content(self, index):
