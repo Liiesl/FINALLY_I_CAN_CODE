@@ -33,7 +33,7 @@ class CustomWindowBar(QWidget):
         self.init_ui()
 
     def init_ui(self):
-        self.setFixedHeight(30)
+        self.setFixedHeight(100)
         self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
         
         self.setStyleSheet(f"""
