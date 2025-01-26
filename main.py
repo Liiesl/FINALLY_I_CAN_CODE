@@ -61,8 +61,7 @@ class MainWindow(QMainWindow):
         self.splitter.setSizes([0, 1])
 
         self.tab_contents.addWidget(self.splitter)
-
-        self.top_bar = QHBoxLayout()
+        
         self.top_bar_added = False
 
         self.create_new_tab_content()
