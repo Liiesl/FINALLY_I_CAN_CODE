@@ -38,7 +38,7 @@ class MainWindow(QMainWindow):
         self.main_menu_active = True
 
         self.custom_window_bar = CustomWindowBar(self, self.app)
-        self.layout.addWidget(self.custom_window_bar))
+        self.layout.addWidget(self.custom_window_bar)
 
         self.tab_contents = QStackedWidget()
         self.layout.addWidget(self.tab_contents)
