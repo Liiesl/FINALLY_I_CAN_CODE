@@ -146,6 +146,6 @@ class Settings(QWidget):
         self.config.load()
         if self.main_window:
             self.main_window.refresh_settings()
-            self.main_window.apply_theme()
+            self.apply_theme()
         
         QMessageBox.information(self, "Success", "Settings saved and applied successfully!")
