@@ -89,7 +89,7 @@ class CustomWindowBar(QWidget):
             self.parent.showMaximized()
 
     def apply_theme(self, theme):
-        palette = self.app.palette()
+        palette = QApplication.instance().palette()
         background_color = palette.color(QPalette.Window).name()
         text_color = palette.color(QPalette.WindowText).name()
 
