@@ -98,26 +98,34 @@ class CustomWindowBar(QWidget):
             self.start = event.globalPos()
         else:
             # Change cursor when near the edges or corners of the window
-            edge = self.get_resize_edge(event.pos())
-            if edge == 'left' or edge == 'right':
-                self.setCursor(Qt.SizeHorCursor)
-            elif edge == 'top' or edge == 'bottom':
-                self.setCursor(Qt.SizeVerCursor)
-            elif edge == 'top-left' or edge == 'bottom-right':
-                self.setCursor(Qt.SizeFDiagCursor)
-            elif edge == 'top-right' or edge == 'bottom-left':
-                self.setCursor(Qt.SizeBDiagCursor)
-            else:
-                self.setCursor(Qt.ArrowCursor)
+            self.update_cursor(event.pos())
 
     def mouseReleaseEvent(self, event):
         self.pressing = False
         self.resize_edge = None
         self.setCursor(Qt.ArrowCursor)
 
-    def mouseDoubleClickEvent(self, event):
-        if event.button() == Qt.LeftButton:
-            self.toggle_maximize_restore()
+    def enterEvent(self, event):
+        # Update cursor when the mouse enters the widget
+        self.update_cursor(self.mapFromGlobal(QApplication.mousePos()))
+
+    def leaveEvent(self, event):
+        # Reset cursor when the mouse leaves the widget
+        self.setCursor(Qt.ArrowCursor)
+
+    def update_cursor(self, pos):
+        # Change cursor based on the mouse position
+        edge = self.get_resize_edge(pos)
+        if edge == 'left' or edge == 'right':
+            self.setCursor(Qt.SizeHorCursor)
+        elif edge == 'top' or edge == 'bottom':
+            self.setCursor(Qt.SizeVerCursor)
+        elif edge == 'top-left' or edge == 'bottom-right':
+            self.setCursor(Qt.SizeFDiagCursor)
+        elif edge == 'top-right' or edge == 'bottom-left':
+            self.setCursor(Qt.SizeBDiagCursor)
+        else:
+            self.setCursor(Qt.ArrowCursor)
 
     def get_resize_edge(self, pos):
         # Check if the mouse is near the edges or corners of the window
