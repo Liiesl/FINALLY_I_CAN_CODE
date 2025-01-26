@@ -29,7 +29,7 @@ class CustomWindowBar(QWidget):
         
         self.setStyleSheet(f"""
             CustomWindowBar {{
-                background-color: {self.button_color}; 
+                background-color: {self.highlight_color}; 
             }}
         """)
 
