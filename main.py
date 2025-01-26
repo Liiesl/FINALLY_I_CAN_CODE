@@ -309,15 +309,16 @@ class MainWindow(QMainWindow):
         tool_widget.show()
 
     def toggle_side_panel(self):
+        # Get the current splitter for the active tab
         current_splitter = self.tab_contents.currentWidget()
         if current_splitter is not None:
-            side_panel = current_splitter.widget(0)
-            if self.side_panel.isVisible():
-                self.splitter.setSizes([0, 1])
-                self.side_panel.setVisible(False)
+            side_panel = current_splitter.widget(0)  # Side panel is the first widget in the splitter
+            if side_panel.isVisible():
+                current_splitter.setSizes([0, 1])  # Hide the side panel
+                side_panel.setVisible(False)
             else:
-                self.side_panel.setVisible(True)
-                self.splitter.setSizes([self.width() // 2, self.width() // 2])
+                side_panel.setVisible(True)
+                current_splitter.setSizes([self.width() // 2, self.width() // 2])  # Show the side panel
 
     def open_settings(self, item=None):
         current_splitter = self.tab_contents.currentWidget()
@@ -328,10 +329,15 @@ class MainWindow(QMainWindow):
             settings_widget.settings_saved.connect(self.apply_theme)
             self.load_tool(settings_widget)
 
-    def update_safe_area_size(self):
-        self.config = Config(source="MainWindow")
-        safe_area_size = self.config.get_safe_area_size()
-        self.main_content_layout.setContentsMargins(safe_area_size, safe_area_size, safe_area_size, safe_area_size)
+    def open_settings(self, item=None):
+        # Get the current main content layout for the active tab
+        current_splitter = self.tab_contents.currentWidget()
+        if current_splitter is not None:
+            main_content = current_splitter.widget(1)  # Main content is the second widget in the splitter
+            settings_widget = Settings(parent=main_content, back_callback=self.main_menu, main_window=self)
+            settings_widget.setFont(self.inter_regular_font)
+            settings_widget.settings_saved.connect(self.apply_theme)
+            self.load_tool(settings_widget)
 
     def apply_text_size(self):
         text_size = self.config.get_text_size()
