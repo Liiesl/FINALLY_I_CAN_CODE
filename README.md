@@ -19,13 +19,15 @@
 
 ### macOS
 Installer coming soon
+
 or you could use pyinstaller on your own.
 1. Download source code
 2. Extract the file
 3. Run .spec file provided
 
 ### Linux
-Coming soon
+Installer coming soon
+
 or you could use pyinstaller on your own.
 1. Download source code
 2. Extract the file
