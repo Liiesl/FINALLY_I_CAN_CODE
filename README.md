@@ -33,8 +33,9 @@ or you could use pyinstaller on your own.
 
 1. **Launch Subtl**: Open the application from your desktop or applications menu.
 2. **Select a Tool**: Choose from the available tools in the main menu.
-3. **Load Your Subtitle**: Import your subtitle file(s) into the app.
-4. **Edit and Save**: Make the necessary changes and save your modified subtitle file.
+3. **Add new tabs**: You can open several tools at the same time.
+4. **Load Your Subtitle**: Import your subtitle file(s) into the app.
+5. **Edit and Save**: Make the necessary changes and save your modified subtitle file.
 
 ## Supported Subtitle Formats
 
