@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QWidget, QHBoxLayout, QPushButton, QTabBar, QApplication, QSpacerItem, QSizePolicy
 from PyQt5.QtCore import Qt, QPoint
-from PyQt5.QtGui import QPalette
+from PyQt5.QtGui import QPalette, QColor
 
 class CustomWindowBar(QWidget):
     def __init__(self, parent=None, app=None):
@@ -25,6 +25,13 @@ class CustomWindowBar(QWidget):
 
         self.create_tab_bar()
         self.create_buttons()
+
+        # Add a tiny border around the window for resize behavior
+        self.parent.setStyleSheet("""
+            QWidget {
+                border: 2px solid #333333;  /* Tiny border for resize behavior */
+            }
+        """)
 
     def create_tab_bar(self):
         self.tab_bar = QTabBar(self)
@@ -170,14 +177,17 @@ class CustomWindowBar(QWidget):
         background_color = palette.color(QPalette.Window).name()
         text_color = palette.color(QPalette.WindowText).name()
 
+        # Slightly darker background for the window/tab bar
+        darker_background = QColor(background_color).darker(110).name()
+
         self.setStyleSheet(f"""
             CustomWindowBar {{
-                background-color: {background_color};
+                background-color: {darker_background};
                 color: {text_color};
             }}
 
             QTabBar::tab {{
-                background-color: {background_color};
+                background-color: {darker_background};
                 color: {text_color};
                 padding: 2px 10px;  /* Adjust padding to fit the title */
                 margin: 0;          /* Remove extra margin */
