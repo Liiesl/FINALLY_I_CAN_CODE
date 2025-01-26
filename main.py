@@ -1,435 +1,259 @@
-import sys
-import qtawesome as qta
-from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QLabel, QScrollArea, QMessageBox, QSplitter, QFrame, QStackedWidget
-from PyQt5.QtGui import QPalette, QColor, QFont, QFontDatabase
-from PyQt5.QtCore import Qt, QPropertyAnimation
+from PyQt5.QtWidgets import QWidget, QHBoxLayout, QPushButton, QTabBar, QApplication, QSpacerItem, QSizePolicy
+from PyQt5.QtCore import Qt, QPoint
+from PyQt5.QtGui import QPalette, QColor, QCursor
 
-from tools.subtitle_converter import SubtitleConverter
-from tools.subtitle_shifter import SubtitleShifter
-from assets.modules.side_panel import SidePanel
-from assets.modules.settings import Settings
-from assets.modules.config import Config
-from assets.modules.custom_window_bar import CustomWindowBar  # Import the CustomWindowBar
-
-class MainWindow(QMainWindow):
-    def __init__(self, app):
-        super().__init__()
+class CustomWindowBar(QWidget):
+    def __init__(self, parent=None, app=None):
+        super().__init__(parent)
+        self.parent = parent
         self.app = app
-        self.tab_contents = QStackedWidget()
+        self.start = QPoint(0, 0)
+        self.pressing = False  # Track if the mouse is pressed
+        self.resize_edge = None  # Track which edge is being resized
+        self.resize_handle_size = 5  # Size of the resize handle (smaller for better sensitivity)
         self.init_ui()
 
     def init_ui(self):
-        self.setWindowTitle("SRT Editor")
-        self.setGeometry(100, 100, 1200, 800)
-        self.setWindowFlags(Qt.FramelessWindowHint)  # Remove native window bar
-        self.setStyleSheet("background-color: {background_color};")
+        self.setFixedHeight(30)
+        self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
+        self.setAttribute(Qt.WA_TranslucentBackground)
 
-        QFontDatabase.addApplicationFont("assets/fonts/Inter-Regular.otf")
-        QFontDatabase.addApplicationFont("assets/fonts/Inter-ExtraBold.otf")
-        
-        self.inter_regular_font = QFont("Inter Regular")
-        self.inter_extra_bold_font = QFont("Inter ExtraBold")
+        self.layout = QHBoxLayout(self)
+        self.layout.setContentsMargins(0, 0, 0, 0)
+        self.layout.setSpacing(0)  # Remove spacing between widgets
+        self.setLayout(self.layout)
 
-        self.central_widget = QWidget()
-        self.layout = QVBoxLayout(self.central_widget)
-        self.setCentralWidget(self.central_widget)
+        self.create_tab_bar()
+        self.create_buttons()
 
-        self.config = Config(source="MainWindow")
-        self.main_menu_active = True
+    def create_tab_bar(self):
+        self.tab_bar = QTabBar(self)
+        self.tab_bar.setMovable(True)
+        self.tab_bar.setTabsClosable(True)
+        self.tab_bar.tabCloseRequested.connect(self.close_tab)
+        self.tab_bar.currentChanged.connect(self.change_tab)
 
-        self.custom_window_bar = CustomWindowBar(self, self.app)
-        self.layout.addWidget(self.custom_window_bar)
+        # Adjust tab bar styling to fit the title
+        self.tab_bar.setStyleSheet("""
+            QTabBar::tab {
+                padding: 2px 10px;  /* Adjust padding to fit the title */
+                margin: 0;          /* Remove extra margin */
+                border: none;       /* Remove border */
+            }
+            QTabBar {
+                background: transparent;  /* Make the tab bar background transparent */
+            }
+        """)
 
-        self.tab_contents = QStackedWidget()
-        self.layout.addWidget(self.tab_contents)
+        self.layout.addWidget(self.tab_bar)
 
-        self.side_panel = SidePanel(self, self.open_settings)
-        self.side_panel.setVisible(False)
-        self.side_panel.setFont(self.inter_regular_font)
+        # Add the "add tab" button directly to the right of the tabs
+        self.new_tab_button = QPushButton('+')
+        self.new_tab_button.setFixedSize(30, 30)
+        self.new_tab_button.clicked.connect(lambda: self.add_tab("New Tab"))
+        self.layout.addWidget(self.new_tab_button)
 
-        self.main_content = QWidget()
-        self.main_content_layout = QVBoxLayout(self.main_content)
-        self.main_content.setLayout(self.main_content_layout)
+        # Add a spacer to leave space between the tabs and the window buttons
+        self.spacer = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.layout.addItem(self.spacer)
 
-        self.splitter = QSplitter(Qt.Horizontal)
-        self.splitter.addWidget(self.side_panel)
-        self.splitter.addWidget(self.main_content)
-        self.splitter.setSizes([0, 1])
+        self.add_tab("SRT Editor")
 
-        self.tab_contents.addWidget(self.splitter)
-        
-        self.top_bar = QHBoxLayout()
-        self.top_bar_added = False
-        self.menu_button = None
-        
-        self.create_new_tab_content()
+    def create_buttons(self):
+        self.min_button = QPushButton('-')
+        self.min_button.setFixedSize(30, 30)
+        self.min_button.clicked.connect(self.parent.showMinimized)
+        self.layout.addWidget(self.min_button)
 
-        self.apply_theme()
+        self.max_button = QPushButton('□')
+        self.max_button.setFixedSize(30, 30)
+        self.max_button.clicked.connect(self.toggle_maximize_restore)
+        self.layout.addWidget(self.max_button)
 
-    def create_new_tab_content(self):
-        # Create a new splitter for the tab
-        new_splitter = QSplitter(Qt.Horizontal)
-    
-        # Create a new side panel for the tab
-        new_side_panel = SidePanel(self, self.open_settings)
-        new_side_panel.setVisible(False)
-        new_side_panel.setFont(self.inter_regular_font)
-        
-        self.top_bar = QHBoxLayout()
-        self.top_bar_added = False
-        self.menu_button = None
-    
-        # Create a new main content widget for the tab
-        new_main_content = QWidget()
-        new_main_content_layout = QVBoxLayout(new_main_content)
-        new_main_content.setLayout(new_main_content_layout)
-    
-        # Add the side panel and main content to the splitter
-        new_splitter.addWidget(new_side_panel)
-        new_splitter.addWidget(new_main_content)
-        new_splitter.setSizes([0, 1])
-    
-        # Add the splitter to the tab contents
-        self.tab_contents.addWidget(new_splitter)
-        self.tab_contents.setCurrentWidget(new_splitter)
-    
-        # Replicate the main menu layout in the new tab
-        self.main_menu(new_main_content_layout)
+        self.close_button = QPushButton('x')
+        self.close_button.setFixedSize(30, 30)
+        self.close_button.clicked.connect(self.parent.close)
+        self.layout.addWidget(self.close_button)
 
-    def remove_tab_content(self, index):
-        widget = self.tab_contents.widget(index)
-        if widget is not None:
-            self.tab_contents.removeWidget(widget)
-            widget.deleteLater()  # Clean up the widget
+    def mousePressEvent(self, event):
+        if event.button() == Qt.LeftButton:
+            self.start = event.globalPos()
+            self.pressing = True
+            self.resize_edge = self.get_resize_edge(event.globalPos())
 
-    def display_tab_content(self, index):
-        self.tab_contents.setCurrentIndex(index)
-
-    def apply_theme(self):
-        self.config = Config(source="MainWindow")
-        theme = self.config.get_theme()
-        print(f"Applying theme: {theme}")
-        palette = QPalette()
-        if theme == "dark":
-            palette.setColor(QPalette.Window, QColor(44, 47, 56))
-            palette.setColor(QPalette.WindowText, Qt.white)
-            palette.setColor(QPalette.Base, QColor(44, 47, 56))
-            palette.setColor(QPalette.AlternateBase, QColor(66, 69, 79))
-            palette.setColor(QPalette.ToolTipBase, Qt.white)
-            palette.setColor(QPalette.ToolTipText, Qt.white)
-            palette.setColor(QPalette.Text, Qt.white)
-            palette.setColor(QPalette.Button, QColor(33, 35, 41))
-            palette.setColor(QPalette.ButtonText, Qt.white)
-            palette.setColor(QPalette.BrightText, Qt.red)
-            palette.setColor(QPalette.Highlight, QColor(75, 110, 175))
-            palette.setColor(QPalette.HighlightedText, Qt.white)
-        elif theme == "light":
-            palette.setColor(QPalette.Window, Qt.white)
-            palette.setColor(QPalette.WindowText, Qt.black)
-            palette.setColor(QPalette.Base, Qt.white)
-            palette.setColor(QPalette.AlternateBase, QColor(240, 240, 240))
-            palette.setColor(QPalette.ToolTipBase, Qt.black)
-            palette.setColor(QPalette.ToolTipText, Qt.black)
-            palette.setColor(QPalette.Text, Qt.black)
-            palette.setColor(QPalette.Button, QColor(220, 220, 220))
-            palette.setColor(QPalette.ButtonText, Qt.black)
-            palette.setColor(QPalette.BrightText, Qt.red)
-            palette.setColor(QPalette.Highlight, QColor(75, 110, 175))
-            palette.setColor(QPalette.HighlightedText, Qt.black)
+    def mouseMoveEvent(self, event):
+        if self.pressing and self.resize_edge:
+            self.resize_window(event)
+        elif event.buttons() == Qt.LeftButton and self.pressing:
+            # Move the window
+            diff = event.globalPos() - self.start
+            self.parent.move(self.parent.pos() + diff)
+            self.start = event.globalPos()
         else:
-            palette.setColor(QPalette.Window, QColor(44, 47, 56))
-            palette.setColor(QPalette.WindowText, Qt.white)
-            palette.setColor(QPalette.Base, QColor(44, 47, 56))
-            palette.setColor(QPalette.AlternateBase, QColor(66, 69, 79))
-            palette.setColor(QPalette.ToolTipBase, Qt.white)
-            palette.setColor(QPalette.ToolTipText, Qt.white)
-            palette.setColor(QPalette.Text, Qt.white)
-            palette.setColor(QPalette.Button, QColor(44, 47, 56))
-            palette.setColor(QPalette.ButtonText, Qt.white)
-            palette.setColor(QPalette.BrightText, Qt.red)
-            palette.setColor(QPalette.Highlight, QColor(75, 110, 175))
-            palette.setColor(QPalette.HighlightedText, Qt.white)
+            # Change cursor when near the edges or corners of the window
+            self.update_cursor(event.globalPos())
 
-        self.app.setPalette(palette)
-        self.setPalette(palette)
-        self.update()
+    def mouseReleaseEvent(self, event):
+        self.pressing = False
+        self.resize_edge = None
+        self.setCursor(Qt.ArrowCursor)
 
-    def create_tool_button(self, tool_name, tool_description):
-        button = QPushButton()
+    def enterEvent(self, event):
+        # Update cursor when the mouse enters the widget
+        self.update_cursor(QCursor.pos())  # Use global mouse position
 
-        palette = self.app.palette()
-        background_color = palette.color(QPalette.Base).name()
-        border_color = palette.color(QPalette.Highlight).name()
-        text_color = palette.color(QPalette.ButtonText).name()
-        hover_background_color = palette.color(QPalette.Highlight).name()
-        hover_border_color = palette.color(QPalette.Highlight).darker().name()
+    def leaveEvent(self, event):
+        # Reset cursor when the mouse leaves the widget
+        self.setCursor(Qt.ArrowCursor)
 
-        button.setStyleSheet(f"""
-            QPushButton {{
-                border: 5px solid {border_color};
-                color: rgba(255, 255, 255, 0);
-                border-radius: 15px;
-                padding: 10px;
-                min-width: 300px;
-                min-height: 400px;
-                margin: 10px;
-                background-color: {background_color};
-                text-align: center;
-            }}
-            QPushButton:hover {{
-                border-color: {hover_border_color};
-                background-color: {hover_background_color};
-            }}
-        """)
+    def update_cursor(self, global_pos):
+        # Change cursor based on the mouse position relative to the window's absolute edges
+        edge = self.get_resize_edge(global_pos)
+        if edge == 'left' or edge == 'right':
+            self.setCursor(Qt.SizeHorCursor)
+        elif edge == 'top' or edge == 'bottom':
+            self.setCursor(Qt.SizeVerCursor)
+        elif edge == 'top-left' or edge == 'bottom-right':
+            self.setCursor(Qt.SizeFDiagCursor)
+        elif edge == 'top-right' or edge == 'bottom-left':
+            self.setCursor(Qt.SizeBDiagCursor)
+        else:
+            self.setCursor(Qt.ArrowCursor)
 
-        text_size = self.config.get_text_size()
-        font_size = {
-            "small": 18,
-            "default": 26,
-            "large": 34,
-            "huge": 42
-        }.get(text_size, 26)
+    def get_resize_edge(self, global_pos):
+        # Get the parent window's geometry
+        window_rect = self.parent.geometry()
 
-        name_label = QLabel(tool_name)
-        name_label.setFont(QFont("Inter ExtraBold", font_size, QFont.Bold))
-        name_label.setStyleSheet(f"color: {border_color}; background-color: transparent;")
-        name_label.setWordWrap(True)
-        name_label.setAlignment(Qt.AlignCenter)
+        # Check if the mouse is near the edges or corners of the window
+        if (global_pos.x() <= window_rect.left() + self.resize_handle_size and
+            global_pos.y() <= window_rect.top() + self.resize_handle_size):
+            return 'top-left'
+        elif (global_pos.x() >= window_rect.right() - self.resize_handle_size and
+              global_pos.y() <= window_rect.top() + self.resize_handle_size):
+            return 'top-right'
+        elif (global_pos.x() <= window_rect.left() + self.resize_handle_size and
+              global_pos.y() >= window_rect.bottom() - self.resize_handle_size):
+            return 'bottom-left'
+        elif (global_pos.x() >= window_rect.right() - self.resize_handle_size and
+              global_pos.y() >= window_rect.bottom() - self.resize_handle_size):
+            return 'bottom-right'
+        elif global_pos.x() <= window_rect.left() + self.resize_handle_size:
+            return 'left'
+        elif global_pos.x() >= window_rect.right() - self.resize_handle_size:
+            return 'right'
+        elif global_pos.y() <= window_rect.top() + self.resize_handle_size:
+            return 'top'
+        elif global_pos.y() >= window_rect.bottom() - self.resize_handle_size:
+            return 'bottom'
+        else:
+            return None
 
-        description_label = QLabel(tool_description)
-        description_label.setFont(QFont("Inter Regular", font_size))
-        description_label.setStyleSheet(f"color: {text_color}; background-color: transparent;")
-        description_label.setWordWrap(True)
-        description_label.setAlignment(Qt.AlignCenter)
+    def resize_window(self, event):
+        if self.resize_edge == 'left':
+            diff = event.globalPos() - self.start
+            new_width = self.parent.width() - diff.x()
+            if new_width > self.parent.minimumWidth():
+                self.parent.resize(new_width, self.parent.height())
+                self.start = event.globalPos()
+        elif self.resize_edge == 'right':
+            diff = event.globalPos() - self.start
+            new_width = self.parent.width() + diff.x()
+            if new_width > self.parent.minimumWidth():
+                self.parent.resize(new_width, self.parent.height())
+                self.start = event.globalPos()
+        elif self.resize_edge == 'top':
+            diff = event.globalPos() - self.start
+            new_height = self.parent.height() - diff.y()
+            if new_height > self.parent.minimumHeight():
+                self.parent.resize(self.parent.width(), new_height)
+                self.start = event.globalPos()
+        elif self.resize_edge == 'bottom':
+            diff = event.globalPos() - self.start
+            new_height = self.parent.height() + diff.y()
+            if new_height > self.parent.minimumHeight():
+                self.parent.resize(self.parent.width(), new_height)
+                self.start = event.globalPos()
+        elif self.resize_edge == 'top-left':
+            diff = event.globalPos() - self.start
+            new_width = self.parent.width() - diff.x()
+            new_height = self.parent.height() - diff.y()
+            if new_width > self.parent.minimumWidth() and new_height > self.parent.minimumHeight():
+                self.parent.resize(new_width, new_height)
+                self.start = event.globalPos()
+        elif self.resize_edge == 'top-right':
+            diff = event.globalPos() - self.start
+            new_width = self.parent.width() + diff.x()
+            new_height = self.parent.height() - diff.y()
+            if new_width > self.parent.minimumWidth() and new_height > self.parent.minimumHeight():
+                self.parent.resize(new_width, new_height)
+                self.start = event.globalPos()
+        elif self.resize_edge == 'bottom-left':
+            diff = event.globalPos() - self.start
+            new_width = self.parent.width() - diff.x()
+            new_height = self.parent.height() + diff.y()
+            if new_width > self.parent.minimumWidth() and new_height > self.parent.minimumHeight():
+                self.parent.resize(new_width, new_height)
+                self.start = event.globalPos()
+        elif self.resize_edge == 'bottom-right':
+            diff = event.globalPos() - self.start
+            new_width = self.parent.width() + diff.x()
+            new_height = self.parent.height() + diff.y()
+            if new_width > self.parent.minimumWidth() and new_height > self.parent.minimumHeight():
+                self.parent.resize(new_width, new_height)
+                self.start = event.globalPos()
 
-        button_layout = QVBoxLayout(button)
-        button_layout.addWidget(name_label)
-        button_layout.addWidget(description_label)
+    def add_tab(self, title):
+        self.tab_bar.addTab(title)
+        self.tab_bar.setCurrentIndex(self.tab_bar.count() - 1)
+        self.parent.create_new_tab_content()
 
-        button.clicked.connect(lambda: self.tool_selected(tool_name))
-        return button
-    
-    def main_menu(self, layout=None):
-        # Get the current main content layout for the active tab
-        current_splitter = self.tab_contents.currentWidget()
-        if current_splitter is not None:
-            main_content = current_splitter.widget(1)  # Main content is the second widget in the splitter
-            main_content_layout = main_content.layout()
+    def close_tab(self, index):
+        self.tab_bar.removeTab(index)
+        self.parent.remove_tab_content(index)
+        if self.tab_bar.count() == 0:
+            self.add_tab("SRT Editor")
 
-            self.main_menu_active = True
+    def change_tab(self, index):
+        self.parent.display_tab_content(index)
 
-            # Clear the existing layout
-            for i in reversed(range(main_content_layout.count())):
-                widget = main_content_layout.itemAt(i).widget()
-                if widget is not None:
-                    widget.setParent(None)
+    def toggle_maximize_restore(self):
+        if self.parent.isMaximized():
+            self.parent.showNormal()
+        else:
+            self.parent.showMaximized()
 
-            # Add the top bar with the menu button
-            if not self.top_bar_added:
-                # Add the top bar with the menu button
-                self.top_bar = QHBoxLayout()
-                self.menu_button = QPushButton()
-                menu_icon = qta.icon('fa.bars')
-                self.menu_button.setIcon(menu_icon)
-                self.menu_button.setFixedSize(30, 30)
-                self.menu_button.setStyleSheet("color: {button_text_color}; background-color:{button_color}; border: none; border-radius: 3px;")
-                self.menu_button.clicked.connect(self.toggle_side_panel)
-                self.top_bar.addWidget(self.menu_button, alignment=Qt.AlignLeft)
-                main_content_layout.addLayout(self.top_bar)
-                self.top_bar_added = True  # Mark the top bar as added
-                
-            # Add the tool buttons
-            self.tool_buttons_container = QWidget()
-            self.tool_buttons_layout = QHBoxLayout(self.tool_buttons_container)
-            self.tool_buttons_layout.setContentsMargins(0, 0, 0, 0)
+    def apply_theme(self, theme):
+        palette = QApplication.instance().palette()
+        background_color = palette.color(QPalette.Window).name()
+        text_color = palette.color(QPalette.WindowText).name()
 
-            tools = [
-                ("Longer Appearance SRT", "Increase the duration each subtitle appears."),
-                ("Merge SRT Files", "Combine multiple SRT files into one."),
-                ("Subtitle Converter", "Convert subtitles between different formats."),
-                ("Subtitle Shifter", "Shift subtitles by milliseconds."),
-                ("Coming Soon", "More tools will be added in the future.")
-            ]
+        # Slightly darker background for the window/tab bar
+        darker_background = QColor(background_color).darker(110).name()
 
-            for tool in tools:
-                self.tool_buttons_layout.addWidget(self.create_tool_button(tool[0], tool[1]))
-
-            self.tool_buttons_layout.addStretch()
-
-            # Add navigation arrows
-            navigation_frame = QFrame()
-            navigation_layout = QHBoxLayout(navigation_frame)
-            navigation_layout.setContentsMargins(0, 0, 0, 0)
-
-            left_arrow_button = QPushButton()
-            left_arrow_icon = qta.icon('fa.chevron-left')
-            left_arrow_button.setIcon(left_arrow_icon)
-            left_arrow_button.setFixedSize(50, 75)
-            left_arrow_button.setStyleSheet("background-color: #4f86f7; border: none;")
-            left_arrow_button.clicked.connect(self.scroll_left)
-            navigation_layout.addWidget(left_arrow_button)
-
-            scroll_area = QScrollArea()
-            scroll_area.setWidgetResizable(True)
-            scroll_area.setWidget(self.tool_buttons_container)
-            scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-            scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-            self.scroll_area = scroll_area
-            navigation_layout.addWidget(scroll_area)
-
-            right_arrow_button = QPushButton()
-            right_arrow_icon = qta.icon('fa.chevron-right')
-            right_arrow_button.setIcon(right_arrow_icon)
-            right_arrow_button.setFixedSize(50, 75)
-            right_arrow_button.setStyleSheet("background-color: #4f86f7; border: none;")
-            right_arrow_button.clicked.connect(self.scroll_right)
-            navigation_layout.addWidget(right_arrow_button)
-
-            main_content_layout.addWidget(navigation_frame)
-
-            self.update_safe_area_size()
-            self.apply_text_size()
-            self.apply_theme()
-            self.update_tool_button_visibility()
-            self.resizeEvent = self.update_tool_button_visibility
-
-    def tool_selected(self, tool_name):
-        # Get the current splitter for the active tab
-        current_splitter = self.tab_contents.currentWidget()
-        if current_splitter is not None:
-            # Get the main content widget for the current tab
-            main_content = current_splitter.widget(1)  # Main content is the second widget in the splitter
-            main_content_layout = main_content.layout()
-    
-            if tool_name == "Longer Appearance SRT":
-                from tools.longer_appearance import LongerAppearanceSRT
-                tool_widget = LongerAppearanceSRT(parent=main_content, back_callback=self.main_menu)
-                tool_widget.setFont(self.inter_regular_font)
-                self.load_tool(tool_widget, main_content_layout)
-            elif tool_name == "Merge SRT Files":
-                from tools.merge_srt import MergeSRT
-                tool_widget = MergeSRT(parent=main_content, back_callback=self.main_menu)
-                self.load_tool(tool_widget, main_content_layout)
-            elif tool_name == "Subtitle Converter":
-                tool_widget = SubtitleConverter(parent=main_content, back_callback=self.main_menu)
-                self.load_tool(tool_widget, main_content_layout)
-            elif tool_name == "Subtitle Shifter":
-                tool_widget = SubtitleShifter(parent=main_content, back_callback=self.main_menu)
-                self.load_tool(tool_widget, main_content_layout)
-            else:
-                QMessageBox.information(self, "Coming Soon", "This feature is coming soon!")
-    
-    def load_tool(self, tool_widget, layout):
-        self.main_menu_active = False
-    
-        # Clear the existing layout
-        for i in reversed(range(layout.count())):
-            widget = layout.itemAt(i).widget()
-            if widget is not None:
-                widget.setParent(None)
-    
-        # Add the tool widget to the layout
-        layout.addWidget(tool_widget)
-        tool_widget.show()
-
-    def toggle_side_panel(self):
-        # Get the current splitter for the active tab
-        current_splitter = self.tab_contents.currentWidget()
-        if current_splitter is not None:
-            side_panel = current_splitter.widget(0)  # Side panel is the first widget in the splitter
-            if side_panel.isVisible():
-                current_splitter.setSizes([0, 1])  # Hide the side panel
-                side_panel.setVisible(False)
-            else:
-                side_panel.setVisible(True)
-                current_splitter.setSizes([self.width() // 2, self.width() // 2])  # Show the side panel
-
-    def open_settings(self, item=None):
-        # Get the current splitter for the active tab
-        current_splitter = self.tab_contents.currentWidget()
-        if current_splitter is not None:
-            # Get the main content widget for the current tab
-            main_content = current_splitter.widget(1)  # Main content is the second widget in the splitter
-            main_content_layout = main_content.layout()
-    
-            # Create the settings widget
-            settings_widget = Settings(parent=self.main_content, back_callback=self.main_menu, main_window=self)
-            settings_widget.setFont(self.inter_regular_font)
-            settings_widget.settings_saved.connect(self.apply_theme)
-    
-            # Load the settings widget into the current tab's main content layout
-            self.load_tool(settings_widget, main_content_layout)
-            
-    def update_safe_area_size(self):
-        self.config = Config(source="MainWindow")
-        safe_area_size = self.config.get_safe_area_size()
-        for i in range(self.tab_contents.count()):
-            tab_widget = self.tab_contents.widget(i)
-            if tab_widget:
-                main_content = tab_widget.widget(1)  # Main content is the second widget in the splitter
-                if main_content:
-                    main_content_layout = main_content.layout()
-                    if main_content_layout:
-                        main_content_layout.setContentsMargins(
-                            safe_area_size, safe_area_size, safe_area_size, safe_area_size
-                        )
-            
-    def apply_text_size(self):
-        self.config = Config(source="MainWindow")
-        text_size = self.config.get_text_size()
-        font_size = {
-            "small": 18,
-            "default": 26,
-            "large": 34,
-            "huge": 42
-        }.get(text_size, 26)
-
+        # Set styles for the window bar, tab bar, and buttons
         self.setStyleSheet(f"""
-            * {{
-                font-size: {font_size}px;
+            CustomWindowBar {{
+                background-color: {darker_background};
+                color: {text_color};
+            }}
+
+            QTabBar::tab {{
+                background-color: {darker_background};
+                color: {text_color};
+                padding: 2px 10px;  /* Adjust padding to fit the title */
+                margin: 0;          /* Remove extra margin */
+                border: none;       /* Remove border */
+            }}
+
+            QPushButton {{
+                background-color: {darker_background};
+                color: {text_color};
+                border: none;
+                padding: 0;
+                margin: 0;
+            }}
+
+            QPushButton:hover {{
+                background-color: {QColor(darker_background).darker(120).name()};
             }}
         """)
-
-    def refresh_settings(self):
-        self.update_safe_area_size()  # Update safe area size
-        self.apply_text_size()  # Update text size
-        self.apply_theme()  # Update theme
-
-    def update_tool_button_visibility(self, event=None):
-        if self.main_menu_active and self.tool_buttons_container:
-            container_width = self.tool_buttons_container.width()
-            button_width = 220
-            visible_buttons = container_width // button_width
-            for i in range(self.tool_buttons_layout.count()):
-                item = self.tool_buttons_layout.itemAt(i)
-                if item is not None and item.widget() is not None:
-                    if i < visible_buttons:
-                        item.widget().setVisible(True)
-                    else:
-                        item.widget().setVisible(False)
-
-    def scroll_left(self):
-        current_value = self.scroll_area.horizontalScrollBar().value()
-        new_value = max(0, current_value - 220)
-        self.animate_scroll(current_value, new_value)
-
-    def scroll_right(self):
-        max_value = self.scroll_area.horizontalScrollBar().maximum()
-        current_value = self.scroll_area.horizontalScrollBar().value()
-        new_value = min(max_value, current_value + 220)
-        self.animate_scroll(current_value, new_value)
-
-    def animate_scroll(self, start_value, end_value):
-        animation = QPropertyAnimation(self.scroll_area.horizontalScrollBar(), b"value")
-        animation.setDuration(500)
-        animation.setStartValue(start_value)
-        animation.setEndValue(end_value)
-        animation.start()
-        self.animation = animation
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-
-    window = MainWindow(app)
-    window.show()
-    sys.exit(app.exec_())
