@@ -231,7 +231,7 @@ class MainWindow(QMainWindow):
                 menu_button.setFixedSize(30, 30)
                 menu_button.setStyleSheet("color: {button_text_color}; background-color:{button_color}; border: none; border-radius: 3px;")
                 menu_button.clicked.connect(self.toggle_side_panel)
-                top_bar.addWidget(menu_button, alignment=Qt.AlignLeft)
+                self.top_bar.addWidget(menu_button, alignment=Qt.AlignLeft)
                 main_content_layout.addLayout(top_bar)
 
             # Add the tool buttons
