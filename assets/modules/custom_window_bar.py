@@ -48,8 +48,8 @@ class CustomWindowBar(QWidget):
         self.layout.addWidget(self.tab_bar)
 
         # Add a spacer to leave space between the tabs and the buttons
-        spacer = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
-        self.layout.addItem(spacer)
+        self.spacer = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.layout.addItem(self.spacer)
 
         self.add_tab("SRT Editor")
 
@@ -88,8 +88,8 @@ class CustomWindowBar(QWidget):
             self.parent.move(self.parent.pos() + diff)
             self.start = event.globalPos()
         else:
-            # Change cursor when near the edges
-            edge = self.get_resize_edge(event.pos())
+            # Change cursor when near the edges of the entire window
+            edge = self.get_resize_edge(event.globalPos() - self.parent.pos())
             if edge == 'left':
                 self.setCursor(Qt.SizeHorCursor)
             elif edge == 'right':
@@ -107,14 +107,14 @@ class CustomWindowBar(QWidget):
         self.setCursor(Qt.ArrowCursor)
 
     def get_resize_edge(self, pos):
-        # Check if the mouse is near the edges of the window
+        # Check if the mouse is near the edges of the entire window
         if pos.x() < self.resize_handle_size:
             return 'left'
-        elif pos.x() > self.width() - self.resize_handle_size:
+        elif pos.x() > self.parent.width() - self.resize_handle_size:
             return 'right'
         elif pos.y() < self.resize_handle_size:
             return 'top'
-        elif pos.y() > self.height() - self.resize_handle_size:
+        elif pos.y() > self.parent.height() - self.resize_handle_size:
             return 'bottom'
         else:
             return None
