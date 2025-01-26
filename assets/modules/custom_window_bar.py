@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QWidget, QHBoxLayout, QPushButton, QTabBar, QApplication
+from PyQt5.QtWidgets import QWidget, QHBoxLayout, QPushButton, QTabBar, QApplication, QSpacerItem, QSizePolicy
 from PyQt5.QtCore import Qt, QPoint
 from PyQt5.QtGui import QPalette
 
@@ -8,7 +8,7 @@ class CustomWindowBar(QWidget):
         self.parent = parent
         self.app = app
         self.start = QPoint(0, 0)
-        self.pressing = False  # Initialize pressing attribute
+        self.pressing = False  # Track if the mouse is pressed
         self.resize_edge = None  # Track which edge is being resized
         self.resize_handle_size = 8  # Size of the resize handle
         self.init_ui()
@@ -20,6 +20,7 @@ class CustomWindowBar(QWidget):
 
         self.layout = QHBoxLayout(self)
         self.layout.setContentsMargins(0, 0, 0, 0)
+        self.layout.setSpacing(0)  # Remove spacing between widgets
         self.setLayout(self.layout)
 
         self.create_tab_bar()
@@ -39,9 +40,16 @@ class CustomWindowBar(QWidget):
                 margin: 0;          /* Remove extra margin */
                 border: none;       /* Remove border */
             }
+            QTabBar {
+                background: transparent;  /* Make the tab bar background transparent */
+            }
         """)
 
         self.layout.addWidget(self.tab_bar)
+
+        # Add a spacer to leave space between the tabs and the buttons
+        spacer = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.layout.addItem(spacer)
 
         self.add_tab("SRT Editor")
 
