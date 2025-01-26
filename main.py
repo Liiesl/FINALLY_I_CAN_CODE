@@ -418,6 +418,14 @@ class MainWindow(QMainWindow):
         current_value = self.scroll_area.horizontalScrollBar().value()
         new_value = min(max_value, current_value + 220)
         self.animate_scroll(current_value, new_value)
+        
+    def resizeEvent(self, event):
+    # Call the parent class's resizeEvent
+    super().resizeEvent(event)
+    
+    # Update any child widgets or layouts if needed
+    if hasattr(self, 'custom_window_bar'):
+        self.custom_window_bar.resize(self.width(), self.custom_window_bar.height())
 
     def animate_scroll(self, start_value, end_value):
         animation = QPropertyAnimation(self.scroll_area.horizontalScrollBar(), b"value")
