@@ -53,9 +53,7 @@ class CustomWindowBar(QWidget):
     def create_tab_bar(self):
         self.tab_bar = CustomTabBar(self)  # Use the custom tab bar
         self.tab_bar.setMovable(True)
-        self.tab_bar.setTabsClosable(True)
-        self.tab_bar.tabCloseRequested.connect(self.close_tab)
-        self.tab_bar.currentChanged.connect(self.change_tab)
+        self.tab_bar.setTabsClosable(False)  # Disable close buttons on tabs
 
         # Set the tab bar style
         self.tab_bar.setStyleSheet("""
@@ -284,15 +282,6 @@ class CustomWindowBar(QWidget):
         self.tab_bar.addTab(title)
         self.tab_bar.setCurrentIndex(self.tab_bar.count() - 1)
         self.parent.create_new_tab_content()
-
-    def close_tab(self, index):
-        # Prevent closing the first tab
-        if index == 0:
-            return
-        self.tab_bar.removeTab(index)
-        self.parent.remove_tab_content(index)
-        if self.tab_bar.count() == 0:
-            self.add_tab("Subtl")  # Ensure at least one tab exists
 
     def change_tab(self, index):
         self.parent.display_tab_content(index)
