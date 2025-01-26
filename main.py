@@ -107,6 +107,7 @@ class MainWindow(QMainWindow):
 
     def apply_theme(self):
         theme = self.config.get_theme()
+        print(f"Applying theme: {theme}")
         palette = QPalette()
         if theme == "dark":
             palette.setColor(QPalette.Window, QColor(44, 47, 56))
