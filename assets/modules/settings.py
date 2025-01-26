@@ -132,7 +132,6 @@ class Settings(QWidget):
         new_state = "light" if current_state == "dark" else "dark"
         self.theme_toggle.set_state(new_state)
         self.config.data["theme"] = new_state
-        self.apply_theme()
 
     def apply_theme(self):
         self.settings_saved.emit()
