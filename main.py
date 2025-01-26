@@ -386,9 +386,6 @@ class MainWindow(QMainWindow):
         """)
 
     def refresh_settings(self):
-        """
-        Refresh all settings, including safe area size, text size, and theme.
-        """
         self.update_safe_area_size()  # Update safe area size
         self.apply_text_size()  # Update text size
         self.apply_theme()  # Update theme
