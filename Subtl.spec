@@ -9,7 +9,7 @@ a = Analysis(
         ('assets/fonts/Inter-ExtraBold.otf', 'assets/fonts'), 
         ('assets/fonts/Inter-Regular.otf', 'assets/fonts'), 
         ('assets/changelog/changelog.txt', 'assets/changelog'),
-        ('Subtle.ico', '.'),
+        ('assets/Subtle.ico', 'assetx'),
     ],
     hiddenimports=[],
     hookspath=[],
@@ -41,5 +41,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon='Subtle.ico'
+    icon='assets/Subtle.ico'
 )
