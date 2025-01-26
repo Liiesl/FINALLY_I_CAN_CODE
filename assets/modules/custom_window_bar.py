@@ -12,6 +12,7 @@ class CustomWindowBar(QWidget):
         self.resize_edge = None  # Track which edge is being resized
         self.resize_handle_size = 5  # Size of the resize handle (smaller for better sensitivity)
         self.init_ui()
+        self.apply_theme()
 
     def init_ui(self):
         self.setFixedHeight(30)
@@ -32,13 +33,6 @@ class CustomWindowBar(QWidget):
         self.tab_bar.setTabsClosable(True)
         self.tab_bar.tabCloseRequested.connect(self.close_tab)
         self.tab_bar.currentChanged.connect(self.change_tab)
-
-        # Explicitly set the tab bar background color to the button color
-        palette = self.tab_bar.palette()
-        palette.setColor(QPalette.Button, QApplication.palette().color(QPalette.Button))
-        palette.setColor(QPalette.Window, QApplication.palette().color(QPalette.Window))
-        palette.setColor(QPalette.ButtonText, QApplication.palette().color(QPalette.ButtonText))
-        self.tab_bar.setPalette(palette)
 
         # Explicitly set the tab bar style
         self.tab_bar.setStyleSheet("""
@@ -286,7 +280,45 @@ class CustomWindowBar(QWidget):
             self.parent.showMaximized()
 
     def apply_theme(self):
+        # Retrieve the current palette colors
         palette = QApplication.instance().palette()
-        button_color = palette.color(QPalette.Button).name()  # Get the button color
-        button_text_color = palette.color(QPalette.ButtonText).name()  # Get the button text color
-        background_color = palette.color(QPalette.Window).name()  # Get the background color
+        text_color = palette.color(QPalette.WindowText).name()
+        background_color = palette.color(QPalette.Window).name()
+        button_color = palette.color(QPalette.Button).name()
+        button_text_color = palette.color(QPalette.ButtonText).name()
+        highlight_color = palette.color(QPalette.Highlight).name()
+        hover_color = palette.color(QPalette.Highlight).darker().name()
+
+        # Apply the colors to the custom window bar
+        self.setStyleSheet(f"background-color: {background_color};")
+
+        # Apply the colors to the tab bar
+        self.tab_bar.setStyleSheet(f"""
+            QTabBar::tab {{
+                padding: 2px 10px;  /* Adjust padding to fit the title */
+                margin: 0;          /* Remove extra margin */
+                border: none;       /* Remove border */
+                background: transparent;  /* Make the tab background transparent */
+                color: {button_text_color};  /* Use the button text color */
+            }}
+            QTabBar::tab:selected {{
+                background: {background_color};  /* Use the background color for the selected tab */
+            }}
+        """)
+
+        # Apply the colors to the buttons
+        button_style = f"""
+            QPushButton {{
+                color: {button_text_color};
+                background: transparent;
+                border: none;
+                font-size: 16px;
+            }}
+            QPushButton:hover {{
+                background: rgba(255, 255, 255, 0.2);
+            }}
+        """
+        self.new_tab_button.setStyleSheet(button_style)
+        self.min_button.setStyleSheet(button_style)
+        self.max_button.setStyleSheet(button_style)
+        self.close_button.setStyleSheet(button_style)
