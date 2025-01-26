@@ -92,7 +92,11 @@ class CustomWindowBar(QWidget):
             edge = self.get_resize_edge(event.pos())
             if edge == 'left':
                 self.setCursor(Qt.SizeHorCursor)
+            elif edge == 'right':
+                self.setCursor(Qt.SizeHorCursor)
             elif edge == 'top':
+                self.setCursor(Qt.SizeVerCursor)
+            elif edge == 'bottom':
                 self.setCursor(Qt.SizeVerCursor)
             else:
                 self.setCursor(Qt.ArrowCursor)
@@ -103,10 +107,15 @@ class CustomWindowBar(QWidget):
         self.setCursor(Qt.ArrowCursor)
 
     def get_resize_edge(self, pos):
+        # Check if the mouse is near the edges of the window
         if pos.x() < self.resize_handle_size:
             return 'left'
+        elif pos.x() > self.width() - self.resize_handle_size:
+            return 'right'
         elif pos.y() < self.resize_handle_size:
             return 'top'
+        elif pos.y() > self.height() - self.resize_handle_size:
+            return 'bottom'
         else:
             return None
 
@@ -117,9 +126,21 @@ class CustomWindowBar(QWidget):
             if new_width > self.parent.minimumWidth():
                 self.parent.resize(new_width, self.parent.height())
                 self.start = event.globalPos()
+        elif self.resize_edge == 'right':
+            diff = event.globalPos() - self.start
+            new_width = self.parent.width() + diff.x()
+            if new_width > self.parent.minimumWidth():
+                self.parent.resize(new_width, self.parent.height())
+                self.start = event.globalPos()
         elif self.resize_edge == 'top':
             diff = event.globalPos() - self.start
             new_height = self.parent.height() - diff.y()
+            if new_height > self.parent.minimumHeight():
+                self.parent.resize(self.parent.width(), new_height)
+                self.start = event.globalPos()
+        elif self.resize_edge == 'bottom':
+            diff = event.globalPos() - self.start
+            new_height = self.parent.height() + diff.y()
             if new_height > self.parent.minimumHeight():
                 self.parent.resize(self.parent.width(), new_height)
                 self.start = event.globalPos()
