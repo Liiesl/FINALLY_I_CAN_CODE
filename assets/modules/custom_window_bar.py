@@ -75,7 +75,7 @@ class CustomWindowBar(QWidget):
 
         # Add the "add tab" button directly to the right of the tabs
         self.new_tab_button = QPushButton('+')
-        self.new_tab_button.setFixedSize(100, 100)
+        self.new_tab_button.setFixedSize(50, 50)
         self.new_tab_button.clicked.connect(lambda: self.add_tab("Subtl"))  # Change tab name to "Subtl"
 
         # Set the "+" button style
