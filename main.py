@@ -81,7 +81,6 @@ class MainWindow(QMainWindow):
         new_main_content.setLayout(new_main_content_layout)
 
         # Initialize top_bar and menu_button for the new tab
-        self.top_bar = QHBoxLayout()
         self.top_bar_added = False
     
         # Add the side panel and main content to the splitter
@@ -98,6 +97,7 @@ class MainWindow(QMainWindow):
     
     def replicate_main_menu(self, layout):
         # Use the new method to create the main menu layout
+        self.top_bar_added = False
         self.main_menu(layout)
 
     def remove_tab_content(self, index):
