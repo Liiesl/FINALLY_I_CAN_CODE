@@ -1,5 +1,5 @@
-from PyQt5.QtWidgets import QWidget, QHBoxLayout, QPushButton, QTabBar, QApplication, QSpacerItem, QSizePolicy
-from PyQt5.QtCore import Qt, QPoint, QEvent
+from PyQt5.QtWidgets import QWidget, QHBoxLayout, QPushButton, QTabBar, QApplication, QSpacerItem, QSizePolicy, QLabel
+from PyQt5.QtCore import Qt, QPoint
 from PyQt5.QtGui import QPalette, QColor, QCursor
 
 class CustomTabBar(QTabBar):
@@ -71,6 +71,11 @@ class CustomWindowBar(QWidget):
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.layout.setSpacing(0)  # Remove spacing between widgets
         self.setLayout(self.layout)
+
+        # Add a title label (optional)
+        self.title = QLabel("Custom Window")
+        self.title.setStyleSheet(f"color: {self.button_text_color}; font-size: 16px;")
+        self.layout.addWidget(self.title)
 
         self.create_tab_bar()
         self.create_buttons()
@@ -181,26 +186,34 @@ class CustomWindowBar(QWidget):
         """)
         self.layout.addWidget(self.close_button)
 
+    def resizeEvent(self, event):
+        # Handle resize events
+        super().resizeEvent(event)
+        # Adjust the title width to match the parent window width
+        self.title.setFixedWidth(self.parent.width())
+
     def mousePressEvent(self, event):
+        # Start moving the window
         if event.button() == Qt.LeftButton:
-            self.start = event.globalPos()
+            self.start = self.mapToGlobal(event.pos())
             self.pressing = True
 
     def mouseMoveEvent(self, event):
-        if event.buttons() == Qt.LeftButton and self.pressing:
-            # Move the window
-            diff = event.globalPos() - self.start
-            self.parent.move(self.parent.pos() + diff)
-            self.start = event.globalPos()
+        # Move the window
+        if self.pressing:
+            self.end = self.mapToGlobal(event.pos())
+            self.movement = self.end - self.start
+            self.parent.setGeometry(
+                self.mapToGlobal(self.movement).x(),
+                self.mapToGlobal(self.movement).y(),
+                self.parent.width(),
+                self.parent.height()
+            )
+            self.start = self.end
 
     def mouseReleaseEvent(self, event):
+        # Stop moving the window
         self.pressing = False
-
-    def resizeEvent(self, event):
-        # Handle resize events here
-        super().resizeEvent(event)
-        # You can add custom logic here if needed, such as adjusting child widgets
-        print(f"Window resized to: {self.parent.size()}")
 
     def add_tab(self, title):
         self.tab_bar.addTab(title)
