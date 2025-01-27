@@ -31,6 +31,7 @@ class MainWindow(QMainWindow):
     def init_ui(self):
         self.setWindowTitle("SRT Editor")
         self.setGeometry(100, 100, 1200, 800)
+        self.edge_threshold = 10
         self.setWindowFlags(Qt.FramelessWindowHint)
         self.setStyleSheet("background-color: {background_color};")
 
