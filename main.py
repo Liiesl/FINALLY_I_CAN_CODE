@@ -99,7 +99,7 @@ class MainWindow(QMainWindow):
             self.setCursor(Qt.SizeFDiagCursor)
             return 'top-left'
         elif pos.x() >= rect.width() - handle_size and pos.y() <= handle_size:
-            self.setCursor(Qt.SizeBDiagCursor
+            self.setCursor(Qt.SizeBDiagCursor)
             return 'top-right'
         elif pos.x() <= handle_size and pos.y() >= rect.height() - handle_size:
             self.setCursor(Qt.SizeBDiagCursor)
