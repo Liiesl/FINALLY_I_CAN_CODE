@@ -86,7 +86,7 @@ class MainWindow(QMainWindow):
             else:
                 self.move_window(event)
         else:
-            self.update_cursor_shape(event.pos()
+            self.update_cursor_shape(event.pos())
 
     def mouseReleaseEvent(self, event):
         if event.button() == Qt.LeftButton:
