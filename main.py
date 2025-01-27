@@ -88,6 +88,7 @@ class MainWindow(QMainWindow):
             else:
                 self.move_window(event)
         else:
+            print("sending cursor shape")
             self.update_cursor_shape(event.pos())
 
     def mouseReleaseEvent(self, event):
