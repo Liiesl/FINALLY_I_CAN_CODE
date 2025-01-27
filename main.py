@@ -83,7 +83,7 @@ class MainWindow(QMainWindow):
             self.resize_edge = self.get_resize_edge(event.pos())
 
     def mouseMoveEvent(self, event):
-        if self.pressing:
+        if self.pressing = True:
             if self.resize_edge:
                 self.resize_window(event)
             else:
