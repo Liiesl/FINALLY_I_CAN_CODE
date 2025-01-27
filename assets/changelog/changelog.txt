@@ -122,3 +122,8 @@ alpha 0.1.5.2
 -fix bugs caused by light theme
 -improve merge srt's ui
 -improve subtitle converter's ui
+
+alpha 0.1.6.0
+-the new custom window is finnaly here!
+-add tab function
+-note : the new tab function is somewhat unstable so please bear with me.s
