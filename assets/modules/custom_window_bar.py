@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QWidget, QHBoxLayout, QPushButton, QTabBar, QApplication, QSpacerItem, QSizePolicy, QLabel
+from PyQt5.QtWidgets import QWidget, QHBoxLayout, QPushButton, QTabBar, QApplication, QSpacerItem, QSizePolicy
 from PyQt5.QtCore import Qt, QPoint
 from PyQt5.QtGui import QPalette, QColor, QCursor
 
@@ -10,7 +10,9 @@ class CustomTabBar(QTabBar):
 
     def addTab(self, text):
         index = super().addTab(text)
-        self.setTabButton(index, QTabBar.RightSide, self.create_close_button(index))
+        # Add a close button to all tabs except the first one
+        if index != 0:
+            self.setTabButton(index, QTabBar.RightSide, self.create_close_button(index))
         return index
 
     def create_close_button(self, index):
