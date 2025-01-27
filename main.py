@@ -17,6 +17,7 @@ class MainWindow(QMainWindow):
         self.app = app
         self.tab_contents = QStackedWidget()
         self.setMouseTracking(True)
+        self.label = QLabel("Click in this window")
         self.label.setMouseTracking(True)
         self.init_ui()
         
