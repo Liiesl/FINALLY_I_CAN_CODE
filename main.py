@@ -32,6 +32,9 @@ class MainWindow(QMainWindow):
         self.setStyleSheet("background-color: {background_color};")
 
         self.setMouseTracking(True)
+        
+        self.label = QLabel("Mouse coordinates", parent)
+        self.label.setMouseTracking(True)
 
         QFontDatabase.addApplicationFont("assets/fonts/Inter-Regular.otf")
         QFontDatabase.addApplicationFont("assets/fonts/Inter-ExtraBold.otf")
@@ -157,6 +160,7 @@ class MainWindow(QMainWindow):
             self.setCursor(Qt.SizeBDiagCursor)
         else:
             self.setCursor(Qt.ArrowCursor)
+        self.update()
 
     def move_window(self, event):
         global_pos = self.mapToGlobal(event.pos())
