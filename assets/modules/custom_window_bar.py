@@ -183,133 +183,6 @@ class CustomWindowBar(QWidget):
         """)
         self.layout.addWidget(self.close_button)
 
-    def mousePressEvent(self, event):
-        if event.button() == Qt.LeftButton:
-            self.start = event.globalPos()
-            self.pressing = True
-            self.resize_edge = self.get_resize_edge(event.globalPos())
-
-    def mouseMoveEvent(self, event):
-        if self.pressing and self.resize_edge:
-            self.resize_window(event)
-        elif event.buttons() == Qt.LeftButton and self.pressing:
-            # Move the window
-            diff = event.globalPos() - self.start
-            self.parent.move(self.parent.pos() + diff)
-            self.start = event.globalPos()
-        else:
-            # Change cursor when near the edges or corners of the window
-            self.update_cursor(event.globalPos())
-
-    def mouseReleaseEvent(self, event):
-        self.pressing = False
-        self.resize_edge = None
-        self.setCursor(Qt.ArrowCursor)
-
-    def enterEvent(self, event):
-        # Update cursor when the mouse enters the widget
-        self.update_cursor(QCursor.pos())  # Use global mouse position
-
-    def leaveEvent(self, event):
-        # Reset cursor when the mouse leaves the widget
-        self.setCursor(Qt.ArrowCursor)
-
-    def update_cursor(self, global_pos):
-        # Change cursor based on the mouse position relative to the window's absolute edges
-        edge = self.get_resize_edge(global_pos)
-        if edge == 'left' or edge == 'right':
-            self.setCursor(Qt.SizeHorCursor)
-        elif edge == 'top' or edge == 'bottom':
-            self.setCursor(Qt.SizeVerCursor)
-        elif edge == 'top-left' or edge == 'bottom-right':
-            self.setCursor(Qt.SizeFDiagCursor)
-        elif edge == 'top-right' or edge == 'bottom-left':
-            self.setCursor(Qt.SizeBDiagCursor)
-        else:
-            self.setCursor(Qt.ArrowCursor)
-
-    def get_resize_edge(self, global_pos):
-        # Get the parent window's geometry
-        window_rect = self.parent.geometry()
-
-        # Check if the mouse is near the edges or corners of the window
-        if (global_pos.x() <= window_rect.left() + self.resize_handle_size and
-            global_pos.y() <= window_rect.top() + self.resize_handle_size):
-            return 'top-left'
-        elif (global_pos.x() >= window_rect.right() - self.resize_handle_size and
-              global_pos.y() <= window_rect.top() + self.resize_handle_size):
-            return 'top-right'
-        elif (global_pos.x() <= window_rect.left() + self.resize_handle_size and
-              global_pos.y() >= window_rect.bottom() - self.resize_handle_size):
-            return 'bottom-left'
-        elif (global_pos.x() >= window_rect.right() - self.resize_handle_size and
-              global_pos.y() >= window_rect.bottom() - self.resize_handle_size):
-            return 'bottom-right'
-        elif global_pos.x() <= window_rect.left() + self.resize_handle_size:
-            return 'left'
-        elif global_pos.x() >= window_rect.right() - self.resize_handle_size:
-            return 'right'
-        elif global_pos.y() <= window_rect.top() + self.resize_handle_size:
-            return 'top'
-        elif global_pos.y() >= window_rect.bottom() - self.resize_handle_size:
-            return 'bottom'
-        else:
-            return None
-
-    def resize_window(self, event):
-        if self.resize_edge == 'left':
-            diff = event.globalPos() - self.start
-            new_width = self.parent.width() - diff.x()
-            if new_width > self.parent.minimumWidth():
-                self.parent.resize(new_width, self.parent.height())
-                self.start = event.globalPos()
-        elif self.resize_edge == 'right':
-            diff = event.globalPos() - self.start
-            new_width = self.parent.width() + diff.x()
-            if new_width > self.parent.minimumWidth():
-                self.parent.resize(new_width, self.parent.height())
-                self.start = event.globalPos()
-        elif self.resize_edge == 'top':
-            diff = event.globalPos() - self.start
-            new_height = self.parent.height() - diff.y()
-            if new_height > self.parent.minimumHeight():
-                self.parent.resize(self.parent.width(), new_height)
-                self.start = event.globalPos()
-        elif self.resize_edge == 'bottom':
-            diff = event.globalPos() - self.start
-            new_height = self.parent.height() + diff.y()
-            if new_height > self.parent.minimumHeight():
-                self.parent.resize(self.parent.width(), new_height)
-                self.start = event.globalPos()
-        elif self.resize_edge == 'top-left':
-            diff = event.globalPos() - self.start
-            new_width = self.parent.width() - diff.x()
-            new_height = self.parent.height() - diff.y()
-            if new_width > self.parent.minimumWidth() and new_height > self.parent.minimumHeight():
-                self.parent.resize(new_width, new_height)
-                self.start = event.globalPos()
-        elif self.resize_edge == 'top-right':
-            diff = event.globalPos() - self.start
-            new_width = self.parent.width() + diff.x()
-            new_height = self.parent.height() - diff.y()
-            if new_width > self.parent.minimumWidth() and new_height > self.parent.minimumHeight():
-                self.parent.resize(new_width, new_height)
-                self.start = event.globalPos()
-        elif self.resize_edge == 'bottom-left':
-            diff = event.globalPos() - self.start
-            new_width = self.parent.width() - diff.x()
-            new_height = self.parent.height() + diff.y()
-            if new_width > self.parent.minimumWidth() and new_height > self.parent.minimumHeight():
-                self.parent.resize(new_width, new_height)
-                self.start = event.globalPos()
-        elif self.resize_edge == 'bottom-right':
-            diff = event.globalPos() - self.start
-            new_width = self.parent.width() + diff.x()
-            new_height = self.parent.height() + diff.y()
-            if new_width > self.parent.minimumWidth() and new_height > self.parent.minimumHeight():
-                self.parent.resize(new_width, new_height)
-                self.start = event.globalPos()
-
     def add_tab(self, title):
         self.tab_bar.addTab(title)
         self.tab_bar.setCurrentIndex(self.tab_bar.count() - 1)
@@ -332,3 +205,15 @@ class CustomWindowBar(QWidget):
             self.parent.showNormal()
         else:
             self.parent.showMaximized()
+
+    def mousePressEvent(self, event):
+        if event.button() == Qt.LeftButton:
+            self.pressing = True
+            self.start = self.mapToGlobal(event.pos())
+            self.resize_edge = self.get_resize_edge(event.pos())
+
+    def move_window(self, event):
+        global_pos = self.mapToGlobal(event.pos())
+        delta = global_pos - self.start
+        self.start = global_pos
+        self.parent.move(self.parent.pos() + delta)
