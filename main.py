@@ -107,7 +107,7 @@ class MainWindow(QMainWindow):
             self.setCursor(Qt.SizeVerCursor)  # Top or bottom edge
         else:
             self.setCursor(Qt.ArrowCursor)  # Default cursor
-)
+            
         if self.pressing:
             if self.resize_edge:
                 self.resize_window(event)
