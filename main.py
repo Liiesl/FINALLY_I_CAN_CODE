@@ -93,6 +93,7 @@ class MainWindow(QMainWindow):
         if event.button() == Qt.LeftButton:
             self.pressing = False
             self.resize_edge = None
+        self.update_cursor_shape(event.pos())
 
     def get_resize_edge(self, pos):
         rect = self.rect()
