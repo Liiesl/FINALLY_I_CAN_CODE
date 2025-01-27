@@ -16,6 +16,7 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.app = app
         self.tab_contents = QStackedWidget()
+        self.setMouseTracking(True)
         self.init_ui()
         
         self.resize_edge = None  # Tracks which edge is being resized
@@ -30,11 +31,6 @@ class MainWindow(QMainWindow):
         self.setGeometry(100, 100, 1200, 800)
         self.setWindowFlags(Qt.FramelessWindowHint)
         self.setStyleSheet("background-color: {background_color};")
-
-        self.setMouseTracking(True)
-        
-        self.label = QLabel("Mouse coordinates", self)
-        self.label.setMouseTracking(True)
 
         QFontDatabase.addApplicationFont("assets/fonts/Inter-Regular.otf")
         QFontDatabase.addApplicationFont("assets/fonts/Inter-ExtraBold.otf")
@@ -102,6 +98,7 @@ class MainWindow(QMainWindow):
                 self.setCursor(Qt.SizeBDiagCursor)
             else:
                 self.setCursor(Qt.ArrowCursor)
+            self.update()
 
     def mouseReleaseEvent(self, event):
         if event.button() == Qt.LeftButton:
