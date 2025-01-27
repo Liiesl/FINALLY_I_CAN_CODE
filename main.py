@@ -2,7 +2,7 @@ import sys
 import qtawesome as qta
 from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QLabel, QScrollArea, QMessageBox, QSplitter, QFrame, QStackedWidget
 from PyQt5.QtGui import QPalette, QColor, QFont, QFontDatabase
-from PyQt5.QtCore import Qt, QPropertyAnimation
+from PyQt5.QtCore import Qt, QPropertyAnimation, QPoint
 
 from tools.subtitle_converter import SubtitleConverter
 from tools.subtitle_shifter import SubtitleShifter
@@ -17,11 +17,18 @@ class MainWindow(QMainWindow):
         self.app = app
         self.tab_contents = QStackedWidget()
         self.init_ui()
+        
+        self.resize_edge = None  # Tracks which edge is being resized
+        self.resize_handle_size = 5  # Size of the resize handle (smaller for better sensitivity)
+        self.pressing = False  # Tracks if the mouse is pressed
+        self.start = QPoint(0, 0)  # Tracks the initial mouse position
+
+
 
     def init_ui(self):
         self.setWindowTitle("SRT Editor")
         self.setGeometry(100, 100, 1200, 800)
-        self.setWindowFlags(Qt.FramelessWindowHint)  # Remove native window bar
+        self.setWindowFlags(Qt.FramelessWindowHint)
         self.setStyleSheet("background-color: {background_color};")
 
         QFontDatabase.addApplicationFont("assets/fonts/Inter-Regular.otf")
@@ -65,6 +72,92 @@ class MainWindow(QMainWindow):
         self.create_new_tab_content()
 
         self.apply_theme()
+
+    def mousePressEvent(self, event):
+        if event.button() == Qt.LeftButton:
+            self.pressing = True
+            self.start = self.mapToGlobal(event.pos())
+            self.resize_edge = self.get_resize_edge(event.pos())
+
+    def mouseMoveEvent(self, event):
+        if self.pressing:
+            if self.resize_edge:
+                self.resize_window(event)
+            else:
+                self.move_window(event)
+
+    def mouseReleaseEvent(self, event):
+        if event.button() == Qt.LeftButton:
+            self.pressing = False
+            self.resize_edge = None
+
+    def get_resize_edge(self, pos):
+        rect = self.rect()
+        handle_size = self.resize_handle_size
+
+        if pos.x() <= handle_size and pos.y() <= handle_size:
+            return 'top-left'
+        elif pos.x() >= rect.width() - handle_size and pos.y() <= handle_size:
+            return 'top-right'
+        elif pos.x() <= handle_size and pos.y() >= rect.height() - handle_size:
+            return 'bottom-left'
+        elif pos.x() >= rect.width() - handle_size and pos.y() >= rect.height() - handle_size:
+            return 'bottom-right'
+        elif pos.x() <= self.resize_handle_size:
+            return 'left'
+        elif pos.x() >= rect.width() - self.resize_handle_size:
+            return 'right'
+        elif pos.y() <= self.resize_handle_size:
+            return 'top'
+        elif pos.y() >= rect.height() - self.resize_handle_size:
+            return 'bottom'
+        return None
+
+    def resize_window(self, event):
+        global_pos = self.mapToGlobal(event.pos())
+        delta = global_pos - self.start
+        self.start = global_pos
+
+        geometry = self.geometry()
+        if self.resize_edge == 'left':
+            geometry.setLeft(geometry.left() + delta.x())
+        elif self.resize_edge == 'right':
+            geometry.setRight(geometry.right() + delta.x())
+        elif self.resize_edge == 'top':
+            geometry.setTop(geometry.top() + delta.y())
+        elif self.resize_edge == 'bottom':
+            geometry.setBottom(geometry.bottom() + delta.y())
+        elif self.resize_edge == 'top-left':
+            geometry.setTopLeft(geometry.topLeft() + delta)
+        elif self.resize_edge == 'top-right':
+            geometry.setTopRight(geometry.topRight() + delta)
+        elif self.resize_edge == 'bottom-left':
+            geometry.setBottomLeft(geometry.bottomLeft() + delta)
+        elif self.resize_edge == 'bottom-right':
+            geometry.setBottomRight(geometry.bottomRight() + delta)
+
+
+        self.setGeometry(geometry)
+
+    def update_cursor_shape(self, pos):
+        edge = self.get_resize_edge(pos)
+        if edge in ('left', 'right'):
+            self.setCursor(Qt.SizeHorCursor)
+        elif edge in ('top', 'bottom'):
+            self.setCursor(Qt.SizeVerCursor)
+        elif edge in ('top-left', 'bottom-right'):
+            self.setCursor(Qt.SizeFDiagCursor)
+        elif edge in ('top-right', 'bottom-left'):
+            self.setCursor(Qt.SizeBDiagCursor)
+        else:
+            self.setCursor(Qt.ArrowCursor)
+
+    def move_window(self, event):
+        global_pos = self.mapToGlobal(event.pos())
+        delta = global_pos - self.start
+        self.start = global_pos
+        self.move(self.pos() + delta)
+
 
     def create_new_tab_content(self):
         # Create a new splitter for the tab
