@@ -79,7 +79,6 @@ class MainWindow(QMainWindow):
             self.pressing = True
             self.start = self.mapToGlobal(event.pos())
             self.resize_edge = self.get_resize_edge(event.pos())
-        self.update_cursor_shape(event.pos())
 
     def mouseMoveEvent(self, event):
         if self.pressing:
@@ -87,13 +86,23 @@ class MainWindow(QMainWindow):
                 self.resize_window(event)
             else:
                 self.move_window(event)
-        self.update_cursor_shape(event.pos())
+        edge = self.get_resize_edge(pos)
+        if edge in ('left', 'right'):
+            self.setCursor(Qt.SizeHorCursor)
+        elif edge in ('top', 'bottom'):
+            self.setCursor(Qt.SizeVerCursor)
+        elif edge in ('top-left', 'bottom-right'):
+            self.setCursor(Qt.SizeFDiagCursor)
+        elif edge in ('top-right', 'bottom-left'):
+            self.setCursor(Qt.SizeBDiagCursor)
+        else:
+            self.setCursor(Qt.ArrowCursor)
+        self.update()
 
     def mouseReleaseEvent(self, event):
         if event.button() == Qt.LeftButton:
             self.pressing = False
             self.resize_edge = None
-        self.update_cursor_shape(event.pos())
 
     def get_resize_edge(self, pos):
         rect = self.rect()
