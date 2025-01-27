@@ -91,8 +91,17 @@ class MainWindow(QMainWindow):
             else:
                 self.move_window(event)
         else:
-            print("sending cursor shape")
-            self.update_cursor_shape(event.pos())
+            edge = self.get_resize_edge(pos)
+            if edge in ('left', 'right'):
+                self.setCursor(Qt.SizeHorCursor)
+            elif edge in ('top', 'bottom'):
+                self.setCursor(Qt.SizeVerCursor)
+            elif edge in ('top-left', 'bottom-right'):
+                self.setCursor(Qt.SizeFDiagCursor)
+            elif edge in ('top-right', 'bottom-left'):
+                self.setCursor(Qt.SizeBDiagCursor)
+            else:
+                self.setCursor(Qt.ArrowCursor)
 
     def mouseReleaseEvent(self, event):
         if event.button() == Qt.LeftButton:
