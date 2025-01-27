@@ -7,6 +7,7 @@ class CustomTabBar(QTabBar):
         super().__init__(parent)
         self.setMovable(True)
         self.setTabsClosable(False)  # Disable default close button
+        self.parent = parent  # Reference to the parent window
 
     def addTab(self, text):
         index = super().addTab(text)
@@ -37,6 +38,23 @@ class CustomTabBar(QTabBar):
         if index == 0 and button_type == QTabBar.RightSide:
             return None
         return super().tabButton(index, button_type)
+
+    def add_tab(self, title):
+        index = self.addTab(title)
+        self.setCurrentIndex(self.count() - 1)
+        self.parent.create_new_tab_content()
+
+    def close_tab(self, index):
+        # Prevent closing the first tab
+        if index == 0:
+            return
+        self.removeTab(index)
+        self.parent.remove_tab_content(index)
+        if self.count() == 0:
+            self.add_tab("Subtl")  # Ensure at least one tab exists
+
+    def change_tab(self, index):
+        self.parent.display_tab_content(index)
 
 class CustomWindowBar(QWidget):
     def __init__(self, parent=None, app=None):
@@ -77,16 +95,16 @@ class CustomWindowBar(QWidget):
         self.create_buttons()
 
         # Add the first tab but hide it
-        self.add_tab("Hidden Tab")
+        self.tab_bar.add_tab("Hidden Tab")
         self.tab_bar.setTabVisible(0, False)  # Hide the first tab
 
         # Create a new tab and make it visible
-        self.add_tab("Subtl")  # This will be the visible tab
+        self.tab_bar.add_tab("Subtl")  # This will be the visible tab
 
     def create_tab_bar(self):
         self.tab_bar = CustomTabBar(self)  # Use the custom tab bar
-        self.tab_bar.tabCloseRequested.connect(self.close_tab)
-        self.tab_bar.currentChanged.connect(self.change_tab)
+        self.tab_bar.tabCloseRequested.connect(self.tab_bar.close_tab)
+        self.tab_bar.currentChanged.connect(self.tab_bar.change_tab)
 
         # Set the tab bar style
         self.tab_bar.setStyleSheet(f"""
@@ -107,7 +125,7 @@ class CustomWindowBar(QWidget):
         # Add the "add tab" button directly to the right of the tabs
         self.new_tab_button = QPushButton('+')
         self.new_tab_button.setFixedSize(50, 50)
-        self.new_tab_button.clicked.connect(lambda: self.add_tab("Subtl"))  # Change tab name to "Subtl"
+        self.new_tab_button.clicked.connect(lambda: self.tab_bar.add_tab("Subtl"))  # Change tab name to "Subtl"
 
         # Set the "+" button style
         self.new_tab_button.setStyleSheet(f"""
@@ -308,23 +326,6 @@ class CustomWindowBar(QWidget):
             if new_width > self.parent.minimumWidth() and new_height > self.parent.minimumHeight():
                 self.parent.resize(new_width, new_height)
                 self.start = event.globalPos()
-
-    def add_tab(self, title):
-        self.tab_bar.addTab(title)
-        self.tab_bar.setCurrentIndex(self.tab_bar.count() - 1)
-        self.parent.create_new_tab_content()
-
-    def close_tab(self, index):
-        # Prevent closing the first tab
-        if index == 0:
-            return
-        self.tab_bar.removeTab(index)
-        self.parent.remove_tab_content(index)
-        if self.tab_bar.count() == 0:
-            self.add_tab("Subtl")  # Ensure at least one tab exists
-
-    def change_tab(self, index):
-        self.parent.display_tab_content(index)
 
     def toggle_maximize_restore(self):
         if self.parent.isMaximized():
