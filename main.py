@@ -143,19 +143,19 @@ class MainWindow(QMainWindow):
         self.setGeometry(geometry)
 
     def update_cursor_shape(self, pos):
-        print:("changing the cursor")
-        if self.resize_edge == 'left', 'right'
+        edge = self.get_resize_edge(pos)
+        if edge in ('left', 'right'):
             self.setCursor(Qt.SizeHorCursor)
-        elif self.resize_edge == 'top', 'bottom'
+        elif edge in ('top', 'bottom'):
             self.setCursor(Qt.SizeVerCursor)
-        elif self.resize_edge == 'top-left', 'bottom-right'
+        elif edge in ('top-left', 'bottom-right'):
             self.setCursor(Qt.SizeFDiagCursor)
-        elif self.resize_edge == 'top-right', 'bottom-left'
+        elif edge in ('top-right', 'bottom-left'):
             self.setCursor(Qt.SizeBDiagCursor)
         else:
             self.setCursor(Qt.ArrowCursor)
         self.update()
-
+        
     def move_window(self, event):
         global_pos = self.mapToGlobal(event.pos())
         delta = global_pos - self.start
