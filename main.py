@@ -33,7 +33,7 @@ class MainWindow(QMainWindow):
 
         self.setMouseTracking(True)
         
-        self.label = QLabel("Mouse coordinates", parent)
+        self.label = QLabel("Mouse coordinates", self)
         self.label.setMouseTracking(True)
 
         QFontDatabase.addApplicationFont("assets/fonts/Inter-Regular.otf")
