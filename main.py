@@ -71,9 +71,6 @@ class MainWindow(QMainWindow):
         
         self.create_new_tab_content()
 
-        self.setMouseTracking(True)
-        self.label = QLabel("Mouse coordinates")
-
         self.apply_theme()
 
     def mousePressEvent(self, event):
