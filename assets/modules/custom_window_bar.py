@@ -205,15 +205,3 @@ class CustomWindowBar(QWidget):
             self.parent.showNormal()
         else:
             self.parent.showMaximized()
-
-    def mousePressEvent(self, event):
-        if event.button() == Qt.LeftButton:
-            self.pressing = True
-            self.start = self.mapToGlobal(event.pos())
-            self.resize_edge = self.get_resize_edge(event.pos())
-
-    def move_window(self, event):
-        global_pos = self.mapToGlobal(event.pos())
-        delta = global_pos - self.start
-        self.start = global_pos
-        self.parent.move(self.parent.pos() + delta)
