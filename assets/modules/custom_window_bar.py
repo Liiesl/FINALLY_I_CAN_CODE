@@ -2,6 +2,43 @@ from PyQt5.QtWidgets import QWidget, QHBoxLayout, QPushButton, QTabBar, QApplica
 from PyQt5.QtCore import Qt, QPoint
 from PyQt5.QtGui import QPalette, QColor, QCursor
 
+class CustomTabBar(QTabBar):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setMovable(True)
+        self.setTabsClosable(False)  # Disable default close button
+
+    def addTab(self, text):
+        index = super().addTab(text)
+        # Add a close button to all tabs except the first one
+        if index != 0:
+            self.setTabButton(index, QTabBar.RightSide, self.create_close_button(index))
+        return index
+
+    def create_close_button(self, index):
+        close_button = QPushButton('✖')
+        close_button.setFixedSize(20, 20)
+        close_button.clicked.connect(lambda: self.tabCloseRequested.emit(index))
+        close_button.setStyleSheet("""
+            QPushButton {
+                color: black;
+                background: transparent;
+                border: none;
+                font-size: 12px;
+            }
+            QPushButton:hover {
+                background: rgba(255, 0, 0, 0.5);
+            }
+        """)
+        return close_button
+
+    def tabButton(self, index, button_type):
+        # Override to remove the close button for the first tab
+        if index == 0 and button_type == QTabBar.RightSide:
+            return None
+        return super().tabButton(index, button_type)
+
+
 class CustomWindowBar(QWidget):
     def __init__(self, parent=None, app=None):
         super().__init__(parent)
@@ -295,39 +332,3 @@ class CustomWindowBar(QWidget):
             self.parent.showNormal()
         else:
             self.parent.showMaximized()
-
-class CustomTabBar(QTabBar):
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.setMovable(True)
-        self.setTabsClosable(False)  # Disable default close button
-
-    def addTab(self, text):
-        index = super().addTab(text)
-        # Add a close button to all tabs except the first one
-        if index != 0:
-            self.setTabButton(index, QTabBar.RightSide, self.create_close_button(index))
-        return index
-
-    def create_close_button(self, index):
-        close_button = QPushButton('✖')
-        close_button.setFixedSize(20, 20)
-        close_button.clicked.connect(lambda: self.tabCloseRequested.emit(index))
-        close_button.setStyleSheet("""
-            QPushButton {
-                color: black;
-                background: transparent;
-                border: none;
-                font-size: 12px;
-            }
-            QPushButton:hover {
-                background: rgba(255, 0, 0, 0.5);
-            }
-        """)
-        return close_button
-
-    def tabButton(self, index, button_type):
-        # Override to remove the close button for the first tab
-        if index == 0 and button_type == QTabBar.RightSide:
-            return None
-        return super().tabButton(index, button_type)
