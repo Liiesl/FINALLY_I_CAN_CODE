@@ -83,36 +83,36 @@ class MainWindow(QMainWindow):
             self.resize_edge = self.get_resize_edge(event.pos())
 
     def mouseMoveEvent(self, event):
-        mouse_pos = event.pos()
-        width, height = self.width(), self.height()
-
-        # Check if the mouse is near the edges
-        near_left = mouse_pos.x() <= self.edge_threshold
-        near_right = mouse_pos.x() >= width - self.edge_threshold
-        near_top = mouse_pos.y() <= self.edge_threshold
-        near_bottom = mouse_pos.y() >= height - self.edge_threshold
-
-        # Change the cursor based on the edge
-        if near_left and near_top:
-            self.setCursor(Qt.SizeFDiagCursor)  # Top-left corner
-        elif near_right and near_top:
-            self.setCursor(Qt.SizeBDiagCursor)  # Top-right corner
-        elif near_left and near_bottom:
-            self.setCursor(Qt.SizeBDiagCursor)  # Bottom-left corner
-        elif near_right and near_bottom:
-            self.setCursor(Qt.SizeFDiagCursor)  # Bottom-right corner
-        elif near_left or near_right:
-            self.setCursor(Qt.SizeHorCursor)  # Left or right edge
-        elif near_top or near_bottom:
-            self.setCursor(Qt.SizeVerCursor)  # Top or bottom edge
-        else:
-            self.setCursor(Qt.ArrowCursor)  # Default cursor
-            
         if self.pressing:
             if self.resize_edge:
                 self.resize_window(event)
             else:
                 self.move_window(event)
+        else:
+            mouse_pos = event.pos()
+            width, height = self.width(), self.height()
+    
+            # Check if the mouse is near the edges
+            near_left = mouse_pos.x() <= self.edge_threshold
+            near_right = mouse_pos.x() >= width - self.edge_threshold
+            near_top = mouse_pos.y() <= self.edge_threshold
+            near_bottom = mouse_pos.y() >= height - self.edge_threshold
+    
+            # Change the cursor based on the edge
+            if near_left and near_top:
+                self.setCursor(Qt.SizeFDiagCursor)  # Top-left corner
+            elif near_right and near_top:
+                self.setCursor(Qt.SizeBDiagCursor)  # Top-right corner
+            elif near_left and near_bottom:
+                self.setCursor(Qt.SizeBDiagCursor)  # Bottom-left corner
+            elif near_right and near_bottom:
+                self.setCursor(Qt.SizeFDiagCursor)  # Bottom-right corner
+            elif near_left or near_right:
+                self.setCursor(Qt.SizeHorCursor)  # Left or right edge
+            elif near_top or near_bottom:
+                self.setCursor(Qt.SizeVerCursor)  # Top or bottom edge
+            else:
+                self.setCursor(Qt.ArrowCursor)  # Default cursor
 
     def mouseReleaseEvent(self, event):
         if event.button() == Qt.LeftButton:
