@@ -76,6 +76,13 @@ class CustomWindowBar(QWidget):
         self.create_tab_bar()
         self.create_buttons()
 
+        # Add the first tab but hide it
+        self.add_tab("Hidden Tab")
+        self.tab_bar.setTabVisible(0, False)  # Hide the first tab
+
+        # Create a new tab and make it visible
+        self.add_tab("Subtl")  # This will be the visible tab
+
     def create_tab_bar(self):
         self.tab_bar = CustomTabBar(self)  # Use the custom tab bar
         self.tab_bar.tabCloseRequested.connect(self.close_tab)
@@ -119,8 +126,6 @@ class CustomWindowBar(QWidget):
         # Add a spacer to leave space between the tabs and the window buttons
         self.spacer = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
         self.layout.addItem(self.spacer)
-
-        self.add_tab("Subtl")  # Change the first tab name to "Subtl"
 
     def create_buttons(self):
         self.min_button = QPushButton('-')
