@@ -145,6 +145,7 @@ class MainWindow(QMainWindow):
         self.setGeometry(geometry)
 
     def update_cursor_shape(self, pos):
+        print:("changing the cursor")
         edge = self.get_resize_edge(pos)
         if edge in ('left', 'right'):
             self.setCursor(Qt.SizeHorCursor)
