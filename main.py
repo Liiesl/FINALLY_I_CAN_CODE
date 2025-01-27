@@ -71,6 +71,8 @@ class MainWindow(QMainWindow):
         
         self.create_new_tab_content()
 
+        self.setMouseTracking(True)
+
         self.apply_theme()
 
     def mousePressEvent(self, event):
@@ -85,6 +87,8 @@ class MainWindow(QMainWindow):
                 self.resize_window(event)
             else:
                 self.move_window(event)
+            else:
+                self.update_cursor_shape(event.pos())
 
     def mouseReleaseEvent(self, event):
         if event.button() == Qt.LeftButton:
