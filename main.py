@@ -96,28 +96,20 @@ class MainWindow(QMainWindow):
         handle_size = self.resize_handle_size
 
         if pos.x() <= handle_size and pos.y() <= handle_size:
-            self.setCursor(Qt.SizeFDiagCursor)
             return 'top-left'
         elif pos.x() >= rect.width() - handle_size and pos.y() <= handle_size:
-            self.setCursor(Qt.SizeBDiagCursor)
             return 'top-right'
         elif pos.x() <= handle_size and pos.y() >= rect.height() - handle_size:
-            self.setCursor(Qt.SizeBDiagCursor)
             return 'bottom-left'
         elif pos.x() >= rect.width() - handle_size and pos.y() >= rect.height() - handle_size:
-            self.setCursor(Qt.SizeFDiagCursor)
             return 'bottom-right'
         elif pos.x() <= self.resize_handle_size:
-            self.setCursor(Qt.SizeHorCursor)
             return 'left'
         elif pos.x() >= rect.width() - self.resize_handle_size:
-            self.setCursor(Qt.SizeVerCursor)
             return 'right'
         elif pos.y() <= self.resize_handle_size:
-            self.setCursor(Qt.SizeVerCursor)
             return 'top'
         elif pos.y() >= rect.height() - self.resize_handle_size:
-            self.setCursor(Qt.ArrowCursor)
             return 'bottom'
         return None
 
