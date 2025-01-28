@@ -8,6 +8,14 @@ class CustomTabBar(QTabBar):
         super().__init__(parent)
         self.setMovable(True)
         self.setTabsClosable(False)  # Disable default close button
+        
+        self.palette = QApplication.instance().palette()
+        self.text_color = self.palette.color(QPalette.WindowText).name()
+        self.background_color = self.palette.color(QPalette.Window).name()
+        self.button_color = self.palette.color(QPalette.Button).name()
+        self.button_text_color = self.palette.color(QPalette.ButtonText).name()
+        self.highlight_color = self.palette.color(QPalette.Highlight).name()
+        self.hover_color = self.palette.color(QPalette.Highlight).darker().name()
 
     def addTab(self, text):
         index = super().addTab(text)
@@ -25,7 +33,7 @@ class CustomTabBar(QTabBar):
                 color: {self.text_color};
                 background: transparent;
                 border: none;
-                font-size: 12px;
+                font-size: 18px;
             }
             QPushButton:hover {
                 background: rgba(255, 0, 0, 0.5);
