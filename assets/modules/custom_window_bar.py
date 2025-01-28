@@ -50,7 +50,7 @@ class CustomWindowBar(QWidget):
         self.resize_edge = None  # Track which edge is being resized
         self.resize_handle_size = 5  # Size of the resize handle (smaller for better sensitivity)
 
-        palette = self.parent.palette()
+        palette = self.parent().palette()
         self.text_color = palette.color(QPalette.WindowText).name()
         self.background_color = palette.color(QPalette.Window).name()
         self.button_color = palette.color(QPalette.Button).name()
