@@ -49,6 +49,14 @@ class CustomWindowBar(QWidget):
         self.pressing = False  # Track if the mouse is pressed
         self.resize_edge = None  # Track which edge is being resized
         self.resize_handle_size = 5  # Size of the resize handle (smaller for better sensitivity)
+
+        palette = self.parent().palette()
+        self.text_color = palette.color(QPalette.WindowText).name()
+        self.background_color = palette.color(QPalette.Window).name()
+        self.button_color = palette.color(QPalette.Button).name()
+        self.button_text_color = palette.color(QPalette.ButtonText).name()
+        self.highlight_color = palette.color(QPalette.Highlight).name()
+        self.hover_color = palette.color(QPalette.Highlight).darker().name()
         
         self.init_ui()
 
@@ -67,14 +75,6 @@ class CustomWindowBar(QWidget):
         # Add the first tab but hide it
         self.add_tab("Hidden Tab")
         self.tab_bar.setTabVisible(0, False)  # Hide the first tab
-
-        palette = self.parent().palette()
-        self.text_color = palette.color(QPalette.WindowText).name()
-        self.background_color = palette.color(QPalette.Window).name()
-        self.button_color = palette.color(QPalette.Button).name()
-        self.button_text_color = palette.color(QPalette.ButtonText).name()
-        self.highlight_color = palette.color(QPalette.Highlight).name()
-        self.hover_color = palette.color(QPalette.Highlight).darker().name()
 
         # Create a new tab and make it visible
         self.add_tab("Subtl")  # This will be the visible tab
