@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import QWidget, QHBoxLayout, QPushButton, QTabBar, QApplica
 from PyQt5.QtCore import Qt, QPoint
 from PyQt5.QtGui import QPalette, QColor, QCursor
 import qtawesome as qta
+from MainWindow import MainWindow
 
 class CustomTabBar(QTabBar):
     def __init__(self, parent=None):
