@@ -22,7 +22,7 @@ class CustomTabBar(QTabBar):
         close_button.clicked.connect(lambda: self.tabCloseRequested.emit(index))
         close_button.setStyleSheet("""
             QPushButton {
-                color: black;
+                color: {self.text_color};
                 background: transparent;
                 border: none;
                 font-size: 12px;
@@ -97,7 +97,7 @@ class CustomWindowBar(QWidget):
                 margin: 0;          
                 border: none;      
                 background: {self.button_color};  /* Make the tab background transparent */
-                color: {self.button_text_color};  /* Use the button text color */
+                color: {self.text_color};  /* Use the button text color */
             }}
             QTabBar::tab:selected {{
                 background: {self.background_color};  /* Use the background color for the selected tab */
@@ -137,7 +137,7 @@ class CustomWindowBar(QWidget):
         # Set the minimize button style
         self.min_button.setStyleSheet(f"""
             QPushButton {{
-                color: {self.button_text_color};  /* Use the button text color */
+                color: {self.text_color};  /* Use the button text color */
                 background: transparent;  /* Make the background transparent */
                 border: none;  /* Remove border */
                 font-size: 40px;  /* Increase font size for better visibility */
@@ -155,7 +155,7 @@ class CustomWindowBar(QWidget):
         # Set the maximize button style
         self.max_button.setStyleSheet(f"""
             QPushButton {{
-                color: {self.button_text_color};  /* Use the button text color */
+                color: {self.text_color};  /* Use the button text color */
                 background: transparent;  /* Make the background transparent */
                 border: none;  /* Remove border */
                 font-size: 40px;  /* Increase font size for better visibility */
@@ -173,7 +173,7 @@ class CustomWindowBar(QWidget):
         # Set the close button style
         self.close_button.setStyleSheet(f"""
             QPushButton {{
-                color: {self.button_text_color};  
+                color: {self.text_color};  
                 background: transparent;  
                 border: none;  
                 font-size: 40px;  
