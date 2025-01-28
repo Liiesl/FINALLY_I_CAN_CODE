@@ -47,6 +47,8 @@ class MainWindow(QMainWindow):
         self.config = Config(source="MainWindow")
         self.main_menu_active = True
 
+        self.apply_theme()
+
         self.custom_window_bar = CustomWindowBar(self, self.app)
         self.layout.addWidget(self.custom_window_bar)
 
@@ -73,8 +75,6 @@ class MainWindow(QMainWindow):
         self.menu_button = None
         
         self.create_new_tab_content()
-
-        self.apply_theme()
 
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
