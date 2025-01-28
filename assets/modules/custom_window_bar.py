@@ -9,14 +9,6 @@ class CustomTabBar(QTabBar):
         self.setMovable(True)
         self.setTabsClosable(False)  # Disable default close button
         
-        palette = self.parent().palette()
-        self.text_color = self.palette.color(QPalette.WindowText).name()
-        self.background_color = self.palette.color(QPalette.Window).name()
-        self.button_color = self.palette.color(QPalette.Button).name()
-        self.button_text_color = self.palette.color(QPalette.ButtonText).name()
-        self.highlight_color = self.palette.color(QPalette.Highlight).name()
-        self.hover_color = self.palette.color(QPalette.Highlight).darker().name()
-
     def addTab(self, text):
         index = super().addTab(text)
         # Add a close button to all tabs except the first one
