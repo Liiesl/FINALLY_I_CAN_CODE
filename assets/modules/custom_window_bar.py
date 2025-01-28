@@ -9,7 +9,7 @@ class CustomTabBar(QTabBar):
         self.setMovable(True)
         self.setTabsClosable(False)  # Disable default close button
         
-        self.palette = QApplication.instance().palette()
+        palette = self.parent().palette()
         self.text_color = self.palette.color(QPalette.WindowText).name()
         self.background_color = self.palette.color(QPalette.Window).name()
         self.button_color = self.palette.color(QPalette.Button).name()
@@ -58,7 +58,7 @@ class CustomWindowBar(QWidget):
         self.resize_edge = None  # Track which edge is being resized
         self.resize_handle_size = 5  # Size of the resize handle (smaller for better sensitivity)
 
-        self.palette = QApplication.instance().palette()
+        palette = self.parent().palette()
         self.text_color = self.palette.color(QPalette.WindowText).name()
         self.background_color = self.palette.color(QPalette.Window).name()
         self.button_color = self.palette.color(QPalette.Button).name()
