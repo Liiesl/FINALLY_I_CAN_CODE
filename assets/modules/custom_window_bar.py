@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import QWidget, QHBoxLayout, QPushButton, QTabBar, QApplication, QSpacerItem, QSizePolicy
 from PyQt5.QtCore import Qt, QPoint
 from PyQt5.QtGui import QPalette, QColor, QCursor
+import qtawesome as qta
 
 class CustomTabBar(QTabBar):
     def __init__(self, parent=None):
@@ -16,7 +17,7 @@ class CustomTabBar(QTabBar):
         return index
 
     def create_close_button(self, index):
-        close_button = QPushButton('✖')
+        close_button = QPushButton(qta.icon('fa.close'), '')
         close_button.setFixedSize(20, 20)
         close_button.clicked.connect(lambda: self.tabCloseRequested.emit(index))
         close_button.setStyleSheet("""
@@ -106,7 +107,7 @@ class CustomWindowBar(QWidget):
         self.layout.addWidget(self.tab_bar)
 
         # Add the "add tab" button directly to the right of the tabs
-        self.new_tab_button = QPushButton('+')
+        self.new_tab_button = QPushButton(qta.icon('fa.plus'), '')
         self.new_tab_button.setFixedSize(50, 50)
         self.new_tab_button.clicked.connect(lambda: self.add_tab("Subtl"))  # Change tab name to "Subtl"
 
@@ -129,7 +130,7 @@ class CustomWindowBar(QWidget):
         self.layout.addItem(self.spacer)
 
     def create_buttons(self):
-        self.min_button = QPushButton('-')
+        self.min_button = QPushButton(qta.icon('fa.window-minimize'), '')
         self.min_button.setFixedSize(50, 50)
         self.min_button.clicked.connect(self.parent.showMinimized)
 
@@ -147,7 +148,7 @@ class CustomWindowBar(QWidget):
         """)
         self.layout.addWidget(self.min_button)
 
-        self.max_button = QPushButton('❏')
+        self.max_button = QPushButton(qta.icon('fa.window-maximize'), '')
         self.max_button.setFixedSize(50, 50)
         self.max_button.clicked.connect(self.toggle_maximize_restore)
 
@@ -165,7 +166,7 @@ class CustomWindowBar(QWidget):
         """)
         self.layout.addWidget(self.max_button)
 
-        self.close_button = QPushButton('✖')
+        self.close_button = QPushButton(qta.icon('fa.close'), '')
         self.close_button.setFixedSize(50, 50)
         self.close_button.clicked.connect(self.parent.close)
 
