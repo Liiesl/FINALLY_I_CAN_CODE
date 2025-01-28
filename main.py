@@ -76,6 +76,55 @@ class MainWindow(QMainWindow):
         
         self.create_new_tab_content()
 
+    def apply_theme(self):
+        self.config = Config(source="MainWindow")
+        theme = self.config.get_theme()
+        print(f"Applying theme: {theme}")
+        palette = QPalette()
+        if theme == "dark":
+            palette.setColor(QPalette.Window, QColor(44, 47, 56))
+            palette.setColor(QPalette.WindowText, Qt.white)
+            palette.setColor(QPalette.Base, QColor(44, 47, 56))
+            palette.setColor(QPalette.AlternateBase, QColor(66, 69, 79))
+            palette.setColor(QPalette.ToolTipBase, Qt.white)
+            palette.setColor(QPalette.ToolTipText, Qt.white)
+            palette.setColor(QPalette.Text, Qt.white)
+            palette.setColor(QPalette.Button, QColor(33, 35, 41))
+            palette.setColor(QPalette.ButtonText, Qt.white)
+            palette.setColor(QPalette.BrightText, Qt.red)
+            palette.setColor(QPalette.Highlight, QColor(75, 110, 175))
+            palette.setColor(QPalette.HighlightedText, Qt.white)
+        elif theme == "light":
+            palette.setColor(QPalette.Window, Qt.white)
+            palette.setColor(QPalette.WindowText, Qt.black)
+            palette.setColor(QPalette.Base, Qt.white)
+            palette.setColor(QPalette.AlternateBase, QColor(240, 240, 240))
+            palette.setColor(QPalette.ToolTipBase, Qt.black)
+            palette.setColor(QPalette.ToolTipText, Qt.black)
+            palette.setColor(QPalette.Text, Qt.black)
+            palette.setColor(QPalette.Button, QColor(220, 220, 220))
+            palette.setColor(QPalette.ButtonText, Qt.black)
+            palette.setColor(QPalette.BrightText, Qt.red)
+            palette.setColor(QPalette.Highlight, QColor(75, 110, 175))
+            palette.setColor(QPalette.HighlightedText, Qt.black)
+        else:
+            palette.setColor(QPalette.Window, QColor(44, 47, 56))
+            palette.setColor(QPalette.WindowText, Qt.white)
+            palette.setColor(QPalette.Base, QColor(44, 47, 56))
+            palette.setColor(QPalette.AlternateBase, QColor(66, 69, 79))
+            palette.setColor(QPalette.ToolTipBase, Qt.white)
+            palette.setColor(QPalette.ToolTipText, Qt.white)
+            palette.setColor(QPalette.Text, Qt.white)
+            palette.setColor(QPalette.Button, QColor(44, 47, 56))
+            palette.setColor(QPalette.ButtonText, Qt.white)
+            palette.setColor(QPalette.BrightText, Qt.red)
+            palette.setColor(QPalette.Highlight, QColor(75, 110, 175))
+            palette.setColor(QPalette.HighlightedText, Qt.white)
+
+        self.app.setPalette(palette)
+        self.setPalette(palette)
+        self.update()
+
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
             self.pressing = True
@@ -226,55 +275,6 @@ class MainWindow(QMainWindow):
 
     def display_tab_content(self, index):
         self.tab_contents.setCurrentIndex(index)
-
-    def apply_theme(self):
-        self.config = Config(source="MainWindow")
-        theme = self.config.get_theme()
-        print(f"Applying theme: {theme}")
-        palette = QPalette()
-        if theme == "dark":
-            palette.setColor(QPalette.Window, QColor(44, 47, 56))
-            palette.setColor(QPalette.WindowText, Qt.white)
-            palette.setColor(QPalette.Base, QColor(44, 47, 56))
-            palette.setColor(QPalette.AlternateBase, QColor(66, 69, 79))
-            palette.setColor(QPalette.ToolTipBase, Qt.white)
-            palette.setColor(QPalette.ToolTipText, Qt.white)
-            palette.setColor(QPalette.Text, Qt.white)
-            palette.setColor(QPalette.Button, QColor(33, 35, 41))
-            palette.setColor(QPalette.ButtonText, Qt.white)
-            palette.setColor(QPalette.BrightText, Qt.red)
-            palette.setColor(QPalette.Highlight, QColor(75, 110, 175))
-            palette.setColor(QPalette.HighlightedText, Qt.white)
-        elif theme == "light":
-            palette.setColor(QPalette.Window, Qt.white)
-            palette.setColor(QPalette.WindowText, Qt.black)
-            palette.setColor(QPalette.Base, Qt.white)
-            palette.setColor(QPalette.AlternateBase, QColor(240, 240, 240))
-            palette.setColor(QPalette.ToolTipBase, Qt.black)
-            palette.setColor(QPalette.ToolTipText, Qt.black)
-            palette.setColor(QPalette.Text, Qt.black)
-            palette.setColor(QPalette.Button, QColor(220, 220, 220))
-            palette.setColor(QPalette.ButtonText, Qt.black)
-            palette.setColor(QPalette.BrightText, Qt.red)
-            palette.setColor(QPalette.Highlight, QColor(75, 110, 175))
-            palette.setColor(QPalette.HighlightedText, Qt.black)
-        else:
-            palette.setColor(QPalette.Window, QColor(44, 47, 56))
-            palette.setColor(QPalette.WindowText, Qt.white)
-            palette.setColor(QPalette.Base, QColor(44, 47, 56))
-            palette.setColor(QPalette.AlternateBase, QColor(66, 69, 79))
-            palette.setColor(QPalette.ToolTipBase, Qt.white)
-            palette.setColor(QPalette.ToolTipText, Qt.white)
-            palette.setColor(QPalette.Text, Qt.white)
-            palette.setColor(QPalette.Button, QColor(44, 47, 56))
-            palette.setColor(QPalette.ButtonText, Qt.white)
-            palette.setColor(QPalette.BrightText, Qt.red)
-            palette.setColor(QPalette.Highlight, QColor(75, 110, 175))
-            palette.setColor(QPalette.HighlightedText, Qt.white)
-
-        self.app.setPalette(palette)
-        self.setPalette(palette)
-        self.update()
 
     def create_tool_button(self, tool_name, tool_description):
         button = QPushButton()
