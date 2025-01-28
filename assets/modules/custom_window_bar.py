@@ -63,12 +63,6 @@ class CustomWindowBar(QWidget):
     def init_ui(self):
         self.setFixedHeight(50)
         self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
-        
-        self.setStyleSheet(f"""
-            CustomWindowBar {{
-                background-color: {self.highlight_color}; 
-            }}
-        """)
 
         self.layout = QHBoxLayout(self)
         self.layout.setContentsMargins(0, 0, 0, 0)
