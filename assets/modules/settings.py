@@ -155,4 +155,5 @@ class Settings(QWidget):
             self.main_window.refresh_settings()
         else:
             print("Warning: main_window is None, cannot refresh settings")  # Debug print
-            
+
+        QMessageBox.information(self, "Success", "Settings saved and applied successfully!")
