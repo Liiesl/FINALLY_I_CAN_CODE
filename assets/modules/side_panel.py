@@ -15,6 +15,7 @@ class SidePanel(QWidget):
         self.setFont(QFont("Inter Regular"))
 
     def setup_ui(self, open_settings_callback):
+        self.setStyleSheet(f"background-color: {background_color};")
         self.setFixedWidth(self.parent().width() // 2)
         self.setLayout(QVBoxLayout())
 
@@ -54,7 +55,7 @@ class SidePanel(QWidget):
         self.layout().insertWidget(1, self.settings_list)  # Insert the list at the top, below the info label
 
     def current_palette(self):
-        palette = self.parent().palette()
+        palette = self.parent.palette()
         text_color = palette.color(QPalette.WindowText).name()
         background_color = palette.color(QPalette.Window).name()
         highlight_color = palette.color(QPalette.Highlight).name()
