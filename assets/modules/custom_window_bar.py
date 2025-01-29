@@ -20,15 +20,12 @@ class CustomWindowBar(QWidget):
         self.button_text_color = palette.color(QPalette.ButtonText).name()
         self.highlight_color = palette.color(QPalette.Highlight).name()
         self.hover_color = palette.color(QPalette.Highlight).darker().name()
-
         
         self.init_ui()
 
     def init_ui(self):
         self.setFixedHeight(50)
         self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
-
-        self.apply_theme()
 
         self.setStyleSheet(f"background-color: {self.button_color};")
 
@@ -46,16 +43,6 @@ class CustomWindowBar(QWidget):
 
         self.add_tab("Subtl")
         
-
-    def apply_theme(self):
-        palette = self.parent.palette()
-        self.text_color = palette.color(QPalette.WindowText).name()
-        self.background_color = palette.color(QPalette.Window).name()
-        self.button_color = palette.color(QPalette.Button).name()
-        self.button_text_color = palette.color(QPalette.ButtonText).name()
-        self.highlight_color = palette.color(QPalette.Highlight).name()
-        self.hover_color = palette.color(QPalette.Highlight).darker().name()
-
     def create_tab_bar(self):
         self.tab_bar = QTabBar(self)  # Use the custom tab bar
         self.tab_bar.setMovable(True)
