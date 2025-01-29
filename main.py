@@ -373,6 +373,7 @@ class MainWindow(QMainWindow):
                 ("Merge SRT Files", "Combine multiple SRT files into one."),
                 ("Subtitle Converter", "Convert subtitles between different formats."),
                 ("Subtitle Shifter", "Shift subtitles by milliseconds."),
+                ("Multilingual Merge", "Merge subtitles in different languages with colors."),
                 ("Coming Soon", "More tools will be added in the future.")
             ]
 
@@ -440,6 +441,10 @@ class MainWindow(QMainWindow):
                 self.load_tool(tool_widget, main_content_layout)
             elif tool_name == "Subtitle Shifter":
                 tool_widget = SubtitleShifter(parent=main_content, back_callback=self.main_menu)
+                self.load_tool(tool_widget, main_content_layout)
+            elif tool_name == "Multilingual Merge":
+                from tools.multilingual_tool import MultilingualTool
+                tool_widget = MultilingualTool(parent=main_content, back_callback=self.main_menu)
                 self.load_tool(tool_widget, main_content_layout)
             else:
                 QMessageBox.information(self, "Coming Soon", "This feature is coming soon!")
