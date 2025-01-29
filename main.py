@@ -354,7 +354,7 @@ class MainWindow(QMainWindow):
                 menu_icon = qta.icon('fa.bars')
                 self.menu_button.setIcon(menu_icon)
                 self.menu_button.setFixedSize(30, 30)
-                self.menu_button.setStyleSheet("color: {button_text_color}; background-color: {button_color}; border: none; border-radius: 3px;")
+                self.menu_button.setStyleSheet("color: {button_text_color}; background-color: transparent; border: none; border-radius: 3px;")
                 self.menu_button.clicked.connect(self.toggle_side_panel)
                 self.top_bar.addWidget(self.menu_button, alignment=Qt.AlignLeft)
                 main_content_layout.addLayout(self.top_bar)
