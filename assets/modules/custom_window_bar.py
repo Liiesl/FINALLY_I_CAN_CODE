@@ -115,6 +115,7 @@ class CustomWindowBar(QWidget):
                         background: rgba(255, 0, 0, 0.5);
                     }}
                 """)
+        self.update()
 
     def create_tab_bar(self):
         self.tab_bar = QTabBar(self)  # Use the custom tab bar
