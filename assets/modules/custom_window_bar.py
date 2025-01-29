@@ -40,6 +40,7 @@ class CustomWindowBar(QWidget):
         self.add_tab("Subtl")  # This will be the visible tab
 
     def current_palette(self):
+        print("palette is being loaded by custom window bar")
         palette = self.parent.palette()
         self.text_color = palette.color(QPalette.WindowText).name()
         self.background_color = palette.color(QPalette.Window).name()
@@ -50,6 +51,7 @@ class CustomWindowBar(QWidget):
 
 
     def update_colors(self):
+        print("updating custom window bar's palette")
         palette = self.current_palette()
 
         # Update main background
