@@ -519,6 +519,7 @@ class MainWindow(QMainWindow):
         self.update_safe_area_size()  # Update safe area size
         self.apply_text_size()  # Update text size
         self.apply_theme()  # Update theme
+        self.CustomWindowBar.update_colors()
 
     def update_tool_button_visibility(self, event=None):
         if self.main_menu_active and self.tool_buttons_container:
