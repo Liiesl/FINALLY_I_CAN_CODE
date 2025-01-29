@@ -521,7 +521,7 @@ class MainWindow(QMainWindow):
         """)
 
     def refresh_settings(self):
-        print: ("refreshing the settings")
+        print("refreshing the settings")
         self.update_safe_area_size()  # Update safe area size
         self.apply_text_size()  # Update text size
         self.apply_theme()  # Update theme
