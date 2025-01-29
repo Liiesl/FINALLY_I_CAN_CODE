@@ -16,6 +16,8 @@ class CustomWindowBar(QWidget):
         self.current_palette()
         
         self.init_ui()
+        
+        self.update_colors()
 
     def init_ui(self):
         self.setFixedHeight(50)
