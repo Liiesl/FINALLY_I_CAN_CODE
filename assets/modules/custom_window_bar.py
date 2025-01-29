@@ -13,7 +13,7 @@ class CustomWindowBar(QWidget):
         self.resize_edge = None  # Track which edge is being resized
         self.resize_handle_size = 5  # Size of the resize handle (smaller for better sensitivity)
         
-        self.update_color()
+        self.update_colors()
         
         self.init_ui()
 
