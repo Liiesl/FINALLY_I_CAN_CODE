@@ -20,7 +20,7 @@ class SidePanel(QWidget):
         self.setLayout(QVBoxLayout())
 
         text_size = self.config.get_text_size()
-        font_size = {
+        self.font_size = {
             "small": 18,
             "default": 26,
             "large": 34,
@@ -67,9 +67,9 @@ class SidePanel(QWidget):
 
         self.setStyleSheet(f"background-color: {self.background_color};")
         
-        self.info_label.setStyleSheet(f"color: {self.text_color}; font-size: {font_size}px; font-weight: bold; background-color: none;")
+        self.info_label.setStyleSheet(f"color: {self.text_color}; font-size: {self.font_size}px; font-weight: bold; background-color: none;")
 
-        self.settings_list.setStyleSheet(f"background-color: transparent; border: none; color: {self.text_color}; font-size: {font_size - 2}px;")
+        self.settings_list.setStyleSheet(f"background-color: transparent; border: none; color: {self.text_color}; font-size: {self.font_size - 2}px;")
     
     def handle_item_clicked(self, item):
         if item.text() == "Settings":
