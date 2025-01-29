@@ -282,6 +282,8 @@ class MainWindow(QMainWindow):
         palette = self.app.palette()
         background_color = palette.color(QPalette.Base).name()
         border_color = palette.color(QPalette.Highlight).name()
+        button_color = palette.color(QPalette.Button).name()
+        button_text_color = palette.color(QPalette.ButtonText).name()
         text_color = palette.color(QPalette.ButtonText).name()
         hover_background_color = palette.color(QPalette.Highlight).name()
         hover_border_color = palette.color(QPalette.Highlight).darker().name()
