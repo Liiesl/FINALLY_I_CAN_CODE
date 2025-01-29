@@ -19,7 +19,7 @@ class MainWindow(QMainWindow):
         self.setMouseTracking(True)
 
         self.init_ui()
-        
+
         self.resize_edge = None  # Tracks which edge is being resized
         self.resize_handle_size = 5  # Size of the resize handle (smaller for better sensitivity)
         self.pressing = False  # Tracks if the mouse is pressed
@@ -36,7 +36,7 @@ class MainWindow(QMainWindow):
 
         QFontDatabase.addApplicationFont("assets/fonts/Inter-Regular.otf")
         QFontDatabase.addApplicationFont("assets/fonts/Inter-ExtraBold.otf")
-        
+
         self.inter_regular_font = QFont("Inter Regular")
         self.inter_extra_bold_font = QFont("Inter ExtraBold")
 
@@ -49,6 +49,7 @@ class MainWindow(QMainWindow):
 
         self.custom_window_bar = CustomWindowBar(self, self.app)
         self.layout.addWidget(self.custom_window_bar)
+
 
         self.tab_contents = QStackedWidget()
         self.layout.addWidget(self.tab_contents)
@@ -67,15 +68,14 @@ class MainWindow(QMainWindow):
         self.splitter.setSizes([0, 1])
 
         self.tab_contents.addWidget(self.splitter)
-        
+
         self.top_bar = QHBoxLayout()
         self.top_bar_added = False
         self.menu_button = None
-        
+
         self.create_new_tab_content()
 
         self.apply_theme()
-
     def apply_theme(self):
         self.config = Config(source="MainWindow")
         theme = self.config.get_theme()
@@ -122,6 +122,7 @@ class MainWindow(QMainWindow):
             palette.setColor(QPalette.HighlightedText, Qt.white)
 
         self.app.setPalette(palette)
+        self.custom_window_bar.apply_theme()
         self.setPalette(palette)
         self.update()
 
@@ -140,13 +141,13 @@ class MainWindow(QMainWindow):
         else:
             mouse_pos = event.pos()
             width, height = self.width(), self.height()
-    
+
             # Check if the mouse is near the edges
             near_left = mouse_pos.x() <= self.edge_threshold
             near_right = mouse_pos.x() >= width - self.edge_threshold
             near_top = mouse_pos.y() <= self.edge_threshold
             near_bottom = mouse_pos.y() >= height - self.edge_threshold
-    
+
             # Change the cursor based on the edge
             if near_left and near_top:
                 self.setCursor(Qt.SizeFDiagCursor)  # Top-left corner
@@ -229,7 +230,7 @@ class MainWindow(QMainWindow):
         else:
             self.setCursor(Qt.ArrowCursor)
         self.update()
-        
+
     def move_window(self, event):
         global_pos = self.mapToGlobal(event.pos())
         delta = global_pos - self.start
@@ -240,30 +241,30 @@ class MainWindow(QMainWindow):
     def create_new_tab_content(self):
         # Create a new splitter for the tab
         new_splitter = QSplitter(Qt.Horizontal)
-    
+
         # Create a new side panel for the tab
         new_side_panel = SidePanel(self, self.open_settings)
         new_side_panel.setVisible(False)
         new_side_panel.setFont(self.inter_regular_font)
-        
+
         self.top_bar = QHBoxLayout()
         self.top_bar_added = False
         self.menu_button = None
-    
+
         # Create a new main content widget for the tab
         new_main_content = QWidget()
         new_main_content_layout = QVBoxLayout(new_main_content)
         new_main_content.setLayout(new_main_content_layout)
-    
+
         # Add the side panel and main content to the splitter
         new_splitter.addWidget(new_side_panel)
         new_splitter.addWidget(new_main_content)
         new_splitter.setSizes([0, 1])
-    
+
         # Add the splitter to the tab contents
         self.tab_contents.addWidget(new_splitter)
         self.tab_contents.setCurrentWidget(new_splitter)
-    
+
         # Replicate the main menu layout in the new tab
         self.main_menu(new_main_content_layout)
 
@@ -332,7 +333,7 @@ class MainWindow(QMainWindow):
 
         button.clicked.connect(lambda: self.tool_selected(tool_name))
         return button
-    
+
     def main_menu(self, layout=None):
         # Get the current main content layout for the active tab
         current_splitter = self.tab_contents.currentWidget()
@@ -361,7 +362,7 @@ class MainWindow(QMainWindow):
                 self.top_bar.addWidget(self.menu_button, alignment=Qt.AlignLeft)
                 main_content_layout.addLayout(self.top_bar)
                 self.top_bar_added = True  # Mark the top bar as added
-                
+
             # Add the tool buttons
             self.tool_buttons_container = QWidget()
             self.tool_buttons_layout = QHBoxLayout(self.tool_buttons_container)
@@ -424,7 +425,7 @@ class MainWindow(QMainWindow):
             # Get the main content widget for the current tab
             main_content = current_splitter.widget(1)  # Main content is the second widget in the splitter
             main_content_layout = main_content.layout()
-    
+
             if tool_name == "Longer Appearance SRT":
                 from tools.longer_appearance import LongerAppearanceSRT
                 tool_widget = LongerAppearanceSRT(parent=main_content, back_callback=self.main_menu)
@@ -442,16 +443,16 @@ class MainWindow(QMainWindow):
                 self.load_tool(tool_widget, main_content_layout)
             else:
                 QMessageBox.information(self, "Coming Soon", "This feature is coming soon!")
-    
+
     def load_tool(self, tool_widget, layout):
         self.main_menu_active = False
-    
+
         # Clear the existing layout
         for i in reversed(range(layout.count())):
             widget = layout.itemAt(i).widget()
             if widget is not None:
                 widget.setParent(None)
-    
+
         # Add the tool widget to the layout
         layout.addWidget(tool_widget)
         tool_widget.show()
@@ -475,15 +476,15 @@ class MainWindow(QMainWindow):
             # Get the main content widget for the current tab
             main_content = current_splitter.widget(1)  # Main content is the second widget in the splitter
             main_content_layout = main_content.layout()
-    
+
             # Create the settings widget
             settings_widget = Settings(parent=self.main_content, back_callback=self.main_menu, main_window=self)
             settings_widget.setFont(self.inter_regular_font)
             settings_widget.settings_saved.connect(self.apply_theme)
-    
+
             # Load the settings widget into the current tab's main content layout
             self.load_tool(settings_widget, main_content_layout)
-            
+
     def update_safe_area_size(self):
         self.config = Config(source="MainWindow")
         safe_area_size = self.config.get_safe_area_size()
@@ -497,7 +498,7 @@ class MainWindow(QMainWindow):
                         main_content_layout.setContentsMargins(
                             safe_area_size, safe_area_size, safe_area_size, safe_area_size
                         )
-            
+
     def apply_text_size(self):
         self.config = Config(source="MainWindow")
         text_size = self.config.get_text_size()
@@ -518,7 +519,6 @@ class MainWindow(QMainWindow):
         self.update_safe_area_size()  # Update safe area size
         self.apply_text_size()  # Update text size
         self.apply_theme()  # Update theme
-        self.custom_window_bar.update_colors()
 
     def update_tool_button_visibility(self, event=None):
         if self.main_menu_active and self.tool_buttons_container:
