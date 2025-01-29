@@ -140,6 +140,9 @@ class Settings(QWidget):
 
     def save_settings(self):
         print("Saving settings...")
+
+        old_theme = self.config.get_theme()
+        
         self.config.set_safe_area_size(self.safe_area_slider.value())
         self.config.set_text_size(self.text_size_dropdown.currentText())
         self.config.set_theme(self.config.data["theme"])
