@@ -15,7 +15,6 @@ class SidePanel(QWidget):
         self.setFont(QFont("Inter Regular"))
 
     def setup_ui(self, open_settings_callback):
-        self.setStyleSheet(f"background-color: {background_color};")
         self.setFixedWidth(self.parent().width() // 2)
         self.setLayout(QVBoxLayout())
 
