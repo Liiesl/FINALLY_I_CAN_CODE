@@ -3,43 +3,6 @@ from PyQt5.QtCore import Qt, QPoint
 from PyQt5.QtGui import QPalette, QColor, QCursor
 import qtawesome as qta
 
-class CustomTabBar(QTabBar):
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.setMovable(True)
-        self.setTabsClosable(False)  # Disable default close button
-        
-    def addTab(self, text):
-        index = super().addTab(text)
-        # Add a close button to all tabs except the first one
-        if index != 0:
-            self.setTabButton(index, QTabBar.RightSide, self.create_close_button(index))
-        return index
-
-    def create_close_button(self, index):
-        close_button = QPushButton(qta.icon('fa.close'), '')
-        close_button.setFixedSize(20, 20)
-        close_button.clicked.connect(lambda: self.tabCloseRequested.emit(index))
-        close_button.setStyleSheet("""
-            QPushButton {
-                color: {self.text_color};
-                background: transparent;
-                border: none;
-                font-size: 18px;
-            }
-            QPushButton:hover {
-                background: rgba(255, 0, 0, 0.5);
-            }
-        """)
-        return close_button
-
-    def tabButton(self, index, button_type):
-        # Override to remove the close button for the first tab
-        if index == 0 and button_type == QTabBar.RightSide:
-            return None
-        return super().tabButton(index, button_type)
-
-
 class CustomWindowBar(QWidget):
     def __init__(self, parent=None, app=None):
         super().__init__(parent)
@@ -80,7 +43,9 @@ class CustomWindowBar(QWidget):
         self.add_tab("Subtl")  # This will be the visible tab
 
     def create_tab_bar(self):
-        self.tab_bar = CustomTabBar(self)  # Use the custom tab bar
+        self.tab_bar = QTabBar(self)  # Use the custom tab bar
+        self.tab_bar.setMovable(True)
+        self.tab_bar.setTabsClosable(False)
         self.tab_bar.tabCloseRequested.connect(self.close_tab)
         self.tab_bar.currentChanged.connect(self.change_tab)
 
@@ -100,12 +65,13 @@ class CustomWindowBar(QWidget):
 
         self.layout.addWidget(self.tab_bar)
 
+        self.tab_bar.addTab = lambda text: self._add_tab_wrapper(text)
+        self.tab_bar.tabButton = lambda index, button_type: self._tab_button_wrapper(index, button_type
+
         # Add the "add tab" button directly to the right of the tabs
         self.new_tab_button = QPushButton(qta.icon('fa.plus'), '')
         self.new_tab_button.setFixedSize(50, 50)
         self.new_tab_button.clicked.connect(lambda: self.add_tab("Subtl"))  # Change tab name to "Subtl"
-
-        # Set the "+" button style
         self.new_tab_button.setStyleSheet(f"""
             QPushButton {{
                 color: {self.button_text_color};  /* Use the button text color */
@@ -122,6 +88,34 @@ class CustomWindowBar(QWidget):
         # Add a spacer to leave space between the tabs and the window buttons
         self.spacer = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
         self.layout.addItem(self.spacer)
+
+    def _add_tab_wrapper(self, text):
+        index = QTabBar.addTab(self.tab_bar, text)
+        if index != 0:
+            self.tab_bar.setTabButton(index, QTabBar.RightSide, self.create_close_button(index))
+        return index
+
+    def _tab_button_wrapper(self, index, button_type):
+        if index == 0 and button_type == QTabBar.RightSide:
+            return None
+        return QTabBar.tabButton(self.tab_bar, index, button_type)
+
+    def create_close_button(self, index):
+        close_button = QPushButton(qta.icon('fa.close'), '')
+        close_button.setFixedSize(20, 20)
+        close_button.clicked.connect(lambda: self.tab_bar.tabCloseRequested.emit(index))
+        close_button.setStyleSheet(f"""
+            QPushButton {{
+                color: {self.text_color};
+                background: transparent;
+                border: none;
+                font-size: 18px;
+            }}
+            QPushButton:hover {{
+                background: rgba(255, 0, 0, 0.5);
+            }}
+        """)
+        return close_button
 
     def create_buttons(self):
         self.min_button = QPushButton(qta.icon('fa.window-minimize'), '')
