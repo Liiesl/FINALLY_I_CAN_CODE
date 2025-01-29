@@ -48,7 +48,8 @@ class CustomWindowBar(QWidget):
         self.button_text_color = palette.color(QPalette.ButtonText).name()
         self.highlight_color = palette.color(QPalette.Highlight).name()
         self.hover_color = palette.color(QPalette.Highlight).darker().name()
-
+        
+        self.update()
 
     def update_colors(self):
         print("updating custom window bar's palette")
