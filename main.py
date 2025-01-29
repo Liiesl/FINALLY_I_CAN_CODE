@@ -50,7 +50,6 @@ class MainWindow(QMainWindow):
         self.custom_window_bar = CustomWindowBar(self, self.app)
         self.layout.addWidget(self.custom_window_bar)
 
-        self.apply_theme()
 
         self.tab_contents = QStackedWidget()
         self.layout.addWidget(self.tab_contents)
@@ -73,6 +72,8 @@ class MainWindow(QMainWindow):
         self.top_bar = QHBoxLayout()
         self.top_bar_added = False
         self.menu_button = None
+
+        self.apply_theme()
         
         self.create_new_tab_content()
 
