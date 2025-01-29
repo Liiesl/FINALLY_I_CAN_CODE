@@ -3,6 +3,7 @@ from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QFont, QPalette
 from assets.modules.config import Config
 from assets.buttons.toggle_switch import ToggleSwitch  # Import the ToggleSwitch class
+from assets.modules.custom_window_bar import CustomWindowBar
 
 class Settings(QWidget):
     settings_saved = pyqtSignal()  # Define a signal for settings saved
