@@ -22,8 +22,8 @@ class CustomWindowBar(QWidget):
     def init_ui(self):
         self.setFixedHeight(50)
         self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
-
         self.setStyleSheet(f"background-color: {self.button_color}; color : {self.button_color};")
+        
         self.layout = QHBoxLayout(self)
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.layout.setSpacing(0)  # Remove spacing between widgets
@@ -56,7 +56,7 @@ class CustomWindowBar(QWidget):
         palette = self.current_palette()
 
         # Update main background
-        self.setStyleSheet(f"background-color: {self.button_color};")
+        self.setStyleSheet(f"background-color: {self.button_color}; color : {self.button_color};")
 
         # Update tab bar styles
         self.tab_bar.setStyleSheet(f"""
