@@ -40,6 +40,8 @@ class MainWindow(QMainWindow):
         self.inter_regular_font = QFont("Inter Regular")
         self.inter_extra_bold_font = QFont("Inter ExtraBold")
 
+        self.apply_theme()
+
         self.central_widget = QWidget()
         self.layout = QVBoxLayout(self.central_widget)
         self.setCentralWidget(self.central_widget)
@@ -75,7 +77,6 @@ class MainWindow(QMainWindow):
 
         self.create_new_tab_content()
 
-        self.apply_theme()
     def apply_theme(self):
         self.config = Config(source="MainWindow")
         theme = self.config.get_theme()
@@ -122,7 +123,6 @@ class MainWindow(QMainWindow):
             palette.setColor(QPalette.HighlightedText, Qt.white)
 
         self.app.setPalette(palette)
-        self.custom_window_bar.apply_theme()
         self.setPalette(palette)
         self.update()
 
