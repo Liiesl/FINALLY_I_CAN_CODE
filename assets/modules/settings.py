@@ -162,4 +162,3 @@ class Settings(QWidget):
                 self.main_window.refresh_settings()
             QMessageBox.information(self, "Success", "Settings saved and applied successfully!")
             
-        QMessageBox.information(self, "Success", "Settings saved and applied successfully!")
