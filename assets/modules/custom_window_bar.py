@@ -27,6 +27,8 @@ class CustomWindowBar(QWidget):
         self.setFixedHeight(50)
         self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
 
+        self.setStyleSheet(f"background-color: {self.button_color};")
+
         self.layout = QHBoxLayout(self)
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.layout.setSpacing(0)  # Remove spacing between widgets
@@ -55,7 +57,7 @@ class CustomWindowBar(QWidget):
                 padding: 2px 10px;  /* Adjust padding to fit the title */
                 margin: 0;          
                 border: none;      
-                background: {self.button_color;  /* Make the tab background transparent */
+                background: {self.button_color};  /* Make the tab background transparent */
                 color: {self.text_color};  /* Use the button text color */
             }}
             QTabBar::tab:selected {{
