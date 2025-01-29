@@ -50,7 +50,8 @@ class CustomWindowBar(QWidget):
 
 
     def update_colors(self):
-        # Re-fetch the current palette
+        self.current_palette()
+        
         palette = self.current_palette()
 
         # Update main background
