@@ -17,6 +17,10 @@ def merge_subtitles(main_file_path, secondary_file_paths, color_hex=None):
     secondary_contents = [read_file(path) for path in secondary_file_paths]
 
     if color_hex:
+        if isinstance(color_hex, list):
+            if len(color_hex) != len(secondary_contents):
+                raise ValueError("Number of colors must match number of secondary files.")
+            secondary_contents = [color_subtitles(content, hex) for content, hex in zip(secondary_contents, color_hex)]
         secondary_contents = [color_subtitles(content, color_hex) for content in secondary_contents]
 
     merged_blocks = parse_subtitle_blocks(main_content)
