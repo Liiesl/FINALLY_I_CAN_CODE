@@ -13,6 +13,8 @@ class CustomWindowBar(QWidget):
         self.resize_edge = None  # Track which edge is being resized
         self.resize_handle_size = 5  # Size of the resize handle (smaller for better sensitivity)
 
+        self.current_palette()
+        
         self.init_ui()
 
     def init_ui(self):
@@ -35,7 +37,7 @@ class CustomWindowBar(QWidget):
         # Create a new tab and make it visible
         self.add_tab("Subtl")  # This will be the visible tab
 
-    def palettte(self)
+    def current_palettte(self)
         palette = self.parent.palette()
         self.text_color = palette.color(QPalette.WindowText).name()
         self.background_color = palette.color(QPalette.Window).name()
@@ -47,7 +49,7 @@ class CustomWindowBar(QWidget):
 
     def update_colors(self):
         # Re-fetch the current palette
-        palette = self.palette()
+        self.current_palette()
 
         # Update main background
         self.setStyleSheet(f"background-color: {self.button_color};")
