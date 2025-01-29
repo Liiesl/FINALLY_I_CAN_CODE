@@ -66,7 +66,7 @@ class CustomWindowBar(QWidget):
         self.layout.addWidget(self.tab_bar)
 
         self.tab_bar.addTab = lambda text: self._add_tab_wrapper(text)
-        self.tab_bar.tabButton = lambda index, button_type: self._tab_button_wrapper(index, button_type
+        self.tab_bar.tabButton = lambda index, button_type: self._tab_button_wrapper(index, button_type)
 
         # Add the "add tab" button directly to the right of the tabs
         self.new_tab_button = QPushButton(qta.icon('fa.plus'), '')
