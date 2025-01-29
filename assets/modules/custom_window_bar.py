@@ -55,7 +55,7 @@ class CustomWindowBar(QWidget):
                 padding: 2px 10px;  /* Adjust padding to fit the title */
                 margin: 0;          
                 border: none;      
-                background: {self.button_color};  /* Make the tab background transparent */
+                background: {self.button_color;  /* Make the tab background transparent */
                 color: {self.text_color};  /* Use the button text color */
             }}
             QTabBar::tab:selected {{
