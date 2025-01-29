@@ -147,11 +147,16 @@ class Settings(QWidget):
         self.config.save()
 
         self.config.load()
-        
-        if self.main_window is not None:
-            print("Main window exists, calling refresh_settings")  # Debug print
-            self.main_window.refresh_settings()
+
+        if old_theme != self.config.data["theme"]:
+            # Theme changed - restart app
+            QMessageBox.information(self, "Theme Changed", "The application will restart to apply the new theme.")
+            QApplication.quit()
+            QProcess.startDetached(sys.executable, sys.argv)
         else:
-            print("Warning: main_window is None, cannot refresh settings")  # Debug print
+            # No theme change - just refresh other settings
+            if self.main_window is not None:
+                self.main_window.refresh_settings()
+            QMessageBox.information(self, "Success", "Settings saved and applied successfully!")
             
         QMessageBox.information(self, "Success", "Settings saved and applied successfully!")
