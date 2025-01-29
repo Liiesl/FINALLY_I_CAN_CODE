@@ -126,4 +126,11 @@ alpha 0.1.5.2
 alpha 0.1.6.0
 -the new custom window is finnaly here!
 -add tab function
+-fix initial tools selection visual bug
 -note : the new tab function is somewhat unstable so please bear with me.s
+
+alpha 0.1.6.1
+-new tool : multilingual tool
+-
+-new icon for the window bar
+-fix bugs
