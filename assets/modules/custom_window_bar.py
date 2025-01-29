@@ -12,7 +12,7 @@ class CustomWindowBar(QWidget):
         self.pressing = False  # Track if the mouse is pressed
         self.resize_edge = None  # Track which edge is being resized
         self.resize_handle_size = 5  # Size of the resize handle (smaller for better sensitivity)
-        
+
         palette = self.parent.palette()
         self.text_color = palette.color(QPalette.WindowText).name()
         self.background_color = palette.color(QPalette.Window).name()
@@ -20,7 +20,7 @@ class CustomWindowBar(QWidget):
         self.button_text_color = palette.color(QPalette.ButtonText).name()
         self.highlight_color = palette.color(QPalette.Highlight).name()
         self.hover_color = palette.color(QPalette.Highlight).darker().name()
-        
+
         self.init_ui()
 
     def init_ui(self):
@@ -28,7 +28,6 @@ class CustomWindowBar(QWidget):
         self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
 
         self.setStyleSheet(f"background-color: {self.button_color};")
-
         self.layout = QHBoxLayout(self)
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.layout.setSpacing(0)  # Remove spacing between widgets
@@ -41,75 +40,9 @@ class CustomWindowBar(QWidget):
         self.add_tab("Hidden Tab")
         self.tab_bar.setTabVisible(0, False)  # Hide the first tab
 
-        self.add_tab("Subtl")
+        # Create a new tab and make it visible
+        self.add_tab("Subtl")  # This will be the visible tab
 
-    def update_colors(self):
-        palette = self.parent.palette()
-        self.text_color = palette.color(QPalette.WindowText).name()
-        self.background_color = palette.color(QPalette.Window).name()
-        self.button_color = palette.color(QPalette.Button).name()
-        self.button_text_color = palette.color(QPalette.ButtonText).name()
-        self.highlight_color = palette.color(QPalette.Highlight).name()
-        self.hover_color = palette.color(QPalette.Highlight).darker().name()
-        
-        self.setStyleSheet(f"background-color: {self.button_color};")
-        
-        self.tab_bar.setStyleSheet(f"""
-            QTabBar::tab {{
-                padding: 2px 10px;
-                margin: 0;
-                border: none;
-                background: {self.button_color};
-                color: {self.text_color};
-            }}
-            QTabBar::tab:selected {{
-                background: {self.background_color};
-            }}
-        """)
-
-        self.new_tab_button.setStyleSheet(f"""
-            QPushButton {{
-                color: {self.button_text_color};
-                background: transparent;
-                border: none;
-                font-size: 40px;
-            }}
-            QPushButton:hover {{
-                background: rgba(255, 255, 255, 0.2);
-            }}
-        """)
-
-        # Update window control buttons
-        button_style = f"""
-            QPushButton {{
-                color: {self.text_color};
-                background: transparent;
-                border: none;
-                font-size: 40px;
-            }}
-            QPushButton:hover {{
-                background: rgba(255, 255, 255, 0.2);
-            }}
-        """
-        self.min_button.setStyleSheet(button_style)
-        self.max_button.setStyleSheet(button_style)
-        self.close_button.setStyleSheet(button_style)
-
-        for index in range(1, self.tab_bar.count()):  # Skip hidden tab
-            close_button = self.tab_bar.tabButton(index, QTabBar.RightSide)
-            if close_button:
-                close_button.setStyleSheet(f"""
-                    QPushButton {{
-                        color: {self.text_color};
-                        background: transparent;
-                        border: none;
-                        font-size: 18px;
-                    }}
-                    QPushButton:hover {{
-                        background: rgba(255, 0, 0, 0.5);
-                    }}
-                """)
-        
     def create_tab_bar(self):
         self.tab_bar = QTabBar(self)  # Use the custom tab bar
         self.tab_bar.setMovable(True)
