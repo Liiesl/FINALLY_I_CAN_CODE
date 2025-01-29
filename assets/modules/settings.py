@@ -144,6 +144,8 @@ class Settings(QWidget):
 
         self.config.save()
 
+        self.custom_window_bar.apply_theme()
+
         self.config.load()
         if self.main_window:
             self.main_window.refresh_settings()
