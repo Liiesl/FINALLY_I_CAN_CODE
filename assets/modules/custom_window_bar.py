@@ -43,6 +43,78 @@ class CustomWindowBar(QWidget):
         # Create a new tab and make it visible
         self.add_tab("Subtl")  # This will be the visible tab
 
+    def update_colors(self):
+        # Re-fetch the current palette
+        palette = self.parent.palette()
+        self.text_color = palette.color(QPalette.WindowText).name()
+        self.background_color = palette.color(QPalette.Window).name()
+        self.button_color = palette.color(QPalette.Button).name()
+        self.button_text_color = palette.color(QPalette.ButtonText).name()
+        self.highlight_color = palette.color(QPalette.Highlight).name()
+        self.hover_color = palette.color(QPalette.Highlight).darker().name()
+
+        # Update main background
+        self.setStyleSheet(f"background-color: {self.button_color};")
+
+        # Update tab bar styles
+        self.tab_bar.setStyleSheet(f"""
+            QTabBar::tab {{
+                padding: 2px 10px;
+                margin: 0;
+                border: none;
+                background: {self.button_color};
+                color: {self.text_color};
+            }}
+            QTabBar::tab:selected {{
+                background: {self.background_color};
+            }}
+        """)
+
+        # Update new tab button style
+        self.new_tab_button.setStyleSheet(f"""
+            QPushButton {{
+                color: {self.button_text_color};
+                background: transparent;
+                border: none;
+                font-size: 40px;
+            }}
+            QPushButton:hover {{
+                background: rgba(255, 255, 255, 0.2);
+            }}
+        """)
+
+        # Update window control buttons
+        button_style = f"""
+            QPushButton {{
+                color: {self.text_color};
+                background: transparent;
+                border: none;
+                font-size: 40px;
+            }}
+            QPushButton:hover {{
+                background: rgba(255, 255, 255, 0.2);
+            }}
+        """
+        self.min_button.setStyleSheet(button_style)
+        self.max_button.setStyleSheet(button_style)
+        self.close_button.setStyleSheet(button_style)
+
+        # Update close buttons on existing tabs
+        for index in range(1, self.tab_bar.count()):  # Skip hidden tab
+            close_button = self.tab_bar.tabButton(index, QTabBar.RightSide)
+            if close_button:
+                close_button.setStyleSheet(f"""
+                    QPushButton {{
+                        color: {self.text_color};
+                        background: transparent;
+                        border: none;
+                        font-size: 18px;
+                    }}
+                    QPushButton:hover {{
+                        background: rgba(255, 0, 0, 0.5);
+                    }}
+                """)
+
     def create_tab_bar(self):
         self.tab_bar = QTabBar(self)  # Use the custom tab bar
         self.tab_bar.setMovable(True)
