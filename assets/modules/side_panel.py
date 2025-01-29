@@ -9,17 +9,12 @@ class SidePanel(QWidget):
         super().__init__(parent)
         self.config = Config()
         self.open_settings_callback = open_settings_callback
+        self.current_palette()
         self.setup_ui(open_settings_callback)
+        self.update_colors()
         self.setFont(QFont("Inter Regular"))
 
     def setup_ui(self, open_settings_callback):
-        # Retrieve the current palette colors
-        palette = self.parent().palette()
-        text_color = palette.color(QPalette.WindowText).name()
-        background_color = palette.color(QPalette.Window).name()
-        highlight_color = palette.color(QPalette.Highlight).name()
-        hover_color = palette.color(QPalette.Highlight).darker().name()
-
         self.setStyleSheet(f"background-color: {background_color};")
         self.setFixedWidth(self.parent().width() // 2)
         self.setLayout(QVBoxLayout())
@@ -33,7 +28,6 @@ class SidePanel(QWidget):
         }.get(text_size, 26)
 
         self.info_label = QLabel("Side Panel Content")
-        self.info_label.setStyleSheet(f"color: {text_color}; font-size: {font_size}px; font-weight: bold; background-color: none;")
         self.info_label.setAlignment(Qt.AlignCenter)
 
         self.layout().addWidget(self.info_label)
@@ -41,7 +35,6 @@ class SidePanel(QWidget):
 
         # Create a list widget for settings
         self.settings_list = QListWidget()
-        self.settings_list.setStyleSheet(f"background-color: transparent; border: none; color: {text_color}; font-size: {font_size - 2}px;")
 
         # Add settings item to the list
         settings_item = QListWidgetItem("Settings")
@@ -61,6 +54,23 @@ class SidePanel(QWidget):
         self.layout().addWidget(self.settings_list)
         self.layout().insertWidget(1, self.settings_list)  # Insert the list at the top, below the info label
 
+    def current_palette(self):
+        palette = self.parent().palette()
+        text_color = palette.color(QPalette.WindowText).name()
+        background_color = palette.color(QPalette.Window).name()
+        highlight_color = palette.color(QPalette.Highlight).name()
+        hover_color = palette.color(QPalette.Highlight).darker().name()
+
+    def update_colors(self):
+        # Re-fetch the current palette
+        palette = self.current_palette()
+
+        self.setStyleSheet(f"background-color: {background_color};")
+        
+        self.info_label.setStyleSheet(f"color: {text_color}; font-size: {font_size}px; font-weight: bold; background-color: none;")
+
+        self.settings_list.setStyleSheet(f"background-color: transparent; border: none; color: {text_color}; font-size: {font_size - 2}px;")
+    
     def handle_item_clicked(self, item):
         if item.text() == "Settings":
             # Handle the settings click event
@@ -77,14 +87,3 @@ class SidePanel(QWidget):
         else:
             self.changelog_window.raise_()
             self.changelog_window.activateWindow()
-
-    def apply_theme(self):
-        # Retrieve the current palette colors
-        palette = self.parent().palette()
-        text_color = palette.color(QPalette.WindowText).name()
-        background_color = palette.color(QPalette.Window).name()
-
-        self.setStyleSheet(f"background-color: {background_color};")
-        self.info_label.setStyleSheet(f"color: {text_color};")
-
-        self.settings_list.setStyleSheet(f"background-color: transparent; border: none; color: {text_color};")
