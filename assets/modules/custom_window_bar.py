@@ -38,6 +38,15 @@ class CustomWindowBar(QWidget):
         # Create a new tab and make it visible
         self.add_tab("Subtl")  # This will be the visible tab
 
+    def apply_theme(self):
+        palette = self.parent.palette()
+        self.text_color = palette.color(QPalette.WindowText).name()
+        self.background_color = palette.color(QPalette.Window).name()
+        self.button_color = palette.color(QPalette.Button).name()
+        self.button_text_color = palette.color(QPalette.ButtonText).name()
+        self.highlight_color = palette.color(QPalette.Highlight).name()
+        self.hover_color = palette.color(QPalette.Highlight).darker().name()
+
     def create_tab_bar(self):
         self.tab_bar = QTabBar(self)  # Use the custom tab bar
         self.tab_bar.setMovable(True)
@@ -190,12 +199,3 @@ class CustomWindowBar(QWidget):
             self.parent.showNormal()
         else:
             self.parent.showMaximized()
-
-    def apply_theme(self):
-        palette = self.parent.palette()
-        self.text_color = palette.color(QPalette.WindowText).name()
-        self.background_color = palette.color(QPalette.Window).name()
-        self.button_color = palette.color(QPalette.Button).name()
-        self.button_text_color = palette.color(QPalette.ButtonText).name()
-        self.highlight_color = palette.color(QPalette.Highlight).name()
-        self.hover_color = palette.color(QPalette.Highlight).darker().name()
