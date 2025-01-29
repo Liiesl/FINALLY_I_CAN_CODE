@@ -19,6 +19,8 @@ class CustomWindowBar(QWidget):
         self.setFixedHeight(50)
         self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
 
+        self.apply_theme()
+
         self.setStyleSheet(f"background-color: {self.button_color};")
 
         self.layout = QHBoxLayout(self)
@@ -35,7 +37,6 @@ class CustomWindowBar(QWidget):
 
         self.add_tab("Subtl")
         
-        self.apply_theme()
 
     def apply_theme(self):
         palette = self.parent.palette()
