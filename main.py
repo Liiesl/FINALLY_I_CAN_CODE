@@ -49,8 +49,6 @@ class MainWindow(QMainWindow):
 
         self.custom_window_bar = CustomWindowBar(self, self.app)
         self.layout.addWidget(self.custom_window_bar)
-        
-        self.custom_window_bar.add_initial_tabs()
 
         self.tab_contents = QStackedWidget()
         self.layout.addWidget(self.tab_contents)
@@ -124,7 +122,6 @@ class MainWindow(QMainWindow):
             palette.setColor(QPalette.HighlightedText, Qt.white)
 
         self.app.setPalette(palette)
-        self.custom_window_bar.apply_theme()
         self.setPalette(palette)
         self.update()
 
