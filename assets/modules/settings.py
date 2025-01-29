@@ -140,8 +140,6 @@ class Settings(QWidget):
 
     def save_settings(self):
         print("Saving settings...")
-
-        old_theme = self.config.get_theme()
         
         self.config.set_safe_area_size(self.safe_area_slider.value())
         self.config.set_text_size(self.text_size_dropdown.currentText())
@@ -151,14 +149,10 @@ class Settings(QWidget):
 
         self.config.load()
 
-        if old_theme != self.config.data["theme"]:
-            # Theme changed - restart app
-            QMessageBox.information(self, "Theme Changed", "The application will restart to apply the new theme.")
-            QApplication.quit()
-            QProcess.startDetached(sys.executable, sys.argv)
+       
+        if self.main_window is not None:
+            print("Main window exists, calling refresh_settings")  # Debug print
+            self.main_window.refresh_settings()
         else:
-            # No theme change - just refresh other settings
-            if self.main_window is not None:
-                self.main_window.refresh_settings()
-            QMessageBox.information(self, "Success", "Settings saved and applied successfully!")
+            print("Warning: main_window is None, cannot refresh settings")  # Debug print
             
