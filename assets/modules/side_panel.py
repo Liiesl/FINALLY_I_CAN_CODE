@@ -15,7 +15,7 @@ class SidePanel(QWidget):
         self.setFont(QFont("Inter Regular"))
 
     def setup_ui(self, open_settings_callback):
-        self.setStyleSheet(f"background-color: {background_color};")
+        self.setStyleSheet(f"background-color: {self.background_color};")
         self.setFixedWidth(self.parent().width() // 2)
         self.setLayout(QVBoxLayout())
 
@@ -56,20 +56,20 @@ class SidePanel(QWidget):
 
     def current_palette(self):
         palette = self.parent().palette()
-        text_color = palette.color(QPalette.WindowText).name()
-        background_color = palette.color(QPalette.Window).name()
-        highlight_color = palette.color(QPalette.Highlight).name()
-        hover_color = palette.color(QPalette.Highlight).darker().name()
+        self.text_color = palette.color(QPalette.WindowText).name()
+        self.background_color = palette.color(QPalette.Window).name()
+        self.highlight_color = palette.color(QPalette.Highlight).name()
+        self.hover_color = palette.color(QPalette.Highlight).darker().name()
 
     def update_colors(self):
         # Re-fetch the current palette
         palette = self.current_palette()
 
-        self.setStyleSheet(f"background-color: {background_color};")
+        self.setStyleSheet(f"background-color: {self.background_color};")
         
-        self.info_label.setStyleSheet(f"color: {text_color}; font-size: {font_size}px; font-weight: bold; background-color: none;")
+        self.info_label.setStyleSheet(f"color: {self.text_color}; font-size: {font_size}px; font-weight: bold; background-color: none;")
 
-        self.settings_list.setStyleSheet(f"background-color: transparent; border: none; color: {text_color}; font-size: {font_size - 2}px;")
+        self.settings_list.setStyleSheet(f"background-color: transparent; border: none; color: {self.text_color}; font-size: {font_size - 2}px;")
     
     def handle_item_clicked(self, item):
         if item.text() == "Settings":
