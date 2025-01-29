@@ -72,10 +72,10 @@ class MainWindow(QMainWindow):
         self.top_bar = QHBoxLayout()
         self.top_bar_added = False
         self.menu_button = None
-
-        self.apply_theme()
         
         self.create_new_tab_content()
+
+        self.apply_theme()
 
     def apply_theme(self):
         self.config = Config(source="MainWindow")
