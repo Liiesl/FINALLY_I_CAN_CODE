@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QFi
 from PyQt5.QtGui import QFont, QColor, QPalette
 from PyQt5.QtCore import Qt
 from assets.modules.config import Config
-from smprocessing import merge_subtitles, read_file, write_file
+from .smprocessing import merge_subtitles, read_file, write_file
 
 class MultilingualTool(QWidget):
     def __init__(self, parent=None, back_callback=None):
