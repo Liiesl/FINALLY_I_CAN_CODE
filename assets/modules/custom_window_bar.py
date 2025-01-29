@@ -35,6 +35,8 @@ class CustomWindowBar(QWidget):
         self.add_tab("Hidden Tab")
         self.tab_bar.setTabVisible(0, False)  # Hide the first tab
 
+        self.add_tab("Subtl")
+
     def apply_theme(self):
         palette = self.parent.palette()
         self.text_color = palette.color(QPalette.WindowText).name()
