@@ -12,8 +12,6 @@ class CustomWindowBar(QWidget):
         self.pressing = False  # Track if the mouse is pressed
         self.resize_edge = None  # Track which edge is being resized
         self.resize_handle_size = 5  # Size of the resize handle (smaller for better sensitivity)
-
-        self.apply_theme()
         
         self.init_ui()
 
@@ -36,6 +34,8 @@ class CustomWindowBar(QWidget):
         self.tab_bar.setTabVisible(0, False)  # Hide the first tab
 
         self.add_tab("Subtl")
+        
+        self.apply_theme()
 
     def apply_theme(self):
         palette = self.parent.palette()
