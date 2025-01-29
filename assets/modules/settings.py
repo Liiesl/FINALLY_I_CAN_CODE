@@ -139,6 +139,7 @@ class Settings(QWidget):
         self.settings_saved.emit()
 
     def save_settings(self):
+        print("Saving settings...")
         self.config.set_safe_area_size(self.safe_area_slider.value())
         self.config.set_text_size(self.text_size_dropdown.currentText())
         self.config.set_theme(self.config.data["theme"])
@@ -147,6 +148,10 @@ class Settings(QWidget):
 
         self.config.load()
         
-        self.main_window.refresh_settings()
-        
+        if self.main_window is not None:
+            print("Main window exists, calling refresh_settings")  # Debug print
+            self.main_window.refresh_settings()
+        else:
+            print("Warning: main_window is None, cannot refresh settings")  # Debug print
+            
         QMessageBox.information(self, "Success", "Settings saved and applied successfully!")
