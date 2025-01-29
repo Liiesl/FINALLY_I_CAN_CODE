@@ -1,6 +1,6 @@
 import os
 from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QFileDialog, 
-                             QMessageBox, QLabel, QListWidget, QColorDialog, QListWidgetItem)
+                             QMessageBox, QLabel, QListWidget, QColorDialog, QListWidgetItem, QStyledItemDelegate)
 from PyQt5.QtGui import QFont, QColor, QPalette
 from PyQt5.QtCore import Qt
 from assets.modules.config import Config
@@ -61,7 +61,8 @@ class MultilingualTool(QWidget):
         for idx, (path, color) in enumerate(zip(self.subtitle_paths, self.colors)):
             item = QListWidgetItem(os.path.basename(path))
             item.setData(Qt.UserRole, idx)
-            item.setStyleSheet(f"background-color: {color}; color: black;")
+            item.setBackground(QColor(color))
+            item.setForeground(QColor("black"))
             self.list_widget.addItem(item)
         self.list_widget.itemDoubleClicked.connect(self.change_color)
 
