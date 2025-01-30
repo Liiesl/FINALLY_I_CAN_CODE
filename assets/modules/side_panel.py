@@ -53,6 +53,14 @@ class SidePanel(QWidget):
 
         self.layout().addWidget(self.settings_list)
         self.layout().insertWidget(1, self.settings_list)  # Insert the list at the top, below the info label
+                
+        self.credit_label = QLabel("brought to you by\nLiiesl on GitHub")
+        self.credit_label.setAlignment(Qt.AlignCenter)
+        self.credit_label.setOpenExternalLinks(True)  # Allow clickable links
+        self.credit_label.mousePressEvent = self.show_socials  # Connect click event
+
+        # Add the credit label to the layout
+        self.layout().addWidget(self.credit_label)
 
     def current_palette(self):
         palette = self.parent().palette()
@@ -87,3 +95,13 @@ class SidePanel(QWidget):
         else:
             self.changelog_window.raise_()
             self.changelog_window.activateWindow()
+
+    def show_socials(self, event):
+        # Create a message box to display social media links
+        socials_message = (
+            "GitHub: Liiesl\n"
+            "Instagram: @suryaalingga\n"
+            "YouTube: @Vfrix"
+        )
+        QMessageBox.information(self, "Socials", socials_message)
+
