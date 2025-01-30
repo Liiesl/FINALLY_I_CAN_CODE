@@ -161,6 +161,18 @@ class Settings(QWidget):
             msg_box.setWindowTitle("Relaunch Application")
             msg_box.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
             
+            msg_box.setStyleSheet("""
+                QMessageBox {
+                    color: black;
+                }
+                QMessageBox QLabel {
+                    color: black;
+                }
+                QMessageBox QPushButton {
+                    color: black;
+                }
+            """)
+            
             # Execute the message box and get the user's choice
             choice = msg_box.exec_()
             
