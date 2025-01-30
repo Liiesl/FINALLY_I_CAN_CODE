@@ -157,7 +157,11 @@ class Settings(QWidget):
             # Show a confirmation message box
             msg_box = QMessageBox()
             msg_box.setIcon(QMessageBox.Question)
-            msg_box.setText("The theme has been changed. Do you want to relaunch the application?")
+            msg_box.setText(
+                "The theme has been changed.\n\n"
+                "You need to relaunch the application for the change to fully take effect,\n\n"
+                "Do you want to relaunch the application?"
+            )
             msg_box.setWindowTitle("Relaunch Application")
             msg_box.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
             
