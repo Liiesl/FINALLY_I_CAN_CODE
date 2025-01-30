@@ -38,7 +38,6 @@ class MainWindow(QMainWindow):
         self.inter_extra_bold_font = QFont("Inter ExtraBold")
 
         self.apply_theme()
-        self.tab_names = {}
 
         self.central_widget = QWidget()
         self.layout = QVBoxLayout(self.central_widget)
@@ -49,7 +48,8 @@ class MainWindow(QMainWindow):
 
         self.custom_window_bar = CustomWindowBar(self, self.app)
         self.layout.addWidget(self.custom_window_bar)
-
+        
+        self.tab_names = {}
 
         self.tab_contents = QStackedWidget()
         self.layout.addWidget(self.tab_contents)
