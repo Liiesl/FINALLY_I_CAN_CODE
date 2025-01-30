@@ -133,4 +133,6 @@ alpha 0.1.6.1
 -new tool : multilingual tool
 -
 -new icon for the window bar
--fix bugs
+-fix close tab button's style
+-fix side panel's color theme
+-now when changing theme, app relaunch is required.
