@@ -58,7 +58,8 @@ class SidePanel(QWidget):
         self.credit_label.setAlignment(Qt.AlignLeft)
         self.credit_label.setOpenExternalLinks(True)  # Allow clickable links
         self.credit_label.mousePressEvent = self.show_socials  # Connect click event
-
+        self.credit_label.setStyleSheet("font-size: 18px;")
+        
         # Add the credit label to the layout
         self.layout().addWidget(self.credit_label)
 
