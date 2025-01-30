@@ -14,6 +14,7 @@ class Settings(QWidget):
         self.main_window = main_window
         self.setFont(QFont("Inter Regular"))
         self.config = Config(source="Settings")
+        self.initial_theme = self.config.get_theme()
         self.init_ui()
 
     def init_ui(self):
@@ -141,9 +142,6 @@ class Settings(QWidget):
     def save_settings(self):
         print("Saving settings...")
         
-        # Get the current theme before saving
-        current_theme = self.config.get_theme()
-        
         # Save the settings
         self.config.set_safe_area_size(self.safe_area_slider.value())
         self.config.set_text_size(self.text_size_dropdown.currentText())
@@ -154,7 +152,7 @@ class Settings(QWidget):
     
         # Check if the theme has changed
         new_theme = self.config.get_theme()
-        if current_theme != new_theme:
+        if initial_theme != new_theme:
             # Show a confirmation message box
             msg_box = QMessageBox()
             msg_box.setIcon(QMessageBox.Question)
