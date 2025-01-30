@@ -32,7 +32,6 @@ class MainWindow(QMainWindow):
         self.setGeometry(100, 100, 1200, 800)
         self.edge_threshold = 10
         self.setWindowFlags(Qt.FramelessWindowHint)
-        self.setStyleSheet("background-color: {background_color};")
 
         QFontDatabase.addApplicationFont("assets/fonts/Inter-Regular.otf")
         QFontDatabase.addApplicationFont("assets/fonts/Inter-ExtraBold.otf")
