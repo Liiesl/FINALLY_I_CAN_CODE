@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QWidget, QHBoxLayout, QPushButton, QTabBar, QApplication, QSpacerItem, QSizePolicy
 from PyQt5.QtCore import Qt, QPoint
-from PyQt5.QtGui import QPalette, QColor, QCursor
+from PyQt5.QtGui import QPalette, QColor, QCursor, QPainter
 import qtawesome as qta
 
 class CustomWindowBar(QWidget):
