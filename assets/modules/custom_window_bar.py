@@ -184,13 +184,15 @@ class CustomWindowBar(QWidget):
         self.parent.create_new_tab_content()
 
     def close_tab(self, index):
-        # Prevent closing the first tab
         if index == 0:
             return
+        # Remove from parent's tab_names
+        if index in self.parent.tab_names:
+            del self.parent.tab_names[index]
         self.tab_bar.removeTab(index)
-        self.parent.remove_tab_content(index)
-        if self.tab_bar.count() == 0:
-            self.add_tab("Subtl")  # Ensure at least one tab exists
+        self.parent.remove_tab_content(index - 1)  # Adjust index for MainWindow
+        if self.tab_bar.count() == 1:  # Only hidden tab left
+            self.add_tab("Subtl")
 
     def change_tab(self, index):
         self.parent.display_tab_content(index)
