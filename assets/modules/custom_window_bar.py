@@ -22,7 +22,6 @@ class CustomWindowBar(QWidget):
     def init_ui(self):
         self.setFixedHeight(50)
         self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
-        self.setStyleSheet(f"background-color: {self.button_color}; color : {self.button_color};")
         
         self.layout = QHBoxLayout(self)
         self.layout.setContentsMargins(0, 0, 0, 0)
@@ -39,6 +38,12 @@ class CustomWindowBar(QWidget):
         # Create a new tab and make it visible
         self.add_tab("Subtl")  # This will be the visible tab
 
+    def paintEvent(self, event):
+        painter = QPainter(self)
+        painter.setBrush(QColor(self.button_color))
+        painter.setPen(Qt.NoPen)
+        painter.drawRect(self.rect())
+    
     def current_palette(self):
         print("palette is being loaded by custom window bar")
         palette = self.parent.palette()
@@ -54,9 +59,6 @@ class CustomWindowBar(QWidget):
     def update_colors(self):
         print("updating custom window bar's palette")
         palette = self.current_palette()
-
-        # Update main background
-        self.setStyleSheet(f"background-color: {self.button_color}; color : {self.button_color};")
 
         # Update tab bar styles
         self.tab_bar.setStyleSheet(f"""
