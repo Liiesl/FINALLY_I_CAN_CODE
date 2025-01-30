@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QWidget, QHBoxLayout, QPushButton, QTabBar, QApplication, QSpacerItem, QSizePolicy
 from PyQt5.QtCore import Qt, QPoint
-from PyQt5.QtGui import QPalette, QColor, QCursor, QPainter
+from PyQt5.QtGui import QPalette, QColor, QCursor
 import qtawesome as qta
 
 class CustomWindowBar(QWidget):
@@ -14,15 +14,16 @@ class CustomWindowBar(QWidget):
         self.resize_handle_size = 5  # Size of the resize handle (smaller for better sensitivity)
 
         self.current_palette()
-        
+
         self.init_ui()
-        
+
         self.update_colors()
 
     def init_ui(self):
         self.setFixedHeight(50)
         self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
-        
+        self.setStyleSheet(f"background-color: {self.button_color}; color : {self.button_color};")
+
         self.layout = QHBoxLayout(self)
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.layout.setSpacing(0)  # Remove spacing between widgets
@@ -38,12 +39,6 @@ class CustomWindowBar(QWidget):
         # Create a new tab and make it visible
         self.add_tab("Subtl")  # This will be the visible tab
 
-    def paintEvent(self, event):
-        painter = QPainter(self)
-        painter.setBrush(QColor(self.button_color))
-        painter.setPen(Qt.NoPen)
-        painter.drawRect(self.rect())
-    
     def current_palette(self):
         print("palette is being loaded by custom window bar")
         palette = self.parent.palette()
@@ -53,12 +48,15 @@ class CustomWindowBar(QWidget):
         self.button_text_color = palette.color(QPalette.ButtonText).name()
         self.highlight_color = palette.color(QPalette.Highlight).name()
         self.hover_color = palette.color(QPalette.Highlight).darker().name()
-        
+
         self.update()
 
     def update_colors(self):
         print("updating custom window bar's palette")
         palette = self.current_palette()
+
+        # Update main background
+        self.setStyleSheet(f"background-color: {self.button_color}; color : {self.button_color};")
 
         # Update tab bar styles
         self.tab_bar.setStyleSheet(f"""
@@ -110,8 +108,6 @@ class CustomWindowBar(QWidget):
 
         # Update close buttons on existing tabs
         for index in range(1, self.tab_bar.count()):  # Skip hidden tab
-            if index == 0:  # Skip hidden tab
-                continue
             close_button = self.tab_bar.tabButton(index, QTabBar.RightSide)
             if close_button:
                 close_button.setStyleSheet(f"""
