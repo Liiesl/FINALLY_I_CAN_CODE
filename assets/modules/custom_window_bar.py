@@ -32,7 +32,7 @@ class CustomWindowBar(QWidget):
         self.create_tab_bar()
         self.create_buttons()
 
-    def setup_initial_tab(self):
+    def setup_initial_tabs(self):
         # Add the first tab but hide it
         self.add_tab("Hidden Tab")
         self.tab_bar.setTabVisible(0, False)  # Hide the first tab
