@@ -188,15 +188,9 @@ class CustomWindowBar(QWidget):
         if index == 0:
             return
         self.tab_bar.removeTab(index)
-<<<<<<< HEAD
-        self.parent.remove_tab_content(index)  # Adjust index for MainWindow
-        if self.tab_bar.count() == 0:  # Only hidden tab left
-            self.add_tab("Subtl")
-=======
         self.parent.remove_tab_content(index)
         if self.tab_bar.count() == 0:
             self.add_tab("Subtl")  # Ensure at least one tab exists
->>>>>>> b388a5da22c97a071491ff7402dbe5c0a54ce079
 
     def change_tab(self, index):
         self.parent.display_tab_content(index)
