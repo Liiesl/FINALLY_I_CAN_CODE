@@ -415,6 +415,11 @@ class MainWindow(QMainWindow):
             self.apply_theme()
             self.update_tool_button_visibility()
             self.resizeEvent = self.update_tool_button_visibility
+            
+        current_tab_contents_index = self.tab_contents.currentIndex()
+        tab_bar_index = current_tab_contents_index + 1  # Adjust for hidden tab
+        if tab_bar_index < self.custom_window_bar.tab_bar.count():
+            self.custom_window_bar.tab_bar.setTabText(tab_bar_index, "Subtl")
 
     def tool_selected(self, tool_name):
         # Get the current splitter for the active tab
@@ -445,6 +450,12 @@ class MainWindow(QMainWindow):
                 self.load_tool(tool_widget, main_content_layout)
             else:
                 QMessageBox.information(self, "Coming Soon", "This feature is coming soon!")
+
+        current_tab_contents_index = self.tab_contents.currentIndex()
+        tab_bar_index = current_tab_contents_index + 1  # Adjust for hidden tab
+        if tab_bar_index < self.custom_window_bar.tab_bar.count():
+            self.custom_window_bar.tab_bar.setTabText(tab_bar_index, tool_name)
+        
     def load_tool(self, tool_widget, layout):
         self.main_menu_active = False
 
