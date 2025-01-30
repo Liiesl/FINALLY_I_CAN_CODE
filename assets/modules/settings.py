@@ -151,8 +151,9 @@ class Settings(QWidget):
         self.config.load()
     
         # Check if the theme has changed
-        new_theme = self.config.get_theme()
-        if initial_theme != new_theme:
+        self.new_theme = self.config.get_theme()
+        
+        if self.initial_theme != self.new_theme:
             # Show a confirmation message box
             msg_box = QMessageBox()
             msg_box.setIcon(QMessageBox.Question)
