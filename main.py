@@ -48,10 +48,9 @@ class MainWindow(QMainWindow):
 
         self.custom_window_bar = CustomWindowBar(self, self.app)
         self.layout.addWidget(self.custom_window_bar)
-        
-        self.tab_names = {}
 
         self.tab_contents = QStackedWidget()
+        self.tab_names = {}
         self.layout.addWidget(self.tab_contents)
 
         self.side_panel = SidePanel(self, self.open_settings)
