@@ -55,7 +55,7 @@ class SidePanel(QWidget):
         self.layout().insertWidget(1, self.settings_list)  # Insert the list at the top, below the info label
                 
         self.credit_label = QLabel("brought to you by\nLiiesl on GitHub")
-        self.credit_label.setAlignment(Qt.AlignCenter)
+        self.credit_label.setAlignment(Qt.AlignLeft)
         self.credit_label.setOpenExternalLinks(True)  # Allow clickable links
         self.credit_label.mousePressEvent = self.show_socials  # Connect click event
 
