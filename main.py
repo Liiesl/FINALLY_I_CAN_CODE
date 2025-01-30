@@ -48,8 +48,7 @@ class MainWindow(QMainWindow):
 
         self.custom_window_bar = CustomWindowBar(self, self.app)
         self.layout.addWidget(self.custom_window_bar)
-        
-        self.tab_names = {}
+
 
         self.tab_contents = QStackedWidget()
         self.layout.addWidget(self.tab_contents)
@@ -265,9 +264,6 @@ class MainWindow(QMainWindow):
 
         # Replicate the main menu layout in the new tab
         self.main_menu(new_main_content_layout)
-        
-        current_custom_index = self.custom_window_bar.tab_bar.currentIndex()
-        self.tab_names[current_custom_index] = "Subtl"
 
     def remove_tab_content(self, index):
         widget = self.tab_contents.widget(index)
@@ -276,12 +272,7 @@ class MainWindow(QMainWindow):
             widget.deleteLater()  # Clean up the widget
 
     def display_tab_content(self, index):
-        main_window_index = index - 1
-        if main_window_index >= 0 and main_window_index < self.tab_contents.count():
-            self.tab_contents.setCurrentIndex(main_window_index)
-
-        title = self.tab_names.get(index, "Subtl")
-        self.custom_window_bar.tab_bar.setTabText(index, title)
+        self.tab_contents.setCurrentIndex(index)
 
     def create_tool_button(self, tool_name, tool_description):
         button = QPushButton()
@@ -424,10 +415,6 @@ class MainWindow(QMainWindow):
             self.apply_theme()
             self.update_tool_button_visibility()
             self.resizeEvent = self.update_tool_button_visibility
-        
-            current_custom_index = self.custom_window_bar.tab_bar.currentIndex()
-            self.tab_names[current_custom_index] = "Subtl"
-            self.custom_window_bar.tab_bar.setTabText(current_custom_index, "Subtl")
 
     def tool_selected(self, tool_name):
         # Get the current splitter for the active tab
@@ -458,11 +445,6 @@ class MainWindow(QMainWindow):
                 self.load_tool(tool_widget, main_content_layout)
             else:
                 QMessageBox.information(self, "Coming Soon", "This feature is coming soon!")
-        
-            current_custom_index = self.custom_window_bar.tab_bar.currentIndex()
-            self.tab_names[current_custom_index] = tool_name
-            self.custom_window_bar.tab_bar.setTabText(current_custom_index, tool_name)
-    
     def load_tool(self, tool_widget, layout):
         self.main_menu_active = False
 
@@ -539,7 +521,7 @@ class MainWindow(QMainWindow):
         self.update_safe_area_size()  # Update safe area size
         self.apply_text_size()  # Update text size
         self.apply_theme()  # Update theme
-        
+
         self.custom_window_bar.current_palette()
         self.custom_window_bar.update_colors()
         self.side_panel.current_palette()
