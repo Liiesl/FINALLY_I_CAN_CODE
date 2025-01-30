@@ -110,6 +110,8 @@ class CustomWindowBar(QWidget):
 
         # Update close buttons on existing tabs
         for index in range(1, self.tab_bar.count()):  # Skip hidden tab
+            if index == 0:  # Skip hidden tab
+                continue
             close_button = self.tab_bar.tabButton(index, QTabBar.RightSide)
             if close_button:
                 close_button.setStyleSheet(f"""
