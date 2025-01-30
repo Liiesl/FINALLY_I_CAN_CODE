@@ -61,14 +61,19 @@ class CustomWindowBar(QWidget):
         # Update tab bar styles
         self.tab_bar.setStyleSheet(f"""
             QTabBar::tab {{
-                padding: 2px 10px;
+                height: 50px;
+                padding: 0px 10px;
                 margin: 0;
                 border: none;
                 background: {self.button_color};
                 color: {self.text_color};
+                border-top-left-radius: 10px;
+                border-top-right-radius: 10px;
             }}
             QTabBar::tab:selected {{
                 background: {self.background_color};
+                border-top-left-radius: 10px;
+                border-top-right-radius: 10px;
             }}
         """)
 
