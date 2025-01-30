@@ -141,16 +141,54 @@ class Settings(QWidget):
     def save_settings(self):
         print("Saving settings...")
         
+        # Get the current theme before saving
+        current_theme = self.config.get_theme()
+        
+        # Save the settings
         self.config.set_safe_area_size(self.safe_area_slider.value())
         self.config.set_text_size(self.text_size_dropdown.currentText())
         self.config.set_theme(self.config.data["theme"])
-
+        
         self.config.save()
-
         self.config.load()
-
-        if self.main_window is not None:
-            print("Main window exists, calling refresh_settings")  # Debug print
-            self.main_window.refresh_settings()
+    
+        # Check if the theme has changed
+        new_theme = self.config.get_theme()
+        if current_theme != new_theme:
+            # Show a confirmation message box
+            msg_box = QMessageBox()
+            msg_box.setIcon(QMessageBox.Question)
+            msg_box.setText("The theme has been changed. Do you want to relaunch the application?")
+            msg_box.setWindowTitle("Relaunch Application")
+            msg_box.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+            
+            # Execute the message box and get the user's choice
+            choice = msg_box.exec_()
+            
+            if choice == QMessageBox.Yes:
+                # Relaunch the application
+                self.relaunch_app()
+            else:
+                # If the user chooses not to relaunch, just refresh the settings
+                if self.main_window is not None:
+                    self.main_window.refresh_settings()
         else:
-            print("Warning: main_window is None, cannot refresh settings")  # Debug print
+            # If the theme hasn't changed, just refresh the settings
+            if self.main_window is not None:
+                self.main_window.refresh_settings()
+    
+    def relaunch_app(self):
+        """Relaunch the application."""
+        import os
+        import sys
+        import subprocess
+        
+        # Get the current script path
+        script_path = sys.argv[0]
+        
+        # Close the current application
+        self.main_window.close()
+        
+        # Relaunch the application
+        subprocess.Popen([sys.executable, script_path])
+        sys.exit()
