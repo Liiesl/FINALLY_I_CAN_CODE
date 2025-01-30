@@ -25,8 +25,6 @@ class MainWindow(QMainWindow):
         self.pressing = False  # Tracks if the mouse is pressed
         self.start = QPoint(0, 0)  # Tracks the initial mouse position
 
-
-
     def init_ui(self):
         self.setWindowTitle("SRT Editor")
         self.setGeometry(100, 100, 1200, 800)
