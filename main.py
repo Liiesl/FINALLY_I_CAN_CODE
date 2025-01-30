@@ -38,6 +38,7 @@ class MainWindow(QMainWindow):
         self.inter_extra_bold_font = QFont("Inter ExtraBold")
 
         self.apply_theme()
+        self.tab_names = {}
 
         self.central_widget = QWidget()
         self.layout = QVBoxLayout(self.central_widget)
@@ -73,8 +74,6 @@ class MainWindow(QMainWindow):
         self.menu_button = None
 
         self.create_new_tab_content()
-        
-        self.tab_names = {}
 
     def apply_theme(self):
         self.config = Config(source="MainWindow")
