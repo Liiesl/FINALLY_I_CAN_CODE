@@ -32,11 +32,10 @@ class CustomWindowBar(QWidget):
         self.create_tab_bar()
         self.create_buttons()
 
+    def setup_initial_tab(self):
         # Add the first tab but hide it
         self.add_tab("Hidden Tab")
         self.tab_bar.setTabVisible(0, False)  # Hide the first tab
-
-        # Create a new tab and make it visible
         self.add_tab("Subtl")  # This will be the visible tab
 
     def current_palette(self):
