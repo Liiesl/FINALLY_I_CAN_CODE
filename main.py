@@ -1,6 +1,6 @@
 import sys
 import qtawesome as qta
-from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QLabel, QScrollArea, QMessageBox, QSplitter, QFrame, QStackedWidget
+from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QLabel, QScrollArea, QMessageBox, QSplitter, QFrame, QStackedWidget, QLineEdit
 from PyQt5.QtGui import QPalette, QColor, QFont, QFontDatabase
 from PyQt5.QtCore import Qt, QPropertyAnimation, QPoint
 
@@ -367,6 +367,14 @@ class MainWindow(QMainWindow):
                 main_content_layout.addLayout(self.top_bar)
                 self.top_bar_added = True  # Mark the top bar as added
 
+            # Add this line before the tools loop
+            self.tool_buttons = []
+            
+            for tool in tools:
+                btn = self.create_tool_button(tool[0], tool[1])
+                self.tool_buttons.append(btn)
+                self.tool_buttons_layout.addWidget(btn)
+            
             # Add the tool buttons
             self.tool_buttons_container = QWidget()
             self.tool_buttons_layout = QHBoxLayout(self.tool_buttons_container)
@@ -533,16 +541,16 @@ class MainWindow(QMainWindow):
 
     def update_tool_button_visibility(self, event=None):
         if self.main_menu_active and self.tool_buttons_container:
-            container_width = self.tool_buttons_container.width()
-            button_width = 220
-            visible_buttons = container_width // button_width
-            for i in range(self.tool_buttons_layout.count()):
-                item = self.tool_buttons_layout.itemAt(i)
-                if item is not None and item.widget() is not None:
-                    if i < visible_buttons:
-                        item.widget().setVisible(True)
-                    else:
-                        item.widget().setVisible(False)
+            # Only handle automatic visibility if there's no search filter
+            if not self.search_field.text():
+                container_width = self.tool_buttons_container.width()
+                button_width = 220
+                visible_buttons = container_width // button_width
+                for i, button in enumerate(self.tool_buttons):
+                    button.setVisible(i < visible_buttons)
+            else:
+                # Let filter_tools handle visibility
+                pass
 
     def scroll_left(self):
         current_value = self.scroll_area.horizontalScrollBar().value()
