@@ -334,6 +334,7 @@ class MainWindow(QMainWindow):
         button_layout.addWidget(description_label)
 
         button.clicked.connect(lambda: self.tool_selected(tool_name))
+        button.setProperty("category", category)
         return button
 
     def main_menu(self, layout=None):
