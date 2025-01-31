@@ -596,7 +596,6 @@ class MainWindow(QMainWindow):
             visible = search_text in name or search_text in description
             button.setVisible(visible)
         
-        self.arrange_tools_in_grid()
         QApplication.processEvents()
         # Update scroll area contents
         self.tool_buttons_container.adjustSize()
