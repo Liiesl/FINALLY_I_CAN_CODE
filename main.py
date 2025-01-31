@@ -579,12 +579,10 @@ class MainWindow(QMainWindow):
                 col = 0
                 row += 1
     
-        # Set fixed grid size policy
-        self.tool_buttons_container.setFixedSize(
-            columns * (button_width + 20) - 20,
-            (row + 1) * (button_height + 20) - 20
-        )
-
+    # Remove fixed size to allow dynamic resizing
+    self.tool_buttons_container.setMinimumSize(0, 0)  # Reset minimum size
+    self.tool_buttons_container.adjustSize()  # Adjust based on content
+    
     def eventFilter(self, source, event):
         if source == self.tool_buttons_container and event.type() == event.Resize:
             self.arrange_tools_in_grid()
