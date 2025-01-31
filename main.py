@@ -416,7 +416,7 @@ class MainWindow(QMainWindow):
                 ("Multilingual Merge", "Merge subtitles in different languages with colors.", "Merge"),
                 ("Coming Soon", "More tools will be added in the future.", "Other")
             ]
-            tools_dict = {name: desc for name, desc. _ in tools}
+            tools_dict = {name: desc for name, desc, _ in tools}
             
             self.tool_buttons_container = QWidget()
             container_layout = QVBoxLayout(self.tool_buttons_container)
