@@ -530,6 +530,15 @@ class MainWindow(QMainWindow):
             
             # Modify the main content layout to include filter panel
             main_content_layout = current_splitter.widget(1).layout()
+
+            scroll_area = QScrollArea()
+            scroll_area.setWidgetResizable(True)
+            scroll_area.setWidget(self.tool_buttons_container)
+            scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+            scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+            self.scroll_area = scroll_area
+
+            main_content_layout.addWidget(scroll_area)
             
             # Create a horizontal container for filters and tools
             content_container = QWidget()
@@ -540,15 +549,6 @@ class MainWindow(QMainWindow):
             
             # Replace existing scroll area addition with the container
             main_content_layout.addWidget(content_container)
-
-            scroll_area = QScrollArea()
-            scroll_area.setWidgetResizable(True)
-            scroll_area.setWidget(self.tool_buttons_container)
-            scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-            scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-            self.scroll_area = scroll_area
-
-            main_content_layout.addWidget(scroll_area)
 
             self.apply_text_size()
             self.apply_theme()
