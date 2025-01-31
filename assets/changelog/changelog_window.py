@@ -14,7 +14,7 @@ class VersionBlock(QWidget):
 
     def init_ui(self):
         main_layout = QHBoxLayout(self)
-        main_layout.setContentsMargins(20, 20, 20, 20)  # Creates gap between blocks
+        main_layout.setContentsMargins(20, 30, 20, 30)  # Vertical gap space
         main_layout.setSpacing(20)
 
         # Version title
@@ -23,13 +23,6 @@ class VersionBlock(QWidget):
         version_label.setFixedWidth(150)
         version_label.setAlignment(Qt.AlignLeft | Qt.AlignTop)
         main_layout.addWidget(version_label)
-
-        # Vertical line between title and changes
-        line = QFrame()
-        line.setFrameShape(QFrame.VLine)
-        line.setLineWidth(2)
-        line.setStyleSheet(f"border-color: {self.palette().color(QPalette.WindowText).name()};")
-        main_layout.addWidget(line)
 
         # Changes list
         changes_html = "<ul style='margin: 0; padding-left: 20px;'>"
@@ -44,6 +37,7 @@ class VersionBlock(QWidget):
         changes_label.setWordWrap(True)
         changes_label.setTextInteractionFlags(Qt.TextSelectableByMouse)
         main_layout.addWidget(changes_label, stretch=1)
+
 class ChangelogWindow(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -66,33 +60,31 @@ class ChangelogWindow(QMainWindow):
         self.scroll_area = QScrollArea()
         self.scroll_area.setWidgetResizable(True)
         
-        # Main container with horizontal layout
+        # Main container with line
         self.scroll_content = QWidget()
-        self.scroll_layout = QHBoxLayout(self.scroll_content)
+        self.scroll_layout = QVBoxLayout(self.scroll_content)
         self.scroll_layout.setContentsMargins(0, 0, 0, 0)
         self.scroll_layout.setSpacing(0)
 
-        # Continuous vertical line
-        self.vertical_line = QFrame()
-        self.vertical_line.setFrameShape(QFrame.VLine)
-        self.vertical_line.setLineWidth(2)
-        self.vertical_line.setStyleSheet("border-color: #0078D4;")
-        self.vertical_line.setFixedWidth(2)
-        self.vertical_line.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Expanding)
-        self.scroll_layout.addWidget(self.vertical_line)
-
-        # Version blocks container
-        self.versions_container = QWidget()
-        self.versions_layout = QVBoxLayout(self.versions_container)
-        self.versions_layout.setContentsMargins(20, 0, 20, 0)
-        self.versions_layout.setSpacing(20)  # Gap between version blocks
-        self.scroll_layout.addWidget(self.versions_container)
+        # Add continuous vertical line
+        self.line = QFrame(self.scroll_content)
+        self.line.setFrameShape(QFrame.VLine)
+        self.line.setLineWidth(2)
+        self.line.setStyleSheet("border-color: #0078D4;")
+        self.line.move(170, 0)  # Position after version title + margin
+        self.line.resize(2, self.scroll_content.height())
+        self.line.lower()  # Send to background
 
         self.apply_palette()
         self.load_changelog()
         
         self.scroll_area.setWidget(self.scroll_content)
         main_layout.addWidget(self.scroll_area)
+
+    def resizeEvent(self, event):
+        """Update line height when window resizes"""
+        self.line.resize(2, self.scroll_content.height())
+        super().resizeEvent(event)
 
     def apply_palette(self):
         palette = QApplication.instance().palette()
