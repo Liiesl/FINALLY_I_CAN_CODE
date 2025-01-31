@@ -14,23 +14,25 @@ class VersionBlock(QWidget):
 
     def init_ui(self):
         main_layout = QHBoxLayout(self)
-        main_layout.setContentsMargins(20, 10, 20, 10)  # Vertical spacing between blocks
+        main_layout.setContentsMargins(20, 0, 20, 0)  # Removed vertical margins
         main_layout.setSpacing(20)
 
-        # Version label
+        # Version label (unchanged)
         version_label = QLabel(self.version)
         version_label.setFont(QFont("Inter ExtraBold", 20))
         version_label.setAlignment(Qt.AlignLeft | Qt.AlignTop)
         version_label.setFixedWidth(150)
         main_layout.addWidget(version_label)
 
-        # Vertical line container (stretches full height)
+        # Vertical line container
         line_container = QWidget()
+        line_container.setFixedWidth(24)  # Fixed width to center the line
         line_container.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Expanding)
         line_layout = QVBoxLayout(line_container)
-        line_layout.setContentsMargins(0, -10, 0, -10)  # Negative margins to span spacing
+        line_layout.setContentsMargins(0, 0, 0, 0)  # Removed negative margins
         line_layout.setSpacing(0)
-        # Composite icon (circle outline + dot)
+        
+        # Composite icon (unchanged)
         icon = qta.icon("mdi.circle-outline", color="#0078D4").pixmap(24, 24)
         painter = QPainter(icon)
         dot_icon = qta.icon("mdi.circle", color="#0078D4").pixmap(8, 8)
@@ -40,6 +42,7 @@ class VersionBlock(QWidget):
         icon_label = QLabel()
         icon_label.setPixmap(icon)
         line_layout.addWidget(icon_label, alignment=Qt.AlignTop)
+
         # Vertical line
         line = QFrame()
         line.setFrameShape(QFrame.VLine)
@@ -48,7 +51,8 @@ class VersionBlock(QWidget):
         line.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Expanding)
         line_layout.addWidget(line)
         main_layout.addWidget(line_container)
-        # Changes list
+
+        # Changes list (unchanged)
         changes_html = "<ul style='margin: 0; padding-left: 20px;'>"
         for change in self.changes:
             cleaned_change = change.strip().lstrip('- ')
