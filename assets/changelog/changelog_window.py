@@ -154,7 +154,7 @@ class ChangelogWindow(QMainWindow):
         versions.reverse()
 
         for version, changes in versions:
-            self.versions_layout.addWidget(VersionBlock(version, changes))
+            self.scroll_layout.addWidget(VersionBlock(version, changes))
         
         self.versions_layout.addStretch()
 
