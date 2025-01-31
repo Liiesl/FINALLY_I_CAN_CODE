@@ -4,12 +4,13 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout,
 from PyQt5.QtGui import QPalette, QColor, QFont, QFontDatabase
 from PyQt5.QtCore import Qt, QPropertyAnimation, QPoint
 
+import importlib
 from tools.subtitle_converter import SubtitleConverter
 from tools.subtitle_shifter import SubtitleShifter
 from assets.modules.side_panel import SidePanel
 from assets.modules.settings import Settings
 from assets.modules.config import Config
-from assets.modules.custom_window_bar import CustomWindowBar  # Import the CustomWindowBar
+from assets.modules.custom_window_bar import CustomWindowBar
 
 class MainWindow(QMainWindow):
     def __init__(self, app):
@@ -17,16 +18,17 @@ class MainWindow(QMainWindow):
         self.app = app
         self.tab_contents = QStackedWidget()
         self.setMouseTracking(True)
-
+        self.tools = {}
         self.init_ui()
+        self.load_all_tools()
 
-        self.resize_edge = None  # Tracks which edge is being resized
-        self.resize_handle_size = 5  # Size of the resize handle (smaller for better sensitivity)
-        self.pressing = False  # Tracks if the mouse is pressed
-        self.start = QPoint(0, 0)  # Tracks the initial mouse position
+        self.resize_edge = None
+        self.resize_handle_size = 5
+        self.pressing = False
+        self.start = QPoint(0, 0)
 
     def init_ui(self):
-        self.setWindowTitle("SRT Editor")
+        self.setWindowTitle("Subtl")
         self.setGeometry(100, 100, 1200, 800)
         self.edge_threshold = 10
         self.setWindowFlags(Qt.FramelessWindowHint)
@@ -44,35 +46,23 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.central_widget)
 
         self.config = Config(source="MainWindow")
-        self.main_menu_active = True
 
         self.custom_window_bar = CustomWindowBar(self, self.app)
         self.layout.addWidget(self.custom_window_bar)
-        self.custom_window_bar.setup_initial_tabs()  # Add this line to create initial tabs
-
-        self.tab_contents = QStackedWidget()
-        self.layout.addWidget(self.tab_contents)
-
-        self.side_panel = SidePanel(self, self.open_settings)
-        self.side_panel.setVisible(False)
-        self.side_panel.setFont(self.inter_regular_font)
 
         self.main_content = QWidget()
         self.main_content_layout = QVBoxLayout(self.main_content)
         self.main_content.setLayout(self.main_content_layout)
 
+        self.side_panel = SidePanel(self, self.open_settings)
+        self.side_panel.setFont(self.inter_regular_font)
+
         self.splitter = QSplitter(Qt.Horizontal)
         self.splitter.addWidget(self.side_panel)
         self.splitter.addWidget(self.main_content)
-        self.splitter.setSizes([0, 1])
+        self.splitter.setSizes([200, 1000])
 
-        self.tab_contents.addWidget(self.splitter)
-
-        self.top_bar = QHBoxLayout()
-        self.top_bar_added = False
-        self.menu_button = None
-
-        self.create_new_tab_content()
+        self.layout.addWidget(self.splitter)
 
     def apply_theme(self):
         self.config = Config(source="MainWindow")
@@ -422,52 +412,46 @@ class MainWindow(QMainWindow):
             self.custom_window_bar.tab_bar.setTabText(tab_bar_index, "Subtl")
 
     def tool_selected(self, tool_name):
-        # Get the current splitter for the active tab
-        current_splitter = self.tab_contents.currentWidget()
-        if current_splitter is not None:
-            # Get the main content widget for the current tab
-            main_content = current_splitter.widget(1)  # Main content is the second widget in the splitter
-            main_content_layout = main_content.layout()
+        self.open_tool(tool_name)
+        
+    def open_tool(self, tool_name):
+        self.load_tool(tool_name)
+        self.update_tab_text(tool_name)
 
-            if tool_name == "Longer Appearance SRT":
-                from tools.longer_appearance import LongerAppearanceSRT
-                tool_widget = LongerAppearanceSRT(parent=main_content, back_callback=self.main_menu)
-                tool_widget.setFont(self.inter_regular_font)
-                self.load_tool(tool_widget, main_content_layout)
-            elif tool_name == "Merge SRT Files":
-                from tools.merge_srt import MergeSRT
-                tool_widget = MergeSRT(parent=main_content, back_callback=self.main_menu)
-                self.load_tool(tool_widget, main_content_layout)
-            elif tool_name == "Subtitle Converter":
-                tool_widget = SubtitleConverter(parent=main_content, back_callback=self.main_menu)
-                self.load_tool(tool_widget, main_content_layout)
-            elif tool_name == "Subtitle Shifter":
-                tool_widget = SubtitleShifter(parent=main_content, back_callback=self.main_menu)
-                self.load_tool(tool_widget, main_content_layout)
-            elif tool_name == "Multilingual Merge":
-                from tools.multilingual_tool import MultilingualTool
-                tool_widget = MultilingualTool(parent=main_content, back_callback=self.main_menu)
-                self.load_tool(tool_widget, main_content_layout)
-            else:
-                QMessageBox.information(self, "Coming Soon", "This feature is coming soon!")
-
+    def update_tab_text(self, tool_name):
         current_tab_contents_index = self.tab_contents.currentIndex()
         tab_bar_index = current_tab_contents_index + 1  # Adjust for hidden tab
         if tab_bar_index < self.custom_window_bar.tab_bar.count():
-             self.custom_window_bar.tab_bar.setTabText(tab_bar_index, tool_name)
-        
-    def load_tool(self, tool_widget, layout):
-        self.main_menu_active = False
+            self.custom_window_bar.tab_bar.setTabText(tab_bar_index, tool_name)
 
-        # Clear the existing layout
-        for i in reversed(range(layout.count())):
-            widget = layout.itemAt(i).widget()
+    def load_all_tools(self):
+        import os
+        tools_dir = os.path.join(os.path.dirname(__file__), 'tools')
+        for filename in os.listdir(tools_dir):
+            if filename.endswith('.py') and filename != '__init__.py':
+                tool_name = filename[:-3]
+                self.side_panel.add_tool(tool_name)
+
+    def load_tool(self, tool_name):
+        if tool_name not in self.tools:
+            try:
+                module = importlib.import_module(f"tools.{tool_name.lower().replace(' ', '_')}")
+                tool_class = getattr(module, tool_name.replace(' ', ''))
+                self.tools[tool_name] = tool_class(parent=self.main_content, back_callback=self.main_menu)
+                self.tools[tool_name].setFont(self.inter_regular_font)
+            except ImportError:
+                QMessageBox.warning(self, "Tool not found", f"The tool '{tool_name}' could not be loaded.")
+                return
+
+        # Clear the existing content
+        for i in reversed(range(self.main_content_layout.count())): 
+            widget = self.main_content_layout.itemAt(i).widget()
             if widget is not None:
                 widget.setParent(None)
 
         # Add the tool widget to the layout
-        layout.addWidget(tool_widget)
-        tool_widget.show()
+        self.main_content_layout.addWidget(self.tools[tool_name])
+        self.tools[tool_name].show()
 
     def toggle_side_panel(self):
         # Get the current splitter for the active tab
@@ -482,20 +466,13 @@ class MainWindow(QMainWindow):
                 current_splitter.setSizes([self.width() // 2, self.width() // 2])  # Show the side panel
 
     def open_settings(self, item=None):
-        # Get the current splitter for the active tab
-        current_splitter = self.tab_contents.currentWidget()
-        if current_splitter is not None:
-            # Get the main content widget for the current tab
-            main_content = current_splitter.widget(1)  # Main content is the second widget in the splitter
-            main_content_layout = main_content.layout()
+        tool_name = "Settings"
+        if tool_name not in self.tools:
+            self.tools[tool_name] = Settings(parent=self.main_content, back_callback=self.main_menu, main_window=self)
+            self.tools[tool_name].setFont(self.inter_regular_font)
+            self.tools[tool_name].settings_saved.connect(self.apply_theme)
 
-            # Create the settings widget
-            settings_widget = Settings(parent=self.main_content, back_callback=self.main_menu, main_window=self)
-            settings_widget.setFont(self.inter_regular_font)
-            settings_widget.settings_saved.connect(self.apply_theme)
-
-            # Load the settings widget into the current tab's main content layout
-            self.load_tool(settings_widget, main_content_layout)
+        self.open_tool(tool_name)
 
     def update_safe_area_size(self):
         self.config = Config(source="MainWindow")
