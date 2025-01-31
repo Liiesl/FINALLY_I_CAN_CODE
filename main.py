@@ -335,16 +335,6 @@ class MainWindow(QMainWindow):
 
         button.clicked.connect(lambda: self.tool_selected(tool_name))
         return button
-        
-        button.setProperty("category", tool[2])
-
-        for index, tool in enumerate(tools):
-            btn = self.create_tool_button(tool[0], tool[1])
-            btn.setProperty("category", tool[2])  # Set category property
-            row = index // columns
-            col = index % columns
-            all_tools_grid.addWidget(btn, row, col)
-            self.tool_buttons.append(btn)
 
     def main_menu(self, layout=None):
         # Get the current main content layout for the active tab
