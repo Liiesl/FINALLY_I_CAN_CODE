@@ -65,7 +65,7 @@ class ChangelogWindow(QMainWindow):
         self.scroll_content = QWidget()
         self.grid_layout = QGridLayout(self.scroll_content)
         self.grid_layout.setColumnStretch(2, 1)  # Changes column expands
-        self.grid_layout.setVerticalSpacing(30)  # Gap between versions
+        self.grid_layout.setVerticalSpacing(50)  # Gap between versions
         self.grid_layout.setColumnMinimumWidth(1, 2)  # Line column width
 
         # Add vertical line spanning all rows
