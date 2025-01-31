@@ -395,7 +395,7 @@ class MainWindow(QMainWindow):
             
             # Add the tool buttons
             self.tool_buttons_container = QWidget()
-            self.tool_buttons_layout = QvBoxLayout(self.tool_buttons_container)
+            self.tool_buttons_layout = QVBoxLayout(self.tool_buttons_container)
             self.tool_buttons_layout.setContentsMargins(0, 0, 0, 0)
 
             tools = [
