@@ -501,33 +501,37 @@ class MainWindow(QMainWindow):
             # Get the main content widget for the current tab
             main_content = current_splitter.widget(1)  # Main content is the second widget in the splitter
             main_content_layout = main_content.layout()
-
+    
+            # Clear existing tool widgets in the main content
+            self.clear_layout(main_content_layout)
+    
             if tool_name == "Longer Appearance SRT":
                 from tools.longer_appearance import LongerAppearanceSRT
                 tool_widget = LongerAppearanceSRT(parent=main_content, back_callback=self.main_menu)
                 tool_widget.setFont(self.inter_regular_font)
-                self.load_tool(tool_widget, main_content_layout)
             elif tool_name == "Merge SRT Files":
                 from tools.merge_srt import MergeSRT
                 tool_widget = MergeSRT(parent=main_content, back_callback=self.main_menu)
-                self.load_tool(tool_widget, main_content_layout)
             elif tool_name == "Subtitle Converter":
                 tool_widget = SubtitleConverter(parent=main_content, back_callback=self.main_menu)
-                self.load_tool(tool_widget, main_content_layout)
             elif tool_name == "Subtitle Shifter":
                 tool_widget = SubtitleShifter(parent=main_content, back_callback=self.main_menu)
-                self.load_tool(tool_widget, main_content_layout)
             elif tool_name == "Multilingual Merge":
                 from tools.multilingual_tool import MultilingualTool
                 tool_widget = MultilingualTool(parent=main_content, back_callback=self.main_menu)
-                self.load_tool(tool_widget, main_content_layout)
             else:
                 QMessageBox.information(self, "Coming Soon", "This feature is coming soon!")
-
-        current_tab_contents_index = self.tab_contents.currentIndex()
-        tab_bar_index = current_tab_contents_index + 1  # Adjust for hidden tab
-        if tab_bar_index < self.custom_window_bar.tab_bar.count():
-             self.custom_window_bar.tab_bar.setTabText(tab_bar_index, tool_name)
+                return
+    
+            # Add the tool widget to the main content layout
+            main_content_layout.addWidget(tool_widget)
+            tool_widget.show()
+    
+    def clear_layout(self, layout):
+        while layout.count():
+            child = layout.takeAt(0)
+            if child.widget():
+                child.widget().deleteLater()
         
     def load_tool(self, tool_widget, layout):
         self.main_menu_active = False
