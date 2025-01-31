@@ -370,11 +370,6 @@ class MainWindow(QMainWindow):
             # Add this line before the tools loop
             self.tool_buttons = []
             
-            for tool in tools:
-                btn = self.create_tool_button(tool[0], tool[1])
-                self.tool_buttons.append(btn)
-                self.tool_buttons_layout.addWidget(btn)
-            
             # Add the tool buttons
             self.tool_buttons_container = QWidget()
             self.tool_buttons_layout = QHBoxLayout(self.tool_buttons_container)
@@ -390,7 +385,9 @@ class MainWindow(QMainWindow):
             ]
 
             for tool in tools:
-                self.tool_buttons_layout.addWidget(self.create_tool_button(tool[0], tool[1]))
+                btn = self.create_tool_button(tool[0], tool[1])
+                self.tool_buttons.append(btn)
+                self.tool_buttons_layout.addWidget(btn)
 
             self.tool_buttons_layout.addStretch()
 
