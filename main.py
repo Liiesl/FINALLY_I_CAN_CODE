@@ -67,9 +67,7 @@ class MainWindow(QMainWindow):
         self.main_content = QWidget()
         self.main_content_layout = QVBoxLayout(self.main_content)
         self.main_content.setLayout(self.main_content_layout)
-
-        self.tab_contents.addWidget(self.splitter)
-
+        
         self.top_bar = QHBoxLayout()
         self.top_bar_added = False
         self.menu_button = None
@@ -263,6 +261,10 @@ class MainWindow(QMainWindow):
         # Add the splitter to the tab contents
         self.tab_contents.addWidget(new_splitter)
         self.tab_contents.setCurrentWidget(new_splitter)
+
+        # Store reference to the FIRST splitter
+        if not hasattr(self, 'splitter'):
+            self.splitter = new_splitter  # Maintain reference for initial tab
 
         # Replicate the main menu layout in the new tab
         self.main_menu(new_main_content_layout)
