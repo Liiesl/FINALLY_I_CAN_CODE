@@ -363,7 +363,31 @@ class MainWindow(QMainWindow):
                 
                 self.search_field = QLineEdit()
                 self.search_field.setPlaceholderText("Search tools...")
-                self.search_field.setFixedWidth(200)
+                self.search_field.setFixedWidth(500)
+
+                palette = self.app.palette()
+                text_color = palette.color(QPalette.Text).name()
+                bg_color = palette.color(QPalette.Base).name()
+                placeholder_color = palette.color(QPalette.PlaceholderText).name()
+                button_color = palette.color(QPalette.Button).name()
+                button_text_color = palette.color(QPalette.ButtonText).name()
+
+                search_icon = qta.icon('fa5s.search', color=text_color)
+                self.search_field.addAction(search_icon, QLineEdit.LeadingPosition)
+                self.search_field.setStyleSheet(f"""
+                QLineEdit {{
+                    background-color: {button_color};
+                    color: {button_text_color};
+                    border: 2px solid {palette.color(QPalette.Highlight).name()};
+                    border-radius: 15px;
+                    padding: 5px 5px 5px 35px;  # Adjusted padding for icon
+                    font-size: {self.config.get_text_size("default")}px;
+                }}
+                QLineEdit::placeholder {{
+                    color: {palette.color(QPalette.PlaceholderText).name()};
+                }}
+            """)
+                
                 self.search_field.textChanged.connect(self.filter_tools)
                 self.top_bar.addWidget(self.search_field, alignment=Qt.AlignRight)
 
