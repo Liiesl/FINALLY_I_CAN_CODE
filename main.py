@@ -399,13 +399,6 @@ class MainWindow(QMainWindow):
 
             # Add this line before the tools loop
             self.tool_buttons = []
-            
-            # Add the tool buttons
-            tool_buttons_container = QWidget()
-            tool_buttons_layout = QGridLayout()
-            tool_buttons_layout.setContentsMargins(0, 0, 0, 0)
-            tool_buttons_layout.setHorizontalSpacing(20)
-            tool_buttons_layout.setVerticalSpacing(20)
 
             tools = [
                 ("Longer Appearance SRT", "Increase the duration each subtitle appears."),
@@ -467,10 +460,10 @@ class MainWindow(QMainWindow):
                 btn = self.create_tool_button(tool[0], tool[1])
                 row = index // columns
                 col = index % columns
-                tool_buttons_layout.addWidget(btn, row, col)
+                all_tools_grid.addWidget(btn, row, col)
                 self.tool_buttons.append(btn)
 
-            self.tool_buttons_container.setLayout(tool_buttons_layout)
+            self.tool_buttons_container.setLayout(all_tools_grid)
 
             # Add navigation arrows
             navigation_frame = QFrame()
