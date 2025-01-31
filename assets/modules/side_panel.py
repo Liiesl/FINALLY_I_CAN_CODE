@@ -79,6 +79,9 @@ class SidePanel(QWidget):
         tool_item.setData(Qt.UserRole, tool_name)
         self.tools_list.addItem(tool_item)
 
+    def clear_tools(self):
+        self.tools_list.clear()
+
     def current_palette(self):
         palette = self.parent().palette()
         self.text_color = palette.color(QPalette.WindowText).name()

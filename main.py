@@ -442,6 +442,12 @@ class MainWindow(QMainWindow):
             except ImportError:
                 QMessageBox.warning(self, "Tool not found", f"The tool '{tool_name}' could not be loaded.")
                 return
+            except AttributeError:
+                QMessageBox.warning(self, "Tool Error", f"The tool '{tool_name}' is not properly implemented.")
+                return
+            except Exception as e:
+                QMessageBox.warning(self, "Error", f"An error occurred while loading '{tool_name}': {str(e)}")
+                return
 
         # Clear the existing content
         for i in reversed(range(self.main_content_layout.count())): 
@@ -452,6 +458,15 @@ class MainWindow(QMainWindow):
         # Add the tool widget to the layout
         self.main_content_layout.addWidget(self.tools[tool_name])
         self.tools[tool_name].show()
+
+    def unload_tool(self, tool_name):
+        if tool_name in self.tools:
+            self.tools[tool_name].setParent(None)
+            del self.tools[tool_name]
+
+    def refresh_tools(self):
+        self.side_panel.clear_tools()
+        self.load_all_tools()
 
     def toggle_side_panel(self):
         # Get the current splitter for the active tab
