@@ -66,15 +66,6 @@ class ChangelogWindow(QMainWindow):
         self.scroll_layout.setContentsMargins(0, 0, 0, 0)
         self.scroll_layout.setSpacing(0)
 
-        # Add continuous vertical line
-        self.line = QFrame(self.scroll_content)
-        self.line.setFrameShape(QFrame.VLine)
-        self.line.setLineWidth(2)
-        self.line.setStyleSheet("border-color: #0078D4;")
-        self.line.move(170, 0)  # Position after version title + margin
-        self.line.resize(2, self.scroll_content.height())
-        self.line.lower()  # Send to background
-
         self.apply_palette()
         self.load_changelog()
         
