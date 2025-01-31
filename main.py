@@ -348,12 +348,6 @@ class MainWindow(QMainWindow):
 
             # Add the top bar with the menu button
             if not self.top_bar_added:
-                # Add search field
-                self.search_field = QLineEdit()
-                self.search_field.setPlaceholderText("Search tools...")
-                self.search_field.setFixedWidth(200)
-                self.search_field.textChanged.connect(self.filter_tools)
-                self.top_bar.addWidget(self.search_field, alignment=Qt.AlignRight)
                 
                 # Add the top bar with the menu button
                 self.top_bar = QHBoxLayout()
@@ -366,6 +360,12 @@ class MainWindow(QMainWindow):
                 self.top_bar.addWidget(self.menu_button, alignment=Qt.AlignLeft)
                 main_content_layout.addLayout(self.top_bar)
                 self.top_bar_added = True  # Mark the top bar as added
+                
+                self.search_field = QLineEdit()
+                self.search_field.setPlaceholderText("Search tools...")
+                self.search_field.setFixedWidth(200)
+                self.search_field.textChanged.connect(self.filter_tools)
+                self.top_bar.addWidget(self.search_field, alignment=Qt.AlignRight)
 
             # Add this line before the tools loop
             self.tool_buttons = []
