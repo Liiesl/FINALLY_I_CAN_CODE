@@ -5,13 +5,6 @@ from PyQt5.QtCore import Qt
 import os
 import qtawesome as qta
 
-from PyQt5.QtWidgets import (QMainWindow, QApplication, QVBoxLayout, QWidget, QLabel, 
-                             QScrollArea, QFrame, QHBoxLayout, QSizePolicy)
-from PyQt5.QtGui import QPalette, QFont, QPainter
-from PyQt5.QtCore import Qt, QPoint
-import os
-import qtawesome as qta
-
 class VersionBlock(QWidget):
     def __init__(self, version, changes, parent=None):
         super().__init__(parent)
@@ -21,7 +14,7 @@ class VersionBlock(QWidget):
 
     def init_ui(self):
         main_layout = QHBoxLayout(self)
-        main_layout.setContentsMargins(40, 25, 20, 25)  # Increased left margin for line
+        main_layout.setContentsMargins(20, 10, 20, 10)  # Vertical spacing between blocks
         main_layout.setSpacing(20)
 
         # Version label
@@ -31,13 +24,37 @@ class VersionBlock(QWidget):
         version_label.setFixedWidth(150)
         main_layout.addWidget(version_label)
 
+        # Vertical line container (stretches full height)
+        line_container = QWidget()
+        line_container.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Expanding)
+        line_layout = QVBoxLayout(line_container)
+        line_layout.setContentsMargins(0, -10, 0, -10)  # Negative margins to span spacing
+        line_layout.setSpacing(0)
+        # Composite icon (circle outline + dot)
+        icon = qta.icon("mdi.circle-outline", color="#0078D4").pixmap(24, 24)
+        painter = QPainter(icon)
+        dot_icon = qta.icon("mdi.circle", color="#0078D4").pixmap(8, 8)
+        painter.drawPixmap(8, 8, dot_icon)
+        painter.end()
+        
+        icon_label = QLabel()
+        icon_label.setPixmap(icon)
+        line_layout.addWidget(icon_label, alignment=Qt.AlignTop)
+        # Vertical line
+        line = QFrame()
+        line.setFrameShape(QFrame.VLine)
+        line.setLineWidth(1)
+        line.setStyleSheet(f"border-color: {self.palette().color(QPalette.WindowText).name()};")
+        line.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Expanding)
+        line_layout.addWidget(line)
+        main_layout.addWidget(line_container)
         # Changes list
         changes_html = "<ul style='margin: 0; padding-left: 20px;'>"
         for change in self.changes:
             cleaned_change = change.strip().lstrip('- ')
             changes_html += f"<li style='margin-bottom: 5px;'>{cleaned_change}</li>"
         changes_html += "</ul>"
-        
+
         changes_label = QLabel(changes_html)
         changes_label.setFont(QFont("Inter", 12))
         changes_label.setAlignment(Qt.AlignLeft | Qt.AlignTop)
@@ -45,65 +62,37 @@ class VersionBlock(QWidget):
         changes_label.setTextInteractionFlags(Qt.TextSelectableByMouse)
         main_layout.addWidget(changes_label, stretch=1)
 
-class TimelineWidget(QWidget):
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Expanding)
-        self.setFixedWidth(30)  # Width of the timeline
-        self.icons = []
-
-    def add_icon(self, pos_y):
-        self.icons.append(pos_y)
-        self.update()
-
-    def paintEvent(self, event):
-        painter = QPainter(self)
-        painter.setRenderHint(QPainter.Antialiasing)
-        
-        # Draw continuous vertical line
-        line_color = self.palette().color(QPalette.WindowText)
-        painter.setPen(line_color)
-        painter.drawLine(15, 0, 15, self.height())
-
-        # Draw icons
-        icon = qta.icon("mdi.circle", color="#0078D4")
-        pixmap = icon.pixmap(20, 20)
-        for y in self.icons:
-            painter.drawPixmap(5, y - 10, pixmap)
-
 class ChangelogWindow(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowTitle("What's New")
         self.setGeometry(300, 200, 800, 600)
-        
+
         self.central_widget = QWidget()
         self.setCentralWidget(self.central_widget)
-        
-        self.main_layout = QHBoxLayout(self.central_widget)
-        self.main_layout.setContentsMargins(0, 0, 0, 0)
-        
-        # Create timeline widget
-        self.timeline = TimelineWidget()
-        self.main_layout.addWidget(self.timeline)
-        
-        # Create scroll area for content
+
+        self.layout = QVBoxLayout(self.central_widget)
+        self.layout.setContentsMargins(10, 10, 10, 10)
+
+        # Title label
+        self.title_label = QLabel("What's New")
+        self.title_label.setAlignment(Qt.AlignCenter)
+        self.title_label.setFont(QFont("Inter ExtraBold", 24))
+        self.layout.addWidget(self.title_label)
+
+        # Scroll area setup
         self.scroll_area = QScrollArea()
         self.scroll_area.setWidgetResizable(True)
         self.scroll_content = QWidget()
         self.scroll_layout = QVBoxLayout(self.scroll_content)
-        self.scroll_layout.setContentsMargins(0, 0, 20, 0)
-        self.scroll_layout.setSpacing(0)
-        
+        self.scroll_layout.setSpacing(0)  # No spacing between version blocks
+        self.scroll_layout.setContentsMargins(0, 0, 0, 0)
+
+        self.apply_palette()
         self.load_changelog()
+        
         self.scroll_area.setWidget(self.scroll_content)
-        self.main_layout.addWidget(self.scroll_area)
-
-        # Connect scroll event
-        self.scroll_area.verticalScrollBar().valueChanged.connect(self.update_timeline)
-
-    def update_timeline(self):
-        self.timeline.update()
+        self.layout.addWidget(self.scroll_area)
 
     def apply_palette(self):
         palette = QApplication.instance().palette()
@@ -111,14 +100,14 @@ class ChangelogWindow(QMainWindow):
         background_color = palette.color(QPalette.Window).name()
         scrollbar_color = palette.color(QPalette.Button).name()
         handle_color = palette.color(QPalette.Highlight).name()
-        
+
         # Base styling
         self.setStyleSheet(f"""
             background-color: {background_color};
             color: {text_color};
         """)
         self.scroll_content.setStyleSheet(f"background-color: {background_color};")
-        
+
         # Scrollbar styling
         self.scroll_area.setStyleSheet(f"""
             QScrollArea {{
@@ -162,7 +151,7 @@ class ChangelogWindow(QMainWindow):
         versions = []
         current_version = None
         current_changes = []
-        
+
         for line in content.split('\n'):
             line = line.strip()
             if not line:
@@ -174,25 +163,18 @@ class ChangelogWindow(QMainWindow):
                 current_changes = []
             else:
                 current_changes.append(line)
-        
+
         if current_version:
             versions.append((current_version, current_changes))
-        
-        versions.reverse()
-        
-        for version, changes in versions:
-            block = VersionBlock(version, changes)
-            self.scroll_layout.addWidget(block)
-            block.installEventFilter(self)
-        
-        self.scroll_layout.addStretch()
 
-    def eventFilter(self, source, event):
-        if event.type() == event.Paint and isinstance(source, VersionBlock):
-            pos = source.pos()
-            y_pos = pos.y() + source.size().height() // 2
-            self.timeline.add_icon(y_pos)
-        return super().eventFilter(source, event)
+        # Show latest versions first
+        versions.reverse()
+
+        for version, changes in versions:
+            self.add_version_block(version, changes)
+
+        # Add spacer to push content up
+        self.scroll_layout.addStretch()
 
     def add_version_block(self, version, changes):
         version_block = VersionBlock(version, changes)
