@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import (QMainWindow, QApplication, QVBoxLayout, QWidget, QLabel, 
-                             QScrollArea, QFrame, QHBoxLayout)
+                             QScrollArea, QFrame, QHBoxLayout, QSizePolicy)
 from PyQt5.QtGui import QPalette, QFont
 from PyQt5.QtCore import Qt
 import os
@@ -13,25 +13,40 @@ class VersionBlock(QWidget):
 
     def init_ui(self):
         layout = QHBoxLayout()
-        layout.setContentsMargins(20, 10, 20, 10)
+        layout.setContentsMargins(20, 0, 20, 0)  # Remove top/bottom margins
         layout.setSpacing(20)
 
-        # Version label (left side)
+        # Version section (marker + label)
+        version_section = QHBoxLayout()
+        version_section.setContentsMargins(0, 0, 0, 0)
+        version_section.setSpacing(10)
+
+        # New version marker (circle with dot)
+        marker = QLabel("●")
+        marker.setFont(QFont("Arial", 10))
+        marker.setStyleSheet("color: #0078D4;")
+        marker.setAlignment(Qt.AlignCenter)
+        version_section.addWidget(marker)
+
+        # Version label
         version_label = QLabel(self.version)
         version_label.setFont(QFont("Inter ExtraBold", 20))
         version_label.setAlignment(Qt.AlignLeft | Qt.AlignTop)
-        version_label.setFixedWidth(150)  # Fixed width for version column
-        layout.addWidget(version_label)
+        version_label.setFixedWidth(150)
+        version_section.addWidget(version_label)
 
-        # Vertical separator line
+        layout.addLayout(version_section)
+
+        # Vertical separator line (stretches full height)
         line = QFrame()
         line.setFrameShape(QFrame.VLine)
         line.setLineWidth(1)
+        line.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Expanding)  # Expand vertically
         palette = QApplication.instance().palette()
         line.setStyleSheet(f"border-color: {palette.color(QPalette.WindowText).name()};")
         layout.addWidget(line)
 
-        # Changes list (right side)
+        # Changes list
         changes_html = "<ul style='margin: 0; padding-left: 20px;'>"
         for change in self.changes:
             cleaned_change = change.strip().lstrip('- ')
@@ -70,7 +85,7 @@ class ChangelogWindow(QMainWindow):
         self.scroll_area.setWidgetResizable(True)
         self.scroll_content = QWidget()
         self.scroll_layout = QVBoxLayout(self.scroll_content)
-        self.scroll_layout.setSpacing(15)
+        self.scroll_layout.setSpacing(0)
         self.scroll_layout.setContentsMargins(10, 10, 10, 10)
         
         self.apply_palette()
