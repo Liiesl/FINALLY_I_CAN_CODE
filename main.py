@@ -280,6 +280,9 @@ class MainWindow(QMainWindow):
 
     def create_tool_button(self, tool_name, tool_description):
         button = QPushButton()
+        
+        button.setFixedSize(300, 400)
+        button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
 
         palette = self.app.palette()
         background_color = palette.color(QPalette.Base).name()
@@ -296,8 +299,6 @@ class MainWindow(QMainWindow):
                 color: rgba(255, 255, 255, 0);
                 border-radius: 15px;
                 padding: 10px;
-                min-width: 300px;
-                min-height: 400px;
                 margin: 10px;
                 background-color: {background_color};
                 text-align: center;
@@ -451,6 +452,11 @@ class MainWindow(QMainWindow):
             all_tools_grid = QGridLayout()
             all_tools_grid.setHorizontalSpacing(20)
             all_tools_grid.setVerticalSpacing(20)
+            all_tools_grid.setColumnStretch(0, 0)  # Prevent column stretching
+            all_tools_grid.setColumnStretch(1, 0)
+            all_tools_grid.setColumnStretch(2, 0)
+            all_tools_grid.setRowStretch(0, 0)     # Prevent row stretching
+            all_tools_grid.setRowStretch(1, 0)
             columns = 3
         
             for index, tool in enumerate(tools):
