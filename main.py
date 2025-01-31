@@ -379,7 +379,7 @@ class MainWindow(QMainWindow):
                         background-color: {button_color};
                         color: {button_text_color};
                         border: 2px solid {palette.color(QPalette.Highlight).name()};
-                        border-radius: 30px;
+                        border-radius: 25px;
                         padding: 5px 5px 5px 35px;
                     }}
                     QLineEdit::placeholder {{
