@@ -427,7 +427,9 @@ class MainWindow(QMainWindow):
                 btn = self.create_tool_button(tool_name, tools_dict.get(tool_name, "Popular tool"))
                 most_used_layout.addWidget(btn)
                 category = next((t[2] for t in tools if t[0] == tool_name), "Other")
-                btn = self.create_tool_button(tool_name, tools_dict.get(tool_name, "Popular tool"), category)
+                btn = self.create_tool_button(tool_name, 
+                                 tools_dict.get(tool_name, "Popular tool"),
+                                 category) 
             container_layout.addWidget(most_used_widget)
     
             # Add Recent section
@@ -444,7 +446,9 @@ class MainWindow(QMainWindow):
                 btn = self.create_tool_button(tool_name, tools_dict.get(tool_name, "Recently used tool"))
                 recent_layout.addWidget(btn)
                 category = next((t[2] for t in tools if t[0] == tool_name), "Other")
-                btn = self.create_tool_button(tool_name, tools_dict.get(tool_name, "Recently used tool"), category) 
+                btn = self.create_tool_button(tool_name, 
+                                 tools_dict.get(tool_name, "Popular tool"),
+                                 category) 
             container_layout.addWidget(recent_widget)
 
                         # Add All Tools section
