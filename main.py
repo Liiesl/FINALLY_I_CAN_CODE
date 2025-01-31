@@ -425,7 +425,7 @@ class MainWindow(QMainWindow):
             for tool_name in sorted(self.tool_usage, key=lambda x: -self.tool_usage[x])[:3]:
                 btn = self.create_tool_button(tool_name, tools_dict.get(tool_name, "Popular tool"))
                 most_used_layout.addWidget(btn)
-                btn.setProperty("category", tool)
+                category = next((t[2] for t in tools if t[0] == tool_name), "Other")
             container_layout.addWidget(most_used_widget)
     
             # Add Recent section
@@ -441,7 +441,7 @@ class MainWindow(QMainWindow):
             for tool_name in self.recent_tools[:3]:
                 btn = self.create_tool_button(tool_name, tools_dict.get(tool_name, "Recently used tool"))
                 recent_layout.addWidget(btn)
-                btn.setProperty("category", category)
+                category = next((t[2] for t in tools if t[0] == tool_name), "Other")
             container_layout.addWidget(recent_widget)
 
                         # Add All Tools section
@@ -463,7 +463,7 @@ class MainWindow(QMainWindow):
         
             for index, tool in enumerate(tools):
                 btn = self.create_tool_button(tool[0], tool[1])
-                btn.setProperty("category", tool[2])
+                category = next((t[2] for t in tools if t[0] == tool_name), "Other")
                 row = index // columns
                 col = index % columns
                 all_tools_grid.addWidget(btn, row, col)
