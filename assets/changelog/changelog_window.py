@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import (QMainWindow, QApplication, QVBoxLayout, QWidget, QLabel,
-                             QScrollArea, QFrame, QHBoxLayout, QSizePolicy)
+                             QScrollArea, QFrame, QHBoxLayout, QSpacerItem, QSizePolicy)
 from PyQt5.QtGui import QPalette, QFont, QPainter
 from PyQt5.QtCore import Qt
 import os
@@ -61,29 +61,31 @@ class ChangelogWindow(QMainWindow):
         self.scroll_area = QScrollArea()
         self.scroll_area.setWidgetResizable(True)
         
-        # Main container with vertical line and version blocks
+        # Main content with columns
         self.scroll_content = QWidget()
         self.scroll_layout = QHBoxLayout(self.scroll_content)
-        self.scroll_layout.setContentsMargins(0, 0, 0, 0)  # Left/right padding for line
-        self.scroll_layout.setSpacing(0)
-        
-      # Add left spacer for version titles
-        left_spacer = QWidget()
-        left_spacer.setFixedWidth(170)  # 150px label + 20px margin
-        self.scroll_layout.addWidget(left_spacer)
+        self.scroll_layout.setContentsMargins(20, 0, 20, 0)
+        self.scroll_layout.setSpacing(20)
 
-        # Vertical line spanning entire content
+        # Left column for version titles
+        self.titles_column = QWidget()
+        self.titles_layout = QVBoxLayout(self.titles_column)
+        self.titles_layout.setContentsMargins(0, 0, 0, 0)
+        self.titles_layout.setSpacing(30)  # Vertical gap between versions
+        self.scroll_layout.addWidget(self.titles_column)
+
+        # Vertical line between columns
         self.vertical_line = QFrame()
         self.vertical_line.setFrameShape(QFrame.VLine)
         self.vertical_line.setLineWidth(2)
         self.scroll_layout.addWidget(self.vertical_line)
 
-        # Container for version blocks
-        self.version_container = QWidget()
-        self.version_layout = QVBoxLayout(self.version_container)
-        self.version_layout.setContentsMargins(0, 0, 0, 0)
-        self.version_layout.setSpacing(0)  # Spacing managed by VersionBlock margins
-        self.scroll_layout.addWidget(self.version_container, stretch=1)
+        # Right column for changes
+        self.changes_column = QWidget()
+        self.changes_layout = QVBoxLayout(self.changes_column)
+        self.changes_layout.setContentsMargins(0, 0, 0, 0)
+        self.changes_layout.setSpacing(30)  # Matches title spacing
+        self.scroll_layout.addWidget(self.changes_column, stretch=1)
 
         self.apply_palette()
         self.load_changelog()
@@ -101,6 +103,9 @@ class ChangelogWindow(QMainWindow):
         self.setStyleSheet(f"""
             background-color: {background_color};
             color: {text_color};
+            QFrame {{
+                color: {text_color};
+            }}
         """)
         self.scroll_content.setStyleSheet(f"background-color: {background_color};")
         self.vertical_line.setStyleSheet(f"background-color: {text_color};")
@@ -168,9 +173,29 @@ class ChangelogWindow(QMainWindow):
         versions.reverse()
 
         for version, changes in versions:
-            self.version_layout.addWidget(VersionBlock(version, changes))
-        
-        self.version_layout.addStretch()
+            # Create version title
+            version_label = QLabel(version)
+            version_label.setFont(QFont("Inter ExtraBold", 20))
+            version_label.setAlignment(Qt.AlignLeft | Qt.AlignTop)
+            self.titles_layout.addWidget(version_label)
+            
+            # Create changes list
+            changes_html = "<ul style='margin: 0; padding-left: 20px;'>"
+            for change in changes:
+                cleaned_change = change.strip().lstrip('- ')
+                changes_html += f"<li style='margin-bottom: 5px;'>{cleaned_change}</li>"
+            changes_html += "</ul>"
+            
+            changes_label = QLabel(changes_html)
+            changes_label.setFont(QFont("Inter", 12))
+            changes_label.setAlignment(Qt.AlignLeft | Qt.AlignTop)
+            changes_label.setWordWrap(True)
+            changes_label.setTextInteractionFlags(Qt.TextSelectableByMouse)
+            self.changes_layout.addWidget(changes_label)
+
+        # Add spacing at the end
+        self.titles_layout.addSpacerItem(QSpacerItem(20, 20, QSizePolicy.Minimum, QSizePolicy.Expanding))
+        self.changes_layout.addSpacerItem(QSpacerItem(20, 20, QSizePolicy.Minimum, QSizePolicy.Expanding))
 
     def add_version_block(self, version, changes):
         version_block = VersionBlock(version, changes)
