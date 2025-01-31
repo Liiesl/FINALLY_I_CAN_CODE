@@ -72,11 +72,6 @@ class ChangelogWindow(QMainWindow):
         self.scroll_area.setWidget(self.scroll_content)
         main_layout.addWidget(self.scroll_area)
 
-    def resizeEvent(self, event):
-        """Update line height when window resizes"""
-        self.line.resize(2, self.scroll_content.height())
-        super().resizeEvent(event)
-
     def apply_palette(self):
         palette = QApplication.instance().palette()
         text_color = palette.color(QPalette.WindowText).name()
