@@ -2,7 +2,7 @@ import sys
 import qtawesome as qta
 from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QLabel, QScrollArea, QMessageBox, QSplitter, QFrame, QStackedWidget, QLineEdit, QGridLayout
 from PyQt5.QtGui import QPalette, QColor, QFont, QFontDatabase
-from PyQt5.QtCore import Qt, QPropertyAnimation, QPoint
+from PyQt5.QtCore import Qt, QPropertyAnimation, QPoint, QTimer 
 
 from tools.subtitle_converter import SubtitleConverter
 from tools.subtitle_shifter import SubtitleShifter
@@ -427,8 +427,9 @@ class MainWindow(QMainWindow):
             self.scroll_area = scroll_area
 
             main_content_layout.addWidget(scroll_area)
+
+            QTimer.singleShot(50, self.arrange_tools_in_grid)
             
-            self.arrange_tools_in_grid()
             self.tool_buttons_container.installEventFilter(self)
 
             self.apply_text_size()
@@ -590,6 +591,11 @@ class MainWindow(QMainWindow):
         if source == self.tool_buttons_container and event.type() == event.Resize:
             self.arrange_tools_in_grid()
         return super().eventFilter(source, event)
+
+    def resizeEvent(self, event):
+        self.update_tool_button_visibility()
+        self.arrange_tools_in_grid()
+        super().resizeEvent(event)
 
     def filter_tools(self, search_text):
         if not hasattr(self, 'tool_buttons'):
