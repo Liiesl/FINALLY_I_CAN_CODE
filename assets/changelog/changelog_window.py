@@ -15,7 +15,7 @@ class VersionBlock(QWidget):
     def init_ui(self):
         main_layout = QHBoxLayout(self)
         # Top and bottom margins create space between blocks, left/right margins removed
-        main_layout.setContentsMargins(0, 30, 0, 30)
+        main_layout.setContentsMargins(20, 30, 20, 30)
         main_layout.setSpacing(20)
 
         # Version title
@@ -64,8 +64,13 @@ class ChangelogWindow(QMainWindow):
         # Main container with vertical line and version blocks
         self.scroll_content = QWidget()
         self.scroll_layout = QHBoxLayout(self.scroll_content)
-        self.scroll_layout.setContentsMargins(20, 0, 20, 0)  # Left/right padding for line
-        self.scroll_layout.setSpacing(20)
+        self.scroll_layout.setContentsMargins(0, 0, 0, 0)  # Left/right padding for line
+        self.scroll_layout.setSpacing(0)
+        
+      # Add left spacer for version titles
+        left_spacer = QWidget()
+        left_spacer.setFixedWidth(170)  # 150px label + 20px margin
+        self.scroll_layout.addWidget(left_spacer)
 
         # Vertical line spanning entire content
         self.vertical_line = QFrame()
