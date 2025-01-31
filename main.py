@@ -335,6 +335,16 @@ class MainWindow(QMainWindow):
 
         button.clicked.connect(lambda: self.tool_selected(tool_name))
         return button
+        
+        button.setProperty("category", tool[2])
+
+        for index, tool in enumerate(tools):
+            btn = self.create_tool_button(tool[0], tool[1])
+            btn.setProperty("category", tool[2])  # Set category property
+            row = index // columns
+            col = index % columns
+            all_tools_grid.addWidget(btn, row, col)
+            self.tool_buttons.append(btn)
 
     def main_menu(self, layout=None):
         # Get the current main content layout for the active tab
@@ -399,11 +409,11 @@ class MainWindow(QMainWindow):
             self.tool_buttons = []
 
             tools = [
-                ("Longer Appearance SRT", "Increase the duration each subtitle appears."),
-                ("Merge SRT Files", "Combine multiple SRT files into one."),
-                ("Subtitle Converter", "Convert subtitles between different formats."),
-                ("Subtitle Shifter", "Shift subtitles by milliseconds."),
-                ("Multilingual Merge", "Merge subtitles in different languages with colors."),
+                ("Longer Appearance SRT", "Increase the duration each subtitle appears.", "Timing"),
+                ("Merge SRT Files", "Combine multiple SRT files into one.", "Merge"),
+                ("Subtitle Converter", "Convert subtitles between different formats.", "Convert"),
+                ("Subtitle Shifter", "Shift subtitles by milliseconds.", "Timing"),
+                ("Multilingual Merge", "Merge subtitles in different languages with colors.", "Merge"),
                 ("Coming Soon", "More tools will be added in the future.")
             ]
             tools_dict = {name: desc for name, desc in tools}
@@ -477,7 +487,59 @@ class MainWindow(QMainWindow):
             navigation_frame = QFrame()
             navigation_layout = QHBoxLayout(navigation_frame)
             navigation_layout.setContentsMargins(0, 0, 0, 0)
-
+            
+            # In the main_menu method, before creating the scroll area:
+            # Add filter buttons panel
+            filter_panel = QWidget()
+            filter_panel.setFixedWidth(200)
+            filter_layout = QVBoxLayout(filter_panel)
+            filter_layout.setContentsMargins(0, 20, 0, 0)
+            filter_layout.setSpacing(10)
+            
+            # Get unique categories
+            categories = list(set([tool[2] for tool in tools]))
+            categories.insert(0, "All")  # Add "All" category first
+            
+            # Create filter buttons
+            self.filter_buttons = []
+            for category in categories:
+                btn = QPushButton(category)
+                btn.setCheckable(True)
+                btn.setProperty("category", category)
+                btn.clicked.connect(self.apply_category_filter)
+                btn.setStyleSheet("""
+                    QPushButton {
+                        padding: 10px;
+                        border-radius: 5px;
+                        text-align: left;
+                    }
+                    QPushButton:checked {
+                        background-color: palette(Highlight);
+                        color: palette(HighlightedText);
+                    }
+                """)
+                filter_layout.addWidget(btn)
+                self.filter_buttons.append(btn)
+            
+            # Set "All" as default selected
+            self.filter_buttons[0].setChecked(True)
+            self.current_category = "All"
+            
+            # Add stretch to push buttons to top
+            filter_layout.addStretch()
+            
+            # Modify the main content layout to include filter panel
+            main_content_layout = current_splitter.widget(1).layout()
+            
+            # Create a horizontal container for filters and tools
+            content_container = QWidget()
+            content_layout = QHBoxLayout(content_container)
+            content_layout.setContentsMargins(0, 0, 0, 0)
+            content_layout.addWidget(filter_panel)
+            content_layout.addWidget(scroll_area)
+            
+            # Replace existing scroll area addition with the container
+            main_content_layout.addWidget(content_container)
 
             scroll_area = QScrollArea()
             scroll_area.setWidgetResizable(True)
@@ -622,6 +684,37 @@ class MainWindow(QMainWindow):
                 for i, button in enumerate(self.tool_buttons):
                     button.setVisible(i < visible_buttons)
 
+        # Add these methods to the MainWindow class
+    def apply_category_filter(self):
+        # Uncheck all other buttons
+        sender = self.sender()
+        if not sender.isChecked():
+            sender.setChecked(True)
+            return
+    
+        for btn in self.filter_buttons:
+            if btn != sender:
+                btn.setChecked(False)
+        
+        self.current_category = sender.property("category")
+        self.update_tool_visibility()
+    
+    def update_tool_visibility(self, event=None):
+        search_text = self.search_field.text().lower()
+        current_category = self.current_category
+    
+        for button in self.tool_buttons:
+            name = button.layout().itemAt(0).widget().text().lower()
+            description = button.layout().itemAt(1).widget().text().lower()
+            category = button.property("category").lower()
+    
+            category_match = current_category == "All" or category == current_category.lower()
+            text_match = search_text in name or search_text in description
+            
+            button.setVisible(category_match and text_match)
+    
+        self.tool_buttons_container.adjustSize()
+
 
     def filter_tools(self, search_text):
         if not hasattr(self, 'tool_buttons'):
@@ -638,6 +731,8 @@ class MainWindow(QMainWindow):
         # Update scroll area contents
         self.tool_buttons_container.adjustSize()
         self.update_tool_button_visibility()
+        self.update_tool_visibility()
+        self.tool_buttons_container.adjustSize()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
