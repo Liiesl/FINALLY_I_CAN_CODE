@@ -36,6 +36,13 @@ class MainWindow(QMainWindow):
 
         self.inter_regular_font = QFont("Inter Regular")
         self.inter_extra_bold_font = QFont("Inter ExtraBold")
+        
+        self.tool_usage = {
+            "Subtitle Converter": 5,
+            "Subtitle Shifter": 3,
+            "Merge SRT Files": 2
+        }
+        self.recent_tools = ["Subtitle Converter", "Merge SRT Files", "Subtitle Shifter"]
 
         self.apply_theme()
 
@@ -71,13 +78,6 @@ class MainWindow(QMainWindow):
         self.top_bar = QHBoxLayout()
         self.top_bar_added = False
         self.menu_button = None
-        
-        self.tool_usage = {
-            "Subtitle Converter": 5,
-            "Subtitle Shifter": 3,
-            "Merge SRT Files": 2
-        }
-        self.recent_tools = ["Subtitle Converter", "Merge SRT Files", "Subtitle Shifter"]
 
         self.create_new_tab_content()
     
