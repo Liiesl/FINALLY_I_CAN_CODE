@@ -73,6 +73,13 @@ class MainWindow(QMainWindow):
         self.menu_button = None
 
         self.create_new_tab_content()
+        
+        self.tool_usage = {
+            "Subtitle Converter": 5,
+            "Subtitle Shifter": 3,
+            "Merge SRT Files": 2
+        }
+        self.recent_tools = ["Subtitle Converter", "Merge SRT Files", "Subtitle Shifter"]
 
     def apply_theme(self):
         self.config = Config(source="MainWindow")
@@ -408,7 +415,53 @@ class MainWindow(QMainWindow):
                 ("Multilingual Merge", "Merge subtitles in different languages with colors."),
                 ("Coming Soon", "More tools will be added in the future.")
             ]
-            columns = 3 
+            tools_dict = {name: desc for name, desc in tools}
+            
+            self.tool_buttons_container = QWidget()
+            container_layout = QVBoxLayout(self.tool_buttons_container)
+            container_layout.setContentsMargins(0, 0, 0, 0)
+            container_layout.setSpacing(20)
+            
+            most_used_label = QLabel("Most Used Tools")
+            most_used_label.setFont(self.inter_extra_bold_font)
+            most_used_label.setStyleSheet("color: palette(WindowText);")
+            container_layout.addWidget(most_used_label)
+            
+            most_used_widget = QWidget()
+            most_used_layout = QHBoxLayout(most_used_widget)
+            most_used_layout.setContentsMargins(0, 0, 0, 0)
+            
+            for tool_name in sorted(self.tool_usage, key=lambda x: -self.tool_usage[x])[:3]:
+                btn = self.create_tool_button(tool_name, tools_dict.get(tool_name, "Popular tool"))
+                most_used_layout.addWidget(btn)
+            container_layout.addWidget(most_used_widget)
+    
+            # Add Recent section
+            recent_label = QLabel("Recent Tools")
+            recent_label.setFont(self.inter_extra_bold_font)
+            recent_label.setStyleSheet("color: palette(WindowText);")
+            container_layout.addWidget(recent_label)
+    
+            recent_widget = QWidget()
+            recent_layout = QHBoxLayout(recent_widget)
+            recent_layout.setContentsMargins(0, 0, 0, 0)
+            
+            for tool_name in self.recent_tools[:3]:
+                btn = self.create_tool_button(tool_name, tools_dict.get(tool_name, "Recently used tool"))
+                recent_layout.addWidget(btn)
+            container_layout.addWidget(recent_widget)
+    
+            # Add All Tools section
+            all_tools_label = QLabel("All Tools")
+            all_tools_label.setFont(self.inter_extra_bold_font)
+            all_tools_label.setStyleSheet("color: palette(WindowText);")
+            container_layout.addWidget(all_tools_label)
+    
+            # Create grid for all tools
+            all_tools_grid = QGridLayout()
+            all_tools_grid.setHorizontalSpacing(20)
+            all_tools_grid.setVerticalSpacing(20)
+            columns = 3
 
             for index, tool in enumerate(tools):
                 btn = self.create_tool_button(tool[0], tool[1])
@@ -440,6 +493,15 @@ class MainWindow(QMainWindow):
             self.custom_window_bar.tab_bar.setTabText(tab_bar_index, "Subtl")
 
     def tool_selected(self, tool_name):
+        self.tool_usage[tool_name] = self.tool_usage.get(tool_name, 0) + 1
+        
+        # Update recent tools
+        if tool_name in self.recent_tools:
+            self.recent_tools.remove(tool_name)
+        self.recent_tools.insert(0, tool_name)
+        if len(self.recent_tools) > 3:
+            self.recent_tools = self.recent_tools[:3]
+            
         # Get the current splitter for the active tab
         current_splitter = self.tab_contents.currentWidget()
         if current_splitter is not None:
