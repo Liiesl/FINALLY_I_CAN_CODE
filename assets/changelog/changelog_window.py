@@ -24,6 +24,12 @@ class VersionBlock(QWidget):
         version_label.setAlignment(Qt.AlignLeft | Qt.AlignTop)
         main_layout.addWidget(version_label)
 
+        # Vertical line separator
+        line = QFrame()
+        line.setFixedWidth(2)
+        line.setStyleSheet(f"background-color: {self.palette().text().color().name()};")
+        main_layout.addWidget(line)
+
         # Changes list
         changes_html = "<ul style='margin: 0; padding-left: 20px;'>"
         for change in self.changes:
@@ -37,7 +43,7 @@ class VersionBlock(QWidget):
         changes_label.setWordWrap(True)
         changes_label.setTextInteractionFlags(Qt.TextSelectableByMouse)
         main_layout.addWidget(changes_label, stretch=1)
-
+      
 class ChangelogWindow(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
