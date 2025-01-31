@@ -192,10 +192,7 @@ class CustomWindowBar(QWidget):
             self.add_tab("Subtl")  # Ensure at least one tab exists
 
     def change_tab(self, index):
-        if index == 0:
-            return
-        adjusted_index = index - 1
-        self.parent.display_tab_content(adjusted_index)
+        self.parent.display_tab_content(index)
 
     def toggle_maximize_restore(self):
         if self.parent.isMaximized():
