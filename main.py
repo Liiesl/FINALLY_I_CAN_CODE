@@ -552,22 +552,15 @@ class MainWindow(QMainWindow):
                 visible_buttons = container_width // button_width
                 for i, button in enumerate(self.tool_buttons):
                     button.setVisible(i < visible_buttons)
-            else:
-                # Let filter_tools handle visibility
-                pass
 
     def arrange_tools_in_grid(self):
-        if not hasattr(self, 'tool_buttons') or not self.tool_buttons:
+        if not hasattr(self, 'tool_buttons'):
             return
-    
-        # Get available width from scroll area viewport
-        container_width = self.scroll_area.viewport().width() - 40
-        if container_width <= 0:
-            container_width = self.width() - 100  # Fallback to window width
-            
-        # Calculate columns based on actual available space
+        
+        # Fixed grid layout parameters
+        columns = 3  # Always show 3 columns
         button_width = 300
-        columns = max(1, container_width // (button_width + 20))
+        button_height = 400
         
         # Clear existing layout
         while self.tool_buttons_layout.count():
@@ -575,17 +568,22 @@ class MainWindow(QMainWindow):
             if widget := item.widget():
                 widget.setParent(None)
         
-        # Add all buttons to the grid
-        row = col = 0
+        # Add all buttons to grid with fixed columns
+        row = 0
+        col = 0
         for button in self.tool_buttons:
             self.tool_buttons_layout.addWidget(button, row, col)
-            button.show()  # Ensure all buttons are visible
+            button.setFixedSize(button_width, button_height)
             col += 1
             if col >= columns:
                 col = 0
                 row += 1
-        
-        self.tool_buttons_container.adjustSize()
+    
+        # Set fixed grid size policy
+        self.tool_buttons_container.setFixedSize(
+            columns * (button_width + 20) - 20,
+            (row + 1) * (button_height + 20) - 20
+        )
 
     def eventFilter(self, source, event):
         if source == self.tool_buttons_container and event.type() == event.Resize:
@@ -593,8 +591,6 @@ class MainWindow(QMainWindow):
         return super().eventFilter(source, event)
 
     def resizeEvent(self, event):
-        self.update_tool_button_visibility()
-        self.arrange_tools_in_grid()
         super().resizeEvent(event)
 
     def filter_tools(self, search_text):
