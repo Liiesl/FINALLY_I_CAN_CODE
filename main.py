@@ -68,11 +68,6 @@ class MainWindow(QMainWindow):
         self.main_content_layout = QVBoxLayout(self.main_content)
         self.main_content.setLayout(self.main_content_layout)
 
-        self.splitter = QSplitter(Qt.Horizontal)
-        self.splitter.addWidget(self.side_panel)
-        self.splitter.addWidget(self.main_content)
-        self.splitter.setSizes([0, 1])
-
         self.tab_contents.addWidget(self.splitter)
 
         self.top_bar = QHBoxLayout()
