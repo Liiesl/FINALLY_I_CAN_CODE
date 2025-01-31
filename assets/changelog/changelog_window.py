@@ -14,7 +14,7 @@ class VersionBlock(QWidget):
 
     def init_ui(self):
         main_layout = QHBoxLayout(self)
-        main_layout.setContentsMargins(20, 0, 20, 0)  # No vertical margins
+        main_layout.setContentsMargins(20, 20, 20, 20)  # Uniform margins
         main_layout.setSpacing(20)
 
         # Version label
@@ -23,36 +23,6 @@ class VersionBlock(QWidget):
         version_label.setAlignment(Qt.AlignLeft | Qt.AlignTop)
         version_label.setFixedWidth(150)
         main_layout.addWidget(version_label)
-
-        # Icon + Line container
-        line_container = QWidget()
-        line_container.setFixedWidth(24)
-        line_layout = QVBoxLayout(line_container)
-        line_layout.setContentsMargins(0, 0, 0, 0)
-        line_layout.setSpacing(0)
-
-        # Version marker (icon)
-        self.icon = qta.icon("mdi.circle-outline", color="#0078D4").pixmap(24, 24)
-        painter = QPainter(self.icon)
-        dot_icon = qta.icon("mdi.circle", color="#0078D4").pixmap(8, 8)
-        painter.drawPixmap(8, 8, dot_icon)
-        painter.end()
-        
-        icon_label = QLabel()
-        icon_label.setPixmap(self.icon)
-        line_layout.addWidget(icon_label, alignment=Qt.AlignTop)
-
-        # Connecting line (overlay)
-        self.line = QFrame(self)
-        self.line.setFrameShape(QFrame.VLine)
-        self.line.setLineWidth(1)
-        self.line.setStyleSheet(f"border-color: {self.palette().color(QPalette.WindowText).name()};")
-        self.line.setFixedWidth(1)
-        self.line.move(20 + 150 + 12, 34)  # Position relative to widget
-        self.line.resize(1, self.height() - 34)
-
-        line_layout.addStretch()  # Push icon to top
-        main_layout.addWidget(line_container)
 
         # Changes list
         changes_html = "<ul style='margin: 0; padding-left: 20px;'>"
@@ -68,10 +38,6 @@ class VersionBlock(QWidget):
         changes_label.setTextInteractionFlags(Qt.TextSelectableByMouse)
         main_layout.addWidget(changes_label, stretch=1)
 
-    def resizeEvent(self, event):
-        """Update line height when widget resizes"""
-        self.line.resize(1, self.height() - 34)
-        super().resizeEvent(event)
 class ChangelogWindow(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -81,28 +47,46 @@ class ChangelogWindow(QMainWindow):
         self.central_widget = QWidget()
         self.setCentralWidget(self.central_widget)
 
-        self.layout = QVBoxLayout(self.central_widget)
-        self.layout.setContentsMargins(10, 10, 10, 10)
+        main_layout = QVBoxLayout(self.central_widget)
+        main_layout.setContentsMargins(0, 0, 0, 0)
 
         # Title label
         self.title_label = QLabel("What's New")
         self.title_label.setAlignment(Qt.AlignCenter)
         self.title_label.setFont(QFont("Inter ExtraBold", 24))
-        self.layout.addWidget(self.title_label)
+        main_layout.addWidget(self.title_label)
 
         # Scroll area setup
         self.scroll_area = QScrollArea()
         self.scroll_area.setWidgetResizable(True)
+        
+        # Main container with horizontal layout
         self.scroll_content = QWidget()
-        self.scroll_layout = QVBoxLayout(self.scroll_content)
-        self.scroll_layout.setSpacing(0)  # No spacing between version blocks
+        self.scroll_layout = QHBoxLayout(self.scroll_content)
         self.scroll_layout.setContentsMargins(0, 0, 0, 0)
+        self.scroll_layout.setSpacing(0)
+
+        # Continuous vertical line
+        self.vertical_line = QFrame()
+        self.vertical_line.setFrameShape(QFrame.VLine)
+        self.vertical_line.setLineWidth(2)
+        self.vertical_line.setStyleSheet("border-color: #0078D4;")
+        self.vertical_line.setFixedWidth(2)
+        self.vertical_line.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Expanding)
+        self.scroll_layout.addWidget(self.vertical_line)
+
+        # Version blocks container
+        self.versions_container = QWidget()
+        self.versions_layout = QVBoxLayout(self.versions_container)
+        self.versions_layout.setContentsMargins(20, 0, 20, 0)
+        self.versions_layout.setSpacing(20)  # Gap between version blocks
+        self.scroll_layout.addWidget(self.versions_container)
 
         self.apply_palette()
         self.load_changelog()
         
         self.scroll_area.setWidget(self.scroll_content)
-        self.layout.addWidget(self.scroll_area)
+        main_layout.addWidget(self.scroll_area)
 
     def apply_palette(self):
         palette = QApplication.instance().palette()
@@ -181,10 +165,9 @@ class ChangelogWindow(QMainWindow):
         versions.reverse()
 
         for version, changes in versions:
-            self.add_version_block(version, changes)
-
-        # Add spacer to push content up
-        self.scroll_layout.addStretch()
+            self.versions_layout.addWidget(VersionBlock(version, changes))
+        
+        self.versions_layout.addStretch()
 
     def add_version_block(self, version, changes):
         version_block = VersionBlock(version, changes)
