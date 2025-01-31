@@ -1,8 +1,9 @@
 from PyQt5.QtWidgets import (QMainWindow, QApplication, QVBoxLayout, QWidget, QLabel, 
                              QScrollArea, QFrame, QHBoxLayout, QSizePolicy)
-from PyQt5.QtGui import QPalette, QFont
+from PyQt5.QtGui import QPalette, QFont, QPixmap
 from PyQt5.QtCore import Qt
 import os
+import qtawesome as qta
 
 class VersionBlock(QWidget):
     def __init__(self, version, changes, parent=None):
@@ -12,39 +13,39 @@ class VersionBlock(QWidget):
         self.init_ui()
 
     def init_ui(self):
-        layout = QHBoxLayout()
-        layout.setContentsMargins(20, 0, 20, 0)  # Remove top/bottom margins
-        layout.setSpacing(20)
-
-        # Version section (marker + label)
-        version_section = QHBoxLayout()
-        version_section.setContentsMargins(0, 0, 0, 0)
-        version_section.setSpacing(10)
-
-        # New version marker (circle with dot)
-        marker = QLabel("●")
-        marker.setFont(QFont("Arial", 10))
-        marker.setStyleSheet("color: #0078D4;")
-        marker.setAlignment(Qt.AlignCenter)
-        version_section.addWidget(marker)
+        main_layout = QHBoxLayout(self)
+        main_layout.setContentsMargins(20, 0, 20, 0)
+        main_layout.setSpacing(20)
 
         # Version label
         version_label = QLabel(self.version)
         version_label.setFont(QFont("Inter ExtraBold", 20))
         version_label.setAlignment(Qt.AlignLeft | Qt.AlignTop)
         version_label.setFixedWidth(150)
-        version_section.addWidget(version_label)
+        main_layout.addWidget(version_label)
 
-        layout.addLayout(version_section)
+        # Vertical line with icon
+        line_widget = QWidget()
+        line_layout = QVBoxLayout(line_widget)
+        line_layout.setContentsMargins(0, 0, 0, 0)
+        line_layout.setSpacing(0)
 
-        # Vertical separator line (stretches full height)
+        # Icon using QtAwesome
+        icon = qta.icon("mdi6.circle", color="#0078D4")
+        icon_label = QLabel()
+        icon_label.setPixmap(icon.pixmap(16, 16))
+        line_layout.addWidget(icon_label)
+
+        # Vertical separator line
         line = QFrame()
         line.setFrameShape(QFrame.VLine)
         line.setLineWidth(1)
-        line.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Expanding)  # Expand vertically
+        line.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Expanding)
         palette = QApplication.instance().palette()
         line.setStyleSheet(f"border-color: {palette.color(QPalette.WindowText).name()};")
-        layout.addWidget(line)
+        line_layout.addWidget(line)
+
+        main_layout.addWidget(line_widget)
 
         # Changes list
         changes_html = "<ul style='margin: 0; padding-left: 20px;'>"
@@ -58,10 +59,8 @@ class VersionBlock(QWidget):
         changes_label.setAlignment(Qt.AlignLeft | Qt.AlignTop)
         changes_label.setWordWrap(True)
         changes_label.setTextInteractionFlags(Qt.TextSelectableByMouse)
-        layout.addWidget(changes_label, stretch=1)
-
-        self.setLayout(layout)
-
+        main_layout.addWidget(changes_label, stretch=1)
+      
 class ChangelogWindow(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
