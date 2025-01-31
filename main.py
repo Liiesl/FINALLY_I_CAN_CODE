@@ -469,7 +469,7 @@ class MainWindow(QMainWindow):
             columns = 3
         
             for index, tool in enumerate(tools):
-                btn = self.create_tool_button(tool[0], tool[1])
+                btn = self.create_tool_button(tool[0], tool[1], tool[2])
                 category = next((t[2] for t in tools if t[0] == tool_name), "Other")
                 row = index // columns
                 col = index % columns
