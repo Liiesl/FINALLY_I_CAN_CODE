@@ -381,7 +381,6 @@ class MainWindow(QMainWindow):
                     border: 2px solid {palette.color(QPalette.Highlight).name()};
                     border-radius: 15px;
                     padding: 5px 5px 5px 35px;  # Adjusted padding for icon
-                    font-size: {self.config.get_text_size("default")}px;
                 }}
                 QLineEdit::placeholder {{
                     color: {palette.color(QPalette.PlaceholderText).name()};
