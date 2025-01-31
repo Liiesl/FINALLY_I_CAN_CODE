@@ -423,7 +423,7 @@ class MainWindow(QMainWindow):
             most_used_layout = QHBoxLayout(most_used_widget)
             most_used_layout.setContentsMargins(0, 0, 0, 0)
             
-           for tool_name in sorted(self.tool_usage, key=lambda x: -self.tool_usage[x])[:3]:
+            for tool_name in sorted(self.tool_usage, key=lambda x: -self.tool_usage[x])[:3]:
                 category = next((t[2] for t in tools if t[0] == tool_name), "Other")
                 btn = self.create_tool_button(tool_name, tools_dict.get(tool_name, "Popular tool"), category)  # Added category
                 most_used_layout.addWidget(btn)
