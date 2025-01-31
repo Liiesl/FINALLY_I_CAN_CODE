@@ -395,7 +395,7 @@ class MainWindow(QMainWindow):
             
             # Add the tool buttons
             self.tool_buttons_container = QWidget()
-            self.tool_buttons_layout = QHBoxLayout(self.tool_buttons_container)
+            self.tool_buttons_layout = QvBoxLayout(self.tool_buttons_container)
             self.tool_buttons_layout.setContentsMargins(0, 0, 0, 0)
 
             tools = [
@@ -419,31 +419,14 @@ class MainWindow(QMainWindow):
             navigation_layout = QHBoxLayout(navigation_frame)
             navigation_layout.setContentsMargins(0, 0, 0, 0)
 
-            left_arrow_button = QPushButton()
-            left_arrow_icon = qta.icon('fa.chevron-left')
-            left_arrow_button.setIcon(left_arrow_icon)
-            left_arrow_button.setFixedSize(50, 75)
-            left_arrow_button.setStyleSheet("background-color: #4f86f7; border: none;")
-            left_arrow_button.clicked.connect(self.scroll_left)
-            navigation_layout.addWidget(left_arrow_button)
-
             scroll_area = QScrollArea()
             scroll_area.setWidgetResizable(True)
             scroll_area.setWidget(self.tool_buttons_container)
-            scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+            scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
             scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
             self.scroll_area = scroll_area
-            navigation_layout.addWidget(scroll_area)
 
-            right_arrow_button = QPushButton()
-            right_arrow_icon = qta.icon('fa.chevron-right')
-            right_arrow_button.setIcon(right_arrow_icon)
-            right_arrow_button.setFixedSize(50, 75)
-            right_arrow_button.setStyleSheet("background-color: #4f86f7; border: none;")
-            right_arrow_button.clicked.connect(self.scroll_right)
-            navigation_layout.addWidget(right_arrow_button)
-
-            main_content_layout.addWidget(navigation_frame)
+            main_content_layout.addWidget(scroll_area)
 
             self.apply_text_size()
             self.apply_theme()
@@ -570,17 +553,6 @@ class MainWindow(QMainWindow):
                 # Let filter_tools handle visibility
                 pass
 
-    def scroll_left(self):
-        current_value = self.scroll_area.horizontalScrollBar().value()
-        new_value = max(0, current_value - 220)
-        self.animate_scroll(current_value, new_value)
-
-    def scroll_right(self):
-        max_value = self.scroll_area.horizontalScrollBar().maximum()
-        current_value = self.scroll_area.horizontalScrollBar().value()
-        new_value = min(max_value, current_value + 220)
-        self.animate_scroll(current_value, new_value)
-
     def filter_tools(self, search_text):
         if not hasattr(self, 'tool_buttons'):
             return
@@ -597,14 +569,6 @@ class MainWindow(QMainWindow):
         # Update scroll area contents
         self.tool_buttons_container.adjustSize()
         self.update_tool_button_visibility()
-
-    def animate_scroll(self, start_value, end_value):
-        animation = QPropertyAnimation(self.scroll_area.horizontalScrollBar(), b"value")
-        animation.setDuration(500)
-        animation.setStartValue(start_value)
-        animation.setEndValue(end_value)
-        animation.start()
-        self.animation = animation
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
