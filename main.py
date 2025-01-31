@@ -467,7 +467,7 @@ class MainWindow(QMainWindow):
                 btn = self.create_tool_button(tool[0], tool[1])
                 row = index // columns
                 col = index % columns
-                self.tool_buttons_layout.addWidget(btn, row, col)
+                tool_buttons_layout.addWidget(btn, row, col)
                 self.tool_buttons.append(btn)
 
             self.tool_buttons_container.setLayout(tool_buttons_layout)
