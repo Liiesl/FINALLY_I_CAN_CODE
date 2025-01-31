@@ -561,6 +561,7 @@ class MainWindow(QMainWindow):
         columns = 3  # Always show 3 columns
         button_width = 300
         button_height = 400
+        horizontal_spacing = 20  # Matches QGridLayout's horizontal spacing
         
         # Clear existing layout
         while self.tool_buttons_layout.count():
@@ -579,9 +580,12 @@ class MainWindow(QMainWindow):
                 col = 0
                 row += 1
     
-    # Remove fixed size to allow dynamic resizing
-    self.tool_buttons_container.setMinimumSize(0, 0)  # Reset minimum size
-    self.tool_buttons_container.adjustSize()  # Adjust based on content
+    # Calculate total width: (button_width * columns) + (spacing * (columns - 1))
+    total_width = (button_width * columns) + (horizontal_spacing * (columns - 1))
+    total_height = (button_height * (row + 1)) + (self.tool_buttons_layout.verticalSpacing() * row)
+    
+    # Set fixed container size
+    self.tool_buttons_container.setFixedSize(total_width, total_height)
     
     def eventFilter(self, source, event):
         if source == self.tool_buttons_container and event.type() == event.Resize:
