@@ -397,6 +397,8 @@ class MainWindow(QMainWindow):
             self.tool_buttons_container = QWidget()
             self.tool_buttons_layout = QVBoxLayout(self.tool_buttons_container)
             self.tool_buttons_layout.setContentsMargins(0, 0, 0, 0)
+            self.tool_buttons_layout.setHorizontalSpacing(20)
+            self.tool_buttons_layout.setVerticalSpacing(20)
 
             tools = [
                 ("Longer Appearance SRT", "Increase the duration each subtitle appears."),
@@ -427,6 +429,9 @@ class MainWindow(QMainWindow):
             self.scroll_area = scroll_area
 
             main_content_layout.addWidget(scroll_area)
+            
+            self.arrange_tools_in_grid()
+            self.tool_buttons_container.installEventFilter(self)
 
             self.apply_text_size()
             self.apply_theme()
@@ -553,6 +558,42 @@ class MainWindow(QMainWindow):
                 # Let filter_tools handle visibility
                 pass
 
+    def arrange_tools_in_grid(self):
+        if not hasattr(self, 'tool_buttons'):
+            return
+        
+        # Get container width (accounting for scrollbar and margins)
+        container_width = self.tool_buttons_container.width() - 40  # 20px margins on both sides
+        if self.scroll_area.verticalScrollBar().isVisible():
+            container_width -= self.scroll_area.verticalScrollBar().width()
+        
+        # Calculate number of columns based on button width (300px from your CSS + 20px spacing)
+        button_width = 300
+        columns = max(1, container_width // (button_width + 20))
+        
+        # Clear existing layout
+        while self.tool_buttons_layout.count():
+            item = self.tool_buttons_layout.takeAt(0)
+            widget = item.widget()
+            if widget:
+                widget.setParent(None)
+        
+        # Add visible buttons to grid
+        row = 0
+        col = 0
+        for button in self.tool_buttons:
+            if button.isVisible():
+                self.tool_buttons_layout.addWidget(button, row, col)
+                col += 1
+                if col >= columns:
+                    col = 0
+                    row += 1
+
+    def eventFilter(self, source, event):
+        if source == self.tool_buttons_container and event.type() == event.Resize:
+            self.arrange_tools_in_grid()
+        return super().eventFilter(source, event)
+
     def filter_tools(self, search_text):
         if not hasattr(self, 'tool_buttons'):
             return
@@ -561,11 +602,12 @@ class MainWindow(QMainWindow):
         for button in self.tool_buttons:
             name = button.layout().itemAt(0).widget().text().lower()
             description = button.layout().itemAt(1).widget().text().lower()
-            if search_text in name or search_text in description:
-                button.show()
-            else:
-                button.hide()
+            visible = search_text in name or search_text in description
+            button.setVisible(visible)
         
+        self.arrange_tools_in_grid()
+        self.tool_buttons_container.adjustSize()
+            
         # Update scroll area contents
         self.tool_buttons_container.adjustSize()
         self.update_tool_button_visibility()
