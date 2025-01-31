@@ -414,7 +414,7 @@ class MainWindow(QMainWindow):
                 ("Subtitle Converter", "Convert subtitles between different formats.", "Convert"),
                 ("Subtitle Shifter", "Shift subtitles by milliseconds.", "Timing"),
                 ("Multilingual Merge", "Merge subtitles in different languages with colors.", "Merge"),
-                ("Coming Soon", "More tools will be added in the future.")
+                ("Coming Soon", "More tools will be added in the future.", "Other")
             ]
             tools_dict = {name: desc for name, desc in tools}
             
