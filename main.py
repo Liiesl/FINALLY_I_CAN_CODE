@@ -560,9 +560,9 @@ class MainWindow(QMainWindow):
             return
         
         # Get container width (accounting for scrollbar and margins)
-    container_width = self.tool_buttons_container.width()
-    if container_width <= 0:
-        container_width = self.scroll_area.viewport().width() - 40
+        container_width = self.tool_buttons_container.width()
+        if container_width <= 0:
+            container_width = self.scroll_area.viewport().width() - 40
         
         # Calculate number of columns based on button width (300px from your CSS + 20px spacing)
         button_width = 300
