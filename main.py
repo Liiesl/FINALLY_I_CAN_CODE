@@ -557,35 +557,35 @@ class MainWindow(QMainWindow):
                 pass
 
     def arrange_tools_in_grid(self):
-        if not hasattr(self, 'tool_buttons'):
+        if not hasattr(self, 'tool_buttons') or not self.tool_buttons:
             return
-        
-        # Get container width (accounting for scrollbar and margins)
-        container_width = self.tool_buttons_container.width()
+    
+        # Get available width from scroll area viewport
+        container_width = self.scroll_area.viewport().width() - 40
         if container_width <= 0:
-            container_width = self.scroll_area.viewport().width() - 40
-        
-        # Calculate number of columns based on button width (300px from your CSS + 20px spacing)
+            container_width = self.width() - 100  # Fallback to window width
+            
+        # Calculate columns based on actual available space
         button_width = 300
         columns = max(1, container_width // (button_width + 20))
         
         # Clear existing layout
         while self.tool_buttons_layout.count():
             item = self.tool_buttons_layout.takeAt(0)
-            widget = item.widget()
-            if widget:
+            if widget := item.widget():
                 widget.setParent(None)
         
-        # Add visible buttons to grid
-        row = 0
-        col = 0
+        # Add all buttons to the grid
+        row = col = 0
         for button in self.tool_buttons:
-            if button.isVisible():
-                self.tool_buttons_layout.addWidget(button, row, col)
-                col += 1
-                if col >= columns:
-                    col = 0
-                    row += 1
+            self.tool_buttons_layout.addWidget(button, row, col)
+            button.show()  # Ensure all buttons are visible
+            col += 1
+            if col >= columns:
+                col = 0
+                row += 1
+        
+        self.tool_buttons_container.adjustSize()
 
     def eventFilter(self, source, event):
         if source == self.tool_buttons_container and event.type() == event.Resize:
