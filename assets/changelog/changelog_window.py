@@ -156,7 +156,7 @@ class ChangelogWindow(QMainWindow):
         for version, changes in versions:
             self.scroll_layout.addWidget(VersionBlock(version, changes))
         
-        self.versions_layout.addStretch()
+        self.scroll_layout.addStretch()
 
     def add_version_block(self, version, changes):
         version_block = VersionBlock(version, changes)
