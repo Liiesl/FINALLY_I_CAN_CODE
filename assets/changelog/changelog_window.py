@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import (QMainWindow, QApplication, QVBoxLayout, QWidget, QLabel, 
+from PyQt5.QtWidgets import (QMainWindow, QApplication, QVBoxLayout, QWidget, QLabel,
                              QScrollArea, QFrame, QHBoxLayout, QSizePolicy)
 from PyQt5.QtGui import QPalette, QFont, QPainter
 from PyQt5.QtCore import Qt
@@ -14,7 +14,8 @@ class VersionBlock(QWidget):
 
     def init_ui(self):
         main_layout = QHBoxLayout(self)
-        main_layout.setContentsMargins(20, 30, 20, 30)  # Vertical gap space
+        # Top and bottom margins create space between blocks, left/right margins removed
+        main_layout.setContentsMargins(0, 30, 0, 30)
         main_layout.setSpacing(20)
 
         # Version title
@@ -23,12 +24,6 @@ class VersionBlock(QWidget):
         version_label.setFixedWidth(150)
         version_label.setAlignment(Qt.AlignLeft | Qt.AlignTop)
         main_layout.addWidget(version_label)
-
-        # Vertical line separator
-        line = QFrame()
-        line.setFixedWidth(2)
-        line.setStyleSheet(f"background-color: {self.palette().text().color().name()};")
-        main_layout.addWidget(line)
 
         # Changes list
         changes_html = "<ul style='margin: 0; padding-left: 20px;'>"
@@ -43,7 +38,7 @@ class VersionBlock(QWidget):
         changes_label.setWordWrap(True)
         changes_label.setTextInteractionFlags(Qt.TextSelectableByMouse)
         main_layout.addWidget(changes_label, stretch=1)
-      
+
 class ChangelogWindow(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -66,11 +61,24 @@ class ChangelogWindow(QMainWindow):
         self.scroll_area = QScrollArea()
         self.scroll_area.setWidgetResizable(True)
         
-        # Main container with line
+        # Main container with vertical line and version blocks
         self.scroll_content = QWidget()
-        self.scroll_layout = QVBoxLayout(self.scroll_content)
-        self.scroll_layout.setContentsMargins(0, 0, 0, 0)
-        self.scroll_layout.setSpacing(0)
+        self.scroll_layout = QHBoxLayout(self.scroll_content)
+        self.scroll_layout.setContentsMargins(20, 0, 20, 0)  # Left/right padding for line
+        self.scroll_layout.setSpacing(20)
+
+        # Vertical line spanning entire content
+        self.vertical_line = QFrame()
+        self.vertical_line.setFrameShape(QFrame.VLine)
+        self.vertical_line.setLineWidth(2)
+        self.scroll_layout.addWidget(self.vertical_line)
+
+        # Container for version blocks
+        self.version_container = QWidget()
+        self.version_layout = QVBoxLayout(self.version_container)
+        self.version_layout.setContentsMargins(0, 0, 0, 0)
+        self.version_layout.setSpacing(0)  # Spacing managed by VersionBlock margins
+        self.scroll_layout.addWidget(self.version_container, stretch=1)
 
         self.apply_palette()
         self.load_changelog()
@@ -85,14 +93,14 @@ class ChangelogWindow(QMainWindow):
         scrollbar_color = palette.color(QPalette.Button).name()
         handle_color = palette.color(QPalette.Highlight).name()
 
-        # Base styling
         self.setStyleSheet(f"""
             background-color: {background_color};
             color: {text_color};
         """)
         self.scroll_content.setStyleSheet(f"background-color: {background_color};")
+        self.vertical_line.setStyleSheet(f"background-color: {text_color};")
 
-        # Scrollbar styling
+        # Scrollbar styling (unchanged)
         self.scroll_area.setStyleSheet(f"""
             QScrollArea {{
                 border: none;
@@ -155,9 +163,9 @@ class ChangelogWindow(QMainWindow):
         versions.reverse()
 
         for version, changes in versions:
-            self.scroll_layout.addWidget(VersionBlock(version, changes))
+            self.version_layout.addWidget(VersionBlock(version, changes))
         
-        self.scroll_layout.addStretch()
+        self.version_layout.addStretch()
 
     def add_version_block(self, version, changes):
         version_block = VersionBlock(version, changes)
