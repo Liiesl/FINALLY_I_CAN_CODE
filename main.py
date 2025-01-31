@@ -441,6 +441,38 @@ class MainWindow(QMainWindow):
                 recent_layout.addWidget(btn)
             container_layout.addWidget(recent_widget)
 
+                        # Add All Tools section
+            all_tools_label = QLabel("All Tools")
+            all_tools_label.setFont(self.inter_extra_bold_font)
+            all_tools_label.setStyleSheet("color: palette(WindowText);")
+            container_layout.addWidget(all_tools_label)
+        
+            # Create grid for all tools
+            all_tools_grid = QGridLayout()
+            all_tools_grid.setHorizontalSpacing(20)
+            all_tools_grid.setVerticalSpacing(20)
+            columns = 3
+        
+            for index, tool in enumerate(tools):
+                btn = self.create_tool_button(tool[0], tool[1])
+                row = index // columns
+                col = index % columns
+                all_tools_grid.addWidget(btn, row, col)
+                self.tool_buttons.append(btn)
+        
+            # Create a widget to hold the grid
+            all_tools_widget = QWidget()
+            all_tools_widget.setLayout(all_tools_grid)
+            
+            # Add the grid to the container layout
+            container_layout.addWidget(all_tools_widget)
+        
+            # Navigation and scroll area setup
+            navigation_frame = QFrame()
+            navigation_layout = QHBoxLayout(navigation_frame)
+            navigation_layout.setContentsMargins(0, 0, 0, 0)
+
+
             scroll_area = QScrollArea()
             scroll_area.setWidgetResizable(True)
             scroll_area.setWidget(self.tool_buttons_container)
