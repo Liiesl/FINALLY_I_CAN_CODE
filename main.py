@@ -425,7 +425,7 @@ class MainWindow(QMainWindow):
             
             for tool_name in sorted(self.tool_usage, key=lambda x: -self.tool_usage[x])[:3]:
                 category = next((t[2] for t in tools if t[0] == tool_name), "Other")
-                btn = self.create_tool_button(tool_name, tools_dict.get(tool_name, "Popular tool"), category)  # Added category
+                btn = self.create_tool_button(tool_name, description, category)  # Added category
                 most_used_layout.addWidget(btn)
     
             # Add Recent section
@@ -440,7 +440,7 @@ class MainWindow(QMainWindow):
             
         for tool_name in self.recent_tools[:3]:
             category = next((t[2] for t in tools if t[0] == tool_name), "Other")
-            btn = self.create_tool_button(tool_name, tools_dict.get(tool_name, "Recently used tool"), category)  # Added category
+            btn = self.create_tool_button(tool_name, description, category)  # Added category
             recent_layout.addWidget(btn)
 
             # Add All Tools section
