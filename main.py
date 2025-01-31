@@ -71,8 +71,6 @@ class MainWindow(QMainWindow):
         self.top_bar = QHBoxLayout()
         self.top_bar_added = False
         self.menu_button = None
-
-        self.create_new_tab_content()
         
         self.tool_usage = {
             "Subtitle Converter": 5,
@@ -81,6 +79,8 @@ class MainWindow(QMainWindow):
         }
         self.recent_tools = ["Subtitle Converter", "Merge SRT Files", "Subtitle Shifter"]
 
+        self.create_new_tab_content()
+    
     def apply_theme(self):
         self.config = Config(source="MainWindow")
         theme = self.config.get_theme()
