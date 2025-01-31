@@ -402,7 +402,7 @@ class MainWindow(QMainWindow):
             
             # Add the tool buttons
             tool_buttons_container = QWidget()
-            tool_buttons_layout = QGridLayout(self.tool_buttons_container)
+            tool_buttons_layout = QGridLayout()
             tool_buttons_layout.setContentsMargins(0, 0, 0, 0)
             tool_buttons_layout.setHorizontalSpacing(20)
             tool_buttons_layout.setVerticalSpacing(20)
