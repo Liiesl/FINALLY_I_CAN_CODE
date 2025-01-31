@@ -14,15 +14,22 @@ class VersionBlock(QWidget):
 
     def init_ui(self):
         main_layout = QHBoxLayout(self)
-        main_layout.setContentsMargins(20, 20, 20, 20)  # Uniform margins
+        main_layout.setContentsMargins(20, 20, 20, 20)  # Creates gap between blocks
         main_layout.setSpacing(20)
 
-        # Version label
+        # Version title
         version_label = QLabel(self.version)
         version_label.setFont(QFont("Inter ExtraBold", 20))
-        version_label.setAlignment(Qt.AlignLeft | Qt.AlignTop)
         version_label.setFixedWidth(150)
+        version_label.setAlignment(Qt.AlignLeft | Qt.AlignTop)
         main_layout.addWidget(version_label)
+
+        # Vertical line between title and changes
+        line = QFrame()
+        line.setFrameShape(QFrame.VLine)
+        line.setLineWidth(2)
+        line.setStyleSheet(f"border-color: {self.palette().color(QPalette.WindowText).name()};")
+        main_layout.addWidget(line)
 
         # Changes list
         changes_html = "<ul style='margin: 0; padding-left: 20px;'>"
@@ -30,14 +37,13 @@ class VersionBlock(QWidget):
             cleaned_change = change.strip().lstrip('- ')
             changes_html += f"<li style='margin-bottom: 5px;'>{cleaned_change}</li>"
         changes_html += "</ul>"
-
+        
         changes_label = QLabel(changes_html)
         changes_label.setFont(QFont("Inter", 12))
         changes_label.setAlignment(Qt.AlignLeft | Qt.AlignTop)
         changes_label.setWordWrap(True)
         changes_label.setTextInteractionFlags(Qt.TextSelectableByMouse)
         main_layout.addWidget(changes_label, stretch=1)
-
 class ChangelogWindow(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
