@@ -14,45 +14,47 @@ class VersionBlock(QWidget):
 
     def init_ui(self):
         main_layout = QHBoxLayout(self)
-        main_layout.setContentsMargins(20, 0, 20, 0)  # Removed vertical margins
+        main_layout.setContentsMargins(20, 0, 20, 0)  # No vertical margins
         main_layout.setSpacing(20)
 
-        # Version label (unchanged)
+        # Version label
         version_label = QLabel(self.version)
         version_label.setFont(QFont("Inter ExtraBold", 20))
         version_label.setAlignment(Qt.AlignLeft | Qt.AlignTop)
         version_label.setFixedWidth(150)
         main_layout.addWidget(version_label)
 
-        # Vertical line container
+        # Icon + Line container
         line_container = QWidget()
-        line_container.setFixedWidth(24)  # Fixed width to center the line
-        line_container.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Expanding)
+        line_container.setFixedWidth(24)
         line_layout = QVBoxLayout(line_container)
-        line_layout.setContentsMargins(0, 0, 0, 0)  # Removed negative margins
+        line_layout.setContentsMargins(0, 0, 0, 0)
         line_layout.setSpacing(0)
-        
-        # Composite icon (unchanged)
-        icon = qta.icon("mdi.circle-outline", color="#0078D4").pixmap(24, 24)
-        painter = QPainter(icon)
+
+        # Version marker (icon)
+        self.icon = qta.icon("mdi.circle-outline", color="#0078D4").pixmap(24, 24)
+        painter = QPainter(self.icon)
         dot_icon = qta.icon("mdi.circle", color="#0078D4").pixmap(8, 8)
         painter.drawPixmap(8, 8, dot_icon)
         painter.end()
         
         icon_label = QLabel()
-        icon_label.setPixmap(icon)
+        icon_label.setPixmap(self.icon)
         line_layout.addWidget(icon_label, alignment=Qt.AlignTop)
 
-        # Vertical line
-        line = QFrame()
-        line.setFrameShape(QFrame.VLine)
-        line.setLineWidth(1)
-        line.setStyleSheet(f"border-color: {self.palette().color(QPalette.WindowText).name()};")
-        line.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Expanding)
-        line_layout.addWidget(line)
+        # Connecting line (overlay)
+        self.line = QFrame(self)
+        self.line.setFrameShape(QFrame.VLine)
+        self.line.setLineWidth(1)
+        self.line.setStyleSheet(f"border-color: {self.palette().color(QPalette.WindowText).name()};")
+        self.line.setFixedWidth(1)
+        self.line.move(20 + 150 + 12, 34)  # Position relative to widget
+        self.line.resize(1, self.height() - 34)
+
+        line_layout.addStretch()  # Push icon to top
         main_layout.addWidget(line_container)
 
-        # Changes list (unchanged)
+        # Changes list
         changes_html = "<ul style='margin: 0; padding-left: 20px;'>"
         for change in self.changes:
             cleaned_change = change.strip().lstrip('- ')
@@ -66,6 +68,10 @@ class VersionBlock(QWidget):
         changes_label.setTextInteractionFlags(Qt.TextSelectableByMouse)
         main_layout.addWidget(changes_label, stretch=1)
 
+    def resizeEvent(self, event):
+        """Update line height when widget resizes"""
+        self.line.resize(1, self.height() - 34)
+        super().resizeEvent(event)
 class ChangelogWindow(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
