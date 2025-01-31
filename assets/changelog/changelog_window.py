@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import (QMainWindow, QApplication, QVBoxLayout, QWidget, QLabel, 
                              QScrollArea, QFrame, QHBoxLayout, QSizePolicy)
-from PyQt5.QtGui import QPalette, QFont, QPixmap
+from PyQt5.QtGui import QPalette, QFont, QPainter
 from PyQt5.QtCore import Qt
 import os
 import qtawesome as qta
@@ -14,7 +14,7 @@ class VersionBlock(QWidget):
 
     def init_ui(self):
         main_layout = QHBoxLayout(self)
-        main_layout.setContentsMargins(20, 0, 20, 0)
+        main_layout.setContentsMargins(20, 10, 20, 10)  # Vertical spacing between blocks
         main_layout.setSpacing(20)
 
         # Version label
@@ -24,28 +24,33 @@ class VersionBlock(QWidget):
         version_label.setFixedWidth(150)
         main_layout.addWidget(version_label)
 
-        # Vertical line with icon
-        line_widget = QWidget()
-        line_layout = QVBoxLayout(line_widget)
-        line_layout.setContentsMargins(0, 0, 0, 0)
+        # Vertical line container (stretches full height)
+        line_container = QWidget()
+        line_container.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Expanding)
+        line_layout = QVBoxLayout(line_container)
+        line_layout.setContentsMargins(0, -10, 0, -10)  # Negative margins to span spacing
         line_layout.setSpacing(0)
 
-        # Icon using QtAwesome
-        icon = qta.icon("mdi6.circle", color="#0078D4")
+        # Composite icon (circle outline + dot)
+        icon = qta.icon("mdi.circle-outline", color="#0078D4").pixmap(24, 24)
+        painter = QPainter(icon)
+        dot_icon = qta.icon("mdi.circle", color="#0078D4").pixmap(8, 8)
+        painter.drawPixmap(8, 8, dot_icon)
+        painter.end()
+        
         icon_label = QLabel()
-        icon_label.setPixmap(icon.pixmap(16, 16))
-        line_layout.addWidget(icon_label)
+        icon_label.setPixmap(icon)
+        line_layout.addWidget(icon_label, alignment=Qt.AlignTop)
 
-        # Vertical separator line
+        # Vertical line
         line = QFrame()
         line.setFrameShape(QFrame.VLine)
         line.setLineWidth(1)
+        line.setStyleSheet(f"border-color: {self.palette().color(QPalette.WindowText).name()};")
         line.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Expanding)
-        palette = QApplication.instance().palette()
-        line.setStyleSheet(f"border-color: {palette.color(QPalette.WindowText).name()};")
         line_layout.addWidget(line)
 
-        main_layout.addWidget(line_widget)
+        main_layout.addWidget(line_container)
 
         # Changes list
         changes_html = "<ul style='margin: 0; padding-left: 20px;'>"
@@ -60,7 +65,7 @@ class VersionBlock(QWidget):
         changes_label.setWordWrap(True)
         changes_label.setTextInteractionFlags(Qt.TextSelectableByMouse)
         main_layout.addWidget(changes_label, stretch=1)
-      
+
 class ChangelogWindow(QMainWindow):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -84,8 +89,8 @@ class ChangelogWindow(QMainWindow):
         self.scroll_area.setWidgetResizable(True)
         self.scroll_content = QWidget()
         self.scroll_layout = QVBoxLayout(self.scroll_content)
-        self.scroll_layout.setSpacing(0)
-        self.scroll_layout.setContentsMargins(10, 10, 10, 10)
+        self.scroll_layout.setSpacing(0)  # No spacing between version blocks
+        self.scroll_layout.setContentsMargins(0, 0, 0, 0)
         
         self.apply_palette()
         self.load_changelog()
