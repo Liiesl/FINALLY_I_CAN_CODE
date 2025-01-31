@@ -54,7 +54,7 @@ class ChangelogWindow(QMainWindow):
         # Title label
         self.title_label = QLabel("What's New")
         self.title_label.setAlignment(Qt.AlignCenter)
-        self.title_label.setFont(QFont("Inter ExtraBold", 24))
+        self.title_label.setFont(QFont("Inter ExtraBold", 100))
         main_layout.addWidget(self.title_label)
 
         # Scroll area setup
