@@ -423,14 +423,10 @@ class MainWindow(QMainWindow):
             most_used_layout = QHBoxLayout(most_used_widget)
             most_used_layout.setContentsMargins(0, 0, 0, 0)
             
-            for tool_name in sorted(self.tool_usage, key=lambda x: -self.tool_usage[x])[:3]:
-                btn = self.create_tool_button(tool_name, tools_dict.get(tool_name, "Popular tool"))
-                most_used_layout.addWidget(btn)
+           for tool_name in sorted(self.tool_usage, key=lambda x: -self.tool_usage[x])[:3]:
                 category = next((t[2] for t in tools if t[0] == tool_name), "Other")
-                btn = self.create_tool_button(tool_name, 
-                                 tools_dict.get(tool_name, "Popular tool"),
-                                 category) 
-            container_layout.addWidget(most_used_widget)
+                btn = self.create_tool_button(tool_name, tools_dict.get(tool_name, "Popular tool"), category)  # Added category
+                most_used_layout.addWidget(btn)
     
             # Add Recent section
             recent_label = QLabel("Recent Tools")
@@ -442,16 +438,12 @@ class MainWindow(QMainWindow):
             recent_layout = QHBoxLayout(recent_widget)
             recent_layout.setContentsMargins(0, 0, 0, 0)
             
-            for tool_name in self.recent_tools[:3]:
-                btn = self.create_tool_button(tool_name, tools_dict.get(tool_name, "Recently used tool"))
-                recent_layout.addWidget(btn)
-                category = next((t[2] for t in tools if t[0] == tool_name), "Other")
-                btn = self.create_tool_button(tool_name, 
-                                 tools_dict.get(tool_name, "Popular tool"),
-                                 category) 
-            container_layout.addWidget(recent_widget)
+        for tool_name in self.recent_tools[:3]:
+            category = next((t[2] for t in tools if t[0] == tool_name), "Other")
+            btn = self.create_tool_button(tool_name, tools_dict.get(tool_name, "Recently used tool"), category)  # Added category
+            recent_layout.addWidget(btn)
 
-                        # Add All Tools section
+            # Add All Tools section
             all_tools_label = QLabel("All Tools")
             all_tools_label.setFont(self.inter_extra_bold_font)
             all_tools_label.setStyleSheet("color: palette(WindowText);")
