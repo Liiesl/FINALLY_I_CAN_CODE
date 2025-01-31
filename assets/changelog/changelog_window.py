@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import (QMainWindow, QApplication, QVBoxLayout, QWidget, QLabel,
-                             QScrollArea, QFrame, QHBoxLayout, QSpacerItem, QSizePolicy)
+                             QScrollArea, QFrame, QHBoxLayout, QSpacerItem, QSizePolicy, QGridLayout)
 from PyQt5.QtGui import QPalette, QFont, QPainter
 from PyQt5.QtCore import Qt
 import os
