@@ -414,8 +414,6 @@ class MainWindow(QMainWindow):
                 self.tool_buttons.append(btn)
                 self.tool_buttons_layout.addWidget(btn)
 
-            self.tool_buttons_layout.addStretch()
-
             # Add navigation arrows
             navigation_frame = QFrame()
             navigation_layout = QHBoxLayout(navigation_frame)
