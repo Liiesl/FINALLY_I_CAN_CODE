@@ -434,7 +434,6 @@ class MainWindow(QMainWindow):
             self.apply_text_size()
             self.apply_theme()
             self.update_tool_button_visibility()
-            self.resizeEvent = self.update_tool_button_visibility
             
         current_tab_contents_index = self.tab_contents.currentIndex()
         tab_bar_index = current_tab_contents_index + 1  # Adjust for hidden tab
@@ -561,9 +560,9 @@ class MainWindow(QMainWindow):
             return
         
         # Get container width (accounting for scrollbar and margins)
-        container_width = self.tool_buttons_container.width() - 40  # 20px margins on both sides
-        if self.scroll_area.verticalScrollBar().isVisible():
-            container_width -= self.scroll_area.verticalScrollBar().width()
+    container_width = self.tool_buttons_container.width()
+    if container_width <= 0:
+        container_width = self.scroll_area.viewport().width() - 40
         
         # Calculate number of columns based on button width (300px from your CSS + 20px spacing)
         button_width = 300
@@ -604,8 +603,7 @@ class MainWindow(QMainWindow):
             button.setVisible(visible)
         
         self.arrange_tools_in_grid()
-        self.tool_buttons_container.adjustSize()
-            
+        QApplication.processEvents()
         # Update scroll area contents
         self.tool_buttons_container.adjustSize()
         self.update_tool_button_visibility()
