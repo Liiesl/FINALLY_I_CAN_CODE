@@ -348,6 +348,13 @@ class MainWindow(QMainWindow):
 
             # Add the top bar with the menu button
             if not self.top_bar_added:
+                # Add search field
+                self.search_field = QLineEdit()
+                self.search_field.setPlaceholderText("Search tools...")
+                self.search_field.setFixedWidth(200)
+                self.search_field.textChanged.connect(self.filter_tools)
+                self.top_bar.addWidget(self.search_field, alignment=Qt.AlignRight)
+                
                 # Add the top bar with the menu button
                 self.top_bar = QHBoxLayout()
                 self.menu_button = QPushButton()
@@ -497,20 +504,6 @@ class MainWindow(QMainWindow):
             # Load the settings widget into the current tab's main content layout
             self.load_tool(settings_widget, main_content_layout)
 
-    def update_safe_area_size(self):
-        self.config = Config(source="MainWindow")
-        safe_area_size = self.config.get_safe_area_size()
-        for i in range(self.tab_contents.count()):
-            tab_widget = self.tab_contents.widget(i)
-            if tab_widget:
-                main_content = tab_widget.widget(1)  # Main content is the second widget in the splitter
-                if main_content:
-                    main_content_layout = main_content.layout()
-                    if main_content_layout:
-                        main_content_layout.setContentsMargins(
-                            safe_area_size, safe_area_size, safe_area_size, safe_area_size
-                        )
-
     def apply_text_size(self):
         self.config = Config(source="MainWindow")
         text_size = self.config.get_text_size()
@@ -561,6 +554,23 @@ class MainWindow(QMainWindow):
         current_value = self.scroll_area.horizontalScrollBar().value()
         new_value = min(max_value, current_value + 220)
         self.animate_scroll(current_value, new_value)
+
+    def filter_tools(self, search_text):
+        if not hasattr(self, 'tool_buttons'):
+            return
+            
+        search_text = search_text.lower()
+        for button in self.tool_buttons:
+            name = button.layout().itemAt(0).widget().text().lower()
+            description = button.layout().itemAt(1).widget().text().lower()
+            if search_text in name or search_text in description:
+                button.show()
+            else:
+                button.hide()
+        
+        # Update scroll area contents
+        self.tool_buttons_container.adjustSize()
+        self.update_tool_button_visibility()
 
     def animate_scroll(self, start_value, end_value):
         animation = QPropertyAnimation(self.scroll_area.horizontalScrollBar(), b"value")
