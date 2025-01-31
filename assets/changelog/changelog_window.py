@@ -61,31 +61,18 @@ class ChangelogWindow(QMainWindow):
         self.scroll_area = QScrollArea()
         self.scroll_area.setWidgetResizable(True)
         
-        # Main content with columns
+        # Grid-based content
         self.scroll_content = QWidget()
-        self.scroll_layout = QHBoxLayout(self.scroll_content)
-        self.scroll_layout.setContentsMargins(20, 0, 20, 0)
-        self.scroll_layout.setSpacing(20)
+        self.grid_layout = QGridLayout(self.scroll_content)
+        self.grid_layout.setColumnStretch(2, 1)  # Changes column expands
+        self.grid_layout.setVerticalSpacing(30)  # Gap between versions
+        self.grid_layout.setColumnMinimumWidth(1, 2)  # Line column width
 
-        # Left column for version titles
-        self.titles_column = QWidget()
-        self.titles_layout = QVBoxLayout(self.titles_column)
-        self.titles_layout.setContentsMargins(0, 0, 0, 0)
-        self.titles_layout.setSpacing(30)  # Vertical gap between versions
-        self.scroll_layout.addWidget(self.titles_column)
-
-        # Vertical line between columns
+        # Add vertical line spanning all rows
         self.vertical_line = QFrame()
         self.vertical_line.setFrameShape(QFrame.VLine)
         self.vertical_line.setLineWidth(2)
-        self.scroll_layout.addWidget(self.vertical_line)
-
-        # Right column for changes
-        self.changes_column = QWidget()
-        self.changes_layout = QVBoxLayout(self.changes_column)
-        self.changes_layout.setContentsMargins(0, 0, 0, 0)
-        self.changes_layout.setSpacing(30)  # Matches title spacing
-        self.scroll_layout.addWidget(self.changes_column, stretch=1)
+        self.grid_layout.addWidget(self.vertical_line, 0, 1, -1, 1)  # Span all rows
 
         self.apply_palette()
         self.load_changelog()
@@ -147,7 +134,7 @@ class ChangelogWindow(QMainWindow):
         except FileNotFoundError:
             error_label = QLabel("Changelog file not found.")
             error_label.setAlignment(Qt.AlignCenter)
-            self.scroll_layout.addWidget(error_label)
+            self.grid_layout.addWidget(error_label, 0, 0, 1, 3)
 
     def parse_changelog(self, content):
         versions = []
@@ -169,17 +156,17 @@ class ChangelogWindow(QMainWindow):
         if current_version:
             versions.append((current_version, current_changes))
 
-        # Show latest versions first
         versions.reverse()
 
-        for version, changes in versions:
-            # Create version title
+        for row, (version, changes) in enumerate(versions):
+            # Version title
             version_label = QLabel(version)
             version_label.setFont(QFont("Inter ExtraBold", 20))
-            version_label.setAlignment(Qt.AlignLeft | Qt.AlignTop)
-            self.titles_layout.addWidget(version_label)
-            
-            # Create changes list
+            version_label.setAlignment(Qt.AlignRight | Qt.AlignTop)
+            version_label.setContentsMargins(0, 0, 20, 0)  # Right padding
+            self.grid_layout.addWidget(version_label, row, 0)
+
+            # Changes list
             changes_html = "<ul style='margin: 0; padding-left: 20px;'>"
             for change in changes:
                 cleaned_change = change.strip().lstrip('- ')
@@ -191,11 +178,12 @@ class ChangelogWindow(QMainWindow):
             changes_label.setAlignment(Qt.AlignLeft | Qt.AlignTop)
             changes_label.setWordWrap(True)
             changes_label.setTextInteractionFlags(Qt.TextSelectableByMouse)
-            self.changes_layout.addWidget(changes_label)
+            changes_label.setContentsMargins(20, 0, 0, 0)  # Left padding
+            self.grid_layout.addWidget(changes_label, row, 2)
 
-        # Add spacing at the end
-        self.titles_layout.addSpacerItem(QSpacerItem(20, 20, QSizePolicy.Minimum, QSizePolicy.Expanding))
-        self.changes_layout.addSpacerItem(QSpacerItem(20, 20, QSizePolicy.Minimum, QSizePolicy.Expanding))
+        # Add bottom spacer
+        self.grid_layout.setRowStretch(len(versions), 1)
+
 
     def add_version_block(self, version, changes):
         version_block = VersionBlock(version, changes)
