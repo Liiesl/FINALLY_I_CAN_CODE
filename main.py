@@ -408,11 +408,13 @@ class MainWindow(QMainWindow):
                 ("Multilingual Merge", "Merge subtitles in different languages with colors."),
                 ("Coming Soon", "More tools will be added in the future.")
             ]
+            columns = 3 
 
-            for tool in tools:
+            for index, tool in enumerate(tools):
                 btn = self.create_tool_button(tool[0], tool[1])
-                self.tool_buttons.append(btn)
-                self.tool_buttons_layout.addWidget(btn)
+                row = index // columns
+                col = index % columns
+                self.tool_buttons_layout.addWidget(btn, row, col)
 
             # Add navigation arrows
             navigation_frame = QFrame()
@@ -427,10 +429,6 @@ class MainWindow(QMainWindow):
             self.scroll_area = scroll_area
 
             main_content_layout.addWidget(scroll_area)
-
-            QTimer.singleShot(50, self.arrange_tools_in_grid)
-            
-            self.tool_buttons_container.installEventFilter(self)
 
             self.apply_text_size()
             self.apply_theme()
@@ -553,47 +551,6 @@ class MainWindow(QMainWindow):
                 for i, button in enumerate(self.tool_buttons):
                     button.setVisible(i < visible_buttons)
 
-    def arrange_tools_in_grid(self):
-        if not hasattr(self, 'tool_buttons'):
-            return
-        
-        # Fixed grid layout parameters
-        columns = 3  # Always show 3 columns
-        button_width = 300
-        button_height = 400
-        horizontal_spacing = 20  # Matches QGridLayout's horizontal spacing
-        
-        # Clear existing layout
-        while self.tool_buttons_layout.count():
-            item = self.tool_buttons_layout.takeAt(0)
-            if widget := item.widget():
-                widget.setParent(None)
-        
-        # Add all buttons to grid with fixed columns
-        row = 0
-        col = 0
-        for button in self.tool_buttons:
-            self.tool_buttons_layout.addWidget(button, row, col)
-            button.setFixedSize(button_width, button_height)
-            col += 1
-            if col >= columns:
-                col = 0
-                row += 1
-    
-    # Calculate total width: (button_width * columns) + (spacing * (columns - 1))
-    total_width = (button_width * columns) + (horizontal_spacing * (columns - 1))
-    total_height = (button_height * (row + 1)) + (self.tool_buttons_layout.verticalSpacing() * row)
-    
-    # Set fixed container size
-    self.tool_buttons_container.setFixedSize(total_width, total_height)
-    
-    def eventFilter(self, source, event):
-        if source == self.tool_buttons_container and event.type() == event.Resize:
-            self.arrange_tools_in_grid()
-        return super().eventFilter(source, event)
-
-    def resizeEvent(self, event):
-        super().resizeEvent(event)
 
     def filter_tools(self, search_text):
         if not hasattr(self, 'tool_buttons'):
