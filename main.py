@@ -448,25 +448,25 @@ class MainWindow(QMainWindow):
             for category in sorted(all_categories):
                 btn = QPushButton(category.upper())
                 btn.setCheckable(True)
-                btn.setStyleSheet("""
-                    QPushButton {
-                        border: 2px solid {highlight};
+                
+                highlight_color = self.app.palette().color(QPalette.Highlight).name()
+                base_color = self.app.palette().color(QPalette.Base).name()
+                text_color = self.app.palette().color(QPalette.Text).name()
+                highlight_text_color = self.app.palette().color(QPalette.HighlightedText).name()
+                btn.setStyleSheet(f"""
+                    QPushButton {{
+                        border: 2px solid {highlight_color};
                         border-radius: 15px;
                         padding: 8px;
                         margin: 4px;
-                        background-color: {base};
-                        color: {text};
-                    }
-                    QPushButton:checked {
-                        background-color: {highlight};
-                        color: {highlight_text};
-                    }
-                """.format(
-                    highlight=self.app.palette().color(QPalette.Highlight).name(),
-                    base=self.app.palette().color(QPalette.Base).name(),
-                    text=self.app.palette().color(QPalette.Text).name(),
-                    highlight_text=self.app.palette().color(QPalette.HighlightedText).name()
-                ))
+                        background-color: {base_color};
+                        color: {text_color};
+                    }}
+                    QPushButton:checked {{
+                        background-color: {highlight_color};
+                        color: {highlight_text_color};
+                    }}
+                """)
                 btn.clicked.connect(self.update_category_filters)
                 self.category_buttons[category] = btn
                 category_layout.addWidget(btn)
