@@ -480,12 +480,6 @@ class MainWindow(QMainWindow):
             main_tools_layout = QHBoxLayout(main_tools_container)
             main_tools_layout.setContentsMargins(0, 0, 0, 0)
 
-            if layout is None:
-                container_layout = QVBoxLayout()
-                container_layout.addWidget(scroll_area)
-            else:
-                layout.addWidget(scroll_area)
-
             # Create grid for all tools
             all_tools_grid = QGridLayout()
             all_tools_grid.setHorizontalSpacing(20)
@@ -570,6 +564,12 @@ class MainWindow(QMainWindow):
             scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
             scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
             self.scroll_area = scroll_area
+
+             if layout is None:
+                container_layout = QVBoxLayout()
+                container_layout.addWidget(scroll_area)
+            else:
+                layout.addWidget(scroll_area)
 
             main_content_layout.addWidget(scroll_area)
 
