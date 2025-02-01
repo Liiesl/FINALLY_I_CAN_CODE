@@ -138,6 +138,7 @@ alpha 0.1.6.1
 
 0.1.7.0 alpha
 -New interface for main page
--New Tags feature, you can now filer the tools by tags
--New Search featuree, you can search tools in searchar
+-New Tags feature, you can now filter the tools by tags
+-New Search featuree, you can search tools in searchbar
+-Due to layout limitation, the safe area size settings will be deactivated temporarily
 -
