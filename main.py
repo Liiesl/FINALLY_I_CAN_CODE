@@ -345,7 +345,7 @@ class MainWindow(QMainWindow):
         category_container = QWidget()
         category_layout = QHBoxLayout(category_container)
         category_layout.setContentsMargins(0, 0, 0, 0)
-        
+
         for category in categories:
             label = QLabel(category.upper())
             label.setStyleSheet(f"""
@@ -356,7 +356,7 @@ class MainWindow(QMainWindow):
                 font-size: {font_size-6}px;
             """)
             category_layout.addWidget(label)
-        
+
         category_layout.addStretch()
         button_layout.addWidget(category_container)
 
@@ -432,7 +432,7 @@ class MainWindow(QMainWindow):
             main_h_layout = QHBoxLayout()
             main_h_layout.setContentsMargins(20, 20, 20, 20)
             main_h_layout.setSpacing(30)
-    
+
             # Create category buttons panel (left side)
             category_panel = QWidget()
             category_layout = QVBoxLayout(category_panel)
@@ -456,11 +456,11 @@ class MainWindow(QMainWindow):
             all_categories = set()
             for tool in tools:
                 all_categories.update(tool[2])
-                
+
             for category in sorted(all_categories):
                 btn = QPushButton(category.upper())
                 btn.setCheckable(True)
-                
+
                 highlight_color = self.app.palette().color(QPalette.Highlight).name()
                 base_color = self.app.palette().color(QPalette.Base).name()
                 text_color = self.app.palette().color(QPalette.Text).name()
@@ -482,7 +482,7 @@ class MainWindow(QMainWindow):
                 btn.clicked.connect(self.update_category_filters)
                 self.category_buttons[category] = btn
                 category_layout.addWidget(btn)
-            
+
             category_layout.addStretch()
             main_h_layout.addWidget(category_panel, stretch=1)
 
@@ -512,11 +512,7 @@ class MainWindow(QMainWindow):
             main_tools_layout.addWidget(all_tools_widget)
 
             # Create a main scroll widget to hold all sections
-            main_scroll_widget = QScrollArea()
-            main_scroll_widget.setWidgetResizable(True)
-            main_scroll_widget.setWidget(main_scroll_widget)
-            main_scroll_widget.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-            main_scroll_widget.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+            main_scroll_widget = QWidget()
             main_scroll_layout = QVBoxLayout(main_scroll_widget)
             main_scroll_layout.setContentsMargins(20, 20, 20, 20)
             main_scroll_layout.setSpacing(30)
@@ -562,6 +558,12 @@ class MainWindow(QMainWindow):
             navigation_layout = QHBoxLayout(navigation_frame)
             navigation_layout.setContentsMargins(0, 0, 0, 0)
 
+            scroll_area = QScrollArea()
+            scroll_area.setWidgetResizable(True)
+            scroll_area.setWidget(main_scroll_widget)
+            scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+            scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+            self.scroll_area = scroll_area
             main_h_layout.addWidget(main_scroll_widget, stretch=4)
             main_content_layout.addLayout(main_h_layout)
 
@@ -701,17 +703,17 @@ class MainWindow(QMainWindow):
                 visible_buttons = max(1, container_width // button_width)
                 for i, button in enumerate(self.tool_buttons):
                     button.setVisible(i < visible_buttons)
-                
+
                 for button in self.tool_buttons:
                     button.setVisible(True)
-                    
+
     def update_category_filters(self):
         self.active_categories.clear()
         for category, btn in self.category_buttons.items():
             if btn.isChecked():
                 self.active_categories.add(category)
         self.filter_tools(self.search_field.text())
-    
+
     def filter_tools(self, search_text):
         search_text = search_text.lower()
         for index, tool in enumerate(self.tools):
@@ -719,13 +721,13 @@ class MainWindow(QMainWindow):
             name = tool[0].lower()
             desc = tool[1].lower()
             categories = set(tool[2])
-            
+
             text_match = search_text in name or search_text in desc
             category_match = not self.active_categories or bool(categories & self.active_categories)
-            
+
             visible = text_match and category_match
             button.setVisible(visible)
-        
+
         self.tool_buttons_container.adjustSize()
 
 if __name__ == "__main__":
