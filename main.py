@@ -565,7 +565,7 @@ class MainWindow(QMainWindow):
             scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
             self.scroll_area = scroll_area
 
-             if layout is None:
+            if layout is None:
                 container_layout = QVBoxLayout()
                 container_layout.addWidget(scroll_area)
             else:
