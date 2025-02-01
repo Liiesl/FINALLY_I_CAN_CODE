@@ -492,7 +492,7 @@ class MainWindow(QMainWindow):
             columns = 3
 
             for index, tool in enumerate(tools):
-                btn = self.create_tool_button(tool[0], tool[1], tool[2])
+                btn = self.create_tool_button(tool[0], tool[1])
                 row = index // columns
                 col = index % columns
                 all_tools_grid.addWidget(btn, row, col)
