@@ -493,9 +493,13 @@ class MainWindow(QMainWindow):
             most_used_label.setStyleSheet("color: palette(WindowText);")
             main_scroll_layout.addWidget(most_used_label)
 
+            self.most_used_label = most_used_label
+
             most_used_widget = QWidget()
             most_used_layout = QHBoxLayout(most_used_widget)
             most_used_layout.setContentsMargins(0, 0, 0, 0)
+
+            self.most_used_widget = most_used_widget
 
             for tool_name in sorted(self.tool_usage, key=lambda x: -self.tool_usage[x])[:3]:
                 btn = self.create_tool_button(tool_name, tools_dict.get(tool_name, ("Popular tool", []))[0], tools_dict.get(tool_name, ("Popular tool", []))[1])
@@ -508,9 +512,13 @@ class MainWindow(QMainWindow):
             recent_label.setStyleSheet("color: palette(WindowText);")
             main_scroll_layout.addWidget(recent_label)
 
+            self.recent_label = recent_label
+
             recent_widget = QWidget()
             recent_layout = QHBoxLayout(recent_widget)
             recent_layout.setContentsMargins(0, 0, 0, 0)
+
+            self.recent_widget = recent_widget
 
             for tool_name in self.recent_tools[:3]:
                 btn = self.create_tool_button(tool_name, tools_dict.get(tool_name, ("Recently used tool", []))[0], tools_dict.get(tool_name, ("Recently used tool", []))[1])               
@@ -550,6 +558,18 @@ class MainWindow(QMainWindow):
             self.apply_text_size()
             self.apply_theme()
             self.update_tool_button_visibility()
+
+    def on_tag_selected(self):
+        self.most_used_label.hide()
+        self.most_used_widget.hide()
+        self.recent_label.hide()
+        self.recent_widget.hide()
+
+    def on_tag_deselected(self):
+        self.most_used_label.show()
+        self.most_used_widget.show()
+        self.recent_label.show()
+        self.recent_widget.show()
 
     def tool_selected(self, tool_name):
         self.tool_usage[tool_name] = self.tool_usage.get(tool_name, 0) + 1
