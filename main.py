@@ -390,12 +390,13 @@ class MainWindow(QMainWindow):
                 self.menu_button.setStyleSheet("color: {button_text_color}; background-color: transparent; border: none; border-radius: 3px;")
                 self.menu_button.clicked.connect(self.toggle_side_panel)
                 self.top_bar.addWidget(self.menu_button, alignment=Qt.AlignLeft)
-                main_content_layout.addLayout(self.top_bar)
-                self.top_bar_added = True  # Mark the top bar as added
 
                 self.search_field = QLineEdit()
                 self.search_field.setPlaceholderText("Search tools...")
                 self.search_field.setFixedWidth(500)
+
+                main_content_layout.addLayout(self.top_bar)
+                self.top_bar_added = True  # Mark the top bar as added
 
                 palette = self.app.palette()
                 text_color = palette.color(QPalette.Text).name()
@@ -422,6 +423,17 @@ class MainWindow(QMainWindow):
                 self.search_field.textChanged.connect(self.filter_tools)
                 self.top_bar.addWidget(self.search_field, alignment=Qt.AlignRight)
 
+            # Create main horizontal layout (categories + scroll area)
+            main_h_layout = QHBoxLayout()
+            main_h_layout.setContentsMargins(20, 20, 20, 20)
+            main_h_layout.setSpacing(30)
+    
+            # Create category buttons panel (left side)
+            category_panel = QWidget()
+            category_layout = QVBoxLayout(category_panel)
+            category_layout.setContentsMargins(0, 0, 0, 0)
+            category_layout.setSpacing(8)
+
             # Add this line before the tools loop
             self.tool_buttons = []
 
@@ -434,10 +446,6 @@ class MainWindow(QMainWindow):
                 ("Coming Soon", "More tools will be added in the future.", ["other"])
             ]
             tools_dict = {name: (desc, categories) for name, desc, categories in tools}
-
-            category_panel = QWidget()
-            category_layout = QVBoxLayout(category_panel)
-            category_layout.setContentsMargins(0, 50, 0, 0)
 
             # Get unique categories
             all_categories = set()
@@ -471,14 +479,13 @@ class MainWindow(QMainWindow):
                 category_layout.addWidget(btn)
             
             category_layout.addStretch()
+            main_h_layout.addWidget(category_panel, stretch=1)
+            
             category_scroll = QScrollArea()
-            category_scroll.setWidgetResizable(True)
-            category_scroll.setWidget(category_panel)
-            category_scroll.setFixedWidth(200)
-
             main_tools_container = QWidget()
             main_tools_layout = QHBoxLayout(main_tools_container)
             main_tools_layout.setContentsMargins(0, 0, 0, 0)
+            main_tools_layout.setSpacing(30)
 
             # Create grid for all tools
             all_tools_grid = QGridLayout()
