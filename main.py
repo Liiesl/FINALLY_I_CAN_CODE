@@ -512,7 +512,11 @@ class MainWindow(QMainWindow):
             main_tools_layout.addWidget(all_tools_widget)
 
             # Create a main scroll widget to hold all sections
-            main_scroll_widget = QWidget()
+            main_scroll_widget = QScrollArea()
+            main_scroll_widget.setWidgetResizable(True)
+            main_scroll_widget.setWidget(main_scroll_widget)
+            main_scroll_widget.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+            main_scroll_widget.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
             main_scroll_layout = QVBoxLayout(main_scroll_widget)
             main_scroll_layout.setContentsMargins(20, 20, 20, 20)
             main_scroll_layout.setSpacing(30)
@@ -558,12 +562,6 @@ class MainWindow(QMainWindow):
             navigation_layout = QHBoxLayout(navigation_frame)
             navigation_layout.setContentsMargins(0, 0, 0, 0)
 
-            scroll_area = QScrollArea()
-            scroll_area.setWidgetResizable(True)
-            scroll_area.setWidget(main_scroll_widget)
-            scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-            scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-            self.scroll_area = scroll_area
             main_h_layout.addWidget(main_scroll_widget, stretch=4)
             main_content_layout.addLayout(main_h_layout)
 
