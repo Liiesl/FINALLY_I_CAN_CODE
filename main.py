@@ -289,7 +289,7 @@ class MainWindow(QMainWindow):
 
         button = QPushButton()
 
-        button.setFixedSize(250, 150)
+        button.setFixedSize(300, 200)
         button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
 
         palette = self.app.palette()
@@ -700,15 +700,21 @@ class MainWindow(QMainWindow):
                     button.setVisible(True)
 
     def update_category_filters(self):
-        self.active_categories.clear()
-        for category, btn in self.category_buttons.items():
-            if btn.isChecked():
-                self.active_categories.add(category)
-        if self.active_categories:
-            self.on_tag_selected()
-        else:
-            self.on_tag_deselected()
-        self.filter_tools(self.search_field.text())
+        current_splitter = self.tab_contents.currentWidget()
+        if current_splitter is not None:
+            # Get the main content widget for the current tab
+            main_content = current_splitter.widget(1)  # Main content is the second widget in the splitter
+            main_content_layout = main_content.layout()
+            
+            self.active_categories.clear()
+            for category, btn in self.category_buttons.items():
+                if btn.isChecked():
+                    self.active_categories.add(category)
+            if self.active_categories:
+                self.on_tag_selected()
+            else:
+                self.on_tag_deselected()
+            self.filter_tools(self.search_field.text())
 
     def filter_tools(self, search_text):
         search_text = search_text.lower()
