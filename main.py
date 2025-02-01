@@ -487,7 +487,7 @@ class MainWindow(QMainWindow):
             main_h_layout.addWidget(category_panel, stretch=1)
 
             scroll_area = QScrollArea()
-            scroll_area.setWidgetResizable(False)
+            scroll_area.setWidgetResizable(True)
             scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
             scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
             
