@@ -425,7 +425,6 @@ class MainWindow(QMainWindow):
             for tool_name in sorted(self.tool_usage, key=lambda x: -self.tool_usage[x])[:3]:
                 btn = self.create_tool_button(tool_name, tools_dict.get(tool_name, "Popular tool"))
                 most_used_layout.addWidget(btn)
-                most_used_layout.append(btn)
             container_layout.addWidget(most_used_widget)
 
             # Add Recent section
@@ -441,7 +440,6 @@ class MainWindow(QMainWindow):
             for tool_name in self.recent_tools[:3]:
                 btn = self.create_tool_button(tool_name, tools_dict.get(tool_name, "Recently used tool"))
                 recent_layout.addWidget(btn)
-                recent_layout.append(btn)
             container_layout.addWidget(recent_widget)
 
                         # Add All Tools section
@@ -466,7 +464,7 @@ class MainWindow(QMainWindow):
                 row = index // columns
                 col = index % columns
                 all_tools_grid.addWidget(btn, row, col)
-                all_tools_grid.append(btn)
+                self.tool_buttons.append(btn)
 
             # Create a widget to hold the grid
             all_tools_widget = QWidget()
@@ -474,11 +472,6 @@ class MainWindow(QMainWindow):
 
             # Add the grid to the container layout
             container_layout.addWidget(all_tools_widget)
-
-            # Update tool_buttons to include Most Used and Recent only
-            self.tool_buttons = most_used_buttons + recent_buttons
-            # Track All Tools buttons in a separate list
-            self.all_tools_buttons = all_tools_buttons
 
             # Navigation and scroll area setup
             navigation_frame = QFrame()
