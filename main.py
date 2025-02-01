@@ -700,8 +700,6 @@ class MainWindow(QMainWindow):
             visible = text_match and category_match
             button.setVisible(visible)
 
-        self.tool_buttons_container.adjustSize()
-
 if __name__ == "__main__":
     app = QApplication(sys.argv)
 
