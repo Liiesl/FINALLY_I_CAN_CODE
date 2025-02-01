@@ -558,7 +558,7 @@ class MainWindow(QMainWindow):
 
             scroll_area = QScrollArea()
             scroll_area.setWidgetResizable(True)
-            scroll_area.setWidget(self.tool_buttons_container)
+            scroll_area.setWidget(all_tools_widget)
             scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
             scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
             self.scroll_area = scroll_area
