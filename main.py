@@ -554,7 +554,7 @@ class MainWindow(QMainWindow):
                 self.tool_buttons.append(btn)
             main_scroll_layout.addWidget(all_tools_widget)
 
-            self.scroll_area.setWidget(scroll_content
+            self.scroll_area.setWidget(scroll_content)
 
             main_h_layout.addWidget(self.scroll_area, stretch=4)
             main_content_layout.addLayout(main_h_layout)
