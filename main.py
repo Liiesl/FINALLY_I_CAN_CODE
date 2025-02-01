@@ -486,17 +486,24 @@ class MainWindow(QMainWindow):
             category_layout.addStretch()
             main_h_layout.addWidget(category_panel, stretch=1)
 
+            navigation_frame = QFrame()
+            navigation_layout = QHBoxLayout(navigation_frame)
+            navigation_layout.setContentsMargins(0, 0, 0, 0)
+
             self.scroll_area = QScrollArea()
-            self.scroll_area.setWidgetResizable(False)
-            self.scroll_area.setFrameShape(QFrame.StyledPanel)
-            self.scroll_area.setStyleSheet("QScrollArea { border: 2px solid palette(Highlight); border-radius: 10px; }")
+            self.scroll_area.setWidgetResizable(True)
             
             self.scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
             self.scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+
+            self.scroll_area = scroll_area
+            
+            main_scroll_widget.setMinimumWidth(scroll_area.viewport().width())
+            scroll_area.viewport().installEventFilter(self)
             
             # Create a main scroll widget to hold all sections
-            self.scroll_area_container = QWidget()
-            main_scroll_layout = QVBoxLayout(self.scroll_area_container)
+            self.scroll_area = QWidget()
+            main_scroll_layout = QVBoxLayout(self.scroll_area)
             main_scroll_layout.setContentsMargins(20, 20, 20, 20)
             main_scroll_layout.setSpacing(30)
 
@@ -695,6 +702,11 @@ class MainWindow(QMainWindow):
             if btn.isChecked():
                 self.active_categories.add(category)
         self.filter_tools(self.search_field.text())
+
+     def eventFilter(self, obj, event):
+        if obj == self.scroll_area.viewport() and event.type() == event.Resize:
+            self.scroll_area.widget().setMinimumWidth(event.size().width())
+        return super().eventFilter(obj, event)
 
     def filter_tools(self, search_text):
         search_text = search_text.lower()
