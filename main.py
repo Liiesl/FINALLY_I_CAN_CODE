@@ -617,10 +617,12 @@ class MainWindow(QMainWindow):
             if not self.search_field.text():
                 container_width = self.tool_buttons_container.width()
                 button_width = 220
-                visible_buttons = container_width // button_width
+                visible_buttons = max(1, container_width // button_width)
                 for i, button in enumerate(self.tool_buttons):
                     button.setVisible(i < visible_buttons)
-
+                
+                for button in self.all_tools_buttons:
+                    button.setVisible(True)
 
     def filter_tools(self, search_text):
         if not hasattr(self, 'tool_buttons'):
