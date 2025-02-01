@@ -37,6 +37,9 @@ class MainWindow(QMainWindow):
         self.inter_regular_font = QFont("Inter Regular")
         self.inter_extra_bold_font = QFont("Inter ExtraBold")
 
+        self.active_categories = set()
+        self.category_buttons = {}
+
         self.tool_usage = {
             "Subtitle Converter": 5,
             "Subtitle Shifter": 3,
@@ -73,9 +76,6 @@ class MainWindow(QMainWindow):
         self.menu_button = None
 
         self.create_new_tab_content()
-
-        self.active_categories = set()
-        self.category_buttons = {}
 
     def apply_theme(self):
         self.config = Config(source="MainWindow")
