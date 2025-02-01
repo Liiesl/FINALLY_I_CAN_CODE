@@ -482,8 +482,9 @@ class MainWindow(QMainWindow):
 
             if layout is None:
                 container_layout = QVBoxLayout()
+                container_layout.addWidget(scroll_area)
             else:
-                container_layout = layout
+                ayout.addWidget(scroll_area)
 
             # Create grid for all tools
             all_tools_grid = QGridLayout()
@@ -513,10 +514,16 @@ class MainWindow(QMainWindow):
             
             container_layout.addWidget(main_tools_container)
 
+             # Create a main scroll widget to hold all sections
+            main_scroll_widget = QWidget()
+            main_scroll_layout = QVBoxLayout(main_scroll_widget)
+            main_scroll_layout.setContentsMargins(20, 20, 20, 20)
+            main_scroll_layout.setSpacing(30)
+
             most_used_label = QLabel("Most Used Tools")
             most_used_label.setFont(self.inter_extra_bold_font)
             most_used_label.setStyleSheet("color: palette(WindowText);")
-            container_layout.addWidget(most_used_label)
+            main_scroll_layout.addWidget(most_used_label)
 
             most_used_widget = QWidget()
             most_used_layout = QHBoxLayout(most_used_widget)
@@ -525,13 +532,13 @@ class MainWindow(QMainWindow):
             for tool_name in sorted(self.tool_usage, key=lambda x: -self.tool_usage[x])[:3]:
                 btn = self.create_tool_button(tool_name, tools_dict.get(tool_name, ("Popular tool", []))[0], tools_dict.get(tool_name, ("Popular tool", []))[1])
                 most_used_layout.addWidget(btn)
-            container_layout.addWidget(most_used_widget)
+            main_scroll_layout.addWidget(most_used_widget)
 
             # Add Recent section
             recent_label = QLabel("Recent Tools")
             recent_label.setFont(self.inter_extra_bold_font)
             recent_label.setStyleSheet("color: palette(WindowText);")
-            container_layout.addWidget(recent_label)
+            main_scroll_layout.addWidget(recent_label)
 
             recent_widget = QWidget()
             recent_layout = QHBoxLayout(recent_widget)
@@ -540,13 +547,14 @@ class MainWindow(QMainWindow):
             for tool_name in self.recent_tools[:3]:
                 btn = self.create_tool_button(tool_name, tools_dict.get(tool_name, ("Recently used tool", []))[0], tools_dict.get(tool_name, ("Recently used tool", []))[1])               
                 recent_layout.addWidget(btn)
-            container_layout.addWidget(recent_widget)
+            main_scroll_layout.addWidget(recent_widget)
 
                         # Add All Tools section
             all_tools_label = QLabel("All Tools")
             all_tools_label.setFont(self.inter_extra_bold_font)
             all_tools_label.setStyleSheet("color: palette(WindowText);")
-            container_layout.addWidget(all_tools_label)
+            main_scroll_layout.addWidget(all_tools_label)
+            main_scroll_layout.addWidget(all_tools_widget)
 
             # Add the grid to the container layout
             container_layout.addWidget(all_tools_widget)
@@ -558,7 +566,7 @@ class MainWindow(QMainWindow):
 
             scroll_area = QScrollArea()
             scroll_area.setWidgetResizable(True)
-            scroll_area.setWidget(all_tools_widget)
+            scroll_area.setWidget(main_scroll_widget)
             scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
             scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
             self.scroll_area = scroll_area
