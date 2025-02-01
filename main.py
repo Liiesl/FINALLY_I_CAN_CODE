@@ -289,7 +289,7 @@ class MainWindow(QMainWindow):
 
         button = QPushButton()
 
-        button.setFixedSize(300, 400)
+        button.setFixedSize(300, 200)
         button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
 
         palette = self.app.palette()
