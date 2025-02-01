@@ -554,9 +554,6 @@ class MainWindow(QMainWindow):
             main_h_layout.addWidget(main_scroll_widget, stretch=4)
             main_content_layout.addLayout(main_h_layout)
 
-
-            main_content_layout.addWidget(scroll_area)
-
             self.apply_text_size()
             self.apply_theme()
             self.update_tool_button_visibility()
