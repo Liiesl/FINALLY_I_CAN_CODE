@@ -479,7 +479,7 @@ class MainWindow(QMainWindow):
 
             scroll_area = QScrollArea()
             scroll_area.setWidgetResizable(True)
-            scroll_area.setWidget(main_scroll_widget)
+            scroll_area.setWidget(scroll_content)
             scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
             scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
 
