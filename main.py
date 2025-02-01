@@ -548,7 +548,7 @@ class MainWindow(QMainWindow):
                 recent_layout.addWidget(btn)
             main_scroll_layout.addWidget(recent_widget)
 
-                        # Add All Tools section
+            # Add All Tools section
             all_tools_label = QLabel("All Tools")
             all_tools_label.setFont(self.inter_extra_bold_font)
             all_tools_label.setStyleSheet("color: palette(WindowText);")
@@ -566,6 +566,8 @@ class MainWindow(QMainWindow):
             scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
             scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
             self.scroll_area = scroll_area
+            main_h_layout.addWidget(scroll_area, stretch=4)
+            main_content_layout.addLayout(main_h_layout)
 
             if layout is None:
                 main_scroll_layout = QVBoxLayout()
