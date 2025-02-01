@@ -486,31 +486,11 @@ class MainWindow(QMainWindow):
             category_layout.addStretch()
             main_h_layout.addWidget(category_panel, stretch=1)
 
-            # Create a widget to hold the grid
-            all_tools_widget = QWidget()
-            all_tools_grid = QGridLayout(all_tools_widget)
-            all_tools_grid.setHorizontalSpacing(20)
-            all_tools_grid.setVerticalSpacing(20)
-            all_tools_grid.setColumnStretch(0, 0)  # Prevent column stretching
-            all_tools_grid.setColumnStretch(1, 0)
-            all_tools_grid.setColumnStretch(2, 0)
-            all_tools_grid.setRowStretch(0, 0)     # Prevent row stretching
-            all_tools_grid.setRowStretch(1, 0)
-            columns = 3
-
-            for index, tool in enumerate(tools):
-                btn = self.create_tool_button(tool[0], tool[1], tool[2])
-                row = index // columns
-                col = index % columns
-                all_tools_grid.addWidget(btn, row, col)
-                self.tool_buttons.append(btn)
-
-            main_tools_layout = QHBoxLayout()
-            main_tools_layout.setContentsMargins(0, 0, 0, 0)
-            main_tools_layout.setSpacing(30)
-            main_tools_layout.addWidget(category_panel)
-            main_tools_layout.addWidget(all_tools_widget)
-
+            main_scroll_widget = QScrollArea()
+            main_scroll_widget.setWidgetResizable(True)
+            main_scroll_widget.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+            main_scroll_widget.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+            
             # Create a main scroll widget to hold all sections
             main_scroll_widget = QWidget()
             main_scroll_layout = QVBoxLayout(main_scroll_widget)
@@ -553,25 +533,29 @@ class MainWindow(QMainWindow):
             main_scroll_layout.addWidget(all_tools_label)
             main_scroll_layout.addWidget(all_tools_widget)
 
-            # Navigation and scroll area setup
-            navigation_frame = QFrame()
-            navigation_layout = QHBoxLayout(navigation_frame)
-            navigation_layout.setContentsMargins(0, 0, 0, 0)
+                        # Create a widget to hold the grid
+            all_tools_widget = QWidget()
+            all_tools_grid = QGridLayout(all_tools_widget)
+            all_tools_grid.setHorizontalSpacing(20)
+            all_tools_grid.setVerticalSpacing(20)
+            all_tools_grid.setColumnStretch(0, 0)  # Prevent column stretching
+            all_tools_grid.setColumnStretch(1, 0)
+            all_tools_grid.setColumnStretch(2, 0)
+            all_tools_grid.setRowStretch(0, 0)     # Prevent row stretching
+            all_tools_grid.setRowStretch(1, 0)
+            columns = 3
 
-            scroll_area = QScrollArea()
-            scroll_area.setWidgetResizable(True)
-            scroll_area.setWidget(main_scroll_widget)
-            scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-            scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-            self.scroll_area = scroll_area
+            for index, tool in enumerate(tools):
+                btn = self.create_tool_button(tool[0], tool[1], tool[2])
+                row = index // columns
+                col = index % columns
+                all_tools_grid.addWidget(btn, row, col)
+                self.tool_buttons.append(btn)
+            main_tools_layout.addWidget(all_tools_widget)
+
             main_h_layout.addWidget(main_scroll_widget, stretch=4)
             main_content_layout.addLayout(main_h_layout)
 
-            if layout is None:
-                main_scroll_layout = QVBoxLayout()
-                main_scroll_layout.addWidget(scroll_area)
-            else:
-                layout.addWidget(scroll_area)
 
             main_content_layout.addWidget(scroll_area)
 
