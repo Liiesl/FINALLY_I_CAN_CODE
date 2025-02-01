@@ -338,7 +338,6 @@ class MainWindow(QMainWindow):
         description_label.setAlignment(Qt.AlignCenter)
 
         # Add this after creating the description label
-        categories = tool[2] if len(tool) > 2 else []
         category_container = QWidget()
         category_layout = QHBoxLayout(category_container)
         category_layout.setContentsMargins(0, 0, 0, 0)
@@ -493,7 +492,7 @@ class MainWindow(QMainWindow):
             columns = 3
 
             for index, tool in enumerate(tools):
-                btn = self.create_tool_button(tool[0], tool[1])
+                btn = self.create_tool_button(tool[0], tool[1], tool[2])
                 row = index // columns
                 col = index % columns
                 all_tools_grid.addWidget(btn, row, col)
