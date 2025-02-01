@@ -486,14 +486,14 @@ class MainWindow(QMainWindow):
             category_layout.addStretch()
             main_h_layout.addWidget(category_panel, stretch=1)
 
-            self.main_scroll_widget = QScrollArea()
-            self.main_scroll_widget.setWidgetResizable(True)
-            self.main_scroll_widget.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-            self.main_scroll_widget.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+            self.main_scroll_area = QScrollArea()
+            self.main_scroll_area.setWidgetResizable(True)
+            self.main_scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+            self.main_scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
             
             # Create a main scroll widget to hold all sections
-            self.main_scroll_widget = QWidget()
-            main_scroll_layout = QVBoxLayout(self.main_scroll_widget)
+            self.main_scroll_area = QWidget()
+            main_scroll_layout = QVBoxLayout(self.main_scroll_area)
             main_scroll_layout.setContentsMargins(20, 20, 20, 20)
             main_scroll_layout.setSpacing(30)
 
@@ -677,7 +677,7 @@ class MainWindow(QMainWindow):
         if self.main_menu_active and self.tool_buttons:
             # Only handle automatic visibility if there's no search filter
             if not self.search_field.text():
-                container_width = self.main_scroll_widget.width()
+                container_width = self.main_scroll_area.width()
                 button_width = 220
                 visible_buttons = max(1, container_width // button_width)
                 for i, button in enumerate(self.tool_buttons):
