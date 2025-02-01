@@ -341,25 +341,6 @@ class MainWindow(QMainWindow):
         button_layout.addWidget(name_label)
         button_layout.addWidget(description_label)
 
-        # Add this after creating the description label
-        category_container = QWidget()
-        category_layout = QHBoxLayout(category_container)
-        category_layout.setContentsMargins(0, 0, 0, 0)
-
-        for category in categories:
-            label = QLabel(category.upper())
-            label.setStyleSheet(f"""
-                background-color: {palette.color(QPalette.Highlight).name()};
-                color: {palette.color(QPalette.HighlightedText).name()};
-                border-radius: 8px;
-                padding: 4px 8px;
-                font-size: {font_size-6}px;
-            """)
-            category_layout.addWidget(label)
-
-        category_layout.addStretch()
-        button_layout.addWidget(category_container)
-
         button.clicked.connect(lambda: self.tool_selected(tool_name))
         return button
 
