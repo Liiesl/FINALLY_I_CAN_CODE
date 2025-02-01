@@ -564,7 +564,7 @@ class MainWindow(QMainWindow):
             scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
             scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
             self.scroll_area = scroll_area
-            main_h_layout.addWidget(scroll_area, stretch=4)
+            main_h_layout.addWidget(main_scroll_widget, stretch=4)
             main_content_layout.addLayout(main_h_layout)
 
             if layout is None:
