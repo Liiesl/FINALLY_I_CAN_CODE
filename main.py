@@ -282,6 +282,11 @@ class MainWindow(QMainWindow):
         self.tab_contents.setCurrentIndex(index)
 
     def create_tool_button(self, tool_name, tool_description):
+
+        # Get the actual description from the tuple if needed
+        if isinstance(tool_description, tuple):
+            tool_description = tool_description[0]
+
         button = QPushButton()
 
         button.setFixedSize(300, 400)
@@ -429,7 +434,7 @@ class MainWindow(QMainWindow):
                 ("Multilingual Merge", "Merge subtitles in different languages with colors.", ["merge", "translation"]),
                 ("Coming Soon", "More tools will be added in the future.", ["other"])
             ]
-            tools_dict = {name: desc for name, desc in tools}
+            tools_dict = {name: (desc, categories) for name, desc, categories in tools}
 
             category_panel = QWidget()
             category_layout = QVBoxLayout(category_panel)
@@ -492,7 +497,7 @@ class MainWindow(QMainWindow):
             most_used_layout.setContentsMargins(0, 0, 0, 0)
 
             for tool_name in sorted(self.tool_usage, key=lambda x: -self.tool_usage[x])[:3]:
-                btn = self.create_tool_button(tool_name, tools_dict.get(tool_name, "Popular tool"))
+                btn = self.create_tool_button(tool_name, tools_dict.get(tool_name, ("Popular tool", 
                 most_used_layout.addWidget(btn)
             container_layout.addWidget(most_used_widget)
 
@@ -507,8 +512,7 @@ class MainWindow(QMainWindow):
             recent_layout.setContentsMargins(0, 0, 0, 0)
 
             for tool_name in self.recent_tools[:3]:
-                btn = self.create_tool_button(tool_name, tools_dict.get(tool_name, "Recently used tool"))
-                recent_layout.addWidget(btn)
+            btn = self.create_tool_button(tool_name, tools_dict.get(tool_name, ("Recently used tool", []))[0])                recent_layout.addWidget(btn)
             container_layout.addWidget(recent_widget)
 
                         # Add All Tools section
