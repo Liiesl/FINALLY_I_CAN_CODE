@@ -486,13 +486,8 @@ class MainWindow(QMainWindow):
             category_layout.addStretch()
             main_h_layout.addWidget(category_panel, stretch=1)
 
-            navigation_frame = QFrame()
-            navigation_layout = QHBoxLayout(navigation_frame)
-            navigation_layout.setContentsMargins(0, 0, 0, 0)
-
             self.scroll_area = QScrollArea()
             self.scroll_area.setWidgetResizable(True)
-            
             self.scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
             self.scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
             
@@ -697,11 +692,6 @@ class MainWindow(QMainWindow):
             if btn.isChecked():
                 self.active_categories.add(category)
         self.filter_tools(self.search_field.text())
-
-    def eventFilter(self, obj, event):
-        if obj == self.scroll_area.viewport() and event.type() == event.Resize:
-            self.scroll_area.widget().setMinimumWidth(event.size().width())
-        return super().eventFilter(obj, event)
 
     def filter_tools(self, search_text):
         search_text = search_text.lower()
