@@ -74,6 +74,9 @@ class MainWindow(QMainWindow):
 
         self.create_new_tab_content()
 
+        self.active_categories = set()
+        self.category_buttons = {}
+
     def apply_theme(self):
         self.config = Config(source="MainWindow")
         theme = self.config.get_theme()
@@ -329,6 +332,26 @@ class MainWindow(QMainWindow):
         description_label.setWordWrap(True)
         description_label.setAlignment(Qt.AlignCenter)
 
+        # Add this after creating the description label
+        categories = tool[2] if len(tool) > 2 else []
+        category_container = QWidget()
+        category_layout = QHBoxLayout(category_container)
+        category_layout.setContentsMargins(0, 0, 0, 0)
+        
+        for category in categories:
+            label = QLabel(category.upper())
+            label.setStyleSheet(f"""
+                background-color: {palette.color(QPalette.Highlight).name()};
+                color: {palette.color(QPalette.HighlightedText).name()};
+                border-radius: 8px;
+                padding: 4px 8px;
+                font-size: {font_size-6}px;
+            """)
+            category_layout.addWidget(label)
+        
+        category_layout.addStretch()
+        button_layout.addWidget(category_container)
+
         button_layout = QVBoxLayout(button)
         button_layout.addWidget(name_label)
         button_layout.addWidget(description_label)
@@ -399,19 +422,65 @@ class MainWindow(QMainWindow):
             self.tool_buttons = []
 
             tools = [
-                ("Longer Appearance SRT", "Increase the duration each subtitle appears."),
-                ("Merge SRT Files", "Combine multiple SRT files into one."),
-                ("Subtitle Converter", "Convert subtitles between different formats."),
-                ("Subtitle Shifter", "Shift subtitles by milliseconds."),
-                ("Multilingual Merge", "Merge subtitles in different languages with colors."),
-                ("Coming Soon", "More tools will be added in the future.")
+                ("Longer Appearance SRT", "Increase the duration each subtitle appears.", ["appearance", "timing"]),
+                ("Merge SRT Files", "Combine multiple SRT files into one.", ["merge"]),
+                ("Subtitle Converter", "Convert subtitles between different formats.", ["conversion"]),
+                ("Subtitle Shifter", "Shift subtitles by milliseconds.", ["timing"]),
+                ("Multilingual Merge", "Merge subtitles in different languages with colors.", ["merge", "translation"]),
+                ("Coming Soon", "More tools will be added in the future.", ["other"])
             ]
             tools_dict = {name: desc for name, desc in tools}
 
-            self.tool_buttons_container = QWidget()
-            container_layout = QVBoxLayout(self.tool_buttons_container)
-            container_layout.setContentsMargins(0, 0, 0, 0)
-            container_layout.setSpacing(20)
+            category_panel = QWidget()
+            category_layout = QVBoxLayout(category_panel)
+            category_layout.setContentsMargins(0, 50, 0, 0)
+
+            # Get unique categories
+            all_categories = set()
+            for tool in tools:
+                all_categories.update(tool[2])
+                
+            for category in sorted(all_categories):
+                btn = QPushButton(category.upper())
+                btn.setCheckable(True)
+                btn.setStyleSheet("""
+                    QPushButton {
+                        border: 2px solid {highlight};
+                        border-radius: 15px;
+                        padding: 8px;
+                        margin: 4px;
+                        background-color: {base};
+                        color: {text};
+                    }
+                    QPushButton:checked {
+                        background-color: {highlight};
+                        color: {highlight_text};
+                    }
+                """.format(
+                    highlight=self.app.palette().color(QPalette.Highlight).name(),
+                    base=self.app.palette().color(QPalette.Base).name(),
+                    text=self.app.palette().color(QPalette.Text).name(),
+                    highlight_text=self.app.palette().color(QPalette.HighlightedText).name()
+                ))
+                btn.clicked.connect(self.update_category_filters)
+                self.category_buttons[category] = btn
+                category_layout.addWidget(btn)
+            
+            category_layout.addStretch()
+            category_scroll = QScrollArea()
+            category_scroll.setWidgetResizable(True)
+            category_scroll.setWidget(category_panel)
+            category_scroll.setFixedWidth(200)
+
+            main_tools_container = QWidget()
+            main_tools_layout = QHBoxLayout(main_tools_container)
+            main_tools_layout.setContentsMargins(0, 0, 0, 0)
+
+            # Add category panel and tools grid
+            main_tools_layout.addWidget(category_scroll)
+            main_tools_layout.addWidget(all_tools_widget)
+            
+            container_layout.addWidget(main_tools_container)
 
             most_used_label = QLabel("Most Used Tools")
             most_used_label.setFont(self.inter_extra_bold_font)
@@ -623,22 +692,29 @@ class MainWindow(QMainWindow):
                 
                 for button in self.tool_buttons:
                     button.setVisible(True)
-
+                    
+    def update_category_filters(self):
+        self.active_categories.clear()
+        for category, btn in self.category_buttons.items():
+            if btn.isChecked():
+                self.active_categories.add(category)
+        self.filter_tools(self.search_field.text())
+    
     def filter_tools(self, search_text):
-        if not hasattr(self, 'tool_buttons'):
-            return
-
         search_text = search_text.lower()
-        for button in self.tool_buttons:
-            name = button.layout().itemAt(0).widget().text().lower()
-            description = button.layout().itemAt(1).widget().text().lower()
-            visible = search_text in name or search_text in description
+        for index, tool in enumerate(self.tools):
+            button = self.tool_buttons[index]
+            name = tool[0].lower()
+            desc = tool[1].lower()
+            categories = set(tool[2])
+            
+            text_match = search_text in name or search_text in desc
+            category_match = not self.active_categories or bool(categories & self.active_categories)
+            
+            visible = text_match and category_match
             button.setVisible(visible)
-
-        QApplication.processEvents()
-        # Update scroll area contents
+        
         self.tool_buttons_container.adjustSize()
-        self.update_tool_button_visibility()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
