@@ -704,6 +704,10 @@ class MainWindow(QMainWindow):
         for category, btn in self.category_buttons.items():
             if btn.isChecked():
                 self.active_categories.add(category)
+        if self.active_categories:
+            self.on_tag_selected()
+        else:
+            self.on_tag_deselected()
         self.filter_tools(self.search_field.text())
 
     def filter_tools(self, search_text):
