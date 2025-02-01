@@ -484,7 +484,7 @@ class MainWindow(QMainWindow):
                 container_layout = QVBoxLayout()
                 container_layout.addWidget(scroll_area)
             else:
-                ayout.addWidget(scroll_area)
+                layout.addWidget(scroll_area)
 
             # Create grid for all tools
             all_tools_grid = QGridLayout()
