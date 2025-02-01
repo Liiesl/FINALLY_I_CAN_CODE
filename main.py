@@ -487,7 +487,7 @@ class MainWindow(QMainWindow):
             main_h_layout.addWidget(category_panel, stretch=1)
 
             self.scroll_area = QScrollArea()
-            self.scroll_area.setWidgetResizable(True)
+            self.scroll_area.setWidgetResizable(False)
             self.scroll_area.setFrameShape(QFrame.StyledPanel)
             self.scroll_area.setStyleSheet("QScrollArea { border: 2px solid palette(Highlight); border-radius: 10px; }")
             
