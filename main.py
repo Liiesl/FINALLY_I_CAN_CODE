@@ -395,9 +395,6 @@ class MainWindow(QMainWindow):
                 self.search_field.setPlaceholderText("Search tools...")
                 self.search_field.setFixedWidth(500)
 
-                main_content_layout.addLayout(self.top_bar)
-                self.top_bar_added = True  # Mark the top bar as added
-
                 palette = self.app.palette()
                 text_color = palette.color(QPalette.Text).name()
                 bg_color = palette.color(QPalette.Base).name()
@@ -422,6 +419,14 @@ class MainWindow(QMainWindow):
 
                 self.search_field.textChanged.connect(self.filter_tools)
                 self.top_bar.addWidget(self.search_field, alignment=Qt.AlignRight)
+
+                main_content_layout.addLayout(self.top_bar)
+                self.top_bar_added = True  # Mark the top bar as added
+
+            if layout is None:
+                container_layout = QVBoxLayout()
+            else:
+                container_layout = layout
 
             # Create main horizontal layout (categories + scroll area)
             main_h_layout = QHBoxLayout()
@@ -480,15 +485,10 @@ class MainWindow(QMainWindow):
             
             category_layout.addStretch()
             main_h_layout.addWidget(category_panel, stretch=1)
-            
-            category_scroll = QScrollArea()
-            main_tools_container = QWidget()
-            main_tools_layout = QHBoxLayout(main_tools_container)
-            main_tools_layout.setContentsMargins(0, 0, 0, 0)
-            main_tools_layout.setSpacing(30)
 
-            # Create grid for all tools
-            all_tools_grid = QGridLayout()
+            # Create a widget to hold the grid
+            all_tools_widget = QWidget()
+            all_tools_grid = QGridLayout(all_tools_widget)
             all_tools_grid.setHorizontalSpacing(20)
             all_tools_grid.setVerticalSpacing(20)
             all_tools_grid.setColumnStretch(0, 0)  # Prevent column stretching
@@ -504,16 +504,14 @@ class MainWindow(QMainWindow):
                 col = index % columns
                 all_tools_grid.addWidget(btn, row, col)
                 self.tool_buttons.append(btn)
-            
-            # Create a widget to hold the grid
-            all_tools_widget = QWidget()
-            all_tools_widget.setLayout(all_tools_grid)
 
-            # Add category panel and tools grid
-            main_tools_layout.addWidget(category_scroll)
+            main_tools_layout = QHBoxLayout()
+            main_tools_layout.setContentsMargins(0, 0, 0, 0)
+            main_tools_layout.setSpacing(30)
+            main_tools_layout.addWidget(category_panel)
             main_tools_layout.addWidget(all_tools_widget)
 
-             # Create a main scroll widget to hold all sections
+            # Create a main scroll widget to hold all sections
             main_scroll_widget = QWidget()
             main_scroll_layout = QVBoxLayout(main_scroll_widget)
             main_scroll_layout.setContentsMargins(20, 20, 20, 20)
@@ -580,11 +578,6 @@ class MainWindow(QMainWindow):
             self.apply_text_size()
             self.apply_theme()
             self.update_tool_button_visibility()
-
-        current_tab_contents_index = self.tab_contents.currentIndex()
-        tab_bar_index = current_tab_contents_index + 1  # Adjust for hidden tab
-        if tab_bar_index < self.custom_window_bar.tab_bar.count():
-            self.custom_window_bar.tab_bar.setTabText(tab_bar_index, "Subtl")
 
     def tool_selected(self, tool_name):
         self.tool_usage[tool_name] = self.tool_usage.get(tool_name, 0) + 1
