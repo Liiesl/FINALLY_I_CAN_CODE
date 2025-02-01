@@ -486,6 +486,10 @@ class MainWindow(QMainWindow):
             category_layout.addStretch()
             main_h_layout.addWidget(category_panel, stretch=1)
 
+            navigation_frame = QFrame()
+            navigation_layout = QHBoxLayout(navigation_frame)
+            navigation_layout.setContentsMargins(0, 0, 0, 0)
+
             scroll_area = QScrollArea()
             scroll_area.setWidgetResizable(True)
             scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
