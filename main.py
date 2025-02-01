@@ -526,14 +526,12 @@ class MainWindow(QMainWindow):
                 recent_layout.addWidget(btn)
             main_scroll_layout.addWidget(recent_widget)
 
-            # Add All Tools section
             all_tools_label = QLabel("All Tools")
             all_tools_label.setFont(self.inter_extra_bold_font)
             all_tools_label.setStyleSheet("color: palette(WindowText);")
             main_scroll_layout.addWidget(all_tools_label)
-            main_scroll_layout.addWidget(all_tools_widget)
-
-                        # Create a widget to hold the grid
+            
+            # Create a widget to hold the grid
             all_tools_widget = QWidget()
             all_tools_grid = QGridLayout(all_tools_widget)
             all_tools_grid.setHorizontalSpacing(20)
@@ -551,7 +549,7 @@ class MainWindow(QMainWindow):
                 col = index % columns
                 all_tools_grid.addWidget(btn, row, col)
                 self.tool_buttons.append(btn)
-            main_tools_layout.addWidget(all_tools_widget)
+            main_scroll_layout.addWidget(all_tools_widget)
 
             main_h_layout.addWidget(main_scroll_widget, stretch=4)
             main_content_layout.addLayout(main_h_layout)
