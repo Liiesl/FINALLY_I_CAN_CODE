@@ -556,7 +556,7 @@ class MainWindow(QMainWindow):
                 self.tool_buttons.append(btn)
             main_scroll_layout.addWidget(all_tools_widget)
 
-            main_h_layout.addWidget(self.scroll_area_container, stretch=4)
+            main_h_layout.addWidget(self.scroll_area, stretch=4)
             main_content_layout.addLayout(main_h_layout)
 
             self.apply_text_size()
@@ -682,7 +682,7 @@ class MainWindow(QMainWindow):
         if self.main_menu_active and self.tool_buttons:
             # Only handle automatic visibility if there's no search filter
             if not self.search_field.text():
-                container_width = self.scroll_area_container.width()
+                container_width = self.scroll_area.width()
                 button_width = 220
                 visible_buttons = max(1, container_width // button_width)
                 for i, button in enumerate(self.tool_buttons):
