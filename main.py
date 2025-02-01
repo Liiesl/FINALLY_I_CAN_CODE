@@ -493,7 +493,7 @@ class MainWindow(QMainWindow):
             
             # Create a main scroll widget to hold all sections
             scroll_content = QWidget()
-            main_scroll_layout = QVBoxLayout(self.scroll_area)
+            main_scroll_layout = QVBoxLayout(scroll_area)
             main_scroll_layout.setContentsMargins(20, 20, 20, 20)
             main_scroll_layout.setSpacing(30)
 
