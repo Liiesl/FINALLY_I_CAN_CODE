@@ -512,8 +512,9 @@ class MainWindow(QMainWindow):
             recent_layout.setContentsMargins(0, 0, 0, 0)
 
             for tool_name in self.recent_tools[:3]:
-                btn = self.create_tool_button(tool_name, tools_dict.get(tool_name, ("Recently used tool", []))[0])                recent_layout.addWidget(btn)
-                container_layout.addWidget(recent_widget)
+                btn = self.create_tool_button(tool_name, tools_dict.get(tool_name, ("Recently used tool", []))[0])                
+                recent_layout.addWidget(btn)
+            container_layout.addWidget(recent_widget)
 
                         # Add All Tools section
             all_tools_label = QLabel("All Tools")
