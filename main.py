@@ -486,16 +486,19 @@ class MainWindow(QMainWindow):
             category_layout.addStretch()
             main_h_layout.addWidget(category_panel, stretch=1)
 
-            self.scroll_area = QScrollArea()
-            self.scroll_area.setWidgetResizable(False)
-            self.scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-            self.scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+            scroll_area = QScrollArea()
+            scroll_area.setWidgetResizable(False)
+            scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+            scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
             
             # Create a main scroll widget to hold all sections
-            self.scroll_area = QWidget()
+            scroll_content = QWidget()
             main_scroll_layout = QVBoxLayout(self.scroll_area)
             main_scroll_layout.setContentsMargins(20, 20, 20, 20)
             main_scroll_layout.setSpacing(30)
+
+            self.scroll_content = scroll_content
+            self.scroll_area = scroll_area
 
             most_used_label = QLabel("Most Used Tools")
             most_used_label.setFont(self.inter_extra_bold_font)
@@ -550,6 +553,8 @@ class MainWindow(QMainWindow):
                 all_tools_grid.addWidget(btn, row, col)
                 self.tool_buttons.append(btn)
             main_scroll_layout.addWidget(all_tools_widget)
+
+            self.scroll_area.setWidget(scroll_content
 
             main_h_layout.addWidget(self.scroll_area, stretch=4)
             main_content_layout.addLayout(main_h_layout)
