@@ -131,8 +131,13 @@ alpha 0.1.6.0
 
 alpha 0.1.6.1
 -new tool : multilingual tool
--
 -new icon for the window bar
 -fix close tab button's style
 -fix side panel's color theme
 -now when changing theme, app relaunch is required.
+
+0.1.7.0 alpha
+-New interface for main page
+-New Tags feature, you can now filer the tools by tags
+-New Search featuree, you can search tools in searchar
+-
