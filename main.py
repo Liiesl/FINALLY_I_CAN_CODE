@@ -551,7 +551,7 @@ class MainWindow(QMainWindow):
                 self.tool_buttons.append(btn)
             main_scroll_layout.addWidget(all_tools_widget)
 
-            main_h_layout.addWidget(main_scroll_widget, stretch=4)
+            main_h_layout.addWidget(self.main_scroll_widget, stretch=4)
             main_content_layout.addLayout(main_h_layout)
 
             self.apply_text_size()
