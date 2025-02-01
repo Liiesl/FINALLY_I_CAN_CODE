@@ -496,7 +496,7 @@ class MainWindow(QMainWindow):
             self.scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
             self.scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
             
-            self.scroll_area.setMinimumWidth(scroll_area.viewport().width())
+            self.scroll_area.setMinimumWidth(self.scroll_area.viewport().width())
             self.scroll_area.viewport().installEventFilter(self)
             
             # Create a main scroll widget to hold all sections
