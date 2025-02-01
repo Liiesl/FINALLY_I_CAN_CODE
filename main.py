@@ -281,7 +281,7 @@ class MainWindow(QMainWindow):
     def display_tab_content(self, index):
         self.tab_contents.setCurrentIndex(index)
 
-    def create_tool_button(self, tool_name, tool_description):
+    def create_tool_button(self, tool_name, tool_description, categories):
 
         # Get the actual description from the tuple if needed
         if isinstance(tool_description, tuple):
@@ -337,6 +337,10 @@ class MainWindow(QMainWindow):
         description_label.setWordWrap(True)
         description_label.setAlignment(Qt.AlignCenter)
 
+        button_layout = QVBoxLayout(button)
+        button_layout.addWidget(name_label)
+        button_layout.addWidget(description_label)
+
         # Add this after creating the description label
         category_container = QWidget()
         category_layout = QHBoxLayout(category_container)
@@ -355,10 +359,6 @@ class MainWindow(QMainWindow):
         
         category_layout.addStretch()
         button_layout.addWidget(category_container)
-
-        button_layout = QVBoxLayout(button)
-        button_layout.addWidget(name_label)
-        button_layout.addWidget(description_label)
 
         button.clicked.connect(lambda: self.tool_selected(tool_name))
         return button
@@ -480,7 +480,12 @@ class MainWindow(QMainWindow):
             main_tools_layout = QHBoxLayout(main_tools_container)
             main_tools_layout.setContentsMargins(0, 0, 0, 0)
 
-                        # Create grid for all tools
+            if layout is None:
+                container_layout = QVBoxLayout()
+            else:
+                container_layout = layout
+
+            # Create grid for all tools
             all_tools_grid = QGridLayout()
             all_tools_grid.setHorizontalSpacing(20)
             all_tools_grid.setVerticalSpacing(20)
@@ -518,7 +523,7 @@ class MainWindow(QMainWindow):
             most_used_layout.setContentsMargins(0, 0, 0, 0)
 
             for tool_name in sorted(self.tool_usage, key=lambda x: -self.tool_usage[x])[:3]:
-                btn = self.create_tool_button(tool_name, tools_dict.get(tool_name, ("Popular tool", []))[0])
+                btn = self.create_tool_button(tool_name, tools_dict.get(tool_name, ("Popular tool", []))[0], tools_dict.get(tool_name, ("Popular tool", []))[1])
                 most_used_layout.addWidget(btn)
             container_layout.addWidget(most_used_widget)
 
@@ -533,7 +538,7 @@ class MainWindow(QMainWindow):
             recent_layout.setContentsMargins(0, 0, 0, 0)
 
             for tool_name in self.recent_tools[:3]:
-                btn = self.create_tool_button(tool_name, tools_dict.get(tool_name, ("Recently used tool", []))[0])                
+                btn = self.create_tool_button(tool_name, tools_dict.get(tool_name, ("Recently used tool", []))[0], tools_dict.get(tool_name, ("Recently used tool", []))[1])               
                 recent_layout.addWidget(btn)
             container_layout.addWidget(recent_widget)
 
