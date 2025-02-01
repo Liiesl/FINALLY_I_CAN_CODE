@@ -486,14 +486,14 @@ class MainWindow(QMainWindow):
             category_layout.addStretch()
             main_h_layout.addWidget(category_panel, stretch=1)
 
-            main_scroll_widget = QScrollArea()
-            main_scroll_widget.setWidgetResizable(True)
-            main_scroll_widget.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-            main_scroll_widget.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+            self.main_scroll_widget = QScrollArea()
+            self.main_scroll_widget.setWidgetResizable(True)
+            self.main_scroll_widget.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+            self.main_scroll_widget.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
             
             # Create a main scroll widget to hold all sections
-            main_scroll_widget = QWidget()
-            main_scroll_layout = QVBoxLayout(main_scroll_widget)
+            self.main_scroll_widget = QWidget()
+            main_scroll_layout = QVBoxLayout(self.main_scroll_widget)
             main_scroll_layout.setContentsMargins(20, 20, 20, 20)
             main_scroll_layout.setSpacing(30)
 
