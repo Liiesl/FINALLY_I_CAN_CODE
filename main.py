@@ -621,7 +621,7 @@ class MainWindow(QMainWindow):
                 for i, button in enumerate(self.tool_buttons):
                     button.setVisible(i < visible_buttons)
                 
-                for button in self.all_tool_buttons:
+                for button in self.tool_buttons:
                     button.setVisible(True)
 
     def filter_tools(self, search_text):
