@@ -505,8 +505,6 @@ class MainWindow(QMainWindow):
             # Add category panel and tools grid
             main_tools_layout.addWidget(category_scroll)
             main_tools_layout.addWidget(all_tools_widget)
-            
-            container_layout.addWidget(main_tools_container)
 
              # Create a main scroll widget to hold all sections
             main_scroll_widget = QWidget()
@@ -550,9 +548,6 @@ class MainWindow(QMainWindow):
             main_scroll_layout.addWidget(all_tools_label)
             main_scroll_layout.addWidget(all_tools_widget)
 
-            # Add the grid to the container layout
-            container_layout.addWidget(all_tools_widget)
-
             # Navigation and scroll area setup
             navigation_frame = QFrame()
             navigation_layout = QHBoxLayout(navigation_frame)
@@ -566,8 +561,8 @@ class MainWindow(QMainWindow):
             self.scroll_area = scroll_area
 
             if layout is None:
-                container_layout = QVBoxLayout()
-                container_layout.addWidget(scroll_area)
+                main_scroll_layout = QVBoxLayout()
+                main_scroll_layout.addWidget(scroll_area)
             else:
                 layout.addWidget(scroll_area)
 
