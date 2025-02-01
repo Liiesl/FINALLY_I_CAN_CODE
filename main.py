@@ -703,7 +703,7 @@ class MainWindow(QMainWindow):
                 self.active_categories.add(category)
         self.filter_tools(self.search_field.text())
 
-     def eventFilter(self, obj, event):
+    def eventFilter(self, obj, event):
         if obj == self.scroll_area.viewport() and event.type() == event.Resize:
             self.scroll_area.widget().setMinimumWidth(event.size().width())
         return super().eventFilter(obj, event)
