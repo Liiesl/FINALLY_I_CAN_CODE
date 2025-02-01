@@ -495,8 +495,6 @@ class MainWindow(QMainWindow):
             
             self.scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
             self.scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-
-            self.scroll_area = scroll_area
             
             main_scroll_widget.setMinimumWidth(scroll_area.viewport().width())
             scroll_area.viewport().installEventFilter(self)
