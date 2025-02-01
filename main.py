@@ -717,6 +717,12 @@ class MainWindow(QMainWindow):
 
     def filter_tools(self, search_text):
         search_text = search_text.lower()
+        
+        if search_text.strip():  # Check if there is any non-whitespace text
+            self.on_tag_selected()
+        else:
+            self.on_tag_deselected()
+            
         for index, tool in enumerate(self.tools):
             button = self.tool_buttons[index]
             name = tool[0].lower()
