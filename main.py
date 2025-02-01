@@ -690,10 +690,10 @@ class MainWindow(QMainWindow):
         self.side_panel.update_colors()
 
     def update_tool_button_visibility(self, event=None):
-        if self.main_menu_active and self.tool_buttons_container:
+        if self.main_menu_active and self.tool_buttons:
             # Only handle automatic visibility if there's no search filter
             if not self.search_field.text():
-                container_width = self.tool_buttons_container.width()
+                container_width = self.scroll_are.width()
                 button_width = 220
                 visible_buttons = max(1, container_width // button_width)
                 for i, button in enumerate(self.tool_buttons):
