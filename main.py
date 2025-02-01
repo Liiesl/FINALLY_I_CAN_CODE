@@ -488,6 +488,9 @@ class MainWindow(QMainWindow):
 
             self.scroll_area = QScrollArea()
             self.scroll_area.setWidgetResizable(True)
+            self.scroll_area.setFrameShape(QFrame.StyledPanel)
+            self.scroll_area.setStyleSheet("QScrollArea { border: 2px solid palette(Highlight); border-radius: 10px; }")
+            
             self.scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
             self.scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
             
