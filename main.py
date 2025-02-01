@@ -433,6 +433,8 @@ class MainWindow(QMainWindow):
             ]
             tools_dict = {name: (desc, categories) for name, desc, categories in tools}
 
+            self.tools = tools
+            
             # Get unique categories
             all_categories = set()
             for tool in tools:
