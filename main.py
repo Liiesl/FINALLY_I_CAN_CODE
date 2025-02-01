@@ -609,10 +609,6 @@ class MainWindow(QMainWindow):
                 QMessageBox.information(self, "Coming Soon", "This feature is coming soon!")
                 return
 
-            # Add the tool widget to the main content layout
-            main_content_layout.addWidget(tool_widget)
-            tool_widget.show()
-
     def clear_layout(self, layout):
         while layout.count():
             child = layout.takeAt(0)
