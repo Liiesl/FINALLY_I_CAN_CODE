@@ -3,6 +3,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont, QPalette
 from assets.modules.config import Config
 from assets.changelog.changelog_window import ChangelogWindow
+from assets.modules.help_window import HelpWindow  # Import the HelpWindow class
 
 class SidePanel(QWidget):
     def __init__(self, parent=None, open_settings_callback=None):
@@ -18,7 +19,6 @@ class SidePanel(QWidget):
         self.setStyleSheet(f"background-color: {self.background_color};")
         self.setFixedWidth(self.parent().width() // 2)
         self.setLayout(QVBoxLayout())
-
         text_size = self.config.get_text_size()
         self.font_size = {
             "small": 18,
@@ -29,7 +29,6 @@ class SidePanel(QWidget):
 
         self.info_label = QLabel("Side Panel Content")
         self.info_label.setAlignment(Qt.AlignCenter)
-
         self.layout().addWidget(self.info_label)
         self.layout().addStretch()
 
@@ -42,7 +41,13 @@ class SidePanel(QWidget):
         settings_item.setFlags(settings_item.flags() | Qt.ItemIsSelectable | Qt.ItemIsEnabled)
         self.settings_list.addItem(settings_item)
 
-        # Add changelog item to the list
+        # Add help item to the list (positioned below Settings)
+        help_item = QListWidgetItem("Help")
+        help_item.setTextAlignment(Qt.AlignLeft)
+        help_item.setFlags(help_item.flags() | Qt.ItemIsSelectable | Qt.ItemIsEnabled)
+        self.settings_list.addItem(help_item)
+
+        # Add changelog item to the list (positioned below Help)
         changelog_item = QListWidgetItem("Changelog")
         changelog_item.setTextAlignment(Qt.AlignLeft)
         changelog_item.setFlags(changelog_item.flags() | Qt.ItemIsSelectable | Qt.ItemIsEnabled)
@@ -50,16 +55,14 @@ class SidePanel(QWidget):
 
         # Connect the item click event to the callback
         self.settings_list.itemClicked.connect(self.handle_item_clicked)
-
         self.layout().addWidget(self.settings_list)
         self.layout().insertWidget(1, self.settings_list)  # Insert the list at the top, below the info label
-                
+
         self.credit_label = QLabel("brought to you by\nLiiesl on GitHub")
         self.credit_label.setAlignment(Qt.AlignLeft)
         self.credit_label.setOpenExternalLinks(True)  # Allow clickable links
         self.credit_label.mousePressEvent = self.show_socials  # Connect click event
         self.credit_label.setStyleSheet("font-size: 18px;")
-        
         # Add the credit label to the layout
         self.layout().addWidget(self.credit_label)
 
@@ -73,17 +76,17 @@ class SidePanel(QWidget):
     def update_colors(self):
         # Re-fetch the current palette
         palette = self.current_palette()
-
         self.setStyleSheet(f"background-color: {self.background_color};")
-        
         self.info_label.setStyleSheet(f"color: {self.text_color}; font-size: {self.font_size}px; font-weight: bold; background-color: none;")
-
         self.settings_list.setStyleSheet(f"background-color: transparent; border: none; color: {self.text_color}; font-size: {self.font_size - 2}px;")
-    
+
     def handle_item_clicked(self, item):
         if item.text() == "Settings":
             # Handle the settings click event
             self.open_settings_callback()
+        elif item.text() == "Help":
+            # Handle the help click event
+            self.open_help_window()
         elif item.text() == "Changelog":
             # Handle the changelog click event
             self.open_changelog_window()
@@ -97,6 +100,15 @@ class SidePanel(QWidget):
             self.changelog_window.raise_()
             self.changelog_window.activateWindow()
 
+    def open_help_window(self):
+        # Check if help window is already open
+        if not hasattr(self, 'help_window') or not self.help_window.isVisible():
+            self.help_window = HelpWindow(self)  # Instantiate the HelpWindow
+            self.help_window.show()
+        else:
+            self.help_window.raise_()
+            self.help_window.activateWindow()
+
     def show_socials(self, event):
         # Create a message box to display social media links
         socials_message = (
@@ -105,4 +117,3 @@ class SidePanel(QWidget):
             "YouTube: @Vfrix"
         )
         QMessageBox.information(self, "Socials", socials_message)
-
