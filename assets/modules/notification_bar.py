@@ -85,29 +85,38 @@ class NotificationBar(QWidget):
 
     def animate_notification(self):
         """Animate the transition to the next notification."""
-        # Create animations for fading out and fading in
-        self.fade_out_animation = QPropertyAnimation(self.label_emoji, b"windowOpacity")
-        self.fade_in_animation = QPropertyAnimation(self.label_emoji, b"windowOpacity")
+        # Create animations for sliding out and sliding in
+        self.slide_out_animation = QPropertyAnimation(self.label_emoji, b"geometry")
+        self.slide_in_animation = QPropertyAnimation(self.label_emoji, b"geometry")
 
-        # Fade out: Hide the current emoji and text
-        self.fade_out_animation.setDuration(self.animation_duration // 2)
-        self.fade_out_animation.setStartValue(1.0)
-        self.fade_out_animation.setEndValue(0.0)
-        self.fade_out_animation.setEasingCurve(QEasingCurve.OutQuad)
+        # Get the current geometry of the emoji label
+        emoji_geometry = self.label_emoji.geometry()
+
+        # Slide out: Move the emoji label upward
+        self.slide_out_animation.setDuration(self.animation_duration)
+        self.slide_out_animation.setStartValue(emoji_geometry)
+        self.slide_out_animation.setEndValue(
+            QRect(emoji_geometry.x(), emoji_geometry.y() - emoji_geometry.height(),
+                  emoji_geometry.width(), emoji_geometry.height())
+        )
+        self.slide_out_animation.setEasingCurve(QEasingCurve.OutQuad)
 
         # Update to the next notification
         self.current_index = (self.current_index + 1) % len(self.notifications)
         self.update_notification()
 
-        # Fade in: Show the new emoji and text
-        self.fade_in_animation.setDuration(self.animation_duration // 2)
-        self.fade_in_animation.setStartValue(0.0)
-        self.fade_in_animation.setEndValue(1.0)
-        self.fade_in_animation.setEasingCurve(QEasingCurve.InQuad)
+        # Slide in: Move the emoji label back into view
+        self.slide_in_animation.setDuration(self.animation_duration)
+        self.slide_in_animation.setStartValue(
+            QRect(emoji_geometry.x(), emoji_geometry.y() + emoji_geometry.height(),
+                  emoji_geometry.width(), emoji_geometry.height())
+        )
+        self.slide_in_animation.setEndValue(emoji_geometry)
+        self.slide_in_animation.setEasingCurve(QEasingCurve.InQuad)
 
         # Connect animations and start
-        self.fade_out_animation.finished.connect(self.fade_in_animation.start)
-        self.fade_out_animation.start()
+        self.slide_out_animation.finished.connect(self.slide_in_animation.start)
+        self.slide_out_animation.start()
 
     def next_notification(self):
         """Move to the next notification."""
