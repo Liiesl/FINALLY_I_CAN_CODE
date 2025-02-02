@@ -265,30 +265,58 @@ class Settings(QWidget):
         """Load settings from a user-selected config.json file."""
         options = QFileDialog.Options()
         file_path, _ = QFileDialog.getOpenFileName(self, "Select Config File", "", "JSON Files (*.json);;All Files (*)", options=options)
-
+        
         if file_path:
             try:
                 # Read and validate the selected config.json file
                 with open(file_path, "r") as file:
-                    new_config_data = json.load(file)
-
+                    try:
+                        new_config_data = json.load(file)
+                    except json.JSONDecodeError as decode_error:
+                        raise ValueError(f"Invalid JSON format: {decode_error}")
+    
                 # Validate the structure of the loaded config
                 required_keys = {"safe_area_size", "text_size", "theme"}
-                if not required_keys.issubset(new_config_data.keys()):
-                    raise ValueError("Invalid config file: Missing required keys.")
-
+                optional_keys = {"recent_tools", "tool_usage"}
+    
+                # Check for missing required keys
+                missing_keys = required_keys - new_config_data.keys()
+                if missing_keys:
+                    raise ValueError(f"Invalid config file: Missing required keys: {', '.join(missing_keys)}")
+    
+                # Ensure all values have valid types
+                type_checks = {
+                    "safe_area_size": int,
+                    "text_size": str,
+                    "theme": str,
+                    "recent_tools": list,
+                    "tool_usage": dict
+                }
+    
+                for key, expected_type in type_checks.items():
+                    if key in new_config_data and not isinstance(new_config_data[key], expected_type):
+                        raise ValueError(f"Invalid type for '{key}': Expected {expected_type.__name__}, got {type(new_config_data[key]).__name__}")
+    
+                # Assign default values for optional keys if missing
+                for key in optional_keys:
+                    if key not in new_config_data:
+                        new_config_data[key] = [] if key == "recent_tools" else {}
+    
                 # Replace the current config.json with the new data
                 current_config_path = os.path.join(os.path.dirname(__file__), "config.json")
                 with open(current_config_path, "w") as file:
                     json.dump(new_config_data, file, indent=4)
-
+    
                 # Reload the settings in the application
                 self.config.load()
                 self.refresh_ui_from_config()
-
+    
                 QMessageBox.information(self, "Load Successful", "Settings loaded successfully.")
+            
+            except ValueError as ve:
+                QMessageBox.critical(self, "Load Failed", f"Failed to load settings: {str(ve)}")
             except Exception as e:
-                QMessageBox.critical(self, "Load Failed", f"Failed to load settings:\n{str(e)}")
+                QMessageBox.critical(self, "Load Failed", f"An unexpected error occurred while loading settings:\n{str(e)}")
 
     def refresh_ui_from_config(self):
         """Refresh the UI elements based on the current config."""
