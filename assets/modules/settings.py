@@ -110,6 +110,9 @@ class Settings(QWidget):
         save_button.clicked.connect(self.save_settings)
         layout.addWidget(save_button)
 
+        # Horizontal Layout for Export and Load Buttons
+        export_load_layout = QHBoxLayout()
+
         # Export Config Button
         export_config_button = QPushButton("Export Config")
         export_config_button.setStyleSheet(f"""
@@ -128,7 +131,7 @@ class Settings(QWidget):
         }}
         """)
         export_config_button.clicked.connect(self.export_config)
-        layout.addWidget(export_config_button)
+        export_load_layout.addWidget(export_config_button)
 
         # Load Settings Button
         load_settings_button = QPushButton("Load Settings")
@@ -148,7 +151,10 @@ class Settings(QWidget):
         }}
         """)
         load_settings_button.clicked.connect(self.load_settings)
-        layout.addWidget(load_settings_button)
+        export_load_layout.addWidget(load_settings_button)
+
+        # Add the horizontal layout to the main layout
+        layout.addLayout(export_load_layout)
 
         self.setLayout(layout)
         self.setStyleSheet(f"background-color: {background_color};")
