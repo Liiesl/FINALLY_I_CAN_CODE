@@ -48,7 +48,6 @@ class MainWindow(QMainWindow):
         self.layout.addWidget(self.custom_window_bar)
 
         self.notification_bar = NotificationBar(self)
-        self.layout.addWidget(self.notification_bar)
 
         self.custom_window_bar.setup_initial_tabs()  # Add this line to create initial tabs
         
@@ -287,8 +286,7 @@ class MainWindow(QMainWindow):
 
             # Add the NotificationBar below the top bar
             if hasattr(self, 'notification_bar'):
-                if self.notification_bar.parent() != main_content:
-                    main_content_layout.addWidget(self.notification_bar)
+                main_content_layout.addWidget(self.notification_bar)
             
             if layout is None:
                 container_layout = QVBoxLayout()
