@@ -10,7 +10,7 @@ import json
 
 class Settings(QWidget):
     settings_saved = pyqtSignal()  # Define a signal for settings saved
-     experimental_tools_toggled = pyqtSignal(bool)  # Signal for toggling experimental tools
+    experimental_tools_toggled = pyqtSignal(bool)  # Signal for toggling experimental tools
 
     def __init__(self, parent=None, back_callback=None, main_window=None):
         super().__init__(parent)
