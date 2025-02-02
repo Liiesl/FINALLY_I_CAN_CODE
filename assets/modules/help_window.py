@@ -12,6 +12,7 @@ class HelpWindow(QWidget):
         self.markdown_file_path = os.path.join(os.path.dirname(__file__), "help.md")  # Path to the markdown file
         self.markdown_content = self.read_markdown_file()
         self.headers = self.extract_headers(self.markdown_content)
+        self.html_content = self.convert_to_html_with_anchors()
         self.setup_ui()
 
     def read_markdown_file(self):
@@ -33,6 +34,12 @@ class HelpWindow(QWidget):
                 headers.append((level, title))
         return headers
 
+    def convert_to_html_with_anchors(self):
+        """Convert markdown to HTML with anchors for headers."""
+        extensions = ['toc']  # Enable table of contents extension for automatic anchor generation
+        html_content = markdown.markdown(self.markdown_content, extensions=extensions)
+        return html_content
+
     def setup_ui(self):
         # Main layout
         main_layout = QHBoxLayout()
@@ -44,35 +51,23 @@ class HelpWindow(QWidget):
             item = QListWidgetItem(title)
             item.setData(Qt.UserRole, title)  # Store the header title for later use
             self.section_list.addItem(item)
-        self.section_list.itemClicked.connect(self.load_section_content)
+        self.section_list.itemClicked.connect(self.scroll_to_section)
         main_layout.addWidget(self.section_list, 1)  # 1/3 of the width
 
         # Right panel: Markdown viewer
         self.markdown_viewer = QTextEdit()
         self.markdown_viewer.setReadOnly(True)
+        self.markdown_viewer.setHtml(self.html_content)  # Display the full markdown content
         main_layout.addWidget(self.markdown_viewer, 2)  # 2/3 of the width
 
-    def load_section_content(self, item):
-        """Load the markdown content corresponding to the selected header."""
+    def scroll_to_section(self, item):
+        """Scroll to the selected section in the markdown viewer."""
         selected_title = item.data(Qt.UserRole)
-        content = self.get_section_content(selected_title)
-        html_content = markdown.markdown(content)
-        self.markdown_viewer.setHtml(html_content)
+        anchor = self.generate_anchor(selected_title)
+        self.markdown_viewer.scrollToAnchor(anchor)
 
-    def get_section_content(self, selected_title):
-        """Get the markdown content for the selected section."""
-        lines = self.markdown_content.split('\n')
-        content = []
-        capture = False
-        for line in lines:
-            match = re.match(r'^(#+)\s+(.*)', line)
-            if match:
-                title = match.group(2).strip()
-                if title == selected_title:
-                    capture = True
-                    continue
-                elif capture:
-                    break
-            if capture:
-                content.append(line)
-        return '\n'.join(content)
+    def generate_anchor(self, title):
+        """Generate an anchor name for a given header title."""
+        # Convert the title to lowercase and replace spaces with hyphens
+        anchor = title.lower().replace(" ", "-")
+        return anchor
