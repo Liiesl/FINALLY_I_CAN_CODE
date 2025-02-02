@@ -59,8 +59,6 @@ class MainWindow(QMainWindow):
         self.main_content = QWidget()
         self.main_content_layout = QVBoxLayout(self.main_content)
         self.main_content.setLayout(self.main_content_layout)
-
-        self.notification_bar = NotificationBar(self)
         
         self.top_bar = QHBoxLayout()
         self.top_bar_added = False
@@ -285,6 +283,7 @@ class MainWindow(QMainWindow):
             main_content_layout.addWidget(top_bar_widget)
 
             # Add the NotificationBar below the top bar
+            self.notification_bar = NotificationBar(self)
             if hasattr(self, 'notification_bar'):
                 main_content_layout.addWidget(self.notification_bar)
             
