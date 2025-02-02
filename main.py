@@ -351,6 +351,8 @@ class MainWindow(QMainWindow):
             main_content = current_splitter.widget(1)  # Main content is the second widget in the splitter
             main_content_layout = main_content.layout()
 
+            self.main_content_layout = main_content_layout
+
             self.main_menu_active = True
 
             # Clear the existing layout
