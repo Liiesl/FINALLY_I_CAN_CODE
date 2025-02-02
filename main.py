@@ -48,7 +48,7 @@ class MainWindow(QMainWindow):
         self.layout.addWidget(self.custom_window_bar)
 
         self.notification_bar = NotificationBar(self)
-        layout.addWidget(self.notification_bar)
+        self.layout.addWidget(self.notification_bar)
 
         self.custom_window_bar.setup_initial_tabs()  # Add this line to create initial tabs
         
