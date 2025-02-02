@@ -195,7 +195,6 @@ class Settings(QWidget):
         """Toggle the state of experimental tools."""
         current_state = self.experimental_tools_toggle.get_state() == "dark"
         self.config.set_experimental_tools_enabled(current_state)
-        self.experimental_tools_toggled.emit(current_state)  # Emit signal to notify main application
 
     def save_settings(self):
         print("Saving settings...")
@@ -238,6 +237,7 @@ class Settings(QWidget):
             else:
                 self.config.set_theme(self.initial_theme)
                 self.theme_toggle.set_state(self.initial_theme)  # Update toggle position
+                self.experimental_tools_toggled.emit(current_state)  # Emit signal to notify main application
                 self.config.save()
                 # If the user chooses not to relaunch, just refresh the settings
                 if self.main_window is not None:
