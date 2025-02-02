@@ -10,6 +10,7 @@ import json
 
 class Settings(QWidget):
     settings_saved = pyqtSignal()  # Define a signal for settings saved
+     experimental_tools_toggled = pyqtSignal(bool)  # Signal for toggling experimental tools
 
     def __init__(self, parent=None, back_callback=None, main_window=None):
         super().__init__(parent)
@@ -90,6 +91,17 @@ class Settings(QWidget):
         theme_label_dark.setStyleSheet(f"color: {text_color}; font-size: 26px;")
         theme_layout.addWidget(theme_label_dark)
         layout.addLayout(theme_layout)
+
+        # Experimental Tools Toggle
+        experimental_tools_layout = QHBoxLayout()
+        experimental_tools_label = QLabel("Enable Experimental Tools:")
+        experimental_tools_label.setStyleSheet(f"color: {text_color}; font-size: 26px;")
+        experimental_tools_layout.addWidget(experimental_tools_label)
+        self.experimental_tools_toggle = ToggleSwitch()
+        self.experimental_tools_toggle.set_state("dark" if self.config.get_experimental_tools_enabled() else "light")
+        self.experimental_tools_toggle.stateChanged.connect(self.toggle_experimental_tools)
+        experimental_tools_layout.addWidget(self.experimental_tools_toggle)
+        layout.addLayout(experimental_tools_layout)
 
         save_button = QPushButton("Save")
         save_button.setStyleSheet(f"""
@@ -179,12 +191,19 @@ class Settings(QWidget):
     def apply_theme(self):
         self.settings_saved.emit()
 
+    def toggle_experimental_tools(self):
+        """Toggle the state of experimental tools."""
+        current_state = self.experimental_tools_toggle.get_state() == "dark"
+        self.config.set_experimental_tools_enabled(current_state)
+        self.experimental_tools_toggled.emit(current_state)  # Emit signal to notify main application
+
     def save_settings(self):
         print("Saving settings...")
         # Save the settings
         self.config.set_safe_area_size(self.safe_area_slider.value())
         self.config.set_text_size(self.text_size_dropdown.currentText())
         self.config.set_theme(self.config.data["theme"])
+        self.config.set_experimental_tools_enabled(self.experimental_tools_toggle.get_state() == "dark")
         self.config.save()
         self.config.load()
         # Check if the theme has changed
@@ -414,3 +433,4 @@ class Settings(QWidget):
         self.safe_area_value_label.setText(f"{self.config.get_safe_area_size()} px")
         self.text_size_dropdown.setCurrentText(self.config.get_text_size())
         self.theme_toggle.set_state(self.config.get_theme())
+                self.experimental_tools_toggle.set_state("dark" if self.config.get_experimental_tools_enabled() else "light")
