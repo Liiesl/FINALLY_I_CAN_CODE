@@ -642,6 +642,8 @@ class MainWindow(QMainWindow):
             desc = tool[1].lower()
             categories = set(tool[2])
 
+            is_experimental = "experimental" in categories
+
             text_match = search_text in name or search_text in desc
             category_match = not self.active_categories or bool(categories & self.active_categories)
             visible = text_match and category_match and (self.experimental_tools_enabled or not is_experimental)
