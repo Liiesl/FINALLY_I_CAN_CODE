@@ -138,6 +138,8 @@ alpha 0.1.6.1
 
 0.1.7.0 alpha
 -New interface for main page
+-Nwe Help window, can be acessed in side panel
+-Browse help to learn more about the app
 -New Tags feature, you can now filter the tools by tags
 -New Search featuree, you can search tools in searchbar
 -New notification bar, read news, notifications, tips, etc. on the notification bar.
