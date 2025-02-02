@@ -2,10 +2,10 @@ import os
 import sys
 import re
 import markdown
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QListWidget, QListWidgetItem, QSplitter, QPushButton
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QTextEdit, QSplitter, QPushButton
 from PyQt5.QtCore import Qt
 from PyQt5.QtWebEngineWidgets import QWebEngineView
-from PyQt5.QtGui import QFont, QBrush, QColor
+from PyQt5.QtGui import QFont
 import qtawesome as qta  # Import QtAwesome for icons
 
 def resource_path(relative_path):
@@ -76,7 +76,7 @@ class HelpWindow(QWidget):
         self.setLayout(QVBoxLayout())
         self.layout().addWidget(main_splitter)
 
-        # Left panel: List of sections (headers)
+        # Left panel: List of sections (headers) using QTextEdit for word wrapping
         left_panel = QWidget()
         left_layout = QVBoxLayout()
         left_panel.setLayout(left_layout)
@@ -87,27 +87,20 @@ class HelpWindow(QWidget):
         self.toggle_button.clicked.connect(self.toggle_navigation)
         left_layout.addWidget(self.toggle_button, alignment=Qt.AlignRight)
 
-        self.section_list = QListWidget()
+        self.section_list = QTextEdit()
         self.section_list.setFont(QFont("Arial", 14))  # Increase text size
-        self.section_list.setSpacing(10)  # Increase gap between items
-        self.section_list.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)  # Enable horizontal scrolling
+        self.section_list.setReadOnly(True)  # Make it non-editable
+        self.section_list.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)  # Enable vertical scrolling
+        self.section_list.setWordWrapMode(True)  # Enable word wrapping
 
+        # Populate the QTextEdit with headers
         for level, title in self.headers:
-            item = QListWidgetItem(title)
-            item.setData(Qt.UserRole, title)  # Store the header title for later use
-
-            # Indent based on header level (decreased indentation width)
             indent = (level - 1) * 10  # Reduced indentation multiplier
             if level == 1:  # h1 headers should be aligned to the left
                 indent = 0
-            item.setText(f"{' ' * indent}{title}")
+            indented_title = f"{' ' * indent}{title}\n"
+            self.section_list.append(indented_title)
 
-            # Use the same color for all header levels
-            item.setForeground(QBrush(QColor("black")))
-
-            self.section_list.addItem(item)
-
-        self.section_list.itemClicked.connect(self.scroll_to_section)
         left_layout.addWidget(self.section_list)
 
         # Right panel: Markdown viewer using QWebEngineView
@@ -121,6 +114,15 @@ class HelpWindow(QWidget):
         # Set initial sizes for the splitter
         main_splitter.setSizes([200, 600])
 
+    def toggle_navigation(self):
+        """Toggle the visibility of the navigation panel."""
+        if self.section_list.isVisible():
+            self.section_list.hide()
+            self.toggle_button.setIcon(qta.icon('fa5s.angle-right'))
+        else:
+            self.section_list.show()
+            self.toggle_button.setIcon(qta.icon('fa5s.angle-left'))
+
     def scroll_to_section(self, item):
         """Scroll to the selected section in the markdown viewer."""
         selected_title = item.data(Qt.UserRole)
@@ -132,12 +134,3 @@ class HelpWindow(QWidget):
         # Convert the title to lowercase and replace spaces with hyphens
         anchor = title.lower().replace(" ", "-")
         return anchor
-
-    def toggle_navigation(self):
-        """Toggle the visibility of the navigation panel."""
-        if self.section_list.isVisible():
-            self.section_list.hide()
-            self.toggle_button.setIcon(qta.icon('fa5s.angle-right'))
-        else:
-            self.section_list.show()
-            self.toggle_button.setIcon(qta.icon('fa5s.angle-left'))
