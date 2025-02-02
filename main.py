@@ -29,7 +29,6 @@ class MainWindow(QMainWindow):
 
         QFontDatabase.addApplicationFont("assets/fonts/Inter-Regular.otf")
         QFontDatabase.addApplicationFont("assets/fonts/Inter-ExtraBold.otf")
-
         self.inter_regular_font = QFont("Inter Regular")
         self.inter_extra_bold_font = QFont("Inter ExtraBold")
 
@@ -47,9 +46,9 @@ class MainWindow(QMainWindow):
 
         self.custom_window_bar = CustomWindowBar(self, self.app)
         self.layout.addWidget(self.custom_window_bar)
-        
+
         self.notification_bar = NotificationBar(self)
-        self.layout.addWidget(self.notification_bar)
+        layout.addWidget(self.notification_bar)
 
         self.custom_window_bar.setup_initial_tabs()  # Add this line to create initial tabs
         
