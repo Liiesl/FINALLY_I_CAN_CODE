@@ -1,13 +1,18 @@
 # assets/modules/notification_bar.py
-from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel
+from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel, QPushButton
 from PyQt5.QtCore import Qt, QTimer
+from PyQt5.QtGui import QIcon
 
 class NotificationBar(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
+        
+        # Main layout
         self.layout = QHBoxLayout(self)
         self.layout.setContentsMargins(10, 5, 10, 5)
         self.layout.setSpacing(10)
+        
+        # Notifications list
         self.current_index = 0
         self.notifications = [
             ("💡", "Tip: You can merge multiple SRT files into one."),
@@ -15,31 +20,52 @@ class NotificationBar(QWidget):
             ("⏰", "Reminder: You last used the Subtitle Shifter 2 days ago."),
             ("📰", "News: Check out our latest blog post on subtitle editing!")
         ]
-        self.label_emoji = QLabel()
-        self.label_text = QLabel()
-        self.label_emoji.setStyleSheet("font-size: 20px;")
-        self.label_text.setStyleSheet("color: white; background-color: #333; padding: 5px; border-radius: 5px;")
-        self.layout.addWidget(self.label_emoji)
-        self.layout.addWidget(self.label_text)
-        self.timer = QTimer(self)
-        self.timer.timeout.connect(self.update_notification)
-        self.start_timer()
+        
+        # Left Arrow Button
+        self.left_arrow = QPushButton()
+        self.left_arrow.setIcon(QIcon(':/icons/left_arrow.png'))  # Use appropriate icon path
+        self.left_arrow.setStyleSheet("background-color: transparent; border: none;")
+        self.left_arrow.clicked.connect(self.previous_notification)
+        self.layout.addWidget(self.left_arrow)
 
-    def start_timer(self):
-        """Start the timer to cycle through notifications."""
-        self.update_notification()  # Show the first notification immediately
-        self.timer.start(10000)  # Change notification every 10 seconds
+        # Emoji Label
+        self.label_emoji = QLabel()
+        self.label_emoji.setStyleSheet("font-size: 20px;")
+        self.layout.addWidget(self.label_emoji)
+
+        # Text Label
+        self.label_text = QLabel()
+        self.label_text.setStyleSheet("color: black; padding: 5px;")
+        self.layout.addWidget(self.label_text)
+
+        # Right Arrow Button
+        self.right_arrow = QPushButton()
+        self.right_arrow.setIcon(QIcon(':/icons/right_arrow.png'))  # Use appropriate icon path
+        self.right_arrow.setStyleSheet("background-color: transparent; border: none;")
+        self.right_arrow.clicked.connect(self.next_notification)
+        self.layout.addWidget(self.right_arrow)
+
+        # Set background color of the widget to white
+        self.setStyleSheet("background-color: white; border-radius: 5px;")
+
+        # Initialize with the first notification
+        self.update_notification()
 
     def update_notification(self):
-        """Update the notification bar with the next notification."""
+        """Update the notification bar with the current notification."""
         emoji, text = self.notifications[self.current_index]
         self.label_emoji.setText(emoji)
         self.label_text.setText(text)
-        self.current_index = (self.current_index + 1) % len(self.notifications)
 
-    def stop_timer(self):
-        """Stop the timer."""
-        self.timer.stop()
+    def next_notification(self):
+        """Move to the next notification."""
+        self.current_index = (self.current_index + 1) % len(self.notifications)
+        self.update_notification()
+
+    def previous_notification(self):
+        """Move to the previous notification."""
+        self.current_index = (self.current_index - 1) % len(self.notifications)
+        self.update_notification()
 
     def add_notification(self, emoji, message):
         """Add a new notification to the list."""
