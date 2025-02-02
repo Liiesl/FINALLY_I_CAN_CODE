@@ -433,4 +433,4 @@ class Settings(QWidget):
         self.safe_area_value_label.setText(f"{self.config.get_safe_area_size()} px")
         self.text_size_dropdown.setCurrentText(self.config.get_text_size())
         self.theme_toggle.set_state(self.config.get_theme())
-                self.experimental_tools_toggle.set_state("dark" if self.config.get_experimental_tools_enabled() else "light")
+        self.experimental_tools_toggle.set_state("dark" if self.config.get_experimental_tools_enabled() else "light")
