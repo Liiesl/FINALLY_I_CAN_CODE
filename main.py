@@ -37,6 +37,8 @@ class MainWindow(QMainWindow):
 
         self.apply_theme()
 
+        self.notification_bar = NotificationBar(self)
+
         self.central_widget = QWidget()
         self.layout = QVBoxLayout(self.central_widget)
         self.setCentralWidget(self.central_widget)
@@ -55,9 +57,7 @@ class MainWindow(QMainWindow):
         self.side_panel = SidePanel(self, self.open_settings)
         self.side_panel.setVisible(False)
         self.side_panel.setFont(self.inter_regular_font)
-
-        self.notification_bar = NotificationBar(self)
-
+        
         self.main_content = QWidget()
         self.main_content_layout = QVBoxLayout(self.main_content)
         self.main_content.setLayout(self.main_content_layout)
