@@ -240,12 +240,10 @@ class Settings(QWidget):
                 self.config.save()
                 # If the user chooses not to relaunch, just refresh the settings
                 if self.main_window is not None:
-                    self.experimental_tools_toggled.emit(current_state)  # Emit signal to notify main application
                     self.main_window.refresh_settings()
         else:
             # If the theme hasn't changed, just refresh the settings
             if self.main_window is not None:
-                self.experimental_tools_toggled.emit(current_state)  # Emit signal to notify main application
                 self.main_window.refresh_settings()
                 
 
