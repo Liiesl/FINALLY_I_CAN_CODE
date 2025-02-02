@@ -622,11 +622,14 @@ class MainWindow(QMainWindow):
     def load_tool(self, tool_widget, layout):
         self.main_menu_active = False
 
-        # Clear the existing layout
+            # Clear the existing layout
         while layout.count():
-            child = layout.takeAt(0)
+            child = layout.takeAt(0)  # Remove items sequentially
             if child.widget():
-                child.widget().deleteLater()
+                child.widget().deleteLater()  # Properly destroy widgets
+            elif child.layout():
+                # Recursively clear nested layouts (if any exist)
+                self.clear_layout(child.layout())
                 
         # Add the tool widget to the layout
         layout.addWidget(tool_widget)
