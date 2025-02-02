@@ -134,3 +134,12 @@ class HelpWindow(QWidget):
         # Convert the title to lowercase and replace spaces with hyphens
         anchor = title.lower().replace(" ", "-")
         return anchor
+
+    def toggle_navigation(self):
+        """Toggle the visibility of the navigation panel."""
+        if self.section_list.isVisible():
+            self.section_list.hide()
+            self.toggle_button.setIcon(qta.icon('fa5s.angle-right'))
+        else:
+            self.section_list.show()
+            self.toggle_button.setIcon(qta.icon('fa5s.angle-left'))
