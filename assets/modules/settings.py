@@ -264,59 +264,115 @@ class Settings(QWidget):
     def load_settings(self):
         """Load settings from a user-selected config.json file."""
         options = QFileDialog.Options()
-        file_path, _ = QFileDialog.getOpenFileName(self, "Select Config File", "", "JSON Files (*.json);;All Files (*)", options=options)
-        
-        if file_path:
+        file_path, _ = QFileDialog.getOpenFileName(
+            self, "Select Config File", "", "JSON Files (*.json);;All Files (*)", options=options
+        )
+    
+        if not file_path:
+            return  # User canceled the file dialog
+    
+        try:
+            # Check if the file exists
+            if not os.path.exists(file_path):
+                QMessageBox.critical(self, "File Not Found", "The selected file does not exist.")
+                return
+    
+            # Check if the file has a valid extension
+            if not file_path.lower().endswith(".json"):
+                QMessageBox.critical(self, "Invalid File", "Please select a valid JSON file.")
+                return
+    
+            # Check if the file is empty
+            if os.path.getsize(file_path) == 0:
+                QMessageBox.warning(self, "Empty Config", "The config file is empty. Using default values.")
+                self.config.load()  # Reload default values
+                self.refresh_ui_from_config()
+                return
+    
+            # Read and validate the selected config.json file
             try:
-                # Read and validate the selected config.json file
-                with open(file_path, "r") as file:
-                    try:
-                        new_config_data = json.load(file)
-                    except json.JSONDecodeError as decode_error:
-                        raise ValueError(f"Invalid JSON format: {decode_error}")
+                with open(file_path, "r", encoding="utf-8") as file:
+                    content = file.read()
     
-                # Validate the structure of the loaded config
-                required_keys = {"safe_area_size", "text_size", "theme"}
-                optional_keys = {"recent_tools", "tool_usage"}
+                    # Check for duplicate keys in the JSON
+                    def has_duplicate_keys(json_string):
+                        import json
+                        from collections import Counter
+                        parsed = json.loads(json_string)
+                        counter = Counter(parsed.keys())
+                        duplicates = [key for key, count in counter.items() if count > 1]
+                        if duplicates:
+                            raise ValueError(f"Duplicate keys found: {', '.join(duplicates)}")
     
-                # Check for missing required keys
-                missing_keys = required_keys - new_config_data.keys()
-                if missing_keys:
-                    raise ValueError(f"Invalid config file: Missing required keys: {', '.join(missing_keys)}")
+                    has_duplicate_keys(content)
     
-                # Ensure all values have valid types
-                type_checks = {
-                    "safe_area_size": int,
-                    "text_size": str,
-                    "theme": str,
-                    "recent_tools": list,
-                    "tool_usage": dict
-                }
+                    new_config_data = json.loads(content)
+            except UnicodeDecodeError:
+                QMessageBox.critical(self, "Encoding Error", "The config file contains invalid or unsupported characters.")
+                return
+            except json.JSONDecodeError as decode_error:
+                QMessageBox.critical(self, "Load Failed", f"Invalid JSON format: {decode_error}")
+                return
     
-                for key, expected_type in type_checks.items():
-                    if key in new_config_data and not isinstance(new_config_data[key], expected_type):
-                        raise ValueError(f"Invalid type for '{key}': Expected {expected_type.__name__}, got {type(new_config_data[key]).__name__}")
+            # Validate the structure of the loaded config
+            required_keys = {"safe_area_size", "text_size", "theme"}
+            optional_keys = {"recent_tools": [], "tool_usage": {}}
     
-                # Assign default values for optional keys if missing
-                for key in optional_keys:
-                    if key not in new_config_data:
-                        new_config_data[key] = [] if key == "recent_tools" else {}
+            # Check for missing required keys
+            missing_keys = required_keys - new_config_data.keys()
+            if missing_keys:
+                raise ValueError(f"Invalid config file: Missing required keys: {', '.join(missing_keys)}")
     
-                # Replace the current config.json with the new data
-                current_config_path = os.path.join(os.path.dirname(__file__), "config.json")
+            # Validate data types and assign default values for optional keys
+            type_checks = {
+                "safe_area_size": int,
+                "text_size": str,
+                "theme": str,
+                "recent_tools": list,
+                "tool_usage": dict,
+            }
+    
+            for key, expected_type in type_checks.items():
+                if key in new_config_data and not isinstance(new_config_data[key], expected_type):
+                    raise ValueError(f"Invalid type for '{key}': Expected {expected_type.__name__}, got {type(new_config_data[key]).__name__}")
+                elif key not in new_config_data and key in optional_keys:
+                    new_config_data[key] = optional_keys[key]
+    
+            # Validate specific values
+            valid_text_sizes = {"small", "default", "large", "huge"}
+            valid_themes = {"light", "dark"}
+    
+            if new_config_data["safe_area_size"] < 0:
+                raise ValueError("Invalid value for 'safe_area_size': Must be non-negative.")
+    
+            if new_config_data["text_size"] not in valid_text_sizes:
+                raise ValueError(f"Invalid value for 'text_size': Must be one of {valid_text_sizes}.")
+    
+            if new_config_data["theme"] not in valid_themes:
+                raise ValueError(f"Invalid value for 'theme': Must be one of {valid_themes}.")
+    
+            # Replace the current config.json with the new data
+            current_config_path = os.path.join(os.path.dirname(__file__), "config.json")
+            try:
                 with open(current_config_path, "w") as file:
                     json.dump(new_config_data, file, indent=4)
+            except PermissionError:
+                QMessageBox.critical(self, "Permission Error", "Unable to save the config file due to insufficient permissions.")
+                return
+            except OSError as e:
+                QMessageBox.critical(self, "Save Failed", f"Failed to save settings due to disk space or permissions: {str(e)}")
+                return
     
-                # Reload the settings in the application
-                self.config.load()
-                self.refresh_ui_from_config()
+            # Reload the settings in the application
+            self.config.load()
+            self.refresh_ui_from_config()
     
-                QMessageBox.information(self, "Load Successful", "Settings loaded successfully.")
-            
-            except ValueError as ve:
-                QMessageBox.critical(self, "Load Failed", f"Failed to load settings: {str(ve)}")
-            except Exception as e:
-                QMessageBox.critical(self, "Load Failed", f"An unexpected error occurred while loading settings:\n{str(e)}")
+            QMessageBox.information(self, "Load Successful", "Settings loaded successfully.")
+    
+        except ValueError as ve:
+            QMessageBox.critical(self, "Load Failed", f"Failed to load settings: {str(ve)}")
+        except Exception as e:
+            QMessageBox.critical(self, "Load Failed", f"An unexpected error occurred while loading settings:\n{str(e)}")
 
     def refresh_ui_from_config(self):
         """Refresh the UI elements based on the current config."""
