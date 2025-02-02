@@ -287,7 +287,8 @@ class MainWindow(QMainWindow):
 
             # Add the NotificationBar below the top bar
             if hasattr(self, 'notification_bar'):
-                main_content_layout.addWidget(self.notification_bar)
+                if self.notification_bar.parent() != main_content:
+                    main_content_layout.addWidget(self.notification_bar)
             
             if layout is None:
                 container_layout = QVBoxLayout()
