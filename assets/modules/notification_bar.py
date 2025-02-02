@@ -1,13 +1,13 @@
 # assets/modules/notification_bar.py
 from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel, QPushButton
-from PyQt5.QtCore import Qt, QTimer
+from PyQt5.QtCore import Qt, QTimer, QPropertyAnimation, QRect
 from PyQt5.QtGui import QPalette
 import qtawesome as qta  # Import QtAwesome for icons
+
 
 class NotificationBar(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
-
         # Main layout
         self.layout = QHBoxLayout(self)
         self.layout.setContentsMargins(10, 5, 10, 5)  # Padding inside the rectangle
@@ -53,11 +53,11 @@ class NotificationBar(QWidget):
 
         # Set background color of the entire widget using the highlight color
         self.setStyleSheet(f"""
-            NotificationBar {{
-                background-color: {self.highlight_color};
-                border: 2px solid {self.text_color};  /* Add a visible border */
-                border-radius: 5px;
-            }}
+        NotificationBar {{
+            background-color: {self.highlight_color};
+            border: 2px solid {self.text_color};  /* Add a visible border */
+            border-radius: 5px;
+        }}
         """)
 
         # Initialize with the first notification
@@ -68,6 +68,29 @@ class NotificationBar(QWidget):
         emoji, text = self.notifications[self.current_index]
         self.label_emoji.setText(emoji)
         self.label_text.setText(text)
+
+        # Trigger slide-up animation
+        self.slide_up_animation()
+
+    def slide_up_animation(self):
+        """Perform a slide-up animation for the notification bar."""
+        # Create a property animation for the geometry of the widget
+        animation = QPropertyAnimation(self, b"geometry")
+        animation.setDuration(300)  # Duration of the animation in milliseconds
+
+        # Get the current geometry of the widget
+        current_geometry = self.geometry()
+
+        # Define the start and end positions for the animation
+        start_pos = QRect(current_geometry.x(), current_geometry.y(), current_geometry.width(), current_geometry.height())
+        end_pos = QRect(current_geometry.x(), current_geometry.y() - 20, current_geometry.width(), current_geometry.height())
+
+        # Set the animation keyframes
+        animation.setStartValue(start_pos)
+        animation.setEndValue(end_pos)
+
+        # Start the animation
+        animation.start()
 
     def next_notification(self):
         """Move to the next notification."""
