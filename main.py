@@ -583,7 +583,7 @@ class MainWindow(QMainWindow):
         print("refreshing the settings")
         self.apply_text_size()  # Update text size
         self.apply_theme()  # Update theme
-        self.toggle_experimental_tools():
+        self.toggle_experimental_tools()
 
 
         self.custom_window_bar.current_palette()
