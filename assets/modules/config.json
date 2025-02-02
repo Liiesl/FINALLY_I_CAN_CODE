@@ -2,15 +2,15 @@
     "safe_area_size": 100,
     "text_size": "default",
     "theme": "dark",
-    "tool_usage": {
-        "Longer Appearance SRT": 1,
-        "Merge SRT Files": 1,
-        "Subtitle Converter": 3,
-        "Multilingual Merge": 1
-    },
     "recent_tools": [
+        "Longer Appearance SRT",
         "Subtitle Converter",
-        "Multilingual Merge",
-        "Merge SRT Files"
-    ]
+        "Multilingual Merge"
+    ],
+    "tool_usage": {
+        "Longer Appearance SRT": 2,
+        "Merge SRT Files": 1,
+        "Subtitle Converter": 4,
+        "Multilingual Merge": 1
+    }
 }
