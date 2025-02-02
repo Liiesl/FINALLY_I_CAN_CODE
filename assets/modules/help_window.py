@@ -5,7 +5,7 @@ import markdown
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QListWidget, QListWidgetItem
 from PyQt5.QtCore import Qt
 from PyQt5.QtWebEngineWidgets import QWebEngineView
-from assets.modules.config import Config  # Import Config to access settings
+from PyQt5.QtWidgets import QApplication  # Import QApplication to access the global app instance
 
 def resource_path(relative_path):
     """Get the absolute path to a resource. Works for dev and PyInstaller."""
@@ -67,7 +67,12 @@ class HelpWindow(QWidget):
 
     def get_palette(self):
         """Get the current palette colors."""
-        palette = self.parent().palette() if self.parent() else self.app.palette()
+        # Use QApplication.instance() to access the global app instance
+        app = QApplication.instance()
+        palette = app.palette() if app else None
+        if not palette:
+            raise RuntimeError("Could not access the application palette.")
+
         return {
             "background_color": palette.color(palette.Window).name(),
             "text_color": palette.color(palette.WindowText).name(),
