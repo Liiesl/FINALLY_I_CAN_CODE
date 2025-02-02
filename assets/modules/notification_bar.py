@@ -24,7 +24,7 @@ class NotificationBar(QWidget):
         ]
 
         # Animation duration (in milliseconds)
-        self.animation_duration = 300
+        self.animation_duration = 500
 
         # Get colors from the parent widget's palette
         palette = self.parent().palette() if self.parent() else QPalette()
@@ -118,13 +118,19 @@ class NotificationBar(QWidget):
         """Stop the timer."""
         self.timer.stop()
 
+    def reset_timer(self):
+        self.stop_timer()
+        self.start_timer()
+
     def next_notification(self):
         """Move to the next notification."""
         self.animate_notification(direction="up")
+        self.reset_timer()
 
     def previous_notification(self):
         """Move to the previous notification."""
         self.animate_notification(direction="down")
+        self.reset_timer()
 
     def add_notification(self, emoji, message):
         """Add a new notification to the list."""
