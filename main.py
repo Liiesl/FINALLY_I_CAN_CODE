@@ -20,6 +20,8 @@ class MainWindow(QMainWindow):
         self.setMouseTracking(True)
         
         self.init_ui()
+
+        self.refresh_settings()
         
     def init_ui(self):
         self.setWindowTitle("SRT Editor")
