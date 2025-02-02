@@ -3,13 +3,14 @@
     "text_size": "default",
     "theme": "dark",
     "tool_usage": {
-        "Longer Appearance SRT": 2,
+        "Longer Appearance SRT": 1,
         "Merge SRT Files": 1,
-        "Subtitle Converter": 1
+        "Subtitle Converter": 3,
+        "Multilingual Merge": 1
     },
     "recent_tools": [
         "Subtitle Converter",
-        "Longer Appearance SRT",
+        "Multilingual Merge",
         "Merge SRT Files"
     ]
 }
