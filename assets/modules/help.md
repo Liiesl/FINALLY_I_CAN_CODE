@@ -379,12 +379,15 @@ A: Try restarting the app. If the issue persists, contact support with details a
 
 ## Contact Support
 
-For further assistance, please contact our support team:
-- **Email**: support@srteeditor.com
-- **Website**: [www.srteeditor.com/support](http://www.srteeditor.com/support)
-- **Phone**: +1 (800) 123-4567
+For further assistance, please reach out via the following channels:
 
-We aim to respond within 24-48 hours. Please include details about the issue and any error messages you encountered.
+- **GitHub Repository**: Visit the [Subtl GitHub Page](https://github.com/yourusername/subtl) to report issues, request features, or ask questions.  
+- **Email**: You can also email me directly at **your.email@example.com** for more personalized support.
+- **Discussions**: Join the conversation in the [GitHub Discussions](https://github.com/yourusername/subtl/discussions) section to connect with other users and share ideas.
+
+As this project is maintained by a single developer, I appreciate your patience and understanding. Please include as much detail as possible when reporting issues (e.g., error messages, steps to reproduce).  
+
+I aim to respond within 24–48 hours, but response times may vary depending on workload. Thank you for your support and for using **Subtl**!
 
 ---
 
