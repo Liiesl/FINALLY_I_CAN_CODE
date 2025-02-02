@@ -45,6 +45,12 @@ All tools in **Subtl** are optimized to work with `.srt` subtitle files. If you 
 
 The **Longer Appearance SRT** tool allows you to extend the duration that each subtitle appears on the screen. This is useful when subtitles disappear too quickly, making them difficult to read.
 
+### Use Cases:
+- **Fast-Paced Videos**: Extend subtitle durations for action-packed scenes where viewers may struggle to read quickly disappearing text.
+- **Accessibility Enhancements**: Make subtitles more accessible for viewers with reading difficulties by giving them extra time to process the text.
+- **Educational Content**: Ensure students have ample time to read subtitles in educational videos without missing important information.
+- **Live Event Subtitles**: Adjust subtitles for live performances or speeches where timing might not be perfectly aligned.
+
 #### How to Use
 
 1. **Access the Tool**:
@@ -83,6 +89,12 @@ The **Longer Appearance SRT** tool allows you to extend the duration that each s
 ### Merge SRT Files
 
 The **Merge SRT Files** tool allows you to combine multiple subtitle files into one cohesive file. It offers two modes: **Glue End to End** and **Stacked Merge**.
+
+### Use Cases:
+- **Episodic Content**: Combine subtitles from multiple episodes into a single file for binge-watchers who prefer continuous playback.
+- **Multilingual Presentations**: Create a unified subtitle file for presentations delivered in different languages during international conferences.
+- **Film Festivals**: Prepare a single subtitle file for films shown back-to-back at festivals, ensuring seamless transitions between segments.
+- **YouTube Playlists**: Merge subtitles for videos in a playlist so that viewers can watch the entire series without interruptions.
 
 #### Modes
 
@@ -147,6 +159,12 @@ Alternatively, for **Stacked Merge**:
 
 The **Subtitle Converter** tool allows you to convert subtitles between different formats. Supported formats include `.srt`, `.ass`, `.sub`, `.vtt`, `.sbv`, `.dfxp`, `.stl`, `.mpl`, `.usf`, `.lrc`, `.rt`, `.ttml`, and `.cap`.
 
+### Use Cases:
+- **Cross-Platform Compatibility**: Convert `.srt` files to `.vtt` for web-based video players like YouTube or Vimeo.
+- **Legacy Systems**: Transform older subtitle formats (e.g., `.sub`) into modern formats (e.g., `.ass`) for compatibility with current software.
+- **Professional Editing**: Convert subtitles to `.dfxp` for use in professional video editing suites like Adobe Premiere Pro.
+- **Mobile Devices**: Change subtitle formats to `.sbv` for better compatibility with Android devices or specific media players.
+
 #### How to Use
 
 1. **Access the Tool**:
@@ -184,6 +202,12 @@ The **Subtitle Converter** tool allows you to convert subtitles between differen
 ### Subtitle Shifter
 
 The **Subtitle Shifter** tool allows you to shift subtitle timings by milliseconds. It offers two modes: **Whole Shift** and **Partial Shift**.
+
+### Use Cases:
+- **Audio Sync Issues**: Fix out-of-sync subtitles caused by audio delays in poorly encoded videos.
+- **Editing Workflow**: Adjust subtitle timings during post-production when scene lengths are modified.
+- **Time Zone Differences**: Shift subtitles to match localized broadcast times for global audiences.
+- **Interactive Media**: Fine-tune subtitle timings for interactive media, such as video games or VR experiences, where user actions affect playback speed.
 
 #### Modes
 
@@ -247,6 +271,12 @@ Alternatively, for **Partial Shift**:
 ### Multilingual Merge
 
 The **Multilingual Merge** tool allows you to merge subtitles in different languages with optional color-coding for differentiation.
+
+### Use Cases:
+- **International Films**: Combine subtitles in multiple languages for foreign films, allowing viewers to choose their preferred language.
+- **Corporate Training**: Provide multilingual subtitles for training videos used across global offices.
+- **Online Courses**: Offer subtitles in various languages for e-learning platforms catering to diverse student populations.
+- **Travel Vlogs**: Add subtitles in multiple languages for travel vlogs aimed at international audiences.
 
 #### How to Use
 
