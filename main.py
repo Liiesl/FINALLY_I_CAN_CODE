@@ -42,8 +42,6 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.central_widget)
 
         self.config = Config(source="MainWindow")
-        self.tool_usage = self.config.get_tool_usage()
-        self.recent_tools = self.config.get_recent_tools()
         self.main_menu_active = True
 
         self.custom_window_bar = CustomWindowBar(self, self.app)
@@ -381,6 +379,7 @@ class MainWindow(QMainWindow):
 
             self.most_used_widget = most_used_widget
 
+            self.tool_usage = self.config.get_tool_usage()
             for tool_name in sorted(self.tool_usage, key=lambda x: -self.tool_usage[x])[:3]:
                 btn = self.create_tool_button(tool_name, tools_dict.get(tool_name, ("Popular tool", []))[0], tools_dict.get(tool_name, ("Popular tool", []))[1])
                 most_used_layout.addWidget(btn)
@@ -399,6 +398,8 @@ class MainWindow(QMainWindow):
             recent_layout.setContentsMargins(0, 0, 0, 0)
 
             self.recent_widget = recent_widget
+
+            self.recent_tools = self.config.get_recent_tools()
 
             for tool_name in self.recent_tools[:3]:
                 btn = self.create_tool_button(tool_name, tools_dict.get(tool_name, ("Recently used tool", []))[0], tools_dict.get(tool_name, ("Recently used tool", []))[1])               
