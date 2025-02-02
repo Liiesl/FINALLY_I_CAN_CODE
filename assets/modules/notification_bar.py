@@ -85,38 +85,59 @@ class NotificationBar(QWidget):
 
     def animate_notification(self):
         """Animate the transition to the next notification."""
-        # Create animations for sliding out and sliding in
-        self.slide_out_animation = QPropertyAnimation(self.label_emoji, b"geometry")
-        self.slide_in_animation = QPropertyAnimation(self.label_emoji, b"geometry")
+        # Create animations for sliding out and sliding in (for both emoji and text)
+        self.slide_out_animation_emoji = QPropertyAnimation(self.label_emoji, b"geometry")
+        self.slide_in_animation_emoji = QPropertyAnimation(self.label_emoji, b"geometry")
+        self.slide_out_animation_text = QPropertyAnimation(self.label_text, b"geometry")
+        self.slide_in_animation_text = QPropertyAnimation(self.label_text, b"geometry")
 
-        # Get the current geometry of the emoji label
+        # Get the current geometry of the emoji and text labels
         emoji_geometry = self.label_emoji.geometry()
+        text_geometry = self.label_text.geometry()
 
-        # Slide out: Move the emoji label upward
-        self.slide_out_animation.setDuration(self.animation_duration)
-        self.slide_out_animation.setStartValue(emoji_geometry)
-        self.slide_out_animation.setEndValue(
+        # Slide out: Move the emoji and text labels upward
+        self.slide_out_animation_emoji.setDuration(self.animation_duration)
+        self.slide_out_animation_emoji.setStartValue(emoji_geometry)
+        self.slide_out_animation_emoji.setEndValue(
             QRect(emoji_geometry.x(), emoji_geometry.y() - emoji_geometry.height(),
                   emoji_geometry.width(), emoji_geometry.height())
         )
-        self.slide_out_animation.setEasingCurve(QEasingCurve.OutQuad)
+        self.slide_out_animation_emoji.setEasingCurve(QEasingCurve.OutQuad)
+
+        self.slide_out_animation_text.setDuration(self.animation_duration)
+        self.slide_out_animation_text.setStartValue(text_geometry)
+        self.slide_out_animation_text.setEndValue(
+            QRect(text_geometry.x(), text_geometry.y() - text_geometry.height(),
+                  text_geometry.width(), text_geometry.height())
+        )
+        self.slide_out_animation_text.setEasingCurve(QEasingCurve.OutQuad)
 
         # Update to the next notification
         self.current_index = (self.current_index + 1) % len(self.notifications)
         self.update_notification()
 
-        # Slide in: Move the emoji label back into view
-        self.slide_in_animation.setDuration(self.animation_duration)
-        self.slide_in_animation.setStartValue(
+        # Slide in: Move the emoji and text labels back into view
+        self.slide_in_animation_emoji.setDuration(self.animation_duration)
+        self.slide_in_animation_emoji.setStartValue(
             QRect(emoji_geometry.x(), emoji_geometry.y() + emoji_geometry.height(),
                   emoji_geometry.width(), emoji_geometry.height())
         )
-        self.slide_in_animation.setEndValue(emoji_geometry)
-        self.slide_in_animation.setEasingCurve(QEasingCurve.InQuad)
+        self.slide_in_animation_emoji.setEndValue(emoji_geometry)
+        self.slide_in_animation_emoji.setEasingCurve(QEasingCurve.InQuad)
+
+        self.slide_in_animation_text.setDuration(self.animation_duration)
+        self.slide_in_animation_text.setStartValue(
+            QRect(text_geometry.x(), text_geometry.y() + text_geometry.height(),
+                  text_geometry.width(), text_geometry.height())
+        )
+        self.slide_in_animation_text.setEndValue(text_geometry)
+        self.slide_in_animation_text.setEasingCurve(QEasingCurve.InQuad)
 
         # Connect animations and start
-        self.slide_out_animation.finished.connect(self.slide_in_animation.start)
-        self.slide_out_animation.start()
+        self.slide_out_animation_emoji.finished.connect(self.slide_in_animation_emoji.start)
+        self.slide_out_animation_text.finished.connect(self.slide_in_animation_text.start)
+        self.slide_out_animation_emoji.start()
+        self.slide_out_animation_text.start()
 
     def next_notification(self):
         """Move to the next notification."""
