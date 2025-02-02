@@ -60,8 +60,12 @@ class NotificationBar(QWidget):
         }}
         """)
 
-        # Initialize with the first notification
-        self.update_notification()
+        # Timer for automatic notifications
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.next_notification)
+        self.start_timer()
+        
+        self.update_notification()  # Initialize with the first notification
 
     def update_notification(self):
         """Update the notification bar with the current notification."""
@@ -71,6 +75,14 @@ class NotificationBar(QWidget):
 
         # Trigger slide-up animation
         self.slide_up_animation()
+
+    def start_timer(self):
+        """Start the timer to cycle through notifications."""
+        self.timer.start(10000)  # Change notification every 10 seconds
+        
+    def stop_timer(self):
+        """Stop the timer."""
+        self.timer.stop()
 
     def slide_up_animation(self):
         """Perform a slide-up animation for the notification bar."""
@@ -96,6 +108,7 @@ class NotificationBar(QWidget):
         """Move to the next notification."""
         self.current_index = (self.current_index + 1) % len(self.notifications)
         self.update_notification()
+        self.slide_up_animation()
 
     def previous_notification(self):
         """Move to the previous notification."""
