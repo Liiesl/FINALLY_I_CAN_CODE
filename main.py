@@ -20,6 +20,8 @@ class MainWindow(QMainWindow):
         self.setMouseTracking(True)
         
         self.init_ui()
+        
+        self.experimental_tools_enabled = False
 
     def init_ui(self):
         self.setWindowTitle("SRT Editor")
@@ -43,6 +45,7 @@ class MainWindow(QMainWindow):
 
         self.config = Config(source="MainWindow")
         self.main_menu_active = True
+        self.experimental_tools_enabled = self.config.get_experimental_tools_enabled()
 
         self.custom_window_bar = CustomWindowBar(self, self.app)
         self.layout.addWidget(self.custom_window_bar)
@@ -163,9 +166,9 @@ class MainWindow(QMainWindow):
         # Get the actual description from the tuple if needed
         if isinstance(tool_description, tuple):
             tool_description = tool_description[0]
-
+        
+        is_experimental = "experimental" in categories
         button = QPushButton()
-
         button.setFixedSize(300, 200)
         button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
 
@@ -219,6 +222,7 @@ class MainWindow(QMainWindow):
         button_layout.addWidget(description_label)
 
         button.clicked.connect(lambda: self.tool_selected(tool_name))
+        button.setVisible(self.experimental_tools_enabled or not is_experimental)
         return button
 
     def main_menu(self, layout=None):
@@ -311,7 +315,7 @@ class MainWindow(QMainWindow):
                 ("Merge SRT Files", "Combine multiple SRT files into one.", ["merge"]),
                 ("Subtitle Converter", "Convert subtitles between different formats.", ["conversion"]),
                 ("Subtitle Shifter", "Shift subtitles by milliseconds.", ["timing"]),
-                ("Multilingual Merge", "Merge subtitles in different languages with colors.", ["merge", "translation"]),
+                ("Multilingual Merge", "Merge subtitles in different languages with colors.", ["merge", "translation", "experimental"]),
                 ("Coming Soon", "More tools will be added in the future.", ["other"])
             ]
             tools_dict = {name: (desc, categories) for name, desc, categories in tools}
@@ -615,6 +619,11 @@ class MainWindow(QMainWindow):
                 self.on_tag_deselected()
             self.filter_tools(self.search_field.text())
 
+    def toggle_experimental_tools(self, enabled):
+        """Toggle the visibility of experimental tools."""
+        self.experimental_tools_enabled = enabled
+        self.filter_tools(self.search_field.text())
+
     def filter_tools(self, search_text):
         search_text = search_text.lower()
         
@@ -629,10 +638,12 @@ class MainWindow(QMainWindow):
             desc = tool[1].lower()
             categories = set(tool[2])
 
+            is_experimental = "experimental" in categories
+
             text_match = search_text in name or search_text in desc
             category_match = not self.active_categories or bool(categories & self.active_categories)
-
-            visible = text_match and category_match
+            visible = text_match and category_match and (self.experimental_tools_enabled or not is_experimental)
+            
             button.setVisible(visible)
 
 if __name__ == "__main__":
