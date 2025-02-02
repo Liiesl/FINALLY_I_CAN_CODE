@@ -9,8 +9,8 @@ class NotificationBar(QWidget):
         
         # Main layout
         self.layout = QHBoxLayout(self)
-        self.layout.setContentsMargins(10, 5, 10, 5)
-        self.layout.setSpacing(10)
+        self.layout.setContentsMargins(10, 5, 10, 5)  # Padding inside the rectangle
+        self.layout.setSpacing(10)  # Spacing between elements
         
         # Notifications list
         self.current_index = 0
@@ -45,8 +45,14 @@ class NotificationBar(QWidget):
         self.right_arrow.clicked.connect(self.next_notification)
         self.layout.addWidget(self.right_arrow)
 
-        # Set background color of the widget to white
-        self.setStyleSheet("background-color: white; border-radius: 5px;")
+        # Set background color of the entire widget to white with rounded corners
+        self.setStyleSheet("""
+            NotificationBar {
+                background-color: white;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+            }
+        """)
 
         # Initialize with the first notification
         self.update_notification()
