@@ -57,3 +57,18 @@ class Config:
     def set_theme(self, theme):
         self.data["theme"] = theme
         self.save()
+    # New methods for tool_usage
+    def get_tool_usage(self):
+        return self.data.get("tool_usage", {})
+    
+    def set_tool_usage(self, tool_usage):
+        self.data["tool_usage"] = tool_usage
+        self.save()
+    
+    # New methods for recent_tools
+    def get_recent_tools(self):
+        return self.data.get("recent_tools", [])
+    
+    def set_recent_tools(self, recent_tools):
+        self.data["recent_tools"] = recent_tools
+        self.save()
