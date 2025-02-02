@@ -37,8 +37,6 @@ class MainWindow(QMainWindow):
 
         self.apply_theme()
 
-        self.notification_bar = NotificationBar(self)
-
         self.central_widget = QWidget()
         self.layout = QVBoxLayout(self.central_widget)
         self.setCentralWidget(self.central_widget)
@@ -62,6 +60,8 @@ class MainWindow(QMainWindow):
         self.main_content_layout = QVBoxLayout(self.main_content)
         self.main_content.setLayout(self.main_content_layout)
 
+        self.notification_bar = NotificationBar(self)
+        
         self.top_bar = QHBoxLayout()
         self.top_bar_added = False
         self.menu_button = None
