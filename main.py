@@ -21,8 +21,6 @@ class MainWindow(QMainWindow):
         
         self.init_ui()
         
-        self.experimental_tools_enabled = False
-
     def init_ui(self):
         self.setWindowTitle("SRT Editor")
         self.setGeometry(100, 100, 1200, 800)
@@ -46,6 +44,7 @@ class MainWindow(QMainWindow):
         self.config = Config(source="MainWindow")
         self.main_menu_active = True
         self.experimental_tools_enabled = self.config.get_experimental_tools_enabled()
+        self.experimental_tools_enabled = False
 
         self.custom_window_bar = CustomWindowBar(self, self.app)
         self.layout.addWidget(self.custom_window_bar)
