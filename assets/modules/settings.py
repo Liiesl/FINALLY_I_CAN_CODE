@@ -222,7 +222,7 @@ class Settings(QWidget):
 
         if directory:
             # Path to the original config.json
-            original_config_path = os.path.join(os.path.dirname(__file__), "assets", "modules", "config.json")
+            original_config_path = os.path.join(os.path.dirname(__file__), "config.json")
             
             # Destination path in the selected directory
             destination_path = os.path.join(directory, "config.json")
