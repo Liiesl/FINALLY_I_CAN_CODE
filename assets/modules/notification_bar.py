@@ -1,4 +1,3 @@
-# assets/modules/notification_bar.py
 from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel, QPushButton
 from PyQt5.QtCore import Qt, QTimer, QPropertyAnimation, QRect, QEasingCurve
 from PyQt5.QtGui import QPalette
@@ -94,29 +93,21 @@ class NotificationBar(QWidget):
         # Get the current geometry of the emoji and text labels
         emoji_geometry = self.label_emoji.geometry()
         text_geometry = self.label_text.geometry()
-        
-        # Ensure the labels fit within the NotificationBar's width
-        emoji_width = min(emoji_geometry.width(), self.width() // 4)  # Limit emoji width
-        text_width = min(text_geometry.width(), self.width() * 3 // 4)  # Limit text width
-        
-        # Update the geometry values
-        emoji_geometry.setWidth(emoji_width)
-        text_geometry.setWidth(text_width)
 
         # Slide out: Move the emoji and text labels upward
         self.slide_out_animation_emoji.setDuration(self.animation_duration)
         self.slide_out_animation_emoji.setStartValue(emoji_geometry)
         self.slide_out_animation_emoji.setEndValue(
-            QRect(emoji_geometry.x(), max(0, emoji_geometry.y() - emoji_geometry.height()),
+            QRect(emoji_geometry.x(), emoji_geometry.y() - emoji_geometry.height(),
                   emoji_geometry.width(), emoji_geometry.height())
         )
         self.slide_out_animation_emoji.setEasingCurve(QEasingCurve.OutQuad)
 
         self.slide_out_animation_text.setDuration(self.animation_duration)
         self.slide_out_animation_text.setStartValue(text_geometry)
-        self.slide_out_animation_emoji.setEndValue(
-            QRect(emoji_geometry.x(), max(0, emoji_geometry.y() - emoji_geometry.height()),
-                  emoji_geometry.width(), emoji_geometry.height())
+        self.slide_out_animation_text.setEndValue(
+            QRect(text_geometry.x(), text_geometry.y() - text_geometry.height(),
+                  text_geometry.width(), text_geometry.height())
         )
         self.slide_out_animation_text.setEasingCurve(QEasingCurve.OutQuad)
 
@@ -126,8 +117,8 @@ class NotificationBar(QWidget):
 
         # Slide in: Move the emoji and text labels back into view
         self.slide_in_animation_emoji.setDuration(self.animation_duration)
-        self.slide_in_animation_text.setStartValue(
-            QRect(emoji_geometry.x(), min(self.height(), emoji_geometry.y() + emoji_geometry.height()),
+        self.slide_in_animation_emoji.setStartValue(
+            QRect(emoji_geometry.x(), emoji_geometry.y() + emoji_geometry.height(),
                   emoji_geometry.width(), emoji_geometry.height())
         )
         self.slide_in_animation_emoji.setEndValue(emoji_geometry)
@@ -135,7 +126,7 @@ class NotificationBar(QWidget):
 
         self.slide_in_animation_text.setDuration(self.animation_duration)
         self.slide_in_animation_text.setStartValue(
-            QRect(text_geometry.x(), min(self.height(), text_geometry.y() + text_geometry.height()),
+            QRect(text_geometry.x(), text_geometry.y() + text_geometry.height(),
                   text_geometry.width(), text_geometry.height())
         )
         self.slide_in_animation_text.setEndValue(text_geometry)
