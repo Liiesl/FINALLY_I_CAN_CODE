@@ -17,7 +17,8 @@ class MainWindow(QMainWindow):
         self.app = app
         self.tab_contents = QStackedWidget()
         self.setMouseTracking(True)
-
+        self.resizing = False  # Add a flag to track resizing
+        
         self.init_ui()
 
     def init_ui(self):
@@ -149,6 +150,11 @@ class MainWindow(QMainWindow):
         self.main_menu(new_main_content_layout)
 
     def resizeEvent(self, event):
+        if self.resizing:  # If already resizing, skip further processing
+            return
+        self.resizing = True  # Set the flag to indicate resizing is in progress
+
+        super().resizeEvent(event)  # Call the base class resize event
         # Dynamically adjust the width of the search field
         if self.menu_button and self.search_field:
             menu_button_width = self.menu_button.width()  # Width of the menu button
