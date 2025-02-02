@@ -626,7 +626,6 @@ class MainWindow(QMainWindow):
     def toggle_experimental_tools(self, enabled):
         """Toggle the visibility of experimental tools."""
         self.experimental_tools_enabled = enabled
-        self.filter_tools(self.search_field.text())
 
     def filter_tools(self, search_text):
         search_text = search_text.lower()
