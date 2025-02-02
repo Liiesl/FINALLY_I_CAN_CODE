@@ -114,7 +114,7 @@ class Settings(QWidget):
         export_load_layout = QHBoxLayout()
 
         # Export Config Button
-        export_config_button = QPushButton("Export Config")
+        export_config_button = QPushButton("Export Settings")
         export_config_button.setStyleSheet(f"""
         QPushButton {{
             border: 2px solid {highlight_color};
