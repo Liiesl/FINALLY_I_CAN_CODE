@@ -93,7 +93,7 @@ class HelpWindow(QWidget):
             item = QListWidgetItem(title)
             item.setData(Qt.UserRole, title)  # Store the header title for later use
             # Set font size based on header level
-            font = QFont("Arial", 34 - (level * 2))  # Adjust font size based on level
+            font = QFont("Arial", 26 - (level * 6))  # Adjust font size based on level
             item.setFont(font)
             
             self.section_list.addItem(item)
