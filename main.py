@@ -35,13 +35,6 @@ class MainWindow(QMainWindow):
         self.active_categories = set()
         self.category_buttons = {}
 
-        self.tool_usage = {
-            "Subtitle Converter": 5,
-            "Subtitle Shifter": 3,
-            "Merge SRT Files": 2
-        }
-        self.recent_tools = ["Subtitle Converter", "Merge SRT Files", "Subtitle Shifter"]
-
         self.apply_theme()
 
         self.central_widget = QWidget()
@@ -49,6 +42,8 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.central_widget)
 
         self.config = Config(source="MainWindow")
+        self.tool_usage = self.config.get_tool_usage()
+        self.recent_tools = self.config.get_recent_tools()
         self.main_menu_active = True
 
         self.custom_window_bar = CustomWindowBar(self, self.app)
