@@ -92,6 +92,10 @@ class HelpWindow(QWidget):
         for level, title in self.headers:
             item = QListWidgetItem(title)
             item.setData(Qt.UserRole, title)  # Store the header title for later use
+            # Set font size based on header level
+            font = QFont("Arial", 34 - (level * 2))  # Adjust font size based on level
+            item.setFont(font)
+            
             self.section_list.addItem(item)
         self.section_list.itemClicked.connect(self.scroll_to_section)
         left_layout.addWidget(self.section_list)
