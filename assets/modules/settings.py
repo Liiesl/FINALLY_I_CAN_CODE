@@ -237,15 +237,17 @@ class Settings(QWidget):
             else:
                 self.config.set_theme(self.initial_theme)
                 self.theme_toggle.set_state(self.initial_theme)  # Update toggle position
-                self.experimental_tools_toggled.emit(current_state)  # Emit signal to notify main application
                 self.config.save()
                 # If the user chooses not to relaunch, just refresh the settings
                 if self.main_window is not None:
+                    self.experimental_tools_toggled.emit(current_state)  # Emit signal to notify main application
                     self.main_window.refresh_settings()
         else:
             # If the theme hasn't changed, just refresh the settings
             if self.main_window is not None:
+                self.experimental_tools_toggled.emit(current_state)  # Emit signal to notify main application
                 self.main_window.refresh_settings()
+                
 
     def relaunch_app(self):
         """Relaunch the application."""
