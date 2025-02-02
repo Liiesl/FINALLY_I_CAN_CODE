@@ -466,6 +466,9 @@ class MainWindow(QMainWindow):
         if len(self.recent_tools) > 3:
             self.recent_tools = self.recent_tools[:3]
 
+        self.config.set_tool_usage(self.tool_usage)
+        self.config.set_recent_tools(self.recent_tools)
+
         # Get the current splitter for the active tab
         current_splitter = self.tab_contents.currentWidget()
         if current_splitter is not None:
