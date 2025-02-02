@@ -3,5 +3,6 @@
     "text_size": "default",
     "theme": "dark",
     "recent_tools": [],
-    "tool_usage": {}
+    "tool_usage": {},
+    "experimental_tools_enabled": true
 }
