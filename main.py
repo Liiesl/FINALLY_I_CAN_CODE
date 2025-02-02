@@ -359,7 +359,6 @@ class MainWindow(QMainWindow):
                 if widget is not None:
                     widget.setParent(None)
 
-
             # Add the top bar with the menu button
             top_bar_widget = QWidget()
             self.top_bar = QHBoxLayout(top_bar_widget)
@@ -622,10 +621,10 @@ class MainWindow(QMainWindow):
         self.main_menu_active = False
 
         # Clear the existing layout
-        while layout.count():
-            child = layout.takeAt(0)
-            if child.widget():
-                child.widget().deleteLater()
+        for i in reversed(range(main_content_layout.count())):
+            widget = main_content_layout.itemAt(i).widget()
+            if widget is not None:
+                widget.setParent(None)
 
         # Add the tool widget to the layout
         layout.addWidget(tool_widget)
