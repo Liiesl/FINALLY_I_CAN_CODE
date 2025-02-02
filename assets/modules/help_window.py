@@ -80,7 +80,13 @@ class HelpWindow(QWidget):
         left_panel = QWidget()
         left_layout = QVBoxLayout()
         left_panel.setLayout(left_layout)
-    
+
+        # Add a collapsible button with an arrow icon
+        self.toggle_button = QPushButton(qta.icon('fa5s.angle-left'), "")
+        self.toggle_button.setFixedSize(20, 20)
+        self.toggle_button.clicked.connect(self.toggle_navigation)
+        left_layout.addWidget(self.toggle_button, alignment=Qt.AlignRight)
+        
         self.section_list = QTextEdit()
         self.section_list.setFont(QFont("Arial", 14))  # Increase text size
         self.section_list.setReadOnly(True)  # Make it non-editable
