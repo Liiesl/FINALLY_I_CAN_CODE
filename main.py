@@ -251,6 +251,7 @@ class MainWindow(QMainWindow):
 
             self.search_field = QLineEdit()
             self.search_field.setPlaceholderText("Search tools...")
+            self.search_field.setFixedWidth(700)
             
             palette = self.app.palette()
             text_color = palette.color(QPalette.Text).name()
