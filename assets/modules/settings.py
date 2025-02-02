@@ -6,6 +6,7 @@ from assets.buttons.toggle_switch import ToggleSwitch  # Import the ToggleSwitch
 from assets.modules.custom_window_bar import CustomWindowBar
 import os
 import shutil
+import json
 
 class Settings(QWidget):
     settings_saved = pyqtSignal()  # Define a signal for settings saved
@@ -129,6 +130,26 @@ class Settings(QWidget):
         export_config_button.clicked.connect(self.export_config)
         layout.addWidget(export_config_button)
 
+        # Load Settings Button
+        load_settings_button = QPushButton("Load Settings")
+        load_settings_button.setStyleSheet(f"""
+        QPushButton {{
+            border: 2px solid {highlight_color};
+            color: {button_text_color};
+            border-radius: 10px;
+            padding: 10px;
+            min-height: 40px;
+            background-color: {button_color};
+            text-align: center;
+        }}
+        QPushButton:hover {{
+            border-color: {hover_color};
+            background-color: {hover_color};
+        }}
+        """)
+        load_settings_button.clicked.connect(self.load_settings)
+        layout.addWidget(load_settings_button)
+
         self.setLayout(layout)
         self.setStyleSheet(f"background-color: {background_color};")
 
@@ -222,7 +243,7 @@ class Settings(QWidget):
 
         if directory:
             # Path to the original config.json
-            original_config_path = os.path.join(os.path.dirname(__file__), "config.json")
+            original_config_path = os.path.join(os.path.dirname(__file__), "assets", "modules", "config.json")
             
             # Destination path in the selected directory
             destination_path = os.path.join(directory, "config.json")
@@ -233,3 +254,39 @@ class Settings(QWidget):
                 QMessageBox.information(self, "Export Successful", f"Config file exported successfully to:\n{destination_path}")
             except Exception as e:
                 QMessageBox.critical(self, "Export Failed", f"Failed to export config file:\n{str(e)}")
+
+    def load_settings(self):
+        """Load settings from a user-selected config.json file."""
+        options = QFileDialog.Options()
+        file_path, _ = QFileDialog.getOpenFileName(self, "Select Config File", "", "JSON Files (*.json);;All Files (*)", options=options)
+
+        if file_path:
+            try:
+                # Read and validate the selected config.json file
+                with open(file_path, "r") as file:
+                    new_config_data = json.load(file)
+
+                # Validate the structure of the loaded config
+                required_keys = {"safe_area_size", "text_size", "theme"}
+                if not required_keys.issubset(new_config_data.keys()):
+                    raise ValueError("Invalid config file: Missing required keys.")
+
+                # Replace the current config.json with the new data
+                current_config_path = os.path.join(os.path.dirname(__file__), "assets", "modules", "config.json")
+                with open(current_config_path, "w") as file:
+                    json.dump(new_config_data, file, indent=4)
+
+                # Reload the settings in the application
+                self.config.load()
+                self.refresh_ui_from_config()
+
+                QMessageBox.information(self, "Load Successful", "Settings loaded successfully.")
+            except Exception as e:
+                QMessageBox.critical(self, "Load Failed", f"Failed to load settings:\n{str(e)}")
+
+    def refresh_ui_from_config(self):
+        """Refresh the UI elements based on the current config."""
+        self.safe_area_slider.setValue(self.config.get_safe_area_size())
+        self.safe_area_value_label.setText(f"{self.config.get_safe_area_size()} px")
+        self.text_size_dropdown.setCurrentText(self.config.get_text_size())
+        self.theme_toggle.set_state(self.config.get_theme())
