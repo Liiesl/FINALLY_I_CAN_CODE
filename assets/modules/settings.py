@@ -47,7 +47,6 @@ class Settings(QWidget):
             background-color: {hover_color};
         }}
         """)
-        back_button.clicked.connect(self.main_window.filter_tools(self.search_field.text()))
         back_button.clicked.connect(self.back_callback)
         layout.addWidget(back_button)
 
