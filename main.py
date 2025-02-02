@@ -362,7 +362,6 @@ class MainWindow(QMainWindow):
             scroll_area.setWidget(scroll_content)
             scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
             scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-
             self.scroll_content = scroll_content
             self.scroll_area = scroll_area
 
@@ -370,41 +369,48 @@ class MainWindow(QMainWindow):
             most_used_label.setFont(self.inter_extra_bold_font)
             most_used_label.setStyleSheet("color: palette(WindowText);")
             main_scroll_layout.addWidget(most_used_label)
-
             self.most_used_label = most_used_label
 
             most_used_widget = QWidget()
             most_used_layout = QHBoxLayout(most_used_widget)
             most_used_layout.setContentsMargins(0, 0, 0, 0)
-
             self.most_used_widget = most_used_widget
 
             self.tool_usage = self.config.get_tool_usage()
-            for tool_name in sorted(self.tool_usage, key=lambda x: -self.tool_usage[x])[:3]:
-                btn = self.create_tool_button(tool_name, tools_dict.get(tool_name, ("Popular tool", []))[0], tools_dict.get(tool_name, ("Popular tool", []))[1])
-                most_used_layout.addWidget(btn)
-            main_scroll_layout.addWidget(most_used_widget)
+            has_tool_usage = any(self.tool_usage.values())
+            
+            if has_tool_usage:
+                for tool_name in sorted(self.tool_usage, key=lambda x: -self.tool_usage[x])[:3]:
+                    btn = self.create_tool_button(tool_name, tools_dict.get(tool_name, ("Popular tool", []))[0], tools_dict.get(tool_name, ("Popular tool", []))[1])
+                    most_used_layout.addWidget(btn)
+                main_scroll_layout.addWidget(most_used_widget)
+            else:
+                most_used_label.hide()
+                most_used_widget.hide()
 
             # Add Recent section
             recent_label = QLabel("Recent Tools")
             recent_label.setFont(self.inter_extra_bold_font)
             recent_label.setStyleSheet("color: palette(WindowText);")
             main_scroll_layout.addWidget(recent_label)
-
             self.recent_label = recent_label
 
             recent_widget = QWidget()
             recent_layout = QHBoxLayout(recent_widget)
             recent_layout.setContentsMargins(0, 0, 0, 0)
-
             self.recent_widget = recent_widget
 
             self.recent_tools = self.config.get_recent_tools()
-
-            for tool_name in self.recent_tools[:3]:
-                btn = self.create_tool_button(tool_name, tools_dict.get(tool_name, ("Recently used tool", []))[0], tools_dict.get(tool_name, ("Recently used tool", []))[1])               
-                recent_layout.addWidget(btn)
-            main_scroll_layout.addWidget(recent_widget)
+            has_recent_tools = len(self.recent_tools) > 0  # Check if there are any recent tools
+            
+            if has_recent_tools:
+                for tool_name in self.recent_tools[:3]:
+                    btn = self.create_tool_button(tool_name, tools_dict.get(tool_name, ("Recently used tool", []))[0], tools_dict.get(tool_name, ("Recently used tool", []))[1])               
+                    recent_layout.addWidget(btn)
+                main_scroll_layout.addWidget(recent_widget)
+            else:
+                recent_label.hide()
+                recent_widget.hide()
 
             all_tools_label = QLabel("All Tools")
             all_tools_label.setFont(self.inter_extra_bold_font)
@@ -432,7 +438,6 @@ class MainWindow(QMainWindow):
             main_scroll_layout.addWidget(all_tools_widget)
 
             scroll_area.setWidget(scroll_content)
-
             main_h_layout.addWidget(self.scroll_area, stretch=4)
             main_content_layout.addLayout(main_h_layout)
 
