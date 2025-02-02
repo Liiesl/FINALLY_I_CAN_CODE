@@ -5,8 +5,6 @@ import markdown
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QListWidget, QListWidgetItem
 from PyQt5.QtCore import Qt
 from PyQt5.QtWebEngineWidgets import QWebEngineView
-from PyQt5.QtWidgets import QApplication  # Import QApplication to access the global app instance
-from assets.modules.config import Config
 
 def resource_path(relative_path):
     """Get the absolute path to a resource. Works for dev and PyInstaller."""
@@ -25,16 +23,8 @@ class HelpWindow(QWidget):
         self.markdown_file_path = resource_path("assets/modules/help.md")
         self.markdown_content = self.read_markdown_file()
         self.headers = self.extract_headers(self.markdown_content)
-
-        # Get configuration for text size and theme
-        self.config = Config(source="MainWindow")
-        self.text_size = self.get_text_size()
-        self.palette = self.get_palette()
-
-        # Convert markdown to styled HTML
         self.html_content = self.convert_to_html_with_styling()
 
-        # Set up the UI
         self.setup_ui()
 
     def read_markdown_file(self):
@@ -56,101 +46,19 @@ class HelpWindow(QWidget):
                 headers.append((level, title))
         return headers
 
-    def get_text_size(self):
-        """Get the text size from the configuration."""
-        text_size = self.config.get_text_size()
-        return {
-            "small": 14,
-            "default": 18,
-            "large": 22,
-            "huge": 26
-        }.get(text_size, 18)
-
-    def get_palette(self):
-        """Get the current palette colors."""
-        # Use QApplication.instance() to access the global app instance
-        app = QApplication.instance()
-        palette = app.palette() if app else None
-        if not palette:
-            raise RuntimeError("Could not access the application palette.")
-
-        return {
-            "background_color": palette.color(palette.Window).name(),
-            "text_color": palette.color(palette.WindowText).name(),
-            "link_color": "#0366d6",  # GitHub-like link color
-            "code_background_color": palette.color(palette.Base).name(),
-        }
-
     def convert_to_html_with_styling(self):
-        """Convert markdown to styled HTML using custom CSS."""
+        """Convert markdown to styled HTML using a custom CSS file."""
+        # Define markdown extensions for syntax highlighting and table of contents
         extensions = ['extra', 'codehilite', 'toc']
         html_content = markdown.markdown(self.markdown_content, extensions=extensions)
 
-        # Generate dynamic CSS based on palette and text size
-        css_content = f"""
-        body {{
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-            font-size: {self.text_size}px;
-            line-height: 1.6;
-            color: {self.palette['text_color']};
-            background-color: {self.palette['background_color']};
-            padding: 20px;
-        }}
-        h1, h2, h3, h4, h5, h6 {{
-            margin-top: 24px;
-            margin-bottom: 16px;
-            font-weight: 600;
-            line-height: 1.25;
-            border-bottom: 1px solid {self.palette['text_color']};
-            padding-bottom: 0.3em;
-        }}
-        p {{
-            margin-top: 0;
-            margin-bottom: 16px;
-        }}
-        a {{
-            color: {self.palette['link_color']};
-            text-decoration: none;
-        }}
-        a:hover {{
-            text-decoration: underline;
-        }}
-        pre {{
-            background-color: {self.palette['code_background_color']};
-            border-radius: 6px;
-            padding: 16px;
-            overflow-x: auto;
-        }}
-        code {{
-            font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
-            font-size: 85%;
-            background-color: rgba(27, 31, 35, 0.05);
-            padding: 0.2em 0.4em;
-            border-radius: 3px;
-        }}
-        table {{
-            display: block;
-            width: 100%;
-            overflow: auto;
-            border-spacing: 0;
-            border-collapse: collapse;
-            margin-top: 0;
-            margin-bottom: 16px;
-        }}
-        th {{
-            font-weight: 600;
-        }}
-        td, th {{
-            padding: 6px 13px;
-            border: 1px solid {self.palette['text_color']};
-        }}
-        blockquote {{
-            margin: 0;
-            padding: 0 1em;
-            color: {self.palette['text_color']};
-            border-left: 0.25em solid {self.palette['text_color']};
-        }}
-        """
+        # Load custom CSS for styling
+        css_path = resource_path("assets/modules/styles.css")
+        if os.path.exists(css_path):
+            with open(css_path, 'r', encoding='utf-8') as f:
+                css_content = f.read()
+        else:
+            css_content = ""  # Default to no CSS if the file is missing
 
         # Wrap the HTML content with the CSS
         styled_html = f"""
