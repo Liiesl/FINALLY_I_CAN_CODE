@@ -341,39 +341,132 @@ If you encounter any issues, try the following:
 
 ---
 
-## Keyboard Shortcuts
-
-Here are some useful keyboard shortcuts to enhance your workflow:
-
-- **Ctrl + F**: Focus on the search bar.
-- **Ctrl + T**: Open the most recently used tool.
-- **Ctrl + S**: Save your current work.
-- **Ctrl + Z**: Undo the last action.
-- **Ctrl + Y**: Redo the last action.
+Below is an expanded **FAQ** section, incorporating the most likely questions users might have based on the provided code and documentation. These additions aim to address potential user queries about functionality, navigation, customization, and troubleshooting.
 
 ---
 
 ## Frequently Asked Questions (FAQ)
 
 ### Q: How do I merge subtitles in different languages?
+A: Use the **Multilingual Merge** tool. Select the subtitle files for each language, assign unique colors for differentiation, and merge them into a single `.srt` file.  
+- **Steps**:  
+  1. Open the **Multilingual Merge** tool.  
+  2. Click **Select Subtitles** and choose multiple `.srt` files, each containing subtitles in a different language.  
+  3. Double-click on each file in the list to assign a color for that language using the color picker.  
+  4. Click **Export** to save the merged file with color-coded subtitles.
 
-A: Use the **Multilingual Merge** tool. Select the subtitle files for each language, choose colors for differentiation, and merge them into a single file.
+---
 
 ### Q: Can I convert subtitles to different formats?
+A: Yes, use the **Subtitle Converter** tool. This tool supports converting between various subtitle formats such as `.srt`, `.ass`, `.vtt`, `.sbv`, `.dfxp`, and more.  
+- **Steps**:  
+  1. Open the **Subtitle Converter** tool.  
+  2. Select the subtitle files you want to convert.  
+  3. Choose the target format from the dropdown menu.  
+  4. Click **Convert** and save the converted files to your desired location.
 
-A: Yes, use the **Subtitle Converter** tool. Select the input file, choose the desired output format, and convert.
+---
 
-### Q: Why are some tools grayed out?
+### Q: Why are some tools grayed out or unavailable?
+A: Some tools may be disabled if they require additional files or settings. For example:
+- **Merge SRT Files**: Requires at least two `.srt` files to be selected.  
+- **Multilingual Merge**: Requires multiple `.srt` files in different languages.  
+- **Coming Soon Tools**: These are placeholders for future features and are not yet functional.
 
-A: Some tools may be disabled if they require additional files or settings. Ensure you've uploaded the necessary files or configured the required settings.
+---
 
-### Q: How do I change the theme?
+### Q: How do I change the theme or text size?
+A: You can customize the theme and text size in the **Settings** menu:
+- **Change Theme**:  
+  1. Open the side panel by clicking the menu button (`☰`).  
+  2. Navigate to **Settings** > **Theme** and select your preferred theme (light or dark).  
+- **Adjust Text Size**:  
+  1. Go to **Settings** > **Text Size**.  
+  2. Choose from options like "Small," "Default," "Large," or "Huge."  
 
-A: Go to **Settings** > **Theme** and select your preferred theme (light or dark).
+The app will automatically apply your changes.
 
-### Q: What should I do if the app crashes?
+---
 
-A: Try restarting the app. If the issue persists, contact support with details about the crash.
+### Q: What should I do if the app crashes or becomes unresponsive?
+A: Try the following steps:
+1. Close and relaunch the app.  
+2. Ensure your system meets the minimum requirements for running the application.  
+3. Clear temporary files and restart your computer.  
+4. If the issue persists, report it via the GitHub repository or email support with details about the crash, including any error messages.
+
+---
+
+### Q: How do I search for specific tools?
+A: Use the search bar at the top of the main menu:
+- Type keywords related to the tool's name or description (e.g., "merge," "convert," "shift").  
+- The search results will dynamically filter the available tools.  
+- If no results appear, ensure you're entering relevant keywords or clear the search field and try again.
+
+---
+
+### Q: Why are my subtitles still out of sync after using the Subtitle Shifter?
+A: Ensure you're entering the correct timing adjustments:
+- **Whole Shift Mode**: Enter the number of milliseconds to shift all subtitles uniformly.  
+- **Partial Shift Mode**: Specify the start and end times in `hh:mm:ss,fff` format and the number of milliseconds to shift within that range.  
+If the issue persists, double-check the original subtitle file for inconsistencies or errors.
+
+---
+
+### Q: How do I access the side panel?
+A: The side panel provides quick access to additional features:
+- Click the menu button (`☰`) in the top-left corner to toggle the side panel.  
+- Alternatively, use the keyboard shortcut `Ctrl + M` (if implemented).  
+- The side panel can also be accessed via the **Custom Window Bar** or **Notification Bar**.
+
+---
+
+### Q: What are the most used tools, and how are they determined?
+A: The **Most Used Tools** section displays tools you frequently use, based on usage statistics:
+- The app tracks how often you use each tool and displays the top three most used tools in this section.  
+- If no usage data is available, this section will remain hidden.
+
+---
+
+### Q: How do I report bugs or suggest new features?
+A: As this project is maintained by a solo developer, you can report bugs or suggest features via the following channels:
+- **GitHub Repository**: Visit the [Subtl GitHub Page](https://github.com/yourusername/subtl) to open an issue or submit a pull request.  
+- **Email**: Send an email to **your.email@example.com** with details about the bug or feature request.  
+- **Discussions**: Join the conversation in the [GitHub Discussions](https://github.com/yourusername/subtl/discussions) section to share ideas and feedback.
+
+---
+
+### Q: How do I handle subtitles in unsupported formats?
+A: Use the **Subtitle Converter** tool to convert unsupported formats (e.g., `.ass`, `.vtt`) into `.srt` files before using other tools. Supported formats include `.srt`, `.ass`, `.sub`, `.vtt`, `.sbv`, `.dfxp`, `.stl`, `.mpl`, `.usf`, `.lrc`, `.rt`, `.ttml`, and `.cap`.
+
+---
+
+### Q: What happens if a tool fails to process a file?
+A: If a tool encounters an issue while processing a file:
+- An error message will be displayed, indicating the problematic file.  
+- Other files in the queue will continue to be processed.  
+- Check the file for formatting issues or inconsistencies and try again.
+
+---
+
+### Q: How do I view the changelog or check for updates?
+A: Access the changelog through the side panel:
+- Click the menu button (`☰`) to open the side panel.  
+- Select **Changelog** from the list to view recent updates and changes.  
+Alternatively, visit the official GitHub repository for the latest version history.
+
+---
+
+### Q: Can I customize the appearance of the app further?
+A: While the app currently supports light and dark themes, as well as text size adjustments, further customization options may be added in future updates. Stay tuned to the GitHub repository for announcements.
+
+---
+
+### Q: How do I contact the developer directly?
+A: As a solo developer, I appreciate direct feedback and inquiries. You can reach me via:
+- **GitHub**: Open an issue or discussion on the [Subtl GitHub Page](https://github.com/yourusername/subtl).  
+- **Email**: Send an email to **your.email@example.com** with your query.  
+- **Social Media**: Connect with me on platforms like Instagram (@suryaalingga) or YouTube (@Vfrix) for informal communication.
 
 ---
 
