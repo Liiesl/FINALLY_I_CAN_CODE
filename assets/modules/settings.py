@@ -367,10 +367,9 @@ class Settings(QWidget):
             self.config.load()
             self.refresh_ui_from_config()
 
-                        # Detect theme change and trigger relaunch logic
-            current_theme = self.config.get_theme()
+            # Detect theme change and trigger relaunch logic
             new_theme = new_config_data["theme"]
-            if current_theme != new_theme:
+            if self.initial_theme != new_theme:
                 msg_box = QMessageBox()
                 msg_box.setIcon(QMessageBox.Question)
                 msg_box.setText(
