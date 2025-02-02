@@ -285,7 +285,9 @@ class MainWindow(QMainWindow):
             self.top_bar.addWidget(self.search_field, alignment=Qt.AlignRight)
             main_content_layout.addWidget(top_bar_widget)
 
-            main_content_layout.addWidget(self.notification_bar)
+            # Add the NotificationBar below the top bar
+            if hasattr(self, 'notification_bar'):
+                main_content_layout.addWidget(self.notification_bar)
             
             if layout is None:
                 container_layout = QVBoxLayout()
