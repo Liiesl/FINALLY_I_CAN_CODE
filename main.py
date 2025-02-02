@@ -623,7 +623,7 @@ class MainWindow(QMainWindow):
                 self.on_tag_deselected()
             self.filter_tools(self.search_field.text())
 
-    def Update_toggle_experimental_tools(self, enabled):
+    def update_toggle_experimental_tools(self, enabled):
         """Toggle the visibility of experimental tools."""
         self.experimental_tools_enabled = enabled
 
