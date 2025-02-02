@@ -101,9 +101,9 @@ class SidePanel(QWidget):
             self.changelog_window.activateWindow()
 
     def open_help_window(self):
-        # Check if help window is already open
+        # Ensure the HelpWindow is created without a parent to make it a separate window
         if not hasattr(self, 'help_window') or not self.help_window.isVisible():
-            self.help_window = HelpWindow(self)  # Instantiate the HelpWindow
+            self.help_window = HelpWindow()  # No parent passed here
             self.help_window.show()
         else:
             self.help_window.raise_()
