@@ -143,11 +143,18 @@ class NotificationBar(QWidget):
         """Move to the next notification."""
         self.current_index = (self.current_index + 1) % len(self.notifications)
         self.animate_notification()
+        self.reset_timer()
 
     def previous_notification(self):
         """Move to the previous notification."""
         self.current_index = (self.current_index - 1) % len(self.notifications)
         self.animate_notification()
+        self.reset_timer()
+
+    def reset_timer(self):
+        """Stop and restart the timer."""
+        self.stop_timer()
+        self.start_timer()
 
     def add_notification(self, emoji, message):
         """Add a new notification to the list."""
