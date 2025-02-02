@@ -37,13 +37,11 @@ class NotificationBar(QWidget):
         # Emoji Label
         self.label_emoji = QLabel()
         self.label_emoji.setStyleSheet(f"font-size: 20px; color: {self.text_color};")
-        self.label_emoji.setMinimumWidth(30)
         self.layout.addWidget(self.label_emoji)
 
         # Text Label
         self.label_text = QLabel()
         self.label_text.setStyleSheet(f"color: {self.text_color}; padding: 5px;")
-        self.label_text.setMinimumWidth(200)
         self.layout.addWidget(self.label_text)
 
         # Right Arrow Button
