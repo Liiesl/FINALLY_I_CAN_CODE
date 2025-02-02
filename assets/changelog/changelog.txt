@@ -144,4 +144,5 @@ alpha 0.1.6.1
 -New Search featuree, you can search tools in searchbar
 -New notification bar, read news, notifications, tips, etc. on the notification bar.
 -Due to layout limitation, the safe area size settings will be deactivated temporarily
--
+-Add export settings in settings. now you can export settings to use it on later times.
+-Add load settings in settings. load your exported settings with this feature.
