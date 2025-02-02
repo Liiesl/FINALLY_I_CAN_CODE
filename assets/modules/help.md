@@ -341,10 +341,6 @@ If you encounter any issues, try the following:
 
 ---
 
-Below is an expanded **FAQ** section, incorporating the most likely questions users might have based on the provided code and documentation. These additions aim to address potential user queries about functionality, navigation, customization, and troubleshooting.
-
----
-
 ## Frequently Asked Questions (FAQ)
 
 ### Q: How do I merge subtitles in different languages?
