@@ -75,42 +75,37 @@ class HelpWindow(QWidget):
         main_splitter = QSplitter(Qt.Horizontal)
         self.setLayout(QVBoxLayout())
         self.layout().addWidget(main_splitter)
-
+    
         # Left panel: List of sections (headers) using QTextEdit for word wrapping
         left_panel = QWidget()
         left_layout = QVBoxLayout()
         left_panel.setLayout(left_layout)
-
-        # Add a collapsible button with an arrow icon
-        self.toggle_button = QPushButton(qta.icon('fa5s.angle-left'), "")
-        self.toggle_button.setFixedSize(20, 20)
-        self.toggle_button.clicked.connect(self.toggle_navigation)
-        left_layout.addWidget(self.toggle_button, alignment=Qt.AlignRight)
-
+    
         self.section_list = QTextEdit()
         self.section_list.setFont(QFont("Arial", 14))  # Increase text size
         self.section_list.setReadOnly(True)  # Make it non-editable
         self.section_list.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)  # Enable vertical scrolling
         self.section_list.setWordWrapMode(True)  # Enable word wrapping
-
+    
         # Populate the QTextEdit with headers
         for level, title in self.headers:
             indent = (level - 1) * 10  # Reduced indentation multiplier
             if level == 1:  # h1 headers should be aligned to the left
                 indent = 0
+            # Add spaces for indentation and ensure wrapped text aligns with the same indentation
             indented_title = f"{' ' * indent}{title}\n"
             self.section_list.append(indented_title)
-
+    
         left_layout.addWidget(self.section_list)
-
+    
         # Right panel: Markdown viewer using QWebEngineView
         self.markdown_viewer = QWebEngineView()
         self.markdown_viewer.setHtml(self.html_content)  # Display the styled HTML content
-
+    
         # Add widgets to the splitter
         main_splitter.addWidget(left_panel)
         main_splitter.addWidget(self.markdown_viewer)
-
+    
         # Set initial sizes for the splitter
         main_splitter.setSizes([200, 600])
 
