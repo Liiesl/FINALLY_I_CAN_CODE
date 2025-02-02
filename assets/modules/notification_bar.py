@@ -20,7 +20,25 @@ class NotificationBar(QWidget):
             ("💡", "Tip: You can merge multiple SRT files into one."),
             ("🎉", "New Feature: Try out the Multilingual Merge tool!"),
             ("⏰", "Reminder: You last used the Subtitle Shifter 2 days ago."),
-            ("📰", "News: Check out our latest blog post on subtitle editing!")
+            ("📰", "News: Check out our latest blog post on subtitle editing!"),
+            ("⏰", "Reminder: Use the Longer Appearance tool to extend subtitle durations for better readability."),
+            ("💡", "Tip: The Longer Appearance tool is perfect for viewers who need more time to read subtitles."),
+            ("🎉", "Pro Tip: Combine multiple subtitle files into one using the Merge SRT tool."),
+            ("📚", "Did you know? You can merge subtitles from different sources with the Merge SRT feature."),
+            ("🔄", "Convert any subtitle format to another using the Subtitle Converter tool."),
+            ("💡", "Handy Tip: Before using other tools, convert unsupported formats to .srt with the Subtitle Converter."),
+            ("🎬", "Sync your subtitles perfectly with the Subtitle Shifter tool."),
+            ("⏰", "Reminder: Shift subtitles partially or entirely to match your video's timing."),
+            ("📂", "Open multiple tools at once by adding new tabs in the app."),
+            ("💾", "Don’t forget to save your changes after editing subtitles!"),
+            ("📋", "Supported Formats: Subtl supports over 10 subtitle formats including .srt, .ass, and .vtt."),
+            ("🌐", "Convert uncommon formats like .dfxp or .stl to widely supported ones like .srt."),
+            ("🤝", "Contribute to Subtl! Check out our GitHub repository for contribution guidelines."),
+            ("🌟", "Like Subtl? Star us on GitHub and help spread the word!"),
+            ("📢", "Stay tuned for macOS and Linux installers coming soon!"),
+            ("📝", "Read our latest blog post about advanced subtitle editing techniques."),
+            ("🙏", "Special thanks to all contributors who helped make Subtl better."),
+            ("🛠", "Built with ❤️ by SubtlDevTeams. Happy editing!")
         ]
 
         # Animation duration (in milliseconds)
