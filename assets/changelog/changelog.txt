@@ -140,5 +140,6 @@ alpha 0.1.6.1
 -New interface for main page
 -New Tags feature, you can now filter the tools by tags
 -New Search featuree, you can search tools in searchbar
+-New notification bar, read news, notifications, tips, etc. on the notification bar.
 -Due to layout limitation, the safe area size settings will be deactivated temporarily
 -
