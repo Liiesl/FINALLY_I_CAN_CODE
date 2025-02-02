@@ -1,12 +1,11 @@
 /* General Body Styling */
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-    font-size: 16px;
+    font-size: 26px; /* Increased from 16px to 26px */
     line-height: 1.6;
     color: #24292e;
     background-color: #ffffff;
     padding: 20px;
-    margin: 0;
 }
 
 /* Headers */
@@ -15,48 +14,48 @@ h1, h2, h3, h4, h5, h6 {
     margin-bottom: 16px;
     font-weight: 600;
     line-height: 1.25;
-    color: #24292e;
 }
 
 h1 {
-    font-size: 2em;
+    font-size: 3em; /* Increased from 2em to 3em */
     border-bottom: 1px solid #eaecef;
     padding-bottom: 0.3em;
 }
 
 h2 {
-    font-size: 1.75em;
+    font-size: 2.5em; /* Increased from 1.5em to 2.5em */
     border-bottom: 1px solid #eaecef;
     padding-bottom: 0.3em;
 }
 
 h3 {
-    font-size: 1.5em;
+    font-size: 2.25em; /* Increased from 1.25em to 2.25em */
 }
 
 h4 {
-    font-size: 1.25em;
+    font-size: 2em; /* Increased from 1em to 2em */
 }
 
 h5 {
-    font-size: 1em;
+    font-size: 1.875em; /* Increased from 0.875em to 1.875em */
 }
 
 h6 {
-    font-size: 0.875em;
+    font-size: 1.75em; /* Adjusted for consistency */
 }
 
 /* Paragraphs */
 p {
     margin-top: 0;
     margin-bottom: 16px;
-    color: #586069;
+    font-size: 26px; /* Match body font size */
 }
 
 /* Links */
 a {
     color: #0366d6;
     text-decoration: none;
+    font-size: 26px; /* Match body font size */
 }
 
 a:hover {
@@ -69,23 +68,17 @@ pre {
     border-radius: 6px;
     padding: 16px;
     overflow-x: auto;
-    font-size: 14px;
+    font-size: 24px; /* Increased from 14px to 24px */
     line-height: 1.45;
     border: 1px solid #dfe2e5;
 }
 
 code {
     font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
-    font-size: 85%;
+    font-size: 24px; /* Increased from 85% to 24px */
     background-color: rgba(27, 31, 35, 0.05);
     padding: 0.2em 0.4em;
     border-radius: 3px;
-}
-
-pre > code {
-    background-color: transparent;
-    padding: 0;
-    border-radius: 0;
 }
 
 /* Inline Code */
@@ -94,6 +87,7 @@ p code {
     color: #e36209;
     padding: 0.2em 0.4em;
     border-radius: 3px;
+    font-size: 24px; /* Match code block font size */
 }
 
 /* Tables */
@@ -111,6 +105,7 @@ table {
 
 th {
     font-weight: 600;
+    font-size: 26px; /* Match body font size */
     background-color: #f6f8fa;
     border: 1px solid #dfe2e5;
 }
@@ -119,6 +114,7 @@ td, th {
     padding: 6px 13px;
     border: 1px solid #dfe2e5;
     text-align: left;
+    font-size: 26px; /* Match body font size */
 }
 
 /* Blockquotes */
@@ -129,6 +125,7 @@ blockquote {
     border-left: 0.25em solid #dfe2e5;
     background-color: #f6f8fa;
     border-radius: 3px;
+    font-size: 26px; /* Match body font size */
 }
 
 /* Lists */
@@ -136,6 +133,7 @@ ul, ol {
     margin-top: 0;
     margin-bottom: 16px;
     padding-left: 2em;
+    font-size: 26px; /* Match body font size */
 }
 
 li {
@@ -155,7 +153,7 @@ hr {
 button {
     display: inline-block;
     padding: 6px 12px;
-    font-size: 14px;
+    font-size: 24px; /* Increased from 14px to 24px */
     font-weight: 600;
     line-height: 20px;
     white-space: nowrap;
