@@ -10,7 +10,7 @@ class Config:
             "text_size": "small",  # Default text size
             "theme": "dark",       # Default theme
             "recent_tools": [],    # Default recent tools
-            "tool_usage": {}       # Default tool usage
+            "tool_usage": {},       # Default tool usage
             "experimental_tools_enabled": False  # New setting for experimental tools
         }
         self.source = source
