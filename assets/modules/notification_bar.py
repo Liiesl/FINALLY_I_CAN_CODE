@@ -73,9 +73,6 @@ class NotificationBar(QWidget):
         self.label_emoji.setText(emoji)
         self.label_text.setText(text)
 
-        # Trigger slide-up animation
-        self.slide_up_animation()
-
     def start_timer(self):
         """Start the timer to cycle through notifications."""
         self.timer.start(10000)  # Change notification every 10 seconds
@@ -83,26 +80,6 @@ class NotificationBar(QWidget):
     def stop_timer(self):
         """Stop the timer."""
         self.timer.stop()
-
-    def slide_up_animation(self):
-        """Perform a slide-up animation for the notification bar."""
-        # Create a property animation for the geometry of the widget
-        animation = QPropertyAnimation(self, b"geometry")
-        animation.setDuration(300)  # Duration of the animation in milliseconds
-
-        # Get the current geometry of the widget
-        current_geometry = self.geometry()
-
-        # Define the start and end positions for the animation
-        start_pos = QRect(current_geometry.x(), current_geometry.y(), current_geometry.width(), current_geometry.height())
-        end_pos = QRect(current_geometry.x(), current_geometry.y() - 20, current_geometry.width(), current_geometry.height())
-
-        # Set the animation keyframes
-        animation.setStartValue(start_pos)
-        animation.setEndValue(end_pos)
-
-        # Start the animation
-        animation.start()
 
     def next_notification(self):
         """Move to the next notification."""
