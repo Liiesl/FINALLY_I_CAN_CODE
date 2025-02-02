@@ -366,6 +366,41 @@ class Settings(QWidget):
             # Reload the settings in the application
             self.config.load()
             self.refresh_ui_from_config()
+
+                        # Detect theme change and trigger relaunch logic
+            current_theme = self.config.get_theme()
+            new_theme = new_config_data["theme"]
+            if current_theme != new_theme:
+                msg_box = QMessageBox()
+                msg_box.setIcon(QMessageBox.Question)
+                msg_box.setText(
+                    "The theme has been changed.\n\n"
+                    "You need to relaunch the application for the change to fully take effect,\n\n"
+                    "Do you want to relaunch the application?"
+                )
+                msg_box.setWindowTitle("Relaunch Application")
+                msg_box.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+                msg_box.setStyleSheet("""
+                    QMessageBox {
+                        color: black;
+                    }
+                    QMessageBox QLabel {
+                        color: black;
+                    }
+                    QMessageBox QPushButton {
+                        color: black;
+                    }
+                """)
+    
+                # Execute the message box and get the user's choice
+                choice = msg_box.exec_()
+                if choice == QMessageBox.Yes:
+                    self.relaunch_app()
+                else:
+                    # Revert to the original theme if the user chooses not to relaunch
+                    self.config.set_theme(current_theme)
+                    self.theme_toggle.set_state(current_theme)  # Update toggle position
+                    self.config.save()
     
             QMessageBox.information(self, "Load Successful", "Settings loaded successfully.")
     
