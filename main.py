@@ -359,7 +359,7 @@ class MainWindow(QMainWindow):
             for i in reversed(range(main_content_layout.count())):
                 widget = main_content_layout.itemAt(i).widget()
                 if widget and widget.objectName() == "top_bar_widget":
-                    widget.deleteLater()
+                    widget.setParent(None)
 
             # Add the top bar with the menu button
             top_bar_widget = QWidget()
