@@ -278,7 +278,7 @@ class Settings(QWidget):
                     raise ValueError("Invalid config file: Missing required keys.")
 
                 # Replace the current config.json with the new data
-                current_config_path = os.path.join(os.path.dirname(__file__), "assets", "modules", "config.json")
+                current_config_path = os.path.join(os.path.dirname(__file__), "config.json")
                 with open(current_config_path, "w") as file:
                     json.dump(new_config_data, file, indent=4)
 
