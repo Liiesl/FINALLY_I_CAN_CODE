@@ -623,8 +623,8 @@ class MainWindow(QMainWindow):
         self.main_menu_active = False
 
         # Clear the existing layout
-        for i in reversed(range(main_content_layout.count())):
-            widget = main_content_layout.itemAt(i).widget()
+        for i in reversed(range(self.main_content_layout.count())):
+            widget = self.main_content_layout.itemAt(i).widget()
             if widget is not None:
                 widget.setParent(None)
 
