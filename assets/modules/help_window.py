@@ -1,18 +1,30 @@
 import os
+import sys
 import re
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QListWidget, QTextEdit, QListWidgetItem
+import markdown
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QListWidget, QListWidgetItem
 from PyQt5.QtCore import Qt
-import markdown  # You may need to install the markdown package: pip install markdown
+from PyQt5.QtWebEngineWidgets import QWebEngineView
+
+def resource_path(relative_path):
+    """Get the absolute path to a resource. Works for dev and PyInstaller."""
+    if hasattr(sys, '_MEIPASS'):
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        return os.path.join(sys._MEIPASS, relative_path)
+    return os.path.join(os.path.abspath("."), relative_path)
 
 class HelpWindow(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Help")
         self.setGeometry(100, 100, 800, 600)  # Set the size of the window
-        self.markdown_file_path = os.path.join(os.path.dirname(__file__), "help.md")  # Path to the markdown file
+
+        # Load markdown and CSS files using resource_path
+        self.markdown_file_path = resource_path("assets/modules/help.md")
         self.markdown_content = self.read_markdown_file()
         self.headers = self.extract_headers(self.markdown_content)
-        self.html_content = self.convert_to_html_with_anchors()
+        self.html_content = self.convert_to_html_with_styling()
+
         self.setup_ui()
 
     def read_markdown_file(self):
@@ -34,11 +46,33 @@ class HelpWindow(QWidget):
                 headers.append((level, title))
         return headers
 
-    def convert_to_html_with_anchors(self):
-        """Convert markdown to HTML with anchors for headers."""
-        extensions = ['toc']  # Enable table of contents extension for automatic anchor generation
+    def convert_to_html_with_styling(self):
+        """Convert markdown to styled HTML using a custom CSS file."""
+        # Define markdown extensions for syntax highlighting and table of contents
+        extensions = ['extra', 'codehilite', 'toc']
         html_content = markdown.markdown(self.markdown_content, extensions=extensions)
-        return html_content
+
+        # Load custom CSS for styling
+        css_path = resource_path("assets/modules/styles.css")
+        if os.path.exists(css_path):
+            with open(css_path, 'r', encoding='utf-8') as f:
+                css_content = f.read()
+        else:
+            css_content = ""  # Default to no CSS if the file is missing
+
+        # Wrap the HTML content with the CSS
+        styled_html = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>{css_content}</style>
+        </head>
+        <body>
+            {html_content}
+        </body>
+        </html>
+        """
+        return styled_html
 
     def setup_ui(self):
         # Main layout
@@ -54,17 +88,16 @@ class HelpWindow(QWidget):
         self.section_list.itemClicked.connect(self.scroll_to_section)
         main_layout.addWidget(self.section_list, 1)  # 1/3 of the width
 
-        # Right panel: Markdown viewer
-        self.markdown_viewer = QTextEdit()
-        self.markdown_viewer.setReadOnly(True)
-        self.markdown_viewer.setHtml(self.html_content)  # Display the full markdown content
+        # Right panel: Markdown viewer using QWebEngineView
+        self.markdown_viewer = QWebEngineView()
+        self.markdown_viewer.setHtml(self.html_content)  # Display the styled HTML content
         main_layout.addWidget(self.markdown_viewer, 2)  # 2/3 of the width
 
     def scroll_to_section(self, item):
         """Scroll to the selected section in the markdown viewer."""
         selected_title = item.data(Qt.UserRole)
         anchor = self.generate_anchor(selected_title)
-        self.markdown_viewer.scrollToAnchor(anchor)
+        self.markdown_viewer.page().runJavaScript(f"document.getElementById('{anchor}').scrollIntoView();")
 
     def generate_anchor(self, title):
         """Generate an anchor name for a given header title."""
