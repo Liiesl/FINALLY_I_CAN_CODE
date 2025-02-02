@@ -359,50 +359,51 @@ class MainWindow(QMainWindow):
                 if widget is not None:
                     widget.setParent(None)
 
+
             # Add the top bar with the menu button
-            if not self.top_bar_added:
+            top_bar_widget = QWidget()
+            self.top_bar = QHBoxLayout(top_bar_widget)
+            self.top_bar.setContentsMargins(0, 0, 0, 0)
+            
+            self.menu_button = QPushButton()
+            menu_icon = qta.icon('fa.bars')
+            self.menu_button.setIcon(menu_icon)
+            self.menu_button.setFixedSize(30, 30)
+            self.menu_button.setStyleSheet("color: {button_text_color}; background-color: transparent; border: none; border-radius: 3px;")
+            self.menu_button.clicked.connect(self.toggle_side_panel)
 
-                # Add the top bar with the menu button
-                self.top_bar = QHBoxLayout()
-                self.menu_button = QPushButton()
-                menu_icon = qta.icon('fa.bars')
-                self.menu_button.setIcon(menu_icon)
-                self.menu_button.setFixedSize(30, 30)
-                self.menu_button.setStyleSheet("color: {button_text_color}; background-color: transparent; border: none; border-radius: 3px;")
-                self.menu_button.clicked.connect(self.toggle_side_panel)
-                self.top_bar.addWidget(self.menu_button, alignment=Qt.AlignLeft)
+            self.search_field = QLineEdit()
+            self.search_field.setPlaceholderText("Search tools...")
+            self.search_field.setFixedWidth(500)
+            
+            palette = self.app.palette()
+            text_color = palette.color(QPalette.Text).name()
+            bg_color = palette.color(QPalette.Base).name()
+            placeholder_color = palette.color(QPalette.PlaceholderText).name()
+            button_color = palette.color(QPalette.Button).name()
+            button_text_color = palette.color(QPalette.ButtonText).name()
 
-                self.search_field = QLineEdit()
-                self.search_field.setPlaceholderText("Search tools...")
-                self.search_field.setFixedWidth(500)
+            search_icon = qta.icon('fa5s.search', color=text_color)
+            self.search_field.addAction(search_icon, QLineEdit.LeadingPosition)
+            self.search_field.setStyleSheet(f"""
+                QLineEdit {{
+                    background-color: {button_color};
+                    color: {button_text_color};
+                    border: 2px solid {palette.color(QPalette.Highlight).name()};
+                    border-radius: 20px;
+                    padding: 5px 5px 5px 35px;
+                }}
+                QLineEdit::placeholder {{
+                    color: {palette.color(QPalette.PlaceholderText).name()};
+                }}
+            """)
 
-                palette = self.app.palette()
-                text_color = palette.color(QPalette.Text).name()
-                bg_color = palette.color(QPalette.Base).name()
-                placeholder_color = palette.color(QPalette.PlaceholderText).name()
-                button_color = palette.color(QPalette.Button).name()
-                button_text_color = palette.color(QPalette.ButtonText).name()
+            self.search_field.textChanged.connect(self.filter_tools)
 
-                search_icon = qta.icon('fa5s.search', color=text_color)
-                self.search_field.addAction(search_icon, QLineEdit.LeadingPosition)
-                self.search_field.setStyleSheet(f"""
-                    QLineEdit {{
-                        background-color: {button_color};
-                        color: {button_text_color};
-                        border: 2px solid {palette.color(QPalette.Highlight).name()};
-                        border-radius: 20px;
-                        padding: 5px 5px 5px 35px;
-                    }}
-                    QLineEdit::placeholder {{
-                        color: {palette.color(QPalette.PlaceholderText).name()};
-                    }}
-                """)
+            self.top_bar.addWidget(self.menu_button, alignment=Qt.AlignLeft)
+            self.top_bar.addWidget(self.search_field, alignment=Qt.AlignRight)
 
-                self.search_field.textChanged.connect(self.filter_tools)
-                self.top_bar.addWidget(self.search_field, alignment=Qt.AlignRight)
-
-                main_content_layout.addLayout(self.top_bar)
-                self.top_bar_added = True  # Mark the top bar as added
+            main_content_layout.addWidget(top_bar_widget)
 
             if layout is None:
                 container_layout = QVBoxLayout()
@@ -621,10 +622,10 @@ class MainWindow(QMainWindow):
         self.main_menu_active = False
 
         # Clear the existing layout
-        for i in reversed(range(layout.count())):
-            widget = layout.itemAt(i).widget()
-            if widget is not None:
-                widget.setParent(None)
+        while layout.count():
+            child = layout.takeAt(0)
+            if child.widget():
+                child.widget().deleteLater()
 
         # Add the tool widget to the layout
         layout.addWidget(tool_widget)
