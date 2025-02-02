@@ -585,6 +585,7 @@ class MainWindow(QMainWindow):
         print("refreshing the settings")
         self.apply_text_size()  # Update text size
         self.apply_theme()  # Update theme
+        self.update_toggle_experimental_tools(self.experimental_tools_enabled)
 
         self.custom_window_bar.current_palette()
         self.custom_window_bar.update_colors()
@@ -621,6 +622,10 @@ class MainWindow(QMainWindow):
             else:
                 self.on_tag_deselected()
             self.filter_tools(self.search_field.text())
+
+    def Update_toggle_experimental_tools(self, enabled):
+        """Toggle the visibility of experimental tools."""
+        self.experimental_tools_enabled = enabled
 
     def toggle_experimental_tools(self, enabled):
         """Toggle the visibility of experimental tools."""
