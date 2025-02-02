@@ -1,9 +1,8 @@
 # assets/modules/notification_bar.py
 from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel, QPushButton
-from PyQt5.QtCore import Qt, QTimer, QPropertyAnimation, QRect
+from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtGui import QPalette
 import qtawesome as qta  # Import QtAwesome for icons
-
 
 class NotificationBar(QWidget):
     def __init__(self, parent=None):
@@ -54,11 +53,11 @@ class NotificationBar(QWidget):
 
         # Set background color of the entire widget using the highlight color
         self.setStyleSheet(f"""
-        NotificationBar {{
-            background-color: {self.highlight_color};
-            border: 2px solid {self.text_color};  /* Add a visible border */
-            border-radius: 5px;
-        }}
+            NotificationBar {{
+                background-color: {self.highlight_color};
+                border: 2px solid {self.text_color};  /* Add a visible border */
+                border-radius: 5px;
+            }}
         """)
 
         # Initialize with the first notification
@@ -69,29 +68,6 @@ class NotificationBar(QWidget):
         emoji, text = self.notifications[self.current_index]
         self.label_emoji.setText(emoji)
         self.label_text.setText(text)
-
-        # Trigger slide-up animation
-        self.slide_up_animation()
-
-    def slide_up_animation(self):
-        """Create a slide-up animation for the notification bar."""
-        # Get the current geometry of the widget
-        current_geometry = self.geometry()
-
-        # Create a new geometry for the slide-up effect
-        new_geometry = QRect(current_geometry.x(), current_geometry.y() - 20, current_geometry.width(), current_geometry.height())
-
-        # Create the animation
-        animation = QPropertyAnimation(self, b"geometry")
-        animation.setDuration(300)  # Duration of the animation in milliseconds
-        animation.setStartValue(current_geometry)
-        animation.setEndValue(new_geometry)
-
-        # Move back to the original position after the animation
-        QTimer.singleShot(300, lambda: self.setGeometry(current_geometry))
-
-        # Start the animation
-        animation.start()
 
     def next_notification(self):
         """Move to the next notification."""
