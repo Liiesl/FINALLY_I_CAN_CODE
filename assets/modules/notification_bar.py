@@ -98,12 +98,11 @@ class NotificationBar(QWidget):
 
     def next_notification(self):
         """Move to the next notification."""
-        self.animate_notification()
+        self.animate_notification(direction="up")
 
     def previous_notification(self):
         """Move to the previous notification."""
-        self.current_index = (self.current_index - 1) % len(self.notifications)
-        self.update_notification()
+        self.animate_notification(direction="down")
 
     def add_notification(self, emoji, message):
         """Add a new notification to the list."""
@@ -114,8 +113,11 @@ class NotificationBar(QWidget):
         if 0 <= index < len(self.notifications):
             self.notifications.pop(index)
 
-    def animate_notification(self):
-        """Animate the transition to the next notification."""
+    def animate_notification(self, direction):
+        """
+        Animate the transition to the next or previous notification.
+        :param direction: "up" for next notification, "down" for previous notification.
+        """
         # Create animations for sliding out and sliding in (for the content frame)
         self.slide_out_animation = QPropertyAnimation(self.content_frame, b"geometry")
         self.slide_in_animation = QPropertyAnimation(self.content_frame, b"geometry")
@@ -123,25 +125,48 @@ class NotificationBar(QWidget):
         # Get the current geometry of the content frame
         frame_geometry = self.content_frame.geometry()
 
-        # Slide out: Move the content frame upward
+        # Slide out: Move the content frame upward or downward based on direction
         self.slide_out_animation.setDuration(self.animation_duration)
         self.slide_out_animation.setStartValue(frame_geometry)
-        self.slide_out_animation.setEndValue(
-            QRect(frame_geometry.x(), frame_geometry.y() - frame_geometry.height(),
-                  frame_geometry.width(), frame_geometry.height())
-        )
+
+        if direction == "up":
+            # Slide up: Move the frame upward
+            self.slide_out_animation.setEndValue(
+                QRect(frame_geometry.x(), frame_geometry.y() - frame_geometry.height(),
+                      frame_geometry.width(), frame_geometry.height())
+            )
+        elif direction == "down":
+            # Slide down: Move the frame downward
+            self.slide_out_animation.setEndValue(
+                QRect(frame_geometry.x(), frame_geometry.y() + frame_geometry.height(),
+                      frame_geometry.width(), frame_geometry.height())
+            )
+
         self.slide_out_animation.setEasingCurve(QEasingCurve.OutQuad)
 
-        # Update to the next notification
-        self.current_index = (self.current_index + 1) % len(self.notifications)
+        # Update to the next or previous notification
+        if direction == "up":
+            self.current_index = (self.current_index + 1) % len(self.notifications)
+        elif direction == "down":
+            self.current_index = (self.current_index - 1) % len(self.notifications)
         self.update_notification()
 
         # Slide in: Move the content frame back into view
         self.slide_in_animation.setDuration(self.animation_duration)
-        self.slide_in_animation.setStartValue(
-            QRect(frame_geometry.x(), frame_geometry.y() + frame_geometry.height(),
-                  frame_geometry.width(), frame_geometry.height())
-        )
+
+        if direction == "up":
+            # Slide in from below for "up" direction
+            self.slide_in_animation.setStartValue(
+                QRect(frame_geometry.x(), frame_geometry.y() + frame_geometry.height(),
+                      frame_geometry.width(), frame_geometry.height())
+            )
+        elif direction == "down":
+            # Slide in from above for "down" direction
+            self.slide_in_animation.setStartValue(
+                QRect(frame_geometry.x(), frame_geometry.y() - frame_geometry.height(),
+                      frame_geometry.width(), frame_geometry.height())
+            )
+
         self.slide_in_animation.setEndValue(frame_geometry)
         self.slide_in_animation.setEasingCurve(QEasingCurve.InQuad)
 
