@@ -45,11 +45,12 @@ class MainWindow(QMainWindow):
         self.config = Config(source="MainWindow")
         self.main_menu_active = True
 
+        self.custom_window_bar = CustomWindowBar(self, self.app)
+        self.layout.addWidget(self.custom_window_bar)
+        
         self.notification_bar = NotificationBar(self)
         self.layout.addWidget(self.notification_bar)
 
-        self.custom_window_bar = CustomWindowBar(self, self.app)
-        self.layout.addWidget(self.custom_window_bar)
         self.custom_window_bar.setup_initial_tabs()  # Add this line to create initial tabs
         
         self.tab_contents = QStackedWidget()
@@ -284,6 +285,8 @@ class MainWindow(QMainWindow):
             self.top_bar.addWidget(self.menu_button, alignment=Qt.AlignLeft)
             self.top_bar.addWidget(self.search_field, alignment=Qt.AlignRight)
             main_content_layout.addWidget(top_bar_widget)
+
+            main_content_layout.addWidget(self.notification_bar)
             
             if layout is None:
                 container_layout = QVBoxLayout()
