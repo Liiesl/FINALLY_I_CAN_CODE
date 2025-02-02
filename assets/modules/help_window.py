@@ -90,21 +90,20 @@ class HelpWindow(QWidget):
         self.section_list = QListWidget()
         self.section_list.setFont(QFont("Arial", 14))  # Increase text size
         self.section_list.setSpacing(10)  # Increase gap between items
+        self.section_list.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)  # Enable horizontal scrolling
 
         for level, title in self.headers:
             item = QListWidgetItem(title)
             item.setData(Qt.UserRole, title)  # Store the header title for later use
 
-            # Indent based on header level
-            indent = level * 20  # Indentation proportional to header level
+            # Indent based on header level (decreased indentation width)
+            indent = (level - 1) * 10  # Reduced indentation multiplier
+            if level == 1:  # h1 headers should be aligned to the left
+                indent = 0
             item.setText(f"{' ' * indent}{title}")
 
-            # Optional: Style different levels with colors or boldness
-            if level == 2:  # h2
-                item.setForeground(QBrush(QColor("blue")))
-                item.setFont(QFont("Arial", 14, QFont.Bold))
-            elif level == 3:  # h3
-                item.setForeground(QBrush(QColor("darkgreen")))
+            # Use the same color for all header levels
+            item.setForeground(QBrush(QColor("black")))
 
             self.section_list.addItem(item)
 
