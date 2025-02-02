@@ -87,26 +87,23 @@ class HelpWindow(QWidget):
         self.toggle_button.clicked.connect(self.toggle_navigation)
         left_layout.addWidget(self.toggle_button, alignment=Qt.AlignRight)
     
-        # QTextEdit for displaying the section list
+        # Use QTextEdit to display HTML content
         self.section_list = QTextEdit()
-        self.section_list.setFont(QFont("Courier", 14))  # Use a monospaced font
+        self.section_list.setFont(QFont("Arial", 14))  # Increase text size
         self.section_list.setReadOnly(True)  # Make it non-editable
         self.section_list.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)  # Enable vertical scrolling
-        self.section_list.setWordWrapMode(True)  # Enable word wrapping
     
-        # Configure tab stops to control indentation
-        tab_stop_distance = 40  # Distance between tab stops in pixels
-        self.section_list.setTabStopDistance(tab_stop_distance)
-    
-        # Populate the QTextEdit with headers
+        # Populate the QTextEdit with headers using HTML for proper indentation
+        html_content = ""
         for level, title in self.headers:
-            indent = "\t" * (level - 1)  # Use tab characters for indentation
+            indent = (level - 1) * 20  # Indentation multiplier (adjust as needed)
             if level == 1:  # h1 headers should be aligned to the left
-                indent = ""
-            # Add indented title to QTextEdit
-            indented_title = f"{indent}{title}\n"
-            self.section_list.append(indented_title)
+                indent = 0
+            # Add HTML with padding-left for indentation
+            html_content += f'<div style="padding-left: {indent}px;">{title}</div>'
     
+        # Set the HTML content to the QTextEdit
+        self.section_list.setHtml(html_content)
         left_layout.addWidget(self.section_list)
     
         # Right panel: Markdown viewer using QWebEngineView
