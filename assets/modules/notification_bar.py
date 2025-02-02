@@ -22,30 +22,31 @@ class NotificationBar(QWidget):
             ("📰", "News: Check out our latest blog post on subtitle editing!")
         ]
 
-        # Get the highlight color from the parent widget's palette
+        # Get colors from the parent widget's palette
         palette = self.parent().palette() if self.parent() else QPalette()
-        self.highlight_color = palette.color(QPalette.Highlight).name()
+        self.highlight_color = palette.color(QPalette.Highlight).name()  # Background color
+        self.text_color = palette.color(QPalette.WindowText).name()  # Text color
 
         # Left Arrow Button
         self.left_arrow = QPushButton()
-        self.left_arrow.setIcon(qta.icon('fa5s.angle-left', color='black'))  # Use QtAwesome icon
+        self.left_arrow.setIcon(qta.icon('fa5s.angle-left', color=self.text_color))  # Use QtAwesome icon
         self.left_arrow.setStyleSheet("background-color: transparent; border: none;")
         self.left_arrow.clicked.connect(self.previous_notification)
         self.layout.addWidget(self.left_arrow)
 
         # Emoji Label
         self.label_emoji = QLabel()
-        self.label_emoji.setStyleSheet("font-size: 20px;")
+        self.label_emoji.setStyleSheet(f"font-size: 20px; color: {self.text_color};")
         self.layout.addWidget(self.label_emoji)
 
         # Text Label
         self.label_text = QLabel()
-        self.label_text.setStyleSheet("color: black; padding: 5px;")
+        self.label_text.setStyleSheet(f"color: {self.text_color}; padding: 5px;")
         self.layout.addWidget(self.label_text)
 
         # Right Arrow Button
         self.right_arrow = QPushButton()
-        self.right_arrow.setIcon(qta.icon('fa5s.angle-right', color='black'))  # Use QtAwesome icon
+        self.right_arrow.setIcon(qta.icon('fa5s.angle-right', color=self.text_color))  # Use QtAwesome icon
         self.right_arrow.setStyleSheet("background-color: transparent; border: none;")
         self.right_arrow.clicked.connect(self.next_notification)
         self.layout.addWidget(self.right_arrow)
@@ -54,7 +55,7 @@ class NotificationBar(QWidget):
         self.setStyleSheet(f"""
             NotificationBar {{
                 background-color: {self.highlight_color};
-                border: 1px solid #ccc;
+                border: 2px solid {self.text_color};  /* Add a visible border */
                 border-radius: 5px;
             }}
         """)
