@@ -181,7 +181,7 @@ class NotificationBar(QWidget):
             self.update_notification()
     
         # Start the timer for 250 ms delay before updating the index
-        QTimer.singleShot(300, delayed_update)
+        QTimer.singleShot(325, delayed_update)
         # Slide in: Move the content frame back into view
         self.slide_in_animation.setDuration(self.animation_duration)
 
