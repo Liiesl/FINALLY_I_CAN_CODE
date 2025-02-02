@@ -45,12 +45,12 @@ class MainWindow(QMainWindow):
         self.config = Config(source="MainWindow")
         self.main_menu_active = True
 
+        self.notification_bar = NotificationBar(self)
+        self.layout.addWidget(self.notification_bar)
+
         self.custom_window_bar = CustomWindowBar(self, self.app)
         self.layout.addWidget(self.custom_window_bar)
         self.custom_window_bar.setup_initial_tabs()  # Add this line to create initial tabs
-
-        self.notification_bar = NotificationBar(self)
-        self.layout.addWidget(self.notification_bar)
         
         self.tab_contents = QStackedWidget()
         self.layout.addWidget(self.tab_contents)
