@@ -558,6 +558,8 @@ class MainWindow(QMainWindow):
             settings_widget.setFont(self.inter_regular_font)
             settings_widget.settings_saved.connect(self.apply_theme)
 
+            settings_widget.experimental_tools_toggled.connect(self.toggle_experimental_tools)
+
             # Load the settings widget into the current tab's main content layout
             self.load_tool(settings_widget, main_content_layout)
 
@@ -581,6 +583,8 @@ class MainWindow(QMainWindow):
         print("refreshing the settings")
         self.apply_text_size()  # Update text size
         self.apply_theme()  # Update theme
+        self.toggle_experimental_tools():
+
 
         self.custom_window_bar.current_palette()
         self.custom_window_bar.update_colors()
@@ -636,8 +640,6 @@ class MainWindow(QMainWindow):
             name = tool[0].lower()
             desc = tool[1].lower()
             categories = set(tool[2])
-
-            is_experimental = "experimental" in categories
 
             text_match = search_text in name or search_text in desc
             category_match = not self.active_categories or bool(categories & self.active_categories)
