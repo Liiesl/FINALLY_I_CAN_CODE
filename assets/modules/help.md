@@ -1,223 +1,363 @@
-# Introduction
+# Subtl Help Guide
 
-Welcome to the application! This is a brief introduction to help you get started.
+Welcome to **Subtl** help section! This guide will walk you through the features, navigation, and functionality of the application. Whether you're new to the app or looking for specific instructions, this document has you covered.
 
-## Getting Started
+---
 
-Follow these steps to get started with the application:
+## Introduction
 
-1. Open the application.
-2. Navigate to the settings.
-3. Customize your preferences.
+**Subtl** is a powerful tool designed to simplify subtitle management. With features like subtitle conversion, merging, shifting, and more, it caters to both beginners and advanced users. The app also offers customization options to tailor the experience to your preferences.
 
-## Advanced Features
+---
 
-This section covers advanced features of the application.
+## Navigating the Interface
 
-### Feature 1
+### Main Menu
 
-Description of feature 1.
+The main menu is the central hub of the app. It includes:
+- **Most Used Tools**: Displays tools you frequently use.
+- **Recent Tools**: Shows tools you've accessed recently.
+- **All Tools**: A comprehensive list of all available tools.
 
-### Feature 2
+### Side Panel
 
-Description of feature 2.
+The side panel provides quick access to additional features:
+- Toggle it using the menu button (`☰`) in the top-left corner.
+- Use it to navigate between tabs or access settings.
+
+### Search Functionality
+
+- Use the search bar at the top to quickly find tools.
+- Type keywords related to the tool's name or description to filter results.
+
+---
+
+# Tools
+**Subtl** offers a variety of powerful tools designed to streamline subtitle management. Whether you're adjusting timing, merging files, converting formats, or handling multilingual subtitles, these tools provide intuitive solutions for all your subtitle editing needs. Each tool is optimized for ease of use while maintaining precision and flexibility, ensuring that your subtitles are perfectly synchronized and formatted for any project.
+
+## Disclaimer
+
+All tools in **Subtl** are optimized to work with `.srt` subtitle files. If you have subtitles in other formats (e.g., `.ass`, `.vtt`, `.sub`, etc.), you can use the **Subtitle Converter** tool to convert them to
+
+---
+
+### Longer Appearance SRT
+
+The **Longer Appearance SRT** tool allows you to extend the duration that each subtitle appears on the screen. This is useful when subtitles disappear too quickly, making them difficult to read.
+
+#### How to Use
+
+1. **Access the Tool**:
+   - From the main menu, locate the **Longer Appearance SRT** tool under "All Tools" or search for it using the search bar.
+   - Click on the tool to open it.
+
+2. **Select Subtitle Files**:
+   - Once the tool is open, click the **Select Files** button.
+   - A file dialog will appear. Choose one or more `.srt` subtitle files that you want to modify.
+   - The selected files will be displayed in the list below the button.
+
+3. **Adjust Duration**:
+   - Use the dropdown menu labeled **Add Seconds** to specify how many seconds you want to add to the duration of each subtitle.
+   - You can choose between 1 and 5 seconds.
+
+4. **Export Modified Files**:
+   - After adjusting the duration, click the **Export** button.
+   - A save dialog will appear, allowing you to choose where to save the modified subtitle files.
+   - The tool will automatically adjust the stop time of each subtitle by the number of seconds you specified and save the updated `.srt` file.
+
+#### Example Workflow
+
+1. Open the **Longer Appearance SRT** tool.
+2. Select your `.srt` files using the **Select Files** button.
+3. Choose **3 seconds** from the dropdown menu.
+4. Click **Export** and save the modified files to your desired location.
+
+#### Notes
+
+- If no files are selected, an error message will appear prompting you to select files before exporting.
+- The tool processes each file individually and saves the modified version with a prefix (e.g., `modified_filename.srt`).
+- If any file fails to process, an error message will be displayed, but other files will continue to be processed.
+
+---
+
+### Merge SRT Files
+
+The **Merge SRT Files** tool allows you to combine multiple subtitle files into one cohesive file. It offers two modes: **Glue End to End** and **Stacked Merge**.
+
+#### Modes
+
+1. **Glue End to End**:
+   - Combines subtitles sequentially, appending one after another.
+   - Useful when you want to merge subtitles from different parts of a video.
+
+2. **Stacked Merge**:
+   - Combines subtitles in parallel, allowing for multilingual subtitles with optional color-coding.
+   - Ideal for creating subtitles in multiple languages that appear simultaneously.
+
+#### How to Use
+
+1. **Access the Tool**:
+   - From the main menu, locate the **Merge SRT Files** tool under "All Tools" or search for it using the search bar.
+   - Click on the tool to open it.
+
+2. **Select Mode**:
+   - The tool provides two merging modes:
+     - **Glue End to End**: Combines subtitles sequentially, appending one after another.
+     - **Stacked Merge**: Combines subtitles in parallel, allowing for multilingual subtitles with optional color-coding.
+
+   - Choose the mode by clicking either the **Glue End to End** or **Stacked Merge** button.
+
+3. **Glue End to End Mode**:
+   - **Select Main Subtitle**: Click the **Select Main Subtitle** button and choose the primary `.srt` file.
+   - **Select Secondary Subtitle**: Click the **Select Secondary Subtitle** button and choose the secondary `.srt` file.
+   - **Base Length**: Enter the length of the main subtitle's video in `hh:mm:ss` format.
+   - **Export**: Click the **Export** button to merge the files and save the result.
+
+4. **Stacked Merge Mode**:
+   - **Select Main Subtitle**: Click the **Select Main Subtitle** button and choose the primary `.srt` file.
+   - **Select Secondary Subtitles**: Click the **Select Secondary Subtitles** button and choose multiple `.srt` files.
+   - **Color Options**: Toggle the color option to enable color-coding for merged subtitles. You can select a color from the dropdown or enter a custom hex code.
+   - **Export**: Click the **Export** button to merge the files and save the result.
+
+#### Example Workflow
+
+1. Open the **Merge SRT Files** tool.
+2. Select **Glue End to End** mode.
+3. Choose the main subtitle file and the secondary subtitle file.
+4. Enter the base length of the main subtitle's video (e.g., `01:30:00`).
+5. Click **Export** and save the merged file.
+
+Alternatively, for **Stacked Merge**:
+
+1. Open the **Merge SRT Files** tool.
+2. Select **Stacked Merge** mode.
+3. Choose the main subtitle file and multiple secondary subtitle files.
+4. Enable color-coding and select a color.
+5. Click **Export** and save the merged file.
+
+#### Notes
+
+- Ensure that the base length is entered correctly in `hh:mm:ss` format for **Glue End to End** mode.
+- For **Stacked Merge**, you can merge subtitles in different languages and optionally color-code them for differentiation.
+- If any file fails to process, an error message will be displayed, but other files will continue to be processed.
+
+---
+
+### Subtitle Converter
+
+The **Subtitle Converter** tool allows you to convert subtitles between different formats. Supported formats include `.srt`, `.ass`, `.sub`, `.vtt`, `.sbv`, `.dfxp`, `.stl`, `.mpl`, `.usf`, `.lrc`, `.rt`, `.ttml`, and `.cap`.
+
+#### How to Use
+
+1. **Access the Tool**:
+   - From the main menu, locate the **Subtitle Converter** tool under "All Tools" or search for it using the search bar.
+   - Click on the tool to open it.
+
+2. **Select Subtitle Files**:
+   - Click the **Select File** button and choose one or more subtitle files you want to convert.
+   - The selected files will be displayed in the list below the button.
+
+3. **Choose Target Format**:
+   - Use the dropdown menu labeled **Select Source Format** to choose the format you want to convert the subtitles to.
+   - Supported formats include `.srt`, `.ass`, `.sub`, `.vtt`, `.sbv`, `.dfxp`, `.stl`, `.mpl`, `.usf`, `.lrc`, `.rt`, `.ttml`, and `.cap`.
+
+4. **Convert Files**:
+   - After selecting the target format, click the **Convert** button.
+   - A save dialog will appear, allowing you to choose where to save the converted subtitle files.
+   - The tool will convert the subtitles to the selected format and save the updated files.
+
+#### Example Workflow
+
+1. Open the **Subtitle Converter** tool.
+2. Select your subtitle files using the **Select File** button.
+3. Choose the target format (e.g., `.vtt`) from the dropdown menu.
+4. Click **Convert** and save the converted files to your desired location.
+
+#### Notes
+
+- If no files are selected, an error message will appear prompting you to select files before converting.
+- The tool processes each file individually and saves the converted version with the appropriate file extension.
+- If any file fails to process, an error message will be displayed, but other files will continue to be processed.
+
+---
+
+### Subtitle Shifter
+
+The **Subtitle Shifter** tool allows you to shift subtitle timings by milliseconds. It offers two modes: **Whole Shift** and **Partial Shift**.
+
+#### Modes
+
+1. **Whole Shift**:
+   - Shifts the timing of all subtitles by a specified number of milliseconds.
+   - Useful for synchronizing subtitles with video playback.
+
+2. **Partial Shift**:
+   - Shifts the timing of subtitles within a specific time range.
+   - Ideal for fine-tuning specific sections of subtitles.
+
+#### How to Use
+
+1. **Access the Tool**:
+   - From the main menu, locate the **Subtitle Shifter** tool under "All Tools" or search for it using the search bar.
+   - Click on the tool to open it.
+
+2. **Select Mode**:
+   - The tool provides two shifting modes:
+     - **Whole Shift**: Shifts the timing of all subtitles by a specified number of milliseconds.
+     - **Partial Shift**: Shifts the timing of subtitles within a specific time range.
+
+   - Choose the mode by clicking either the **Whole Shift** or **Partial Shift** button.
+
+3. **Whole Shift Mode**:
+   - **Select Subtitle File**: Click the **Select Subtitle File** button and choose the `.srt` file you want to modify.
+   - **Shift by (milliseconds)**: Enter the number of milliseconds you want to shift the subtitles by.
+   - **Shift**: Click the **Shift** button to apply the changes and save the modified file.
+
+4. **Partial Shift Mode**:
+   - **Select Subtitle File**: Click the **Select Subtitle File** button and choose the `.srt` file you want to modify.
+   - **Start Time**: Enter the start time of the section you want to shift (in `hh:mm:ss,fff` format).
+   - **End Time**: Enter the end time of the section you want to shift (in `hh:mm:ss,fff` format).
+   - **Shift by (milliseconds)**: Enter the number of milliseconds you want to shift the subtitles by.
+   - **Shift**: Click the **Shift** button to apply the changes and save the modified file.
+
+#### Example Workflow
+
+1. Open the **Subtitle Shifter** tool.
+2. Select **Whole Shift** mode.
+3. Choose the `.srt` file you want to modify.
+4. Enter **1000 milliseconds** in the "Shift by" field.
+5. Click **Shift** and save the modified file.
+
+Alternatively, for **Partial Shift**:
+
+1. Open the **Subtitle Shifter** tool.
+2. Select **Partial Shift** mode.
+3. Choose the `.srt` file you want to modify.
+4. Enter the **start time** (`00:01:00,000`) and **end time** (`00:02:00,000`) of the section you want to shift.
+5. Enter **500 milliseconds** in the "Shift by" field.
+6. Click **Shift** and save the modified file.
+
+#### Notes
+
+- Ensure that the start and end times are entered correctly in `hh:mm:ss,fff` format for **Partial Shift** mode.
+- If any file fails to process, an error message will be displayed, but other files will continue to be processed.
+
+---
+
+### Multilingual Merge
+
+The **Multilingual Merge** tool allows you to merge subtitles in different languages with optional color-coding for differentiation.
+
+#### How to Use
+
+1. **Access the Tool**:
+   - From the main menu, locate the **Multilingual Merge** tool under "All Tools" or search for it using the search bar.
+   - Click on the tool to open it.
+
+2. **Select Subtitles**:
+   - Click the **Select Subtitles** button and choose multiple `.srt` files, each containing subtitles in a different language.
+
+3. **Assign Colors**:
+   - Double-click on a subtitle file in the list to assign a color for that language.
+   - A color picker will appear, allowing you to select a color for differentiation.
+
+4. **Export Merged File**:
+   - After assigning colors, click the **Export** button.
+   - A save dialog will appear, allowing you to choose where to save the merged subtitle file.
+   - The tool will combine the subtitles into a single `.srt` file with color-coded differentiation.
+
+#### Example Workflow
+
+1. Open the **Multilingual Merge** tool.
+2. Select multiple `.srt` files, each containing subtitles in a different language.
+3. Double-click on each file in the list and assign a unique color for differentiation.
+4. Click **Export** and save the merged file to your desired location.
+
+#### Notes
+
+- The tool supports multiple languages and allows for color-coded differentiation to make multilingual subtitles easier to read.
+- If any file fails to process, an error message will be displayed, but other files will continue to be processed.
+
+---
+
+## Settings
+
+Access the settings via the side panel or the main menu:
+- **Theme Selection**: Choose between light and dark modes.
+- **Text Size Adjustment**: Customize the font size for better readability.
+- **Reset Preferences**: Restore default settings if needed.
+
+---
 
 ## Troubleshooting
 
 If you encounter any issues, try the following:
 
-- Restart the application.
-- Check your internet connection.
-- Contact support.
+1. **App Not Responding**:
+   - Close and relaunch the app.
+   - Ensure your system meets the minimum requirements.
 
-# WhisperAI Extension for Subtl and Python GUI Applications
+2. **Missing Tools**:
+   - Verify that the tool is supported in your version of the app.
+   - Check for updates to access new features.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+3. **Performance Issues**:
+   - Clear temporary files and restart your computer.
+   - Reduce the number of open tabs or windows.
 
-A standalone WhisperAI extension for Python GUI applications, featuring pre-bundled models for speech-to-text subtitling. Primarily developed for [Subtl](https://github.com/your-subtl-repo) but compatible with any Python 3 GUI framework.
+4. **Search Not Working**:
+   - Ensure you're entering relevant keywords.
+   - Clear the search field and try again.
 
-![Python GUI Integration](assets/python-demo.gif) <!-- Update with Python-specific demo -->
+---
 
-## Features
+## Keyboard Shortcuts
 
-- 🎙️ **Pre-Bundled Models**: Choose from different installer sizes (Tiny, Base, Small, Medium, Large)
-- 🐍 **Python 3 Integration**: Designed for PyQt5/PySide2/Tkinter/Kivy etc.
-- 🌍 **Auto-Detect Language**: Supports 100+ languages out of the box
-- ⚡ **Hardware Acceleration**: CUDA/Metal support in dedicated installers
-- 📦 **Self-Contained**: No Python dependencies required
+Here are some useful keyboard shortcuts to enhance your workflow:
 
-## Installation
+- **Ctrl + F**: Focus on the search bar.
+- **Ctrl + T**: Open the most recently used tool.
+- **Ctrl + S**: Save your current work.
+- **Ctrl + Z**: Undo the last action.
+- **Ctrl + Y**: Redo the last action.
 
-### For Subtl Users
-1. Download the appropriate installer from [Releases](https://github.com/your-repo/releases):
-   - `WhisperAI-Tiny.exe` (100MB) - Basic accuracy
-   - `WhisperAI-Large.exe` (3GB) - Studio quality
-2. Run the installer and follow platform-specific instructions
-3. Launch Subtl - auto-detects available models in:
-   ```bash
-   # Windows
-   %PROGRAMFILES%\SubtlExtensions\WhisperAI\
+---
 
-   # macOS
-   /Applications/SubtlExtensions/WhisperAI/
+## Frequently Asked Questions (FAQ)
 
-   # Linux
-   /opt/subtl-extensions/whisperai/
-   ```
+### Q: How do I merge subtitles in different languages?
 
-## IMPORTANT!!
+A: Use the **Multilingual Merge** tool. Select the subtitle files for each language, choose colors for differentiation, and merge them into a single file.
 
-Choose your model based on hardware capabilities and accuracy needs:
+### Q: Can I convert subtitles to different formats?
 
-### Model Comparison Table
-| Model Size | CPU Requirements          | RAM  | GPU Recommendation          | Disk Space | Processing Speed* | Best For                  |
-|------------|---------------------------|------|------------------------------|------------|-------------------|---------------------------|
-| **Tiny**   | Modern mobile processor   | 4GB+ | Integrated graphics          | 100MB      | 1× real-time      | Low-end PCs, Quick edits  |
-| **Base**   | i5/Ryzen 5 (4-core)       | 6GB+ | Entry-level discrete GPU     | 500MB      | 4× faster         | General purpose use       |
-| **Small**  | i7/Ryzen 7 (6-core)       | 8GB+ | GTX 1660/RTX 3050 (4GB VRAM) | 1GB        | 2× faster         | Content creators          |
-| **Medium** | i9/Ryzen 9 (8-core)       | 12GB+| RTX 3060/RX 6700 (8GB VRAM)  | 2GB        | 1.5× faster       | Professional transcriptions |
-| **Large**  | Xeon/Threadripper (12-core)| 16GB+| RTX 4080/RX 7900 (12GB VRAM) | 3GB        | 1×                | Studio-grade production   |
+A: Yes, use the **Subtitle Converter** tool. Select the input file, choose the desired output format, and convert.
 
-_*Speed relative to audio duration when using recommended GPU_
+### Q: Why are some tools grayed out?
 
-### Decision Guidelines
+A: Some tools may be disabled if they require additional files or settings. Ensure you've uploaded the necessary files or configured the required settings.
 
-**Choose Tiny if:**
-- Using a laptop without dedicated graphics
-- Need instant results for short clips (<5 minutes)
-- Have limited storage space
+### Q: How do I change the theme?
 
-**Choose Base/Small if:**
-- Typical desktop/laptop with gaming GPU
-- Balance between speed and accuracy needed
-- Processing videos under 30 minutes
+A: Go to **Settings** > **Theme** and select your preferred theme (light or dark).
 
-**Choose Medium/Large if:**
-- Have a high-end workstation with powerful GPU
-- Need broadcast-quality subtitles
-- Working with complex audio (multiple speakers, technical terms)
+### Q: What should I do if the app crashes?
 
-### Critical Requirements
-- **GPU Users:** Requires compute capability 5.0+ (NVIDIA) or RDNA2+ (AMD)
-- **Apple Silicon:** Medium/Large models require M1 Pro/Max/Ultra chips
-- **Windows:** Needs DirectX 12 Ultimate for GPU acceleration
-- **Linux:** Requires Vulkan 1.3 drivers for AMD GPUs
+A: Try restarting the app. If the issue persists, contact support with details about the crash.
 
-### Performance Tips
-1. **RAM vs Model Size:** Your system RAM should be _at least 2×_ the model size
-2. **VRAM Formula:** Minimum GPU memory = Model size × 1.5
-   - Example: Large model (3GB) needs ≥4.5GB VRAM
-3. **Batch Processing:** Add 2GB RAM overhead per concurrent transcription
+---
 
-### Verification Tools
-Check your system capabilities:
-- **Windows:** `dxdiag` in Start menu
-- **macOS:** About This Mac > System Report
-- **Linux:** `lspci -v | grep -i vga`
-- **All Platforms:** Included `check_compatibility.exe` tool
+## Contact Support
 
+For further assistance, please contact our support team:
+- **Email**: support@srteeditor.com
+- **Website**: [www.srteeditor.com/support](http://www.srteeditor.com/support)
+- **Phone**: +1 (800) 123-4567
 
-## For Developers
+We aim to respond within 24-48 hours. Please include details about the issue and any error messages you encountered.
 
-### Basic Usage
-```python
-import subprocess
-import json
-from pathlib import Path
+---
 
-class WhisperAI:
-    def __init__(self, model_size='base'):
-        self.bin_path = Path(EXTENSION_PATHS[platform.system()]) / f'whisper-{model_size}'
+Thank you for using **Subtl**! We hope this guide helps you make the most of the app. For updates and new features, stay tuned to our official website.
 
-    def transcribe(self, audio_path, output_format='srt'):
-        cmd = [
-            str(self.bin_path),
-            '--input', str(audio_path),
-            '--output', '-',  # Stdout output
-            '--format', output_format
-        ]
-        
-        result = subprocess.run(
-            cmd,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True
-        )
-        
-        if result.returncode == 0:
-            return self._parse_output(result.stdout, output_format)
-        else:
-            raise RuntimeError(f"Transcription failed: {result.stderr}")
-
-    def _parse_output(self, output, format):
-        # Implement parsing logic for JSON/SRT/VTT
-        return output
-
-# PyQt5 Example Integration
-def generate_subtitles(parent_window):
-    audio_file = parent_window.get_selected_media()
-    whisper = WhisperAI(model_size='large')
-    
-    try:
-        subs = whisper.transcribe(audio_file, format='srt')
-        parent_window.import_subtitles(subs)
-    except RuntimeError as e:
-        show_error_dialog(str(e))
-```
-
-## Output Formats
-Supported formats through `--format` parameter:
-- JSON (default)
-- SRT
-- VTT
-- TXT
-
-Example SRT output:
-```srt
-1
-00:00:00,000 --> 00:00:04,500
-Welcome to today's conference call.
-
-2
-00:00:04,500 --> 00:00:08,200
-Let's begin with Q1 financial results.
-```
-
-## Compatibility
-- Requires Python 3.8+
-- Officially tested with:
-  - PyQt5 5.15+
-  - PySide2 5.15+
-  - Tkinter 8.6+
-- Supported OS:
-  - Windows 10+ (64-bit)
-  - macOS 11+ (Apple Silicon/Intel)
-  - Linux (Ubuntu 20.04+, Fedora 34+)
-
-## Model Comparison
-| Installer Size | VRAM Required | Relative Speed | Use Case |
-|----------------|---------------|----------------|----------|
-| Tiny (100MB)   | 1GB           | 32×            | Real-time |
-| Base (500MB)   | 2GB           | 16×            | General purpose |
-| Small (1GB)    | 4GB           | 8×             | High accuracy |
-| Medium (2GB)   | 8GB           | 4×             | Professional |
-| Large (3GB)    | 12GB          | 1×             | Studio quality |
-
-## Contributing
-Python developers welcome! To contribute:
-1. Clone the repository
-2. Use the bundler tool to package models:
-   ```bash
-   python bundler.py --model large --platform win64
-   ```
-3. Test with the included PyQt5 demo app
-4. Submit PR with your improvements
-
-## License
-MIT License - See [LICENSE](LICENSE) for details
-
-## Support
-For Python integration help:
-- [PyQt5 Documentation](https://www.riverbankcomputing.com/static/Docs/PyQt5/)
-- [Python Subprocess Guide](https://docs.python.org/3/library/subprocess.html)
-
+---
