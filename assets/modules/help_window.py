@@ -5,7 +5,7 @@ import markdown
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QListWidget, QListWidgetItem, QSplitter, QPushButton
 from PyQt5.QtCore import Qt
 from PyQt5.QtWebEngineWidgets import QWebEngineView
-from PyQt5.QtGui import QFont
+from PyQt5.QtGui import QFont, QBrush, QColor
 import qtawesome as qta  # Import QtAwesome for icons
 
 def resource_path(relative_path):
@@ -89,10 +89,25 @@ class HelpWindow(QWidget):
 
         self.section_list = QListWidget()
         self.section_list.setFont(QFont("Arial", 14))  # Increase text size
+        self.section_list.setSpacing(10)  # Increase gap between items
+
         for level, title in self.headers:
             item = QListWidgetItem(title)
             item.setData(Qt.UserRole, title)  # Store the header title for later use
+
+            # Indent based on header level
+            indent = level * 20  # Indentation proportional to header level
+            item.setText(f"{' ' * indent}{title}")
+
+            # Optional: Style different levels with colors or boldness
+            if level == 2:  # h2
+                item.setForeground(QBrush(QColor("blue")))
+                item.setFont(QFont("Arial", 14, QFont.Bold))
+            elif level == 3:  # h3
+                item.setForeground(QBrush(QColor("darkgreen")))
+
             self.section_list.addItem(item)
+
         self.section_list.itemClicked.connect(self.scroll_to_section)
         left_layout.addWidget(self.section_list)
 
