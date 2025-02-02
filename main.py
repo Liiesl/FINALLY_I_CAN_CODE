@@ -149,8 +149,6 @@ class MainWindow(QMainWindow):
         self.main_menu(new_main_content_layout)
 
     def resizeEvent(self, event):
-        super().resizeEvent(event)  # Call the base class resize event
-        
         # Dynamically adjust the width of the search field
         if self.menu_button and self.search_field:
             menu_button_width = self.menu_button.width()  # Width of the menu button
