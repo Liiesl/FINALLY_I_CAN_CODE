@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import QWidget, QHBoxLayout, QPushButton, QTabBar, QApplica
 from PyQt5.QtCore import Qt, QPoint
 from PyQt5.QtGui import QPalette, QColor, QCursor
 import qtawesome as qta
+from main import MainWindow 
 
 class CustomWindowBar(QWidget):
     def __init__(self, parent=None, app=None):
@@ -217,10 +218,10 @@ class CustomWindowBar(QWidget):
             width, height = self.width(), self.height()
 
             # Check if the mouse is near the edges
-            near_left = mouse_pos.x() <= self.edge_threshold
-            near_right = mouse_pos.x() >= width - self.edge_threshold
-            near_top = mouse_pos.y() <= self.edge_threshold
-            near_bottom = mouse_pos.y() >= height - self.edge_threshold
+            near_left = mouse_pos.x() <= self.main.edge_threshold
+            near_right = mouse_pos.x() >= width - self.main.edge_threshold
+            near_top = mouse_pos.y() <= self.main.edge_threshold
+            near_bottom = mouse_pos.y() >= height - self.main.edge_threshold
 
             # Change the cursor based on the edge
             if near_left and near_top:
