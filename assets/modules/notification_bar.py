@@ -8,6 +8,7 @@ import qtawesome as qta  # Import QtAwesome for icons
 class NotificationBar(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
+
         # Main layout
         self.layout = QHBoxLayout(self)
         self.layout.setContentsMargins(10, 5, 10, 5)  # Padding inside the rectangle
@@ -53,19 +54,20 @@ class NotificationBar(QWidget):
 
         # Set background color of the entire widget using the highlight color
         self.setStyleSheet(f"""
-        NotificationBar {{
-            background-color: {self.highlight_color};
-            border: 2px solid {self.text_color};  /* Add a visible border */
-            border-radius: 5px;
-        }}
+            NotificationBar {{
+                background-color: {self.highlight_color};
+                border: 2px solid {self.text_color};  /* Add a visible border */
+                border-radius: 5px;
+            }}
         """)
 
         # Timer for automatic notifications
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.next_notification)
         self.start_timer()
-        
-        self.update_notification()  # Initialize with the first notification
+
+        # Initialize with the first notification
+        self.update_notification()
 
     def update_notification(self):
         """Update the notification bar with the current notification."""
@@ -76,7 +78,7 @@ class NotificationBar(QWidget):
     def start_timer(self):
         """Start the timer to cycle through notifications."""
         self.timer.start(10000)  # Change notification every 10 seconds
-        
+
     def stop_timer(self):
         """Stop the timer."""
         self.timer.stop()
@@ -84,12 +86,13 @@ class NotificationBar(QWidget):
     def next_notification(self):
         """Move to the next notification."""
         self.current_index = (self.current_index + 1) % len(self.notifications)
-        self.update_notification()
         self.slide_up_animation()
+        self.update_notification()
 
     def previous_notification(self):
         """Move to the previous notification."""
         self.current_index = (self.current_index - 1) % len(self.notifications)
+        self.slide_down_animation()
         self.update_notification()
 
     def add_notification(self, emoji, message):
@@ -100,3 +103,31 @@ class NotificationBar(QWidget):
         """Remove a notification from the list."""
         if 0 <= index < len(self.notifications):
             self.notifications.pop(index)
+
+    def slide_up_animation(self):
+        """Slide up animation for the next notification."""
+        current_geometry = self.geometry()
+        target_geometry = QRect(current_geometry.x(), current_geometry.y() - self.height(),
+                                current_geometry.width(), current_geometry.height())
+
+        # Create the animation
+        animation = QPropertyAnimation(self, b"geometry")
+        animation.setDuration(300)  # Duration in milliseconds
+        animation.setStartValue(current_geometry)
+        animation.setEndValue(target_geometry)
+        animation.finished.connect(lambda: self.setGeometry(current_geometry))
+        animation.start()
+
+    def slide_down_animation(self):
+        """Slide down animation for the previous notification."""
+        current_geometry = self.geometry()
+        target_geometry = QRect(current_geometry.x(), current_geometry.y() + self.height(),
+                                current_geometry.width(), current_geometry.height())
+
+        # Create the animation
+        animation = QPropertyAnimation(self, b"geometry")
+        animation.setDuration(300)  # Duration in milliseconds
+        animation.setStartValue(current_geometry)
+        animation.setEndValue(target_geometry)
+        animation.finished.connect(lambda: self.setGeometry(current_geometry))
+        animation.start()
