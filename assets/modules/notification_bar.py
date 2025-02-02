@@ -172,13 +172,16 @@ class NotificationBar(QWidget):
 
         self.slide_out_animation.setEasingCurve(QEasingCurve.OutQuad)
 
-        # Update to the next or previous notification
-        if direction == "up":
-            self.current_index = (self.current_index + 1) % len(self.notifications)
-        elif direction == "down":
-            self.current_index = (self.current_index - 1) % len(self.notifications)
-        self.update_notification()
-
+        # Use QTimer to delay the update of the current_index by 250 ms
+        def delayed_update():
+            if direction == "up":
+                self.current_index = (self.current_index + 1) % len(self.notifications)
+            elif direction == "down":
+                self.current_index = (self.current_index - 1) % len(self.notifications)
+            self.update_notification()
+    
+        # Start the timer for 250 ms delay before updating the index
+        QTimer.singleShot(250, delayed_update)
         # Slide in: Move the content frame back into view
         self.slide_in_animation.setDuration(self.animation_duration)
 
