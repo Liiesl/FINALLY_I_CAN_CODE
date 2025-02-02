@@ -1,7 +1,7 @@
 # assets/modules/notification_bar.py
 from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel, QPushButton, QFrame
 from PyQt5.QtCore import Qt, QTimer, QPropertyAnimation, QRect, QEasingCurve
-from PyQt5.QtGui import QPalette
+from PyQt5.QtGui import QPalette, QFontMetrics
 import qtawesome as qta  # Import QtAwesome for icons
 
 
@@ -87,6 +87,28 @@ class NotificationBar(QWidget):
         emoji, text = self.notifications[self.current_index]
         self.label_emoji.setText(emoji)
         self.label_text.setText(text)
+
+        # Dynamically adjust the width of the content frame
+        self.adjust_frame_width()
+
+    def adjust_frame_width(self):
+        """
+        Adjust the width of the content frame based on the text and emoji.
+        """
+        # Calculate the width of the emoji label
+        emoji_metrics = QFontMetrics(self.label_emoji.font())
+        emoji_width = emoji_metrics.width(self.label_emoji.text())
+
+        # Calculate the width of the text label
+        text_metrics = QFontMetrics(self.label_text.font())
+        text_width = text_metrics.width(self.label_text.text())
+
+        # Add spacing and padding
+        total_width = emoji_width + text_width + 20  # Add some padding
+
+        # Set the new width for the content frame
+        frame_height = self.content_frame.height()
+        self.content_frame.setFixedWidth(total_width)
 
     def start_timer(self):
         """Start the timer to cycle through notifications."""
