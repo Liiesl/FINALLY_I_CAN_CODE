@@ -623,11 +623,11 @@ class MainWindow(QMainWindow):
         self.main_menu_active = False
 
         # Clear the existing layout
-        for i in reversed(range(self.main_content_layout.count())):
-            widget = self.main_content_layout.itemAt(i).widget()
-            if widget is not None:
-                widget.setParent(None)
-
+        while layout.count():
+            child = layout.takeAt(0)
+            if child.widget():
+                child.widget().deleteLater()
+                
         # Add the tool widget to the layout
         layout.addWidget(tool_widget)
         tool_widget.show()
