@@ -1,6 +1,6 @@
 # assets/modules/notification_bar.py
 from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel, QPushButton, QFrame
-from PyQt5.QtCore import Qt, QTimer, QPropertyAnimation, QRect
+from PyQt5.QtCore import Qt, QTimer, QPropertyAnimation, QRect, QEasingCurve
 from PyQt5.QtGui import QPalette
 import qtawesome as qta  # Import QtAwesome for icons
 
@@ -22,6 +22,9 @@ class NotificationBar(QWidget):
             ("⏰", "Reminder: You last used the Subtitle Shifter 2 days ago."),
             ("📰", "News: Check out our latest blog post on subtitle editing!")
         ]
+
+        # Animation duration (in milliseconds)
+        self.animation_duration = 300
 
         # Get colors from the parent widget's palette
         palette = self.parent().palette() if self.parent() else QPalette()
@@ -95,14 +98,11 @@ class NotificationBar(QWidget):
 
     def next_notification(self):
         """Move to the next notification."""
-        self.current_index = (self.current_index + 1) % len(self.notifications)
-        self.slide_up_animation()
-        self.update_notification()
+        self.animate_notification()
 
     def previous_notification(self):
         """Move to the previous notification."""
         self.current_index = (self.current_index - 1) % len(self.notifications)
-        self.slide_down_animation()
         self.update_notification()
 
     def add_notification(self, emoji, message):
@@ -114,38 +114,37 @@ class NotificationBar(QWidget):
         if 0 <= index < len(self.notifications):
             self.notifications.pop(index)
 
-    def slide_up_animation(self):
-        """Slide up animation for the next notification."""
-        current_geometry = self.content_frame.geometry()
-        target_geometry = QRect(
-            current_geometry.x(),
-            current_geometry.y() - self.content_frame.height(),
-            current_geometry.width(),
-            current_geometry.height()
+    def animate_notification(self):
+        """Animate the transition to the next notification."""
+        # Create animations for sliding out and sliding in (for the content frame)
+        self.slide_out_animation = QPropertyAnimation(self.content_frame, b"geometry")
+        self.slide_in_animation = QPropertyAnimation(self.content_frame, b"geometry")
+
+        # Get the current geometry of the content frame
+        frame_geometry = self.content_frame.geometry()
+
+        # Slide out: Move the content frame upward
+        self.slide_out_animation.setDuration(self.animation_duration)
+        self.slide_out_animation.setStartValue(frame_geometry)
+        self.slide_out_animation.setEndValue(
+            QRect(frame_geometry.x(), frame_geometry.y() - frame_geometry.height(),
+                  frame_geometry.width(), frame_geometry.height())
         )
+        self.slide_out_animation.setEasingCurve(QEasingCurve.OutQuad)
 
-        # Create the animation
-        animation = QPropertyAnimation(self.content_frame, b"geometry")
-        animation.setDuration(300)  # Duration in milliseconds
-        animation.setStartValue(current_geometry)
-        animation.setEndValue(target_geometry)
-        animation.finished.connect(lambda: self.content_frame.setGeometry(current_geometry))
-        animation.start()
+        # Update to the next notification
+        self.current_index = (self.current_index + 1) % len(self.notifications)
+        self.update_notification()
 
-    def slide_down_animation(self):
-        """Slide down animation for the previous notification."""
-        current_geometry = self.content_frame.geometry()
-        target_geometry = QRect(
-            current_geometry.x(),
-            current_geometry.y() + self.content_frame.height(),
-            current_geometry.width(),
-            current_geometry.height()
+        # Slide in: Move the content frame back into view
+        self.slide_in_animation.setDuration(self.animation_duration)
+        self.slide_in_animation.setStartValue(
+            QRect(frame_geometry.x(), frame_geometry.y() + frame_geometry.height(),
+                  frame_geometry.width(), frame_geometry.height())
         )
+        self.slide_in_animation.setEndValue(frame_geometry)
+        self.slide_in_animation.setEasingCurve(QEasingCurve.InQuad)
 
-        # Create the animation
-        animation = QPropertyAnimation(self.content_frame, b"geometry")
-        animation.setDuration(300)  # Duration in milliseconds
-        animation.setStartValue(current_geometry)
-        animation.setEndValue(target_geometry)
-        animation.finished.connect(lambda: self.content_frame.setGeometry(current_geometry))
-        animation.start()
+        # Connect animations and start
+        self.slide_out_animation.finished.connect(self.slide_in_animation.start)
+        self.slide_out_animation.start()
