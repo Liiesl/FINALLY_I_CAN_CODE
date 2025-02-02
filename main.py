@@ -10,6 +10,7 @@ from assets.modules.side_panel import SidePanel
 from assets.modules.settings import Settings
 from assets.modules.config import Config
 from assets.modules.custom_window_bar import CustomWindowBar  # Import the CustomWindowBar
+from assets.modules.notification_bar import NotificationBar  # Import the NotificationBar
 
 class MainWindow(QMainWindow):
     def __init__(self, app):
@@ -279,8 +280,9 @@ class MainWindow(QMainWindow):
 
             self.top_bar.addWidget(self.menu_button, alignment=Qt.AlignLeft)
             self.top_bar.addWidget(self.search_field, alignment=Qt.AlignRight)
-
             main_content_layout.addWidget(top_bar_widget)
+            
+            main_content_layout.addWidget(self.notification_bar)
 
             if layout is None:
                 container_layout = QVBoxLayout()
@@ -469,6 +471,9 @@ class MainWindow(QMainWindow):
 
         self.config.set_tool_usage(self.tool_usage)
         self.config.set_recent_tools(self.recent_tools)
+
+        self.notification_bar.add_notification("⏰", f"Reminder: You last used the {tool_name} tool just now.")
+
 
         # Get the current splitter for the active tab
         current_splitter = self.tab_contents.currentWidget()
