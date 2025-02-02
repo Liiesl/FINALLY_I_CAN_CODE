@@ -1,5 +1,5 @@
 # assets/modules/notification_bar.py
-from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel, QPushButton
+from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel, QPushButton, QFrame
 from PyQt5.QtCore import Qt, QTimer, QPropertyAnimation, QRect
 from PyQt5.QtGui import QPalette
 import qtawesome as qta  # Import QtAwesome for icons
@@ -35,15 +35,25 @@ class NotificationBar(QWidget):
         self.left_arrow.clicked.connect(self.previous_notification)
         self.layout.addWidget(self.left_arrow)
 
+        # Invisible Frame to hold emoji and text
+        self.content_frame = QFrame(self)
+        self.content_frame.setStyleSheet("background-color: transparent; border: none;")
+        self.content_layout = QHBoxLayout(self.content_frame)
+        self.content_layout.setContentsMargins(0, 0, 0, 0)
+        self.content_layout.setSpacing(10)
+
         # Emoji Label
         self.label_emoji = QLabel()
         self.label_emoji.setStyleSheet(f"font-size: 20px; color: {self.text_color};")
-        self.layout.addWidget(self.label_emoji)
+        self.content_layout.addWidget(self.label_emoji)
 
         # Text Label
         self.label_text = QLabel()
         self.label_text.setStyleSheet(f"color: {self.text_color}; padding: 5px;")
-        self.layout.addWidget(self.label_text)
+        self.content_layout.addWidget(self.label_text)
+
+        # Add the invisible frame to the main layout
+        self.layout.addWidget(self.content_frame)
 
         # Right Arrow Button
         self.right_arrow = QPushButton()
@@ -106,28 +116,36 @@ class NotificationBar(QWidget):
 
     def slide_up_animation(self):
         """Slide up animation for the next notification."""
-        current_geometry = self.geometry()
-        target_geometry = QRect(current_geometry.x(), current_geometry.y() - self.height(),
-                                current_geometry.width(), current_geometry.height())
+        current_geometry = self.content_frame.geometry()
+        target_geometry = QRect(
+            current_geometry.x(),
+            current_geometry.y() - self.content_frame.height(),
+            current_geometry.width(),
+            current_geometry.height()
+        )
 
         # Create the animation
-        animation = QPropertyAnimation(self, b"geometry")
+        animation = QPropertyAnimation(self.content_frame, b"geometry")
         animation.setDuration(300)  # Duration in milliseconds
         animation.setStartValue(current_geometry)
         animation.setEndValue(target_geometry)
-        animation.finished.connect(lambda: self.setGeometry(current_geometry))
+        animation.finished.connect(lambda: self.content_frame.setGeometry(current_geometry))
         animation.start()
 
     def slide_down_animation(self):
         """Slide down animation for the previous notification."""
-        current_geometry = self.geometry()
-        target_geometry = QRect(current_geometry.x(), current_geometry.y() + self.height(),
-                                current_geometry.width(), current_geometry.height())
+        current_geometry = self.content_frame.geometry()
+        target_geometry = QRect(
+            current_geometry.x(),
+            current_geometry.y() + self.content_frame.height(),
+            current_geometry.width(),
+            current_geometry.height()
+        )
 
         # Create the animation
-        animation = QPropertyAnimation(self, b"geometry")
+        animation = QPropertyAnimation(self.content_frame, b"geometry")
         animation.setDuration(300)  # Duration in milliseconds
         animation.setStartValue(current_geometry)
         animation.setEndValue(target_geometry)
-        animation.finished.connect(lambda: self.setGeometry(current_geometry))
+        animation.finished.connect(lambda: self.content_frame.setGeometry(current_geometry))
         animation.start()
