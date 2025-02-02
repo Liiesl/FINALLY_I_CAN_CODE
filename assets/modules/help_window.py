@@ -5,8 +5,8 @@ from PyQt5.QtCore import Qt
 import markdown  # You may need to install the markdown package: pip install markdown
 
 class HelpWindow(QWidget):
-    def __init__(self, parent=None):
-        super().__init__(parent)
+    def __init__(self):
+        super().__init__()
         self.setWindowTitle("Help")
         self.setGeometry(100, 100, 800, 600)  # Set the size of the window
         self.markdown_file_path = os.path.join(os.path.dirname(__file__), "help.md")  # Path to the markdown file
