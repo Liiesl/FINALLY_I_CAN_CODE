@@ -148,6 +148,18 @@ class MainWindow(QMainWindow):
         # Replicate the main menu layout in the new tab
         self.main_menu(new_main_content_layout)
 
+    def resizeEvent(self, event):
+        super().resizeEvent(event)  # Call the base class resize event
+        
+        # Dynamically adjust the width of the search field
+        if self.menu_button and self.search_field:
+            menu_button_width = self.menu_button.width()  # Width of the menu button
+            margin = 20  # Add some margin between the menu button and the search field
+            available_width = self.width() - menu_button_width - margin
+            
+            # Set the maximum width of the search field to the available width
+            self.search_field.setFixedWidth(available_width)
+
     def remove_tab_content(self, index):
         widget = self.tab_contents.widget(index)
         if widget is not None:
@@ -251,7 +263,6 @@ class MainWindow(QMainWindow):
 
             self.search_field = QLineEdit()
             self.search_field.setPlaceholderText("Search tools...")
-            self.search_field.setFixedWidth(1000)
             
             palette = self.app.palette()
             text_color = palette.color(QPalette.Text).name()
