@@ -2,9 +2,11 @@ import os
 import sys
 import re
 import markdown
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QListWidget, QListWidgetItem
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QListWidget, QListWidgetItem, QSplitter, QPushButton
 from PyQt5.QtCore import Qt
 from PyQt5.QtWebEngineWidgets import QWebEngineView
+from PyQt5.QtGui import QFont
+import qtawesome as qta  # Import QtAwesome for icons
 
 def resource_path(relative_path):
     """Get the absolute path to a resource. Works for dev and PyInstaller."""
@@ -25,6 +27,7 @@ class HelpWindow(QWidget):
         self.headers = self.extract_headers(self.markdown_content)
         self.html_content = self.convert_to_html_with_styling()
 
+        # Initialize the UI
         self.setup_ui()
 
     def read_markdown_file(self):
@@ -62,36 +65,47 @@ class HelpWindow(QWidget):
 
         # Wrap the HTML content with the CSS
         styled_html = f"""
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <style>{css_content}</style>
-        </head>
-        <body>
-            {html_content}
-        </body>
-        </html>
+        <style>{css_content}</style>
+        {html_content}
         """
         return styled_html
 
     def setup_ui(self):
-        # Main layout
-        main_layout = QHBoxLayout()
-        self.setLayout(main_layout)
+        # Main layout using QSplitter for resizable panels
+        main_splitter = QSplitter(Qt.Horizontal)
+        self.setLayout(QVBoxLayout())
+        self.layout().addWidget(main_splitter)
 
         # Left panel: List of sections (headers)
+        left_panel = QWidget()
+        left_layout = QVBoxLayout()
+        left_panel.setLayout(left_layout)
+
+        # Add a collapsible button with an arrow icon
+        self.toggle_button = QPushButton(qta.icon('fa5s.angle-left'), "")
+        self.toggle_button.setFixedSize(20, 20)
+        self.toggle_button.clicked.connect(self.toggle_navigation)
+        left_layout.addWidget(self.toggle_button, alignment=Qt.AlignRight)
+
         self.section_list = QListWidget()
+        self.section_list.setFont(QFont("Arial", 14))  # Increase text size
         for level, title in self.headers:
             item = QListWidgetItem(title)
             item.setData(Qt.UserRole, title)  # Store the header title for later use
             self.section_list.addItem(item)
         self.section_list.itemClicked.connect(self.scroll_to_section)
-        main_layout.addWidget(self.section_list, 1)  # 1/3 of the width
+        left_layout.addWidget(self.section_list)
 
         # Right panel: Markdown viewer using QWebEngineView
         self.markdown_viewer = QWebEngineView()
         self.markdown_viewer.setHtml(self.html_content)  # Display the styled HTML content
-        main_layout.addWidget(self.markdown_viewer, 2)  # 2/3 of the width
+
+        # Add widgets to the splitter
+        main_splitter.addWidget(left_panel)
+        main_splitter.addWidget(self.markdown_viewer)
+
+        # Set initial sizes for the splitter
+        main_splitter.setSizes([200, 600])
 
     def scroll_to_section(self, item):
         """Scroll to the selected section in the markdown viewer."""
@@ -104,3 +118,12 @@ class HelpWindow(QWidget):
         # Convert the title to lowercase and replace spaces with hyphens
         anchor = title.lower().replace(" ", "-")
         return anchor
+
+    def toggle_navigation(self):
+        """Toggle the visibility of the navigation panel."""
+        if self.section_list.isVisible():
+            self.section_list.hide()
+            self.toggle_button.setIcon(qta.icon('fa5s.angle-right'))
+        else:
+            self.section_list.show()
+            self.toggle_button.setIcon(qta.icon('fa5s.angle-left'))
