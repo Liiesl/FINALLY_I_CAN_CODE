@@ -47,8 +47,6 @@ class MainWindow(QMainWindow):
         self.custom_window_bar = CustomWindowBar(self, self.app)
         self.layout.addWidget(self.custom_window_bar)
 
-        self.notification_bar = NotificationBar(self)
-
         self.custom_window_bar.setup_initial_tabs()  # Add this line to create initial tabs
         
         self.tab_contents = QStackedWidget()
@@ -57,6 +55,8 @@ class MainWindow(QMainWindow):
         self.side_panel = SidePanel(self, self.open_settings)
         self.side_panel.setVisible(False)
         self.side_panel.setFont(self.inter_regular_font)
+
+        self.notification_bar = NotificationBar(self)
 
         self.main_content = QWidget()
         self.main_content_layout = QVBoxLayout(self.main_content)
