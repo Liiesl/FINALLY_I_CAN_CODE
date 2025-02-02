@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QListWidget, QLis
 from PyQt5.QtCore import Qt
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 from PyQt5.QtWidgets import QApplication  # Import QApplication to access the global app instance
+from assets.modules.config import Config
 
 def resource_path(relative_path):
     """Get the absolute path to a resource. Works for dev and PyInstaller."""
