@@ -1,9 +1,11 @@
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QSlider, QComboBox, QMessageBox
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QSlider, QComboBox, QMessageBox, QFileDialog
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QFont, QPalette
 from assets.modules.config import Config
 from assets.buttons.toggle_switch import ToggleSwitch  # Import the ToggleSwitch class
 from assets.modules.custom_window_bar import CustomWindowBar
+import os
+import shutil
 
 class Settings(QWidget):
     settings_saved = pyqtSignal()  # Define a signal for settings saved
@@ -19,7 +21,6 @@ class Settings(QWidget):
 
     def init_ui(self):
         layout = QVBoxLayout()
-
         palette = self.parent().palette()
         text_color = palette.color(QPalette.WindowText).name()
         background_color = palette.color(QPalette.Window).name()
@@ -30,19 +31,19 @@ class Settings(QWidget):
 
         back_button = QPushButton("Back to Home")
         back_button.setStyleSheet(f"""
-            QPushButton {{
-                border: 2px solid {highlight_color};
-                color: {button_text_color};
-                border-radius: 10px;
-                padding: 10px;
-                min-height: 40px;
-                background-color: {button_color};
-                text-align: center;
-            }}
-            QPushButton:hover {{
-                border-color: {hover_color};
-                background-color: {hover_color};
-            }}
+        QPushButton {{
+            border: 2px solid {highlight_color};
+            color: {button_text_color};
+            border-radius: 10px;
+            padding: 10px;
+            min-height: 40px;
+            background-color: {button_color};
+            text-align: center;
+        }}
+        QPushButton:hover {{
+            border-color: {hover_color};
+            background-color: {hover_color};
+        }}
         """)
         back_button.clicked.connect(self.back_callback)
         layout.addWidget(back_button)
@@ -51,7 +52,6 @@ class Settings(QWidget):
         safe_area_label = QLabel("Safe Area Size (px):")
         safe_area_label.setStyleSheet(f"color: {text_color}; font-size: 26px;")
         safe_area_layout.addWidget(safe_area_label)
-
         self.safe_area_slider = QSlider(Qt.Horizontal)
         self.safe_area_slider.setMinimum(0)
         self.safe_area_slider.setMaximum(100)
@@ -60,61 +60,74 @@ class Settings(QWidget):
         self.safe_area_slider.setTickPosition(QSlider.TicksBelow)
         self.safe_area_slider.valueChanged.connect(self.update_safe_area)
         safe_area_layout.addWidget(self.safe_area_slider)
-
         self.safe_area_value_label = QLabel(f"{self.config.get_safe_area_size()} px")
         self.safe_area_value_label.setStyleSheet(f"color: {text_color};")
         safe_area_layout.addWidget(self.safe_area_value_label)
-
         layout.addLayout(safe_area_layout)
 
         text_size_layout = QHBoxLayout()
         text_size_label = QLabel("Text Size:")
         text_size_label.setStyleSheet(f"color: {text_color}; font-size: 26px;")
         text_size_layout.addWidget(text_size_label)
-
         self.text_size_dropdown = QComboBox()
         self.text_size_dropdown.addItems(["small", "default", "large", "huge"])
         self.text_size_dropdown.setCurrentText(self.config.get_text_size())
         self.text_size_dropdown.currentTextChanged.connect(self.update_text_size)
         self.text_size_dropdown.setStyleSheet(f"background-color: {background_color}; color: {text_color};")
         text_size_layout.addWidget(self.text_size_dropdown)
-
         layout.addLayout(text_size_layout)
 
         theme_layout = QHBoxLayout()
         theme_label_light = QLabel("Light")
         theme_label_light.setStyleSheet(f"color: {text_color}; font-size: 26px;")
         theme_layout.addWidget(theme_label_light)
-
         self.theme_toggle = ToggleSwitch()
         self.theme_toggle.set_state(self.config.get_theme())
         self.theme_toggle.mousePressEvent = self.toggle_theme
         theme_layout.addWidget(self.theme_toggle)
-
         theme_label_dark = QLabel("Dark")
         theme_label_dark.setStyleSheet(f"color: {text_color}; font-size: 26px;")
         theme_layout.addWidget(theme_label_dark)
-
         layout.addLayout(theme_layout)
 
         save_button = QPushButton("Save")
         save_button.setStyleSheet(f"""
-            QPushButton {{
-                border: 2px solid {highlight_color};
-                color: {button_text_color};
-                border-radius: 10px;
-                padding: 10px;
-                min-height: 40px;
-                background-color: {button_color};
-                text-align: center;
-            }}
-            QPushButton:hover {{
-                border-color: {hover_color};
-                background-color: {hover_color};
-            }}
+        QPushButton {{
+            border: 2px solid {highlight_color};
+            color: {button_text_color};
+            border-radius: 10px;
+            padding: 10px;
+            min-height: 40px;
+            background-color: {button_color};
+            text-align: center;
+        }}
+        QPushButton:hover {{
+            border-color: {hover_color};
+            background-color: {hover_color};
+        }}
         """)
         save_button.clicked.connect(self.save_settings)
         layout.addWidget(save_button)
+
+        # Export Config Button
+        export_config_button = QPushButton("Export Config")
+        export_config_button.setStyleSheet(f"""
+        QPushButton {{
+            border: 2px solid {highlight_color};
+            color: {button_text_color};
+            border-radius: 10px;
+            padding: 10px;
+            min-height: 40px;
+            background-color: {button_color};
+            text-align: center;
+        }}
+        QPushButton:hover {{
+            border-color: {hover_color};
+            background-color: {hover_color};
+        }}
+        """)
+        export_config_button.clicked.connect(self.export_config)
+        layout.addWidget(export_config_button)
 
         self.setLayout(layout)
         self.setStyleSheet(f"background-color: {background_color};")
@@ -141,18 +154,14 @@ class Settings(QWidget):
 
     def save_settings(self):
         print("Saving settings...")
-        
         # Save the settings
         self.config.set_safe_area_size(self.safe_area_slider.value())
         self.config.set_text_size(self.text_size_dropdown.currentText())
         self.config.set_theme(self.config.data["theme"])
-        
         self.config.save()
         self.config.load()
-    
         # Check if the theme has changed
         self.new_theme = self.config.get_theme()
-        
         if self.initial_theme != self.new_theme:
             # Show a confirmation message box
             msg_box = QMessageBox()
@@ -164,22 +173,19 @@ class Settings(QWidget):
             )
             msg_box.setWindowTitle("Relaunch Application")
             msg_box.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-            
             msg_box.setStyleSheet("""
-                QMessageBox {
-                    color: black;
-                }
-                QMessageBox QLabel {
-                    color: black;
-                }
-                QMessageBox QPushButton {
-                    color: black;
-                }
+            QMessageBox {
+            color: black;
+            }
+            QMessageBox QLabel {
+            color: black;
+            }
+            QMessageBox QPushButton {
+            color: black;
+            }
             """)
-            
             # Execute the message box and get the user's choice
             choice = msg_box.exec_()
-            
             if choice == QMessageBox.Yes:
                 # Relaunch the application
                 self.relaunch_app()
@@ -194,19 +200,36 @@ class Settings(QWidget):
             # If the theme hasn't changed, just refresh the settings
             if self.main_window is not None:
                 self.main_window.refresh_settings()
-    
+
     def relaunch_app(self):
         """Relaunch the application."""
         import os
         import sys
         import subprocess
-        
         # Get the current script path
         script_path = sys.argv[0]
-        
         # Close the current application
         self.main_window.close()
-        
         # Relaunch the application
         subprocess.Popen([sys.executable, script_path])
         sys.exit()
+
+    def export_config(self):
+        """Export the config.json file to a user-selected directory."""
+        options = QFileDialog.Options()
+        options |= QFileDialog.ShowDirsOnly  # Only show directories, no files
+        directory = QFileDialog.getExistingDirectory(self, "Select Directory to Export Config", "", options=options)
+
+        if directory:
+            # Path to the original config.json
+            original_config_path = os.path.join(os.path.dirname(__file__), "assets", "modules", "config.json")
+            
+            # Destination path in the selected directory
+            destination_path = os.path.join(directory, "config.json")
+
+            try:
+                # Copy the config.json file to the selected directory
+                shutil.copy(original_config_path, destination_path)
+                QMessageBox.information(self, "Export Successful", f"Config file exported successfully to:\n{destination_path}")
+            except Exception as e:
+                QMessageBox.critical(self, "Export Failed", f"Failed to export config file:\n{str(e)}")
