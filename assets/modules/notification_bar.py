@@ -11,7 +11,7 @@ class NotificationBar(QWidget):
         # Main layout
         self.layout = QHBoxLayout(self)
         self.layout.setContentsMargins(10, 5, 10, 5)  # Padding inside the rectangle
-        self.layout.setSpacing(10)  # Spacing between elements
+        self.layout.setSpacing(3)  # Spacing between elements
 
         # Notifications list
         self.current_index = 0
