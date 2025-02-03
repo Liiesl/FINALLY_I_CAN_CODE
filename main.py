@@ -278,6 +278,7 @@ class MainWindow(QMainWindow):
             ("Multilingual Merge", "Merge subtitles in different languages with colors.", ["merge", "translation"]),
             ("Coming Soon", "More tools will be added in the future.", ["other"])
         ]
+        tools_dict = {name: (desc, categories) for name, desc, categories in tools}
     
         # Get unique categories
         all_categories = set()
