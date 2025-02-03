@@ -264,6 +264,7 @@ class MainWindow(QMainWindow):
             btn = QPushButton(category.upper())
             btn.setCheckable(True)
             # Apply dynamic text size based on app's configuration
+            self.config = Config(source="MainWindow")
             text_size = self.config.get_text_size()
             font_size = {
                 "small": 10,
@@ -407,6 +408,7 @@ class MainWindow(QMainWindow):
             }}
         """)
 
+        self.config = Config(source="MainWindow")
         text_size = self.config.get_text_size()
         font_size = {
             "small": 18,
