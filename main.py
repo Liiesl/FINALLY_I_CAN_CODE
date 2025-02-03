@@ -350,7 +350,7 @@ class MainWindow(QMainWindow):
         has_recent_tools = len(self.recent_tools) > 0
     
         if has_recent_tools:
-            for tool_name in self.tool_usage = self.config.get_tool_usage()[:3]:
+            for tool_name in self.recent_tools[:3]:
                 btn = self.create_tool_button(tool_name, self.tools_dict.get(tool_name, ("Recently used tool", []))[0], self.tools_dict.get(tool_name, ("Recently used tool", []))[1])
                 recent_layout.addWidget(btn)
             layout.addWidget(recent_widget)
