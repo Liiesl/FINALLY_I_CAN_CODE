@@ -271,7 +271,7 @@ class MainWindow(QMainWindow):
                 "large": 34,
                 "huge": 42
             }.get(text_size, 26)  # Default to 18 if text size is unknown
-            btn.setFont(QFont("Inter ExtraBold", font_size))
+            btn.setFont(QFont("Inter ExtraBold", font_size - 10))
             btn.setStyleSheet(f"""
                 QPushButton {{
                     border: 2px solid {self.highlight_color};
@@ -416,13 +416,13 @@ class MainWindow(QMainWindow):
         }.get(text_size, 26)
 
         name_label = QLabel(tool_name)
-        name_label.setFont(QFont("Inter ExtraBold", font_size +10, QFont.Bold))
+        name_label.setFont(QFont("Inter ExtraBold", font_size, QFont.Bold))
         name_label.setStyleSheet(f"color: {self.border_color}; background-color: transparent;")
         name_label.setWordWrap(True)
         name_label.setAlignment(Qt.AlignCenter)
 
         description_label = QLabel(tool_description)
-        description_label.setFont(QFont("Inter Regular", font_size -18))
+        description_label.setFont(QFont("Inter Regular", font_size - 18))
         description_label.setStyleSheet(f"color: {self.text_color}; background-color: transparent;")
         description_label.setWordWrap(True)
         description_label.setAlignment(Qt.AlignCenter)
