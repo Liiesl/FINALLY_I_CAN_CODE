@@ -373,17 +373,17 @@ class MainWindow(QMainWindow):
         button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         button.setStyleSheet(f"""
             QPushButton {{
-                border: 5px solid {border_color};
+                border: 5px solid {self.border_color};
                 color: rgba(255, 255, 255, 0);
                 border-radius: 15px;
                 padding: 10px;
                 margin: 10px;
-                background-color: {background_color};
+                background-color: {self.background_color};
                 text-align: center;
             }}
             QPushButton:hover {{
-                border-color: {hover_border_color};
-                background-color: {hover_background_color};
+                border-color: {sself.hover_border_color};
+                background-color: {self.hover_background_color};
             }}
         """)
 
