@@ -418,7 +418,13 @@ class MainWindow(QMainWindow):
         # Create the description label (hidden by default)
         description_label = QLabel(tool_description)
         description_label.setFont(QFont("Inter Regular", font_size))
-        description_label.setStyleSheet(f"color: {self.text_color}; background-color: {self.base_color}; padding: 10px; border: 2px solid {self.highlight_color}; border-radius: 10px;")
+        description_label.setStyleSheet(f"""
+            color: {self.text_color};
+            background-color: {self.base_color};
+            padding: 10px;
+            border: 2px solid {self.highlight_color};
+            border-radius: 10px;
+        """)
         description_label.setWordWrap(True)
         description_label.hide()  # Hide initially
     
@@ -430,6 +436,7 @@ class MainWindow(QMainWindow):
         # Show description on hover
         def show_description(event):
             pos = button.mapToGlobal(QPoint(0, 0))  # Get global position of the button
+            description_label.setParent(button.parent())  # Set the same parent as the button
             description_label.move(pos.x() + button.width(), pos.y())  # Position beside the button
             description_label.show()
     
@@ -441,8 +448,9 @@ class MainWindow(QMainWindow):
     
         # Connect the tool selection action
         button.clicked.connect(lambda: self.tool_selected(tool_name))
-        return button
-
+    
+        return button, description_label  # Return both button and description_label
+    
     def on_tag_selected(self):
         self.most_used_label.hide()
         self.most_used_widget.hide()
