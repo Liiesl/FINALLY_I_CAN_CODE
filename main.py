@@ -558,9 +558,7 @@ class MainWindow(QMainWindow):
             settings_widget = Settings(parent=self.main_content, back_callback=self.main_menu, main_window=self)
             settings_widget.setFont(self.inter_regular_font)
             settings_widget.settings_saved.connect(self.apply_theme)
-
-            settings_widget.experimental_tools_toggled.connect(self.toggle_experimental_tools)
-
+            
             # Load the settings widget into the current tab's main content layout
             self.load_tool(settings_widget, main_content_layout)
 
