@@ -564,7 +564,8 @@ class MainWindow(QMainWindow):
                 tool_widget = MultilingualTool(parent=main_content, back_callback=self.main_menu)
                 self.load_tool(tool_widget, main_content_layout)
             else:
-                msg_box = QMessageBox.information(self, "Coming Soon", "This feature is coming soon!")
+                msg_box = QMessageBox()
+                msg_box.setText(self, "Coming Soon", "This feature is coming soon!")
                 msg_box.setStyleSheet("""
                 QMessageBox {
                 color: black;
