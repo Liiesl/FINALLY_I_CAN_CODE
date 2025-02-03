@@ -454,6 +454,7 @@ class MainWindow(QMainWindow):
             self.apply_text_size()
             self.apply_theme()
             self.update_tool_button_visibility()
+            self.filter_tools(self.search_field.text())
 
     def on_tag_selected(self):
         self.most_used_label.hide()
@@ -626,7 +627,6 @@ class MainWindow(QMainWindow):
     def toggle_experimental_tools(self, enabled):
         """Toggle the visibility of experimental tools."""
         self.experimental_tools_enabled = enabled
-        self.filter_tools(self.search_field.text())
 
     def filter_tools(self, search_text):
         if not hasattr(self, 'search_field') or self.search_field is None:
