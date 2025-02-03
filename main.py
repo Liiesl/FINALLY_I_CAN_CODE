@@ -118,34 +118,26 @@ class MainWindow(QMainWindow):
     def create_new_tab_content(self):
         # Create a new splitter for the tab
         new_splitter = QSplitter(Qt.Horizontal)
-
+    
         # Create a new side panel for the tab
         new_side_panel = SidePanel(self, self.open_settings)
         new_side_panel.setVisible(False)
         new_side_panel.setFont(self.inter_regular_font)
-
-        self.top_bar = QHBoxLayout()
-        self.top_bar_added = False
-        self.menu_button = None
-
+    
         # Create a new main content widget for the tab
         new_main_content = QWidget()
         new_main_content_layout = QVBoxLayout(new_main_content)
         new_main_content.setLayout(new_main_content_layout)
-
+    
         # Add the side panel and main content to the splitter
         new_splitter.addWidget(new_side_panel)
         new_splitter.addWidget(new_main_content)
-        new_splitter.setSizes([0, 1])
-
+        new_splitter.setSizes([0, 1])  # Initially hide the side panel
+    
         # Add the splitter to the tab contents
         self.tab_contents.addWidget(new_splitter)
         self.tab_contents.setCurrentWidget(new_splitter)
-
-        # Store reference to the FIRST splitter
-        if not hasattr(self, 'splitter'):
-            self.splitter = new_splitter  # Maintain reference for initial tab
-
+    
         # Replicate the main menu layout in the new tab
         self.main_menu(new_main_content_layout)
 
@@ -225,229 +217,162 @@ class MainWindow(QMainWindow):
         if current_splitter is not None:
             main_content = current_splitter.widget(1)  # Main content is the second widget in the splitter
             main_content_layout = main_content.layout()
-
-            self.main_content_layout = main_content_layout
-
-            self.main_menu_active = True
-
+    
             # Clear the existing layout
-            for i in reversed(range(main_content_layout.count())):
-                widget = main_content_layout.itemAt(i).widget()
-                if widget is not None:
-                    widget.setParent(None)
-
+            self.clear_layout(main_content_layout)
+    
             # Add the top bar with the menu button
             top_bar_widget = QWidget()
             self.top_bar = QHBoxLayout(top_bar_widget)
             self.top_bar.setContentsMargins(0, 0, 0, 0)
-
+    
             self.menu_button = QPushButton()
             menu_icon = qta.icon('fa.bars')
             self.menu_button.setIcon(menu_icon)
             self.menu_button.setFixedSize(30, 30)
             self.menu_button.setStyleSheet("color: {button_text_color}; background-color: transparent; border: none; border-radius: 3px;")
             self.menu_button.clicked.connect(self.toggle_side_panel)
-
+    
             self.search_field = QLineEdit()
             self.search_field.setPlaceholderText("Search tools...")
-            self.search_field.setFixedWidth(700)
-
-            palette = self.app.palette()
-            text_color = palette.color(QPalette.Text).name()
-            bg_color = palette.color(QPalette.Base).name()
-            placeholder_color = palette.color(QPalette.PlaceholderText).name()
-            button_color = palette.color(QPalette.Button).name()
-            button_text_color = palette.color(QPalette.ButtonText).name()
-
-            search_icon = qta.icon('fa5s.search', color=text_color)
-            self.search_field.addAction(search_icon, QLineEdit.LeadingPosition)
-            self.search_field.setStyleSheet(f"""
-                QLineEdit {{
-                    background-color: {button_color};
-                    color: {button_text_color};
-                    border: 2px solid {palette.color(QPalette.Highlight).name()};
-                    border-radius: 20px;
-                    padding: 5px 5px 5px 35px;
-                }}
-                QLineEdit::placeholder {{
-                    color: {palette.color(QPalette.PlaceholderText).name()};
-                }}
-            """)
-
             self.search_field.textChanged.connect(self.filter_tools)
-
+    
             self.top_bar.addWidget(self.menu_button, alignment=Qt.AlignLeft)
             self.top_bar.addWidget(self.search_field, alignment=Qt.AlignRight)
             main_content_layout.addWidget(top_bar_widget)
-
+    
             # Add the NotificationBar below the top bar
             self.notification_bar = NotificationBar(self)
-            if hasattr(self, 'notification_bar'):
-                main_content_layout.addWidget(self.notification_bar)
-
-            if layout is None:
-                container_layout = QVBoxLayout()
-            else:
-                container_layout = layout
-
-            # Create main horizontal layout (categories + scroll area)
-            main_h_layout = QHBoxLayout()
-            main_h_layout.setContentsMargins(20, 20, 20, 20)
-            main_h_layout.setSpacing(30)
-
-            # Create category buttons panel (left side)
-            category_panel = QWidget()
-            category_layout = QVBoxLayout(category_panel)
-            category_layout.setContentsMargins(0, 0, 0, 0)
-            category_layout.setSpacing(8)
-
-            # Add this line before the tools loop
-            self.tool_buttons = []
-
-            tools = [
-                ("Longer Appearance SRT", "Increase the duration each subtitle appears.", ["appearance", "timing"]),
-                ("Merge SRT Files", "Combine multiple SRT files into one.", ["merge"]),
-                ("Subtitle Converter", "Convert subtitles between different formats.", ["conversion"]),
-                ("Subtitle Shifter", "Shift subtitles by milliseconds.", ["timing"]),
-                ("Multilingual Merge", "Merge subtitles in different languages with colors.", ["merge", "translation"]),
-                ("Coming Soon", "More tools will be added in the future.", ["other"])
-            ]
-            tools_dict = {name: (desc, categories) for name, desc, categories in tools}
-
-            self.tools = tools
-
-            # Get unique categories
-            all_categories = set()
-            for tool in tools:
-                all_categories.update(tool[2])
-
-            for category in sorted(all_categories):
-                btn = QPushButton(category.upper())
-                btn.setCheckable(True)
-
-                highlight_color = self.app.palette().color(QPalette.Highlight).name()
-                base_color = self.app.palette().color(QPalette.Base).name()
-                text_color = self.app.palette().color(QPalette.Text).name()
-                highlight_text_color = self.app.palette().color(QPalette.HighlightedText).name()
-                btn.setStyleSheet(f"""
-                    QPushButton {{
-                        border: 2px solid {highlight_color};
-                        border-radius: 15px;
-                        padding: 8px;
-                        margin: 4px;
-                        background-color: {base_color};
-                        color: {text_color};
-                    }}
-                    QPushButton:checked {{
-                        background-color: {highlight_color};
-                        color: {highlight_text_color};
-                    }}
-                """)
-                btn.clicked.connect(self.update_category_filters)
-                self.category_buttons[category] = btn
-                category_layout.addWidget(btn)
-
-            category_layout.addStretch()
-            main_h_layout.addWidget(category_panel, stretch=1)
-
-            navigation_frame = QFrame()
-            navigation_layout = QHBoxLayout(navigation_frame)
-            navigation_layout.setContentsMargins(0, 0, 0, 0)
-
-            # Create a main scroll widget to hold all sections
-            scroll_content = QWidget()
-            main_scroll_layout = QVBoxLayout(scroll_content)
-            main_scroll_layout.setContentsMargins(20, 20, 20, 20)
-            main_scroll_layout.setSpacing(30)
-
-            scroll_area = QScrollArea()
-            scroll_area.setWidgetResizable(True)
-            scroll_area.setWidget(scroll_content)
-            scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-            scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-            self.scroll_content = scroll_content
-            self.scroll_area = scroll_area
-
-            most_used_label = QLabel("Most Used Tools")
-            most_used_label.setFont(self.inter_extra_bold_font)
-            most_used_label.setStyleSheet("color: palette(WindowText);")
-            main_scroll_layout.addWidget(most_used_label)
-            self.most_used_label = most_used_label
-
-            most_used_widget = QWidget()
-            most_used_layout = QHBoxLayout(most_used_widget)
-            most_used_layout.setContentsMargins(0, 0, 0, 0)
-            self.most_used_widget = most_used_widget
-
-            self.tool_usage = self.config.get_tool_usage()
-            has_tool_usage = any(self.tool_usage.values())
-
-            if has_tool_usage:
-                for tool_name in sorted(self.tool_usage, key=lambda x: -self.tool_usage[x])[:3]:
-                    btn = self.create_tool_button(tool_name, tools_dict.get(tool_name, ("Popular tool", []))[0], tools_dict.get(tool_name, ("Popular tool", []))[1])
-                    most_used_layout.addWidget(btn)
-                main_scroll_layout.addWidget(most_used_widget)
-            else:
-                most_used_label.hide()
-                most_used_widget.hide()
-
-            # Add Recent section
-            recent_label = QLabel("Recent Tools")
-            recent_label.setFont(self.inter_extra_bold_font)
-            recent_label.setStyleSheet("color: palette(WindowText);")
-            main_scroll_layout.addWidget(recent_label)
-            self.recent_label = recent_label
-
-            recent_widget = QWidget()
-            recent_layout = QHBoxLayout(recent_widget)
-            recent_layout.setContentsMargins(0, 0, 0, 0)
-            self.recent_widget = recent_widget
-
-            self.recent_tools = self.config.get_recent_tools()
-            has_recent_tools = len(self.recent_tools) > 0  # Check if there are any recent tools
-
-            if has_recent_tools:
-                for tool_name in self.recent_tools[:3]:
-                    btn = self.create_tool_button(tool_name, tools_dict.get(tool_name, ("Recently used tool", []))[0], tools_dict.get(tool_name, ("Recently used tool", []))[1])               
-                    recent_layout.addWidget(btn)
-                main_scroll_layout.addWidget(recent_widget)
-            else:
-                recent_label.hide()
-                recent_widget.hide()
-
-            all_tools_label = QLabel("All Tools")
-            all_tools_label.setFont(self.inter_extra_bold_font)
-            all_tools_label.setStyleSheet("color: palette(WindowText);")
-            main_scroll_layout.addWidget(all_tools_label)
-
-            # Create a widget to hold the grid
-            all_tools_widget = QWidget()
-            all_tools_grid = QGridLayout(all_tools_widget)
-            all_tools_grid.setHorizontalSpacing(20)
-            all_tools_grid.setVerticalSpacing(20)
-            all_tools_grid.setColumnStretch(0, 0)  # Prevent column stretching
-            all_tools_grid.setColumnStretch(1, 0)
-            all_tools_grid.setColumnStretch(2, 0)
-            all_tools_grid.setRowStretch(0, 0)     # Prevent row stretching
-            all_tools_grid.setRowStretch(1, 0)
-            columns = 3
-
-            for index, tool in enumerate(tools):
-                btn = self.create_tool_button(tool[0], tool[1], tool[2])
-                row = index // columns
-                col = index % columns
-                all_tools_grid.addWidget(btn, row, col)
-                self.tool_buttons.append(btn)
-            main_scroll_layout.addWidget(all_tools_widget)
-
-            scroll_area.setWidget(scroll_content)
-            main_h_layout.addWidget(self.scroll_area, stretch=4)
-            main_content_layout.addLayout(main_h_layout)
-
+            main_content_layout.addWidget(self.notification_bar)
+    
+            # Add categories and tools dynamically
+            self.add_categories_and_tools(main_content_layout)
+    
+            # Apply theme and text size
             self.apply_text_size()
             self.apply_theme()
             self.update_tool_button_visibility()
 
+    def add_categories_and_tools(self, layout):
+        # Create main horizontal layout (categories + scroll area)
+        main_h_layout = QHBoxLayout()
+        main_h_layout.setContentsMargins(20, 20, 20, 20)
+        main_h_layout.setSpacing(30)
+    
+        # Create category buttons panel (left side)
+        category_panel = QWidget()
+        category_layout = QVBoxLayout(category_panel)
+        category_layout.setContentsMargins(0, 0, 0, 0)
+        category_layout.setSpacing(8)
+    
+        # Initialize tool buttons and active categories for this tab
+        self.tool_buttons = []
+        self.active_categories = set()
+    
+        # Define tools
+        tools = [
+            ("Longer Appearance SRT", "Increase the duration each subtitle appears.", ["appearance", "timing"]),
+            ("Merge SRT Files", "Combine multiple SRT files into one.", ["merge"]),
+            ("Subtitle Converter", "Convert subtitles between different formats.", ["conversion"]),
+            ("Subtitle Shifter", "Shift subtitles by milliseconds.", ["timing"]),
+            ("Multilingual Merge", "Merge subtitles in different languages with colors.", ["merge", "translation"]),
+            ("Coming Soon", "More tools will be added in the future.", ["other"])
+        ]
+    
+        # Get unique categories
+        all_categories = set()
+        for tool in tools:
+            all_categories.update(tool[2])
+    
+        # Create category buttons
+        for category in sorted(all_categories):
+            btn = QPushButton(category.upper())
+            btn.setCheckable(True)
+            btn.clicked.connect(self.update_category_filters)
+            category_layout.addWidget(btn)
+        category_layout.addStretch()
+    
+        main_h_layout.addWidget(category_panel, stretch=1)
+    
+        # Create scroll area for tools
+        scroll_content = QWidget()
+        main_scroll_layout = QVBoxLayout(scroll_content)
+        main_scroll_layout.setContentsMargins(20, 20, 20, 20)
+        main_scroll_layout.setSpacing(30)
+    
+        scroll_area = QScrollArea()
+        scroll_area.setWidgetResizable(True)
+        scroll_area.setWidget(scroll_content)
+    
+        # Add tools dynamically
+        self.add_tool_sections(main_scroll_layout, tools)
+    
+        main_h_layout.addWidget(scroll_area, stretch=4)
+        layout.addLayout(main_h_layout)
+    
+    def add_tool_sections(self, layout, tools):
+        # Add Most Used Tools section
+        most_used_label = QLabel("Most Used Tools")
+        most_used_label.setFont(self.inter_extra_bold_font)
+        layout.addWidget(most_used_label)
+    
+        most_used_widget = QWidget()
+        most_used_layout = QHBoxLayout(most_used_widget)
+        most_used_layout.setContentsMargins(0, 0, 0, 0)
+    
+        tool_usage = self.config.get_tool_usage()
+        has_tool_usage = any(tool_usage.values())
+    
+        if has_tool_usage:
+            for tool_name in sorted(tool_usage, key=lambda x: -tool_usage[x])[:3]:
+                btn = self.create_tool_button(tool_name, tools_dict.get(tool_name, ("Popular tool", []))[0], tools_dict.get(tool_name, ("Popular tool", []))[1])
+                most_used_layout.addWidget(btn)
+            layout.addWidget(most_used_widget)
+        else:
+            most_used_label.hide()
+            most_used_widget.hide()
+    
+        # Add Recent Tools section
+        recent_label = QLabel("Recent Tools")
+        recent_label.setFont(self.inter_extra_bold_font)
+        layout.addWidget(recent_label)
+    
+        recent_widget = QWidget()
+        recent_layout = QHBoxLayout(recent_widget)
+        recent_layout.setContentsMargins(0, 0, 0, 0)
+    
+        recent_tools = self.config.get_recent_tools()
+        has_recent_tools = len(recent_tools) > 0
+    
+        if has_recent_tools:
+            for tool_name in recent_tools[:3]:
+                btn = self.create_tool_button(tool_name, tools_dict.get(tool_name, ("Recently used tool", []))[0], tools_dict.get(tool_name, ("Recently used tool", []))[1])
+                recent_layout.addWidget(btn)
+            layout.addWidget(recent_widget)
+        else:
+            recent_label.hide()
+            recent_widget.hide()
+    
+        # Add All Tools section
+        all_tools_label = QLabel("All Tools")
+        all_tools_label.setFont(self.inter_extra_bold_font)
+        layout.addWidget(all_tools_label)
+    
+        all_tools_widget = QWidget()
+        all_tools_grid = QGridLayout(all_tools_widget)
+        all_tools_grid.setHorizontalSpacing(20)
+        all_tools_grid.setVerticalSpacing(20)
+    
+        columns = 3
+        for index, tool in enumerate(tools):
+            btn = self.create_tool_button(tool[0], tool[1], tool[2])
+            row = index // columns
+            col = index % columns
+            all_tools_grid.addWidget(btn, row, col)
+            self.tool_buttons.append(btn)
+    
+        layout.addWidget(all_tools_widget)
+        
     def on_tag_selected(self):
         self.most_used_label.hide()
         self.most_used_widget.hide()
