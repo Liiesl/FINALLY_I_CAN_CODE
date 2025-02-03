@@ -133,8 +133,8 @@ class HelpWindow(QWidget):
 
     def generate_anchor(self, title):
         """Generate an anchor name for a given header title."""
-        # Convert the title to lowercase and replace spaces with hyphens
-        anchor = title.lower().replace(" ", "-")
+        # Convert the title to lowercase, replace spaces with hyphens, and remove non-alphanumeric characters
+        anchor = re.sub(r'[^\w\- ]', '', title).strip().lower().replace(' ', '-')
         return anchor
 
     def toggle_navigation(self):
