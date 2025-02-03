@@ -389,17 +389,20 @@ class MainWindow(QMainWindow):
         button = QPushButton()
         button.setFixedSize(300, 200)
         button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-    
-        # Make the button itself invisible
-        button.setStyleSheet("""
-            QPushButton {
-                border: none;
-                background-color: transparent;
-            }
-            QPushButton:hover {
-                border: none;
+        button.setStyleSheet(f"""
+            QPushButton {{
+                border: rgba(255, 255, 255, 0);
+                color: rgba(255, 255, 255, 0);
+                border-radius: 15px;
+                padding: 10px;
+                margin: 10px;
+                background-color: rgba(255, 255, 255, 0);
+                text-align: center;
+            }}
+            QPushButton:hover {{
+                border-color: {self.hover_border_color};
                 background-color: {self.hover_background_color};
-            }
+            }}
         """)
     
         # Create the name label (visible always)
