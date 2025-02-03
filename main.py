@@ -467,8 +467,17 @@ class MainWindow(QMainWindow):
                 # If neither side has enough space, default to the left
                 final_pos = pos_left
             
-            # Align the top edge of the description label with the top edge of the button
-            final_pos.setY(button_global_pos.y())  # Ensure vertical alignment
+            # Adjust vertical position to align with the button and stay within window bounds
+            final_pos.setY(button_global_pos.y())  # Align top edge with the button
+            
+            # Check if the description label fits vertically within the window
+            if final_pos.y() + description_size.height() > window_bottom_right.y():
+                # If it doesn't fit below, move it above the button
+                final_pos.setY(button_global_pos.y() - description_size.height())
+            
+            if final_pos.y() < window_top_left.y():
+                # If it doesn't fit above, move it back below the button
+                final_pos.setY(button_global_pos.y())
             
             # Move and show the description label
             description_label.move(final_pos)
