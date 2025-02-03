@@ -447,7 +447,7 @@ class MainWindow(QMainWindow):
         button_layout.addWidget(name_label)
         button_layout.addWidget(description_label)
 
-        button.clicked.connect(lambda: self.tool_selected(tool_nameself.tab_contents.currentIndex()))
+        button.clicked.connect(lambda: self.tool_selected(tool_name, self.tab_contents.currentIndex()))
         return button
         
     def on_tag_selected(self):
