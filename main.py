@@ -436,43 +436,40 @@ class MainWindow(QMainWindow):
         button_layout.addStretch()
     
         # Show description on hover
-        def show_description(self, event):
-            # Get the global position of the mouse cursor
-            cursor_pos = QCursor.pos()
-        
-            # Get the size of the description label
-            description_size = self.description_label.size()
-        
+        def show_description(event):
+            # Get the global position of the button
+            button_global_pos = button.mapToGlobal(QPoint(0, 0))
+            
+            # Get the size of the button and description label
+            button_size = button.size()
+            description_size = description_label.size()
+            
             # Get the window geometry (global coordinates)
             window_geometry = self.geometry()
             window_top_left = self.mapToGlobal(QPoint(0, 0))
             window_bottom_right = window_top_left + QPoint(window_geometry.width(), window_geometry.height())
-        
+            
             # Calculate potential positions for the description label
-            pos_right = cursor_pos + QPoint(description_size.width(), 0)  # To the right of the cursor
-            pos_left = cursor_pos - QPoint(description_size.width(), 0)   # To the left of the cursor
-        
+            pos_right = button_global_pos + QPoint(button_size.width(), 0)  # To the right of the button
+            pos_left = button_global_pos - QPoint(description_size.width(), 0)  # To the left of the button
+            
             # Ensure the description label stays within the window bounds
-            if cursor_pos.x() + description_size.width() <= window_bottom_right.x():
+            if pos_right.x() + description_size.width() <= window_bottom_right.x():
                 # If there's enough space to the right, place it to the right
-                final_pos = cursor_pos
-            elif cursor_pos.x() - description_size.width() >= window_top_left.x():
+                final_pos = pos_right
+            elif pos_left.x() >= window_top_left.x():
                 # If there's enough space to the left, place it to the left
-                final_pos = cursor_pos - QPoint(description_size.width(), 0)
+                final_pos = pos_left
             else:
                 # If neither side has enough space, default to the left
-                final_pos = cursor_pos - QPoint(description_size.width(), 0)
-        
-            # Adjust vertical position to avoid going outside the window
-            if final_pos.y() + description_size.height() > window_bottom_right.y():
-                final_pos.setY(window_bottom_right.y() - description_size.height())
-        
-            if final_pos.y() < window_top_left.y():
-                final_pos.setY(window_top_left.y())
+                final_pos = pos_left
+            
+            # Adjust vertical position to align with the button
+            final_pos.setY(button_global_pos.y())
         
             # Move and show the description label
-            self.description_label.move(final_pos)
-            self.description_label.show()
+            description_label.move(final_pos)
+            description_label.show()
             
         def hide_description(event):
             description_label.hide()
