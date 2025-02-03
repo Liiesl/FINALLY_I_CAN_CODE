@@ -51,22 +51,27 @@ class HelpWindow(QWidget):
 
     def convert_to_html_with_styling(self):
         """Convert markdown to styled HTML using a custom CSS file."""
-        # Define markdown extensions for syntax highlighting and table of contents
+        # Define markdown extensions for syntax highlighting, table of contents, and unique IDs
         extensions = ['extra', 'codehilite', 'toc']
-        html_content = markdown.markdown(self.markdown_content, extensions=extensions)
-
+        html_content = markdown.markdown(self.markdown_content, extensions=extensions, output_format='html5')
+        
         # Load custom CSS for styling
         css_path = resource_path("assets/modules/styles.css")
+        css_content = ""
         if os.path.exists(css_path):
             with open(css_path, 'r', encoding='utf-8') as f:
                 css_content = f.read()
-        else:
-            css_content = ""  # Default to no CSS if the file is missing
-
+        
         # Wrap the HTML content with the CSS
         styled_html = f"""
-        <style>{css_content}</style>
-        {html_content}
+        <html>
+            <head>
+                <style>{css_content}</style>
+            </head>
+            <body>
+                {html_content}
+            </body>
+        </html>
         """
         return styled_html
 
