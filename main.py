@@ -598,7 +598,7 @@ class MainWindow(QMainWindow):
                 side_panel.setVisible(False)
             else:
                 side_panel.setVisible(True)
-                current_splitter.setSizes([self.width() // 2, self.width() // 2])  # Show the side panel
+                current_splitter.setSizes([self.width() // 1, self.width() // 3])  # Show the side panel
 
     def open_settings(self, item=None):
         # Get the current splitter for the active tab
