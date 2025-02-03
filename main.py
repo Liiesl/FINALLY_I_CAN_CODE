@@ -580,11 +580,11 @@ class MainWindow(QMainWindow):
                 if btn.isChecked():
                     self.active_categories.add(category)
 
-            if self.active_categories:
-                self.on_tag_selected()
-            else:
-                self.on_tag_deselected()
-            self.filter_tools(self.search_field.text())
+                if self.active_categories:
+                    self.on_tag_selected()
+                else:
+                    self.on_tag_deselected()
+                self.filter_tools(self.search_field.text())
 
     def filter_tools(self, search_text):
         search_text = search_text.lower()
