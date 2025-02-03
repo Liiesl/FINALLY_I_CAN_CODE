@@ -387,7 +387,7 @@ class MainWindow(QMainWindow):
     def create_tool_button(self, tool_name, tool_description, categories):
         # Create the button
         button = QPushButton()
-        button.setFixedSize(300, 200)
+        button.setFixedSize(200, 100)
         button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         button.setStyleSheet(f"""
             QPushButton {{
@@ -417,33 +417,27 @@ class MainWindow(QMainWindow):
         # Get the emoji for the current tool
         emoji = emojis.get(tool_name, "❓")  # Default to question mark if no emoji is defined
     
-        # Create the layout for the button
-        button_layout = QVBoxLayout(button)
-        button_layout.setAlignment(Qt.AlignCenter)  # Center-align contents
-
-        # Add the emoji label (top part of the button)
-        emoji_label = QLabel(emoji)
+        # Combine the emoji and tool name into a single label
+        combined_text = f"{emoji} {tool_name}"
+        text_size = self.config.get_text_size()
         font_size = {
-            "small": 48,
-            "default": 64,
-            "large": 80,
-            "huge": 96
-        }.get(self.config.get_text_size(), 64)  # Adjust size based on text size setting
-        emoji_label.setFont(QFont("Inter Regular", font_size))
-        emoji_label.setStyleSheet(f"color: {self.text_color};")
-        button_layout.addWidget(emoji_label)
-        
-        name_label = QLabel(tool_name)
-        name_font_size = {
-            "small": 14,
-            "default": 18,
-            "large": 22,
-            "huge": 26
-        }.get(self.config.get_text_size(), 18)  # Adjust size based on text size setting
-        name_label.setFont(QFont("Inter ExtraBold", name_font_size, QFont.Bold))
-        name_label.setStyleSheet(f"color: {self.text_color};")
-        name_label.setAlignment(Qt.AlignCenter)
-        button_layout.addWidget(name_label)
+            "small": 18,
+            "default": 26,
+            "large": 34,
+            "huge": 42
+        }.get(text_size, 26)
+    
+        # Create the combined label
+        combined_label = QLabel(combined_text)
+        combined_label.setFont(QFont("Inter ExtraBold", font_size, QFont.Bold))
+        combined_label.setStyleSheet(f"color: {self.text_color}; background-color: transparent;")
+        combined_label.setAlignment(Qt.AlignCenter)
+        combined_label.setWordWrap(True)  # Enable text wrapping
+
+        # Layout for the button
+        button_layout = QVBoxLayout(button)
+        button_layout.addWidget(combined_label)
+        button_layout.addStretch()
     
         # Create the description label (hidden by default)
         description_label = QLabel(tool_description)
