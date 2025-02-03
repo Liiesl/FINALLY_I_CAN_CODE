@@ -19,7 +19,7 @@ class Settings(QWidget):
         self.setFont(QFont("Inter Regular"))
         self.config = Config(source="Settings")
         self.initial_theme = self.config.get_theme()
-        self.experimental_tools_enabled = self.config.get_experimental_tools_enabled()
+        self.initial_experimental_tools_enabled = self.config.get_experimental_tools_enabled()
 
         self.init_ui()
 
@@ -212,7 +212,7 @@ class Settings(QWidget):
         new_experimental_tools = self.config.get_experimental_tools_enabled()  # Retrieve the updated experimental tools state
         
         theme_changed = self.initial_theme != new_theme
-        experimental_tools_changed = self.initial_experimental_tools != new_experimental_tools
+        experimental_tools_changed = self.initial_experimental_tools_enabled != new_experimental_tools
 
         if theme_changed or experimental_tools_changed:
             # Show a confirmation message box
@@ -393,9 +393,13 @@ class Settings(QWidget):
             self.config.load()
             self.refresh_ui_from_config()
 
-            # Detect theme change and trigger relaunch logic
-            new_theme = new_config_data["theme"]
-            if self.initial_theme != new_theme:
+            new_theme = self.config.get_theme()
+            new_experimental_tools = self.config.get_experimental_tools_enabled()  # Retrieve the updated experimental tools state
+            
+            theme_changed = self.initial_theme != new_theme
+            experimental_tools_changed = self.initial_experimental_tools_enabled != new_experimental_tools
+    
+            if theme_changed or experimental_tools_changed:
                 msg_box = QMessageBox()
                 msg_box.setIcon(QMessageBox.Question)
                 msg_box.setText(
