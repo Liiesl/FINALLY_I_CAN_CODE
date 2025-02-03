@@ -18,11 +18,9 @@ class MainWindow(QMainWindow):
         self.app = app
         self.tab_contents = QStackedWidget()
         self.setMouseTracking(True)
-        
+
         self.init_ui()
 
-        self.refresh_settings()
-        
     def init_ui(self):
         self.setWindowTitle("SRT Editor")
         self.setGeometry(100, 100, 1200, 800)
@@ -45,24 +43,23 @@ class MainWindow(QMainWindow):
 
         self.config = Config(source="MainWindow")
         self.main_menu_active = True
-        self.experimental_tools_enabled = self.config.get_experimental_tools_enabled()  # Fetch from config
 
         self.custom_window_bar = CustomWindowBar(self, self.app)
         self.layout.addWidget(self.custom_window_bar)
 
         self.custom_window_bar.setup_initial_tabs()  # Add this line to create initial tabs
-        
+
         self.tab_contents = QStackedWidget()
         self.layout.addWidget(self.tab_contents)
 
         self.side_panel = SidePanel(self, self.open_settings)
         self.side_panel.setVisible(False)
         self.side_panel.setFont(self.inter_regular_font)
-        
+
         self.main_content = QWidget()
         self.main_content_layout = QVBoxLayout(self.main_content)
         self.main_content.setLayout(self.main_content_layout)
-        
+
         self.top_bar = QHBoxLayout()
         self.top_bar_added = False
         self.menu_button = None
@@ -166,8 +163,6 @@ class MainWindow(QMainWindow):
         # Get the actual description from the tuple if needed
         if isinstance(tool_description, tuple):
             tool_description = tool_description[0]
-        
-        is_experimental = "experimental" in categories
         button = QPushButton()
         button.setFixedSize(300, 200)
         button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
@@ -222,7 +217,6 @@ class MainWindow(QMainWindow):
         button_layout.addWidget(description_label)
 
         button.clicked.connect(lambda: self.tool_selected(tool_name))
-        button.setVisible(self.experimental_tools_enabled or not is_experimental)
         return button
 
     def main_menu(self, layout=None):
@@ -246,7 +240,7 @@ class MainWindow(QMainWindow):
             top_bar_widget = QWidget()
             self.top_bar = QHBoxLayout(top_bar_widget)
             self.top_bar.setContentsMargins(0, 0, 0, 0)
-            
+
             self.menu_button = QPushButton()
             menu_icon = qta.icon('fa.bars')
             self.menu_button.setIcon(menu_icon)
@@ -257,7 +251,7 @@ class MainWindow(QMainWindow):
             self.search_field = QLineEdit()
             self.search_field.setPlaceholderText("Search tools...")
             self.search_field.setFixedWidth(700)
-            
+
             palette = self.app.palette()
             text_color = palette.color(QPalette.Text).name()
             bg_color = palette.color(QPalette.Base).name()
@@ -290,7 +284,7 @@ class MainWindow(QMainWindow):
             self.notification_bar = NotificationBar(self)
             if hasattr(self, 'notification_bar'):
                 main_content_layout.addWidget(self.notification_bar)
-            
+
             if layout is None:
                 container_layout = QVBoxLayout()
             else:
@@ -315,13 +309,13 @@ class MainWindow(QMainWindow):
                 ("Merge SRT Files", "Combine multiple SRT files into one.", ["merge"]),
                 ("Subtitle Converter", "Convert subtitles between different formats.", ["conversion"]),
                 ("Subtitle Shifter", "Shift subtitles by milliseconds.", ["timing"]),
-                ("Multilingual Merge", "Merge subtitles in different languages with colors.", ["merge", "translation", "experimental"]),
+                ("Multilingual Merge", "Merge subtitles in different languages with colors.", ["merge", "translation"]),
                 ("Coming Soon", "More tools will be added in the future.", ["other"])
             ]
             tools_dict = {name: (desc, categories) for name, desc, categories in tools}
 
             self.tools = tools
-            
+
             # Get unique categories
             all_categories = set()
             for tool in tools:
@@ -387,7 +381,7 @@ class MainWindow(QMainWindow):
 
             self.tool_usage = self.config.get_tool_usage()
             has_tool_usage = any(self.tool_usage.values())
-            
+
             if has_tool_usage:
                 for tool_name in sorted(self.tool_usage, key=lambda x: -self.tool_usage[x])[:3]:
                     btn = self.create_tool_button(tool_name, tools_dict.get(tool_name, ("Popular tool", []))[0], tools_dict.get(tool_name, ("Popular tool", []))[1])
@@ -411,7 +405,7 @@ class MainWindow(QMainWindow):
 
             self.recent_tools = self.config.get_recent_tools()
             has_recent_tools = len(self.recent_tools) > 0  # Check if there are any recent tools
-            
+
             if has_recent_tools:
                 for tool_name in self.recent_tools[:3]:
                     btn = self.create_tool_button(tool_name, tools_dict.get(tool_name, ("Recently used tool", []))[0], tools_dict.get(tool_name, ("Recently used tool", []))[1])               
@@ -425,7 +419,7 @@ class MainWindow(QMainWindow):
             all_tools_label.setFont(self.inter_extra_bold_font)
             all_tools_label.setStyleSheet("color: palette(WindowText);")
             main_scroll_layout.addWidget(all_tools_label)
-            
+
             # Create a widget to hold the grid
             all_tools_widget = QWidget()
             all_tools_grid = QGridLayout(all_tools_widget)
@@ -529,7 +523,7 @@ class MainWindow(QMainWindow):
             elif child.layout():
                 # Recursively clear nested layouts (if any exist)
                 self.clear_layout(child.layout())
-                
+
         # Add the tool widget to the layout
         layout.addWidget(tool_widget)
         tool_widget.show()
@@ -558,7 +552,7 @@ class MainWindow(QMainWindow):
             settings_widget = Settings(parent=self.main_content, back_callback=self.main_menu, main_window=self)
             settings_widget.setFont(self.inter_regular_font)
             settings_widget.settings_saved.connect(self.apply_theme)
-            
+
             # Load the settings widget into the current tab's main content layout
             self.load_tool(settings_widget, main_content_layout)
 
@@ -581,32 +575,25 @@ class MainWindow(QMainWindow):
     def refresh_settings(self):
         print("refreshing the settings")
         self.apply_text_size()  # Update text size
-        self.apply_theme()  # Update theme)
-        self.experimental_tools_enabled = self.config.get_experimental_tools_enabled()  # Update experimental tools state
+        self.apply_theme()  # Update theme
+
+        self.custom_window_bar.current_palette()
+        self.custom_window_bar.update_colors()
+        self.side_panel.current_palette()
+        self.side_panel.update_colors()
 
     def update_tool_button_visibility(self, event=None):
         if self.main_menu_active and self.tool_buttons:
-            # Fetch the experimental tools visibility status directly from the config
-            self.experimental_tools_enabled = self.config.get_experimental_tools_enabled()
-    
-            # Update visibility for all buttons based on experimental toggle
-            for i, button in enumerate(self.tool_buttons):
-                tool = self.tools[i]
-                categories = set(tool[2])
-                is_experimental = "experimental" in categories
-                # Determine visibility: show if experimental tools are enabled or if the tool is not experimental
-                visible = (self.experimental_tools_enabled or not is_experimental)
-                button.setVisible(visible)
-    
-            # Adjust visibility based on container width (if no search filter is applied)
+            # Only handle automatic visibility if there's no search filter
             if not self.search_field.text():
                 container_width = self.scroll_area.width()
                 button_width = 220
                 visible_buttons = max(1, container_width // button_width)
-                # Ensure only the first few buttons are visible based on container width
                 for i, button in enumerate(self.tool_buttons):
-                    if i >= visible_buttons:
-                        button.setVisible(False)
+                    button.setVisible(i < visible_buttons)
+
+                for button in self.tool_buttons:
+                    button.setVisible(True)
 
     def update_category_filters(self):
         current_splitter = self.tab_contents.currentWidget()
@@ -614,12 +601,12 @@ class MainWindow(QMainWindow):
             # Get the main content widget for the current tab
             main_content = current_splitter.widget(1)  # Main content is the second widget in the splitter
             main_content_layout = main_content.layout()
-            
+
             self.active_categories.clear()
             for category, btn in self.category_buttons.items():
                 if btn.isChecked():
                     self.active_categories.add(category)
-                    
+
             if self.active_categories:
                 self.on_tag_selected()
             else:
@@ -627,22 +614,19 @@ class MainWindow(QMainWindow):
             self.filter_tools(self.search_field.text())
 
     def filter_tools(self, search_text):
-        if not hasattr(self, 'search_field') or self.search_field is None:
-            return  # Exit if search_field is not available
-    
         search_text = search_text.lower()
+
         if search_text.strip():  # Check if there is any non-whitespace text
             self.on_tag_selected()
         else:
             self.on_tag_deselected()
-    
+
         for index, tool in enumerate(self.tools):
             button = self.tool_buttons[index]
             name = tool[0].lower()
             desc = tool[1].lower()
             categories = set(tool[2])
-    
-            # Determine visibility based on search text and active categories
+
             text_match = search_text in name or search_text in desc
             category_match = not self.active_categories or bool(categories & self.active_categories)
             visible = text_match and category_match
@@ -650,7 +634,6 @@ class MainWindow(QMainWindow):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-
     window = MainWindow(app)
     window.show()
     sys.exit(app.exec_())
