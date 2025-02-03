@@ -437,12 +437,34 @@ class MainWindow(QMainWindow):
     
         # Show description on hover
         def show_description(event):
-            pos = button.mapToGlobal(QPoint(0, 0))  # Get global position of the button
-            x = pos.x() + button.width()  # Position beside the button
-            y = pos.y()
-            description_label.move(x, y)  # Reposition the label
+            # Get the global position of the mouse cursor
+            cursor_pos = event.globalPos()
+            
+            # Get the size of the description label
+            description_size = description_label.size()
+            
+            # Get the window geometry
+            window_geometry = self.geometry()
+            window_top_left = self.mapToGlobal(QPoint(0, 0))
+            window_bottom_right = window_top_left + QPoint(window_geometry.width(), window_geometry.height())
+            
+            # Calculate potential positions for the description label
+            pos_right = cursor_pos + QPoint(button.width(), 0)  # To the right of the button
+            pos_left = cursor_pos - QPoint(description_size.width(), 0)  # To the left of the button
+            
+            # Check if there's enough space to the right
+            if pos_right.x() + description_size.width() <= window_bottom_right.x():
+                final_pos = pos_right
+            # If not, check if there's enough space to the left
+            elif pos_left.x() >= window_top_left.x():
+                final_pos = pos_left
+            # If neither side has enough space, default to the left (or handle as needed)
+            else:
+                final_pos = pos_left
+            
+            # Move and show the description label
+            description_label.move(final_pos)
             description_label.show()
-    
         def hide_description(event):
             description_label.hide()
     
