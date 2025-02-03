@@ -19,7 +19,7 @@ class Settings(QWidget):
         self.setFont(QFont("Inter Regular"))
         self.config = Config(source="Settings")
         self.initial_theme = self.config.get_theme()
-        self.initial_experimental_tools = self.config.get_experimental_tools()  # Add this method to your Config class if not present
+        self.experimental_tools_enabled = self.config.get_experimental_tools_enabled()
 
         self.init_ui()
 
@@ -209,7 +209,7 @@ class Settings(QWidget):
         self.config.load()
         # Check if the theme has changed
         new_theme = self.config.get_theme()
-        new_experimental_tools = self.config.get_experimental_tools()  # Retrieve the updated experimental tools state
+        new_experimental_tools = self.config.get_experimental_tools_enabled()  # Retrieve the updated experimental tools state
         
         theme_changed = self.initial_theme != new_theme
         experimental_tools_changed = self.initial_experimental_tools != new_experimental_tools
