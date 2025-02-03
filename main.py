@@ -45,6 +45,7 @@ class MainWindow(QMainWindow):
 
         self.config = Config(source="MainWindow")
         self.main_menu_active = True
+        self.experimental_tools_enabled = self.config.get_experimental_tools_enabled()  # Fetch from config
 
         self.custom_window_bar = CustomWindowBar(self, self.app)
         self.layout.addWidget(self.custom_window_bar)
@@ -583,11 +584,7 @@ class MainWindow(QMainWindow):
         print("refreshing the settings")
         self.apply_text_size()  # Update text size
         self.apply_theme()  # Update theme)
-        self.toggle_experimental_tools(self.experimental_tools_enabled)
-        self.custom_window_bar.current_palette()
-        self.custom_window_bar.update_colors()
-        self.side_panel.current_palette()
-        self.side_panel.update_colors()
+        self.experimental_tools_enabled = self.config.get_experimental_tools_enabled()  # Update experimental tools state
 
     def update_tool_button_visibility(self, event=None):
         if self.main_menu_active and self.tool_buttons:
