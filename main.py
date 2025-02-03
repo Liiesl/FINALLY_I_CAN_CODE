@@ -150,67 +150,6 @@ class MainWindow(QMainWindow):
     def display_tab_content(self, index):
         self.tab_contents.setCurrentIndex(index)
 
-    def create_tool_button(self, tool_name, tool_description, categories):
-
-        # Get the actual description from the tuple if needed
-        if isinstance(tool_description, tuple):
-            tool_description = tool_description[0]
-        button = QPushButton()
-        button.setFixedSize(300, 200)
-        button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-
-        palette = self.app.palette()
-        background_color = palette.color(QPalette.Base).name()
-        border_color = palette.color(QPalette.Highlight).name()
-        button_color = palette.color(QPalette.Button).name()
-        button_text_color = palette.color(QPalette.ButtonText).name()
-        text_color = palette.color(QPalette.ButtonText).name()
-        hover_background_color = palette.color(QPalette.Highlight).name()
-        hover_border_color = palette.color(QPalette.Highlight).darker().name()
-
-        button.setStyleSheet(f"""
-            QPushButton {{
-                border: 5px solid {border_color};
-                color: rgba(255, 255, 255, 0);
-                border-radius: 15px;
-                padding: 10px;
-                margin: 10px;
-                background-color: {background_color};
-                text-align: center;
-            }}
-            QPushButton:hover {{
-                border-color: {hover_border_color};
-                background-color: {hover_background_color};
-            }}
-        """)
-
-        text_size = self.config.get_text_size()
-        font_size = {
-            "small": 18,
-            "default": 26,
-            "large": 34,
-            "huge": 42
-        }.get(text_size, 26)
-
-        name_label = QLabel(tool_name)
-        name_label.setFont(QFont("Inter ExtraBold", font_size +10, QFont.Bold))
-        name_label.setStyleSheet(f"color: {border_color}; background-color: transparent;")
-        name_label.setWordWrap(True)
-        name_label.setAlignment(Qt.AlignCenter)
-
-        description_label = QLabel(tool_description)
-        description_label.setFont(QFont("Inter Regular", font_size -18))
-        description_label.setStyleSheet(f"color: {text_color}; background-color: transparent;")
-        description_label.setWordWrap(True)
-        description_label.setAlignment(Qt.AlignCenter)
-
-        button_layout = QVBoxLayout(button)
-        button_layout.addWidget(name_label)
-        button_layout.addWidget(description_label)
-
-        button.clicked.connect(lambda: self.tool_selected(tool_name))
-        return button
-
     def main_menu(self, layout=None):
         # Get the current main content layout for the active tab
         current_splitter = self.tab_contents.currentWidget()
@@ -239,7 +178,7 @@ class MainWindow(QMainWindow):
             
             palette = self.app.palette()
             self.text_color = palette.color(QPalette.Text).name()
-            self.bg_color = palette.color(QPalette.Base).name()
+            self.background_color = palette.color(QPalette.Base).name()
             self.placeholder_color = palette.color(QPalette.PlaceholderText).name()
             self.button_color = palette.color(QPalette.Button).name()
             self.button_text_color = palette.color(QPalette.ButtonText).name()
@@ -247,12 +186,16 @@ class MainWindow(QMainWindow):
             self.base_color = self.app.palette().color(QPalette.Base).name()
             self.text_color = self.app.palette().color(QPalette.Text).name()
             self.highlight_text_color = self.app.palette().color(QPalette.HighlightedText).name()
+            self.border_color = palette.color(QPalette.Highlight).name()
+            self.button_color = palette.color(QPalette.Button).name()
+            self.hover_background_color = palette.color(QPalette.Highlight).name()
+            self.hover_border_color = palette.color(QPalette.Highlight).darker().name()
             
-            search_icon = qta.icon('fa5s.search', color=text_color)
+            search_icon = qta.icon('fa5s.search', color=self.text_color)
             self.search_field.addAction(search_icon, QLineEdit.LeadingPosition)
             self.search_field.setStyleSheet(f"""
                 QLineEdit {{
-                    background-color: {button_color};
+                    background-color: {self.button_color};
                     color: {self.button_text_color};
                     border: 2px solid {self.highlight_color};
                     border-radius: 20px;
@@ -419,6 +362,57 @@ class MainWindow(QMainWindow):
             self.tool_buttons.append(btn)
     
         layout.addWidget(all_tools_widget)
+
+    def create_tool_button(self, tool_name, tool_description, categories):
+
+        # Get the actual description from the tuple if needed
+        if isinstance(tool_description, tuple):
+            tool_description = tool_description[0]
+        button = QPushButton()
+        button.setFixedSize(300, 200)
+        button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        button.setStyleSheet(f"""
+            QPushButton {{
+                border: 5px solid {border_color};
+                color: rgba(255, 255, 255, 0);
+                border-radius: 15px;
+                padding: 10px;
+                margin: 10px;
+                background-color: {background_color};
+                text-align: center;
+            }}
+            QPushButton:hover {{
+                border-color: {hover_border_color};
+                background-color: {hover_background_color};
+            }}
+        """)
+
+        text_size = self.config.get_text_size()
+        font_size = {
+            "small": 18,
+            "default": 26,
+            "large": 34,
+            "huge": 42
+        }.get(text_size, 26)
+
+        name_label = QLabel(tool_name)
+        name_label.setFont(QFont("Inter ExtraBold", font_size +10, QFont.Bold))
+        name_label.setStyleSheet(f"color: {border_color}; background-color: transparent;")
+        name_label.setWordWrap(True)
+        name_label.setAlignment(Qt.AlignCenter)
+
+        description_label = QLabel(tool_description)
+        description_label.setFont(QFont("Inter Regular", font_size -18))
+        description_label.setStyleSheet(f"color: {text_color}; background-color: transparent;")
+        description_label.setWordWrap(True)
+        description_label.setAlignment(Qt.AlignCenter)
+
+        button_layout = QVBoxLayout(button)
+        button_layout.addWidget(name_label)
+        button_layout.addWidget(description_label)
+
+        button.clicked.connect(lambda: self.tool_selected(tool_name))
+        return button
         
     def on_tag_selected(self):
         self.most_used_label.hide()
