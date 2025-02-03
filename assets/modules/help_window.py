@@ -41,12 +41,23 @@ class HelpWindow(QWidget):
         """Extract headers and subheaders from the markdown content."""
         headers = []
         lines = markdown_content.split('\n')
+        title_counts = {}  # Dictionary to track duplicate titles
+    
         for line in lines:
             match = re.match(r'^(#+)\s+(.*)', line)
             if match:
                 level = len(match.group(1))  # Number of '#' indicates the header level
                 title = match.group(2).strip()
+    
+                # Handle duplicate titles by appending a counter
+                if title in title_counts:
+                    title_counts[title] += 1
+                    title = f"{title}-{title_counts[title]}"
+                else:
+                    title_counts[title] = 0
+    
                 headers.append((level, title))
+    
         return headers
 
     def convert_to_html_with_styling(self):
@@ -132,9 +143,9 @@ class HelpWindow(QWidget):
         self.markdown_viewer.page().runJavaScript(f"document.getElementById('{anchor}').scrollIntoView();")
 
     def generate_anchor(self, title):
-        """Generate an anchor name for a given header title."""
-        # Convert the title to lowercase, replace spaces with hyphens, and remove non-alphanumeric characters
-        anchor = re.sub(r'[^\w\- ]', '', title).strip().lower().replace(' ', '-')
+        """Generate a unique anchor name for a given header title."""
+        # Convert the title to lowercase, replace spaces with hyphens, and remove special characters
+        anchor = re.sub(r'[^\w\-]', '', title).strip().lower().replace(' ', '-')
         return anchor
 
     def toggle_navigation(self):
