@@ -426,9 +426,9 @@ A: The **Most Used Tools** section displays tools you frequently use, based on u
 
 ### Q: How do I report bugs or suggest new features?
 A: As this project is maintained by a solo developer, you can report bugs or suggest features via the following channels:
-- **GitHub Repository**: Visit the [Subtl GitHub Page](https://github.com/yourusername/subtl) to open an issue or submit a pull request.  
+- **GitHub Repository**: Visit the [Subtl GitHub Page](https://github.com/Liiesl/subtl) to open an issue or submit a pull request.  
 - **Email**: Send an email to **your.email@example.com** with details about the bug or feature request.  
-- **Discussions**: Join the conversation in the [GitHub Discussions](https://github.com/yourusername/subtl/discussions) section to share ideas and feedback.
+- **Discussions**: Join the conversation in the [GitHub Discussions](https://github.com/Liiesl/subtl/discussions) section to share ideas and feedback.
 
 ---
 
@@ -460,7 +460,7 @@ A: While the app currently supports light and dark themes, as well as text size 
 
 ### Q: How do I contact the developer directly?
 A: As a solo developer, I appreciate direct feedback and inquiries. You can reach me via:
-- **GitHub**: Open an issue or discussion on the [Subtl GitHub Page](https://github.com/yourusername/subtl).  
+- **GitHub**: Open an issue or discussion on the [Subtl GitHub Page](https://github.com/Liiesl/subtl).  
 - **Email**: Send an email to **your.email@example.com** with your query.  
 - **Social Media**: Connect with me on platforms like Instagram (@suryaalingga) or YouTube (@Vfrix) for informal communication.
 
@@ -470,9 +470,9 @@ A: As a solo developer, I appreciate direct feedback and inquiries. You can reac
 
 For further assistance, please reach out via the following channels:
 
-- **GitHub Repository**: Visit the [Subtl GitHub Page](https://github.com/yourusername/subtl) to report issues, request features, or ask questions.  
+- **GitHub Repository**: Visit the [Subtl GitHub Page](https://github.com/Liiesl/subtl) to report issues, request features, or ask questions.  
 - **Email**: You can also email me directly at **your.email@example.com** for more personalized support.
-- **Discussions**: Join the conversation in the [GitHub Discussions](https://github.com/yourusername/subtl/discussions) section to connect with other users and share ideas.
+- **Discussions**: Join the conversation in the [GitHub Discussions](https://github.com/Liiesl/subtl/discussions) section to connect with other users and share ideas.
 
 As this project is maintained by a single developer, I appreciate your patience and understanding. Please include as much detail as possible when reporting issues (e.g., error messages, steps to reproduce).  
 
