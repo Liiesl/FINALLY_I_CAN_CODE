@@ -305,10 +305,12 @@ class MainWindow(QMainWindow):
         most_used_label = QLabel("Most Used Tools")
         most_used_label.setFont(self.inter_extra_bold_font)
         layout.addWidget(most_used_label)
+        self.most_used_label = most_used_label
     
         most_used_widget = QWidget()
         most_used_layout = QHBoxLayout(most_used_widget)
         most_used_layout.setContentsMargins(0, 0, 0, 0)
+        self.most_used_widget = most_used_widget
     
         self.tool_usage = self.config.get_tool_usage()
         has_tool_usage = any(self.tool_usage.values())
@@ -326,10 +328,12 @@ class MainWindow(QMainWindow):
         recent_label = QLabel("Recent Tools")
         recent_label.setFont(self.inter_extra_bold_font)
         layout.addWidget(recent_label)
+        self.recent_label = recent_label
     
         recent_widget = QWidget()
         recent_layout = QHBoxLayout(recent_widget)
         recent_layout.setContentsMargins(0, 0, 0, 0)
+        self.recent_widget = recent_widget
     
         self.recent_tools = self.config.get_recent_tools()
         has_recent_tools = len(self.recent_tools) > 0
@@ -352,7 +356,11 @@ class MainWindow(QMainWindow):
         all_tools_grid = QGridLayout(all_tools_widget)
         all_tools_grid.setHorizontalSpacing(20)
         all_tools_grid.setVerticalSpacing(20)
-    
+        all_tools_grid.setColumnStretch(0, 0)  # Prevent column stretching
+        all_tools_grid.setColumnStretch(1, 0)
+        all_tools_grid.setColumnStretch(2, 0)
+        all_tools_grid.setRowStretch(0, 0)     # Prevent row stretching
+        all_tools_grid.setRowStretch(1, 0)
         columns = 3
         for index, tool in enumerate(tools):
             btn = self.create_tool_button(tool[0], tool[1], tool[2])
