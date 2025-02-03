@@ -427,10 +427,9 @@ class MainWindow(QMainWindow):
         """)
         description_label.setWordWrap(True)
         description_label.hide()  # Hide initially
-    
+        description_label.setFixedSize(300, 200)
         # Parent the description label to the MainWindow
         description_label.setParent(self)  # Set MainWindow as the parent
-    
         # Layout for the button
         button_layout = QVBoxLayout(button)
         button_layout.addWidget(name_label)
