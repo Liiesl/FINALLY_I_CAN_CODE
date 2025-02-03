@@ -565,7 +565,8 @@ class MainWindow(QMainWindow):
                 self.load_tool(tool_widget, main_content_layout)
             else:
                 msg_box = QMessageBox()
-                msg_box.setText("More features will be added soon!")
+                msg_box.setText("More tools will be added soon!")
+                msg_box.setWindowTitle("Coming Soon!")
                 msg_box.setStyleSheet("""
                 QMessageBox {
                 color: black;
