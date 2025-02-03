@@ -270,7 +270,7 @@ class MainWindow(QMainWindow):
                 "default": 26,
                 "large": 34,
                 "huge": 42
-            }.get(text_size, 26) - 10  # Default to 18 if text size is unknown
+            }.get(text_size, 26) # Default to 26 if text size is unknown
             btn.setFont(QFont("Inter Regular", font_size))
             btn.setStyleSheet(f"""
                 QPushButton {{
@@ -422,7 +422,7 @@ class MainWindow(QMainWindow):
         name_label.setAlignment(Qt.AlignCenter)
 
         description_label = QLabel(tool_description)
-        description_label.setFont(QFont("Inter Regular", font_size - 18))
+        description_label.setFont(QFont("Inter Regular", font_size))
         description_label.setStyleSheet(f"color: {self.text_color}; background-color: transparent;")
         description_label.setWordWrap(True)
         description_label.setAlignment(Qt.AlignCenter)
