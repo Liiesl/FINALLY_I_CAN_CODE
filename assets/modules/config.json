@@ -3,9 +3,11 @@
     "text_size": "default",
     "theme": "dark",
     "recent_tools": [
-        "Longer Appearance SRT"
+        "Longer Appearance SRT",
+        "Merge SRT Files"
     ],
     "tool_usage": {
-        "Longer Appearance SRT": 3
+        "Longer Appearance SRT": 6,
+        "Merge SRT Files": 2
     }
 }
