@@ -385,30 +385,24 @@ class MainWindow(QMainWindow):
         layout.addWidget(all_tools_widget)
 
     def create_tool_button(self, tool_name, tool_description, categories):
-        # Get the actual description from the tuple if needed
-        if isinstance(tool_description, tuple):
-            tool_description = tool_description[0]
-
+        # Create the button
         button = QPushButton()
         button.setFixedSize(300, 200)
         button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        button.setStyleSheet(f"""
-            QPushButton {{
-                border: 5px solid {self.border_color};
-                color: rgba(255, 255, 255, 0);
-                border-radius: 15px;
-                padding: 10px;
-                margin: 10px;
-                background-color: {self.background_color};
-                text-align: center;
-            }}
-            QPushButton:hover {{
-                border-color: {self.hover_border_color};
-                background-color: {self.hover_background_color};
-            }}
+    
+        # Make the button itself invisible
+        button.setStyleSheet("""
+            QPushButton {
+                border: none;
+                background-color: transparent;
+            }
+            QPushButton:hover {
+                border: none;
+                background-color: transparent;
+            }
         """)
-
-        self.config = Config(source="MainWindow")
+    
+        # Create the name label (visible always)
         text_size = self.config.get_text_size()
         font_size = {
             "small": 18,
@@ -416,24 +410,36 @@ class MainWindow(QMainWindow):
             "large": 34,
             "huge": 42
         }.get(text_size, 26)
-
         name_label = QLabel(tool_name)
         name_label.setFont(QFont("Inter ExtraBold", font_size, QFont.Bold))
         name_label.setStyleSheet(f"color: {self.border_color}; background-color: transparent;")
-        name_label.setWordWrap(True)
         name_label.setAlignment(Qt.AlignCenter)
-
-        description_font_size = font_size - 10
+    
+        # Create the description label (hidden by default)
         description_label = QLabel(tool_description)
-        description_label.setFont(QFont("Inter Regular", description_font_size))
-        description_label.setStyleSheet(f"color: {self.text_color}; background-color: transparent;")
+        description_label.setFont(QFont("Inter Regular", font_size))
+        description_label.setStyleSheet(f"color: {self.text_color}; background-color: {self.base_color}; padding: 10px; border: 2px solid {self.highlight_color}; border-radius: 10px;")
         description_label.setWordWrap(True)
-        description_label.setAlignment(Qt.AlignCenter)
-
+        description_label.hide()  # Hide initially
+    
+        # Layout for the button
         button_layout = QVBoxLayout(button)
         button_layout.addWidget(name_label)
-        button_layout.addWidget(description_label)
-
+        button_layout.addStretch()
+    
+        # Show description on hover
+        def show_description(event):
+            pos = button.mapToGlobal(QPoint(0, 0))  # Get global position of the button
+            description_label.move(pos.x() + button.width(), pos.y())  # Position beside the button
+            description_label.show()
+    
+        def hide_description(event):
+            description_label.hide()
+    
+        button.enterEvent = lambda event: show_description(event)  # On hover enter
+        button.leaveEvent = lambda event: hide_description(event)  # On hover leave
+    
+        # Connect the tool selection action
         button.clicked.connect(lambda: self.tool_selected(tool_name))
         return button
 
