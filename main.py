@@ -263,6 +263,15 @@ class MainWindow(QMainWindow):
         for category in sorted(all_categories):
             btn = QPushButton(category.upper())
             btn.setCheckable(True)
+            # Apply dynamic text size based on app's configuration
+            text_size = self.config.get_text_size()
+            font_size = {
+                "small": 18,
+                "default": 26,
+                "large": 34,
+                "huge": 42
+            }.get(text_size, 26)  # Default to 18 if text size is unknown
+            btn.setFont(QFont("Inter ExtraBold", font_size))
             btn.setStyleSheet(f"""
                 QPushButton {{
                     border: 2px solid {self.highlight_color};
