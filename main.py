@@ -387,7 +387,7 @@ class MainWindow(QMainWindow):
     def create_tool_button(self, tool_name, tool_description, categories):
         # Create the button
         button = QPushButton()
-        button.setFixedSize(200, 100)
+        button.setFixedSize(250, 150)
         button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         button.setStyleSheet(f"""
             QPushButton {{
