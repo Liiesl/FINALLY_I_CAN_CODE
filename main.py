@@ -235,8 +235,36 @@ class MainWindow(QMainWindow):
     
             self.search_field = QLineEdit()
             self.search_field.setPlaceholderText("Search tools...")
+            self.search_field.setFixedWidth(700)
+            
+            palette = self.app.palette()
+            self.text_color = palette.color(QPalette.Text).name()
+            self.bg_color = palette.color(QPalette.Base).name()
+            self.placeholder_color = palette.color(QPalette.PlaceholderText).name()
+            self.button_color = palette.color(QPalette.Button).name()
+            self.button_text_color = palette.color(QPalette.ButtonText).name()
+            self.highlight_color = self.app.palette().color(QPalette.Highlight).name()
+            self.base_color = self.app.palette().color(QPalette.Base).name()
+            self.text_color = self.app.palette().color(QPalette.Text).name()
+            self.highlight_text_color = self.app.palette().color(QPalette.HighlightedText).name()
+            
+            search_icon = qta.icon('fa5s.search', color=text_color)
+            self.search_field.addAction(search_icon, QLineEdit.LeadingPosition)
+            self.search_field.setStyleSheet(f"""
+                QLineEdit {{
+                    background-color: {button_color};
+                    color: {self.button_text_color};
+                    border: 2px solid {self.highlight_color};
+                    border-radius: 20px;
+                    padding: 5px 5px 5px 35px;
+                }}
+                QLineEdit::placeholder {{
+                    color: {self.placeholder_color};
+                }}
+            """)
+            
             self.search_field.textChanged.connect(self.filter_tools)
-    
+
             self.top_bar.addWidget(self.menu_button, alignment=Qt.AlignLeft)
             self.top_bar.addWidget(self.search_field, alignment=Qt.AlignRight)
             main_content_layout.addWidget(top_bar_widget)
@@ -292,8 +320,22 @@ class MainWindow(QMainWindow):
         for category in sorted(all_categories):
             btn = QPushButton(category.upper())
             btn.setCheckable(True)
-            btn.clicked.connect(self.update_category_filters)
-            category_layout.addWidget(btn)
+            btn.setStyleSheet(f"""
+                QPushButton {{
+                    border: 2px solid {self.highlight_color};
+                    border-radius: 15px;
+                    padding: 8px;
+                    margin: 4px;
+                    background-color: {self.base_color};
+                    color: {self.text_color};
+                }}
+                QPushButton:checked {{
+                    background-color: {self.highlight_color};
+                    color: {self.highlight_text_color};
+                }}
+            """)
+        btn.clicked.connect(self.update_category_filters)
+        category_layout.addWidget(btn)
         category_layout.addStretch()
     
         main_h_layout.addWidget(category_panel, stretch=1)
