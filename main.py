@@ -266,10 +266,10 @@ class MainWindow(QMainWindow):
             # Apply dynamic text size based on app's configuration
             text_size = self.config.get_text_size()
             font_size = {
-                "small": 18,
-                "default": 26,
-                "large": 34,
-                "huge": 42
+                "small": 10,
+                "default": 18,
+                "large": 26,
+                "huge": 34
             }.get(text_size, 26) # Default to 26 if text size is unknown
             btn.setFont(QFont("Inter Regular", font_size))
             btn.setStyleSheet(f"""
@@ -421,8 +421,9 @@ class MainWindow(QMainWindow):
         name_label.setWordWrap(True)
         name_label.setAlignment(Qt.AlignCenter)
 
+        description_font_size = font_size - 10
         description_label = QLabel(tool_description)
-        description_label.setFont(QFont("Inter Regular", font_size))
+        description_label.setFont(QFont("Inter Regular", description_font_size))
         description_label.setStyleSheet(f"color: {self.text_color}; background-color: transparent;")
         description_label.setWordWrap(True)
         description_label.setAlignment(Qt.AlignCenter)
