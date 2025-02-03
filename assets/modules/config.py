@@ -10,8 +10,7 @@ class Config:
             "text_size": "small",  # Default text size
             "theme": "dark",       # Default theme
             "recent_tools": [],    # Default recent tools
-            "tool_usage": {},       # Default tool usage
-            "experimental_tools_enabled": False  # New setting for experimental tools
+            "tool_usage": {}       # Default tool usage
         }
         self.source = source
         self.load()
@@ -41,7 +40,6 @@ class Config:
             print(f"Config loaded by {self.source}: {self.data}")
         else:
             print(f"Config loaded: {self.data}")
-            
     def save(self):
         """Save configuration data to the config file."""
         try:
@@ -101,14 +99,4 @@ class Config:
         if not isinstance(recent_tools, list):
             raise ValueError(f"Invalid type for recent_tools: Expected list, got {type(recent_tools).__name__}")
         self.data["recent_tools"] = recent_tools
-        self.save()
-
-    # New methods for experimental tools toggle
-    def get_experimental_tools_enabled(self):
-        """Get the state of the experimental tools toggle."""
-        return self.data.get("experimental_tools_enabled", False)
-
-    def set_experimental_tools_enabled(self, enabled):
-        """Set the state of the experimental tools toggle."""
-        self.data["experimental_tools_enabled"] = enabled
         self.save()
