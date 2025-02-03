@@ -382,7 +382,7 @@ class MainWindow(QMainWindow):
                 text-align: center;
             }}
             QPushButton:hover {{
-                border-color: {sself.hover_border_color};
+                border-color: {self.hover_border_color};
                 background-color: {self.hover_background_color};
             }}
         """)
