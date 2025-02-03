@@ -329,7 +329,7 @@ class MainWindow(QMainWindow):
     
         if has_tool_usage:
             for tool_name in sorted(tool_usage, key=lambda x: -tool_usage[x])[:3]:
-                btn = self.create_tool_button(tool_name, self.tools_dict.get(tool_name, ("Popular tool", []))[0], tools_dict.get(tool_name, ("Popular tool", []))[1])
+                btn = self.create_tool_button(tool_name, self.tools_dict.get(tool_name, ("Popular tool", []))[0], self.tools_dict.get(tool_name, ("Popular tool", []))[1])
                 most_used_layout.addWidget(btn)
             layout.addWidget(most_used_widget)
         else:
@@ -350,7 +350,7 @@ class MainWindow(QMainWindow):
     
         if has_recent_tools:
             for tool_name in recent_tools[:3]:
-                btn = self.create_tool_button(tool_name, self.tools_dict.get(tool_name, ("Recently used tool", []))[0], tools_dict.get(tool_name, ("Recently used tool", []))[1])
+                btn = self.create_tool_button(tool_name, self.tools_dict.get(tool_name, ("Recently used tool", []))[0], self.tools_dict.get(tool_name, ("Recently used tool", []))[1])
                 recent_layout.addWidget(btn)
             layout.addWidget(recent_widget)
         else:
