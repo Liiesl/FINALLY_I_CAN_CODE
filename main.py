@@ -330,7 +330,7 @@ class MainWindow(QMainWindow):
 
         if has_tool_usage:
             for tool_name in sorted(self.tool_usage, key=lambda x: -self.tool_usage[x])[:3]:
-                button = self.create_tool_button(tool_name, self.tools_dict.get(tool_name, ("Popular tool", []))[0], self.tools_dict.get(tool_name, ("Popular tool", []))[1])
+                button, _ = self.create_tool_button(tool_name, self.tools_dict.get(tool_name, ("Popular tool", []))[0], self.tools_dict.get(tool_name, ("Popular tool", []))[1])
                 most_used_layout.addWidget(button)
             layout.addWidget(most_used_widget)
         else:
@@ -353,7 +353,7 @@ class MainWindow(QMainWindow):
 
         if has_recent_tools:
             for tool_name in self.recent_tools[:3]:
-                button = self.create_tool_button(tool_name, self.tools_dict.get(tool_name, ("Recently used tool", []))[0], self.tools_dict.get(tool_name, ("Recently used tool", []))[1])
+                button, _ = self.create_tool_button(tool_name, self.tools_dict.get(tool_name, ("Recently used tool", []))[0], self.tools_dict.get(tool_name, ("Recently used tool", []))[1])
                 recent_layout.addWidget(button)
             layout.addWidget(recent_widget)
         else:
@@ -376,7 +376,7 @@ class MainWindow(QMainWindow):
         all_tools_grid.setRowStretch(1, 0)
         columns = 3
         for index, tool in enumerate(tools):
-            button = self.create_tool_button(tool[0], tool[1], tool[2])
+            button, _ = self.create_tool_button(tool[0], tool[1], tool[2])
             row = index // columns
             col = index % columns
             all_tools_grid.addWidget(button, row, col)
