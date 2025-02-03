@@ -376,7 +376,7 @@ class MainWindow(QMainWindow):
         all_tools_grid.setRowStretch(1, 0)
         columns = 3
         for index, tool in enumerate(tools):
-            btn = self.create_tool_button(tool[0], tool[1], tool[2])
+            button = self.create_tool_button(tool[0], tool[1], tool[2])
             row = index // columns
             col = index % columns
             all_tools_grid.addWidget(button, row, col)
