@@ -582,7 +582,8 @@ class MainWindow(QMainWindow):
                     self.on_tag_selected()
                 else:
                     self.on_tag_deselected()
-                self.filter_tools(self.search_field.text())
+                    
+            self.filter_tools(self.search_field.text())
 
     def filter_tools(self, search_text):
         search_text = search_text.lower()
