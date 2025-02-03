@@ -10,7 +10,6 @@ import json
 
 class Settings(QWidget):
     settings_saved = pyqtSignal()  # Define a signal for settings saved
-    experimental_tools_toggled = pyqtSignal(bool)  # Signal for toggling experimental tools
 
     def __init__(self, parent=None, back_callback=None, main_window=None):
         super().__init__(parent)
@@ -19,8 +18,6 @@ class Settings(QWidget):
         self.setFont(QFont("Inter Regular"))
         self.config = Config(source="Settings")
         self.initial_theme = self.config.get_theme()
-        self.initial_experimental_tools_enabled = self.config.get_experimental_tools_enabled()
-
         self.init_ui()
 
     def init_ui(self):
@@ -93,17 +90,6 @@ class Settings(QWidget):
         theme_label_dark.setStyleSheet(f"color: {text_color}; font-size: 26px;")
         theme_layout.addWidget(theme_label_dark)
         layout.addLayout(theme_layout)
-
-        # Experimental Tools Toggle
-        experimental_tools_layout = QHBoxLayout()
-        experimental_tools_label = QLabel("Enable Experimental Tools:")
-        experimental_tools_label.setStyleSheet(f"color: {text_color}; font-size: 26px;")
-        experimental_tools_layout.addWidget(experimental_tools_label)
-        self.experimental_tools_toggle = ToggleSwitch()
-        self.experimental_tools_toggle.set_state("dark" if self.config.get_experimental_tools_enabled() else "light")
-        self.experimental_tools_toggle.stateChanged.connect(self.toggle_experimental_tools)
-        experimental_tools_layout.addWidget(self.experimental_tools_toggle)
-        layout.addLayout(experimental_tools_layout)
 
         save_button = QPushButton("Save")
         save_button.setStyleSheet(f"""
@@ -193,33 +179,22 @@ class Settings(QWidget):
     def apply_theme(self):
         self.settings_saved.emit()
 
-    def toggle_experimental_tools(self):
-        """Toggle the state of experimental tools."""
-        current_state = self.experimental_tools_toggle.get_state() == "dark"
-        self.config.set_experimental_tools_enabled(current_state)
-
     def save_settings(self):
         print("Saving settings...")
         # Save the settings
         self.config.set_safe_area_size(self.safe_area_slider.value())
         self.config.set_text_size(self.text_size_dropdown.currentText())
         self.config.set_theme(self.config.data["theme"])
-        self.config.set_experimental_tools_enabled(self.experimental_tools_toggle.get_state() == "dark")
         self.config.save()
         self.config.load()
         # Check if the theme has changed
-        new_theme = self.config.get_theme()
-        new_experimental_tools = self.config.get_experimental_tools_enabled()  # Retrieve the updated experimental tools state
-        
-        theme_changed = self.initial_theme != new_theme
-        experimental_tools_changed = self.initial_experimental_tools_enabled != new_experimental_tools
-
-        if theme_changed or experimental_tools_changed:
+        self.new_theme = self.config.get_theme()
+        if self.initial_theme != self.new_theme:
             # Show a confirmation message box
             msg_box = QMessageBox()
             msg_box.setIcon(QMessageBox.Question)
             msg_box.setText(
-                "The theme or experimental tools settings has been changed.\n\n"
+                "The theme has been changed.\n\n"
                 "You need to relaunch the application for the change to fully take effect,\n\n"
                 "Do you want to relaunch the application?"
             )
@@ -252,7 +227,6 @@ class Settings(QWidget):
             # If the theme hasn't changed, just refresh the settings
             if self.main_window is not None:
                 self.main_window.refresh_settings()
-                
 
     def relaunch_app(self):
         """Relaunch the application."""
@@ -276,7 +250,7 @@ class Settings(QWidget):
         if directory:
             # Path to the original config.json
             original_config_path = os.path.join(os.path.dirname(__file__), "config.json")
-            
+
             # Destination path in the selected directory
             destination_path = os.path.join(directory, "config.json")
 
@@ -293,33 +267,33 @@ class Settings(QWidget):
         file_path, _ = QFileDialog.getOpenFileName(
             self, "Select Config File", "", "JSON Files (*.json);;All Files (*)", options=options
         )
-    
+
         if not file_path:
             return  # User canceled the file dialog
-    
+
         try:
             # Check if the file exists
             if not os.path.exists(file_path):
                 QMessageBox.critical(self, "File Not Found", "The selected file does not exist.")
                 return
-    
+
             # Check if the file has a valid extension
             if not file_path.lower().endswith(".json"):
                 QMessageBox.critical(self, "Invalid File", "Please select a valid JSON file.")
                 return
-    
+
             # Check if the file is empty
             if os.path.getsize(file_path) == 0:
                 QMessageBox.warning(self, "Empty Config", "The config file is empty. Using default values.")
                 self.config.load()  # Reload default values
                 self.refresh_ui_from_config()
                 return
-    
+
             # Read and validate the selected config.json file
             try:
                 with open(file_path, "r", encoding="utf-8") as file:
                     content = file.read()
-    
+
                     # Check for duplicate keys in the JSON
                     def has_duplicate_keys(json_string):
                         import json
@@ -329,9 +303,9 @@ class Settings(QWidget):
                         duplicates = [key for key, count in counter.items() if count > 1]
                         if duplicates:
                             raise ValueError(f"Duplicate keys found: {', '.join(duplicates)}")
-    
+
                     has_duplicate_keys(content)
-    
+
                     new_config_data = json.loads(content)
             except UnicodeDecodeError:
                 QMessageBox.critical(self, "Encoding Error", "The config file contains invalid or unsupported characters.")
@@ -339,16 +313,16 @@ class Settings(QWidget):
             except json.JSONDecodeError as decode_error:
                 QMessageBox.critical(self, "Load Failed", f"Invalid JSON format: {decode_error}")
                 return
-    
+
             # Validate the structure of the loaded config
             required_keys = {"safe_area_size", "text_size", "theme"}
             optional_keys = {"recent_tools": [], "tool_usage": {}}
-    
+
             # Check for missing required keys
             missing_keys = required_keys - new_config_data.keys()
             if missing_keys:
                 raise ValueError(f"Invalid config file: Missing required keys: {', '.join(missing_keys)}")
-    
+
             # Validate data types and assign default values for optional keys
             type_checks = {
                 "safe_area_size": int,
@@ -357,26 +331,26 @@ class Settings(QWidget):
                 "recent_tools": list,
                 "tool_usage": dict,
             }
-    
+
             for key, expected_type in type_checks.items():
                 if key in new_config_data and not isinstance(new_config_data[key], expected_type):
                     raise ValueError(f"Invalid type for '{key}': Expected {expected_type.__name__}, got {type(new_config_data[key]).__name__}")
                 elif key not in new_config_data and key in optional_keys:
                     new_config_data[key] = optional_keys[key]
-    
+
             # Validate specific values
             valid_text_sizes = {"small", "default", "large", "huge"}
             valid_themes = {"light", "dark"}
-    
+
             if new_config_data["safe_area_size"] < 0:
                 raise ValueError("Invalid value for 'safe_area_size': Must be non-negative.")
-    
+
             if new_config_data["text_size"] not in valid_text_sizes:
                 raise ValueError(f"Invalid value for 'text_size': Must be one of {valid_text_sizes}.")
-    
+
             if new_config_data["theme"] not in valid_themes:
                 raise ValueError(f"Invalid value for 'theme': Must be one of {valid_themes}.")
-    
+
             # Replace the current config.json with the new data
             current_config_path = os.path.join(os.path.dirname(__file__), "config.json")
             try:
@@ -388,18 +362,14 @@ class Settings(QWidget):
             except OSError as e:
                 QMessageBox.critical(self, "Save Failed", f"Failed to save settings due to disk space or permissions: {str(e)}")
                 return
-    
+
             # Reload the settings in the application
             self.config.load()
             self.refresh_ui_from_config()
 
-            new_theme = self.config.get_theme()
-            new_experimental_tools = self.config.get_experimental_tools_enabled()  # Retrieve the updated experimental tools state
-            
-            theme_changed = self.initial_theme != new_theme
-            experimental_tools_changed = self.initial_experimental_tools_enabled != new_experimental_tools
-    
-            if theme_changed or experimental_tools_changed:
+            # Detect theme change and trigger relaunch logic
+            new_theme = new_config_data["theme"]
+            if self.initial_theme != new_theme:
                 msg_box = QMessageBox()
                 msg_box.setIcon(QMessageBox.Question)
                 msg_box.setText(
@@ -420,7 +390,7 @@ class Settings(QWidget):
                         color: black;
                     }
                 """)
-    
+
                 # Execute the message box and get the user's choice
                 choice = msg_box.exec_()
                 if choice == QMessageBox.Yes:
@@ -430,9 +400,9 @@ class Settings(QWidget):
                     self.config.set_theme(current_theme)
                     self.theme_toggle.set_state(current_theme)  # Update toggle position
                     self.config.save()
-    
+
             QMessageBox.information(self, "Load Successful", "Settings loaded successfully.")
-    
+
         except ValueError as ve:
             QMessageBox.critical(self, "Load Failed", f"Failed to load settings: {str(ve)}")
         except Exception as e:
@@ -444,4 +414,3 @@ class Settings(QWidget):
         self.safe_area_value_label.setText(f"{self.config.get_safe_area_size()} px")
         self.text_size_dropdown.setCurrentText(self.config.get_text_size())
         self.theme_toggle.set_state(self.config.get_theme())
-        self.experimental_tools_toggle.set_state("dark" if self.config.get_experimental_tools_enabled() else "light")
