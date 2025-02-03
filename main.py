@@ -239,7 +239,6 @@ class MainWindow(QMainWindow):
     
         # Initialize tool buttons
         self.tool_buttons = []
-        self.active_categories = set()
     
         # Define tools
         tools = [
