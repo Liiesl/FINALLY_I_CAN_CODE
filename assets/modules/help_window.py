@@ -3,9 +3,9 @@ import sys
 import re
 import markdown
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QListWidget, QListWidgetItem, QSplitter, QPushButton
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QUrl
 from PyQt5.QtWebEngineWidgets import QWebEngineView
-from PyQt5.QtGui import QFont
+from PyQt5.QtGui import QFont, QDesktopServices
 import qtawesome as qta  # Import QtAwesome for icons
 
 def resource_path(relative_path):
@@ -115,7 +115,7 @@ class HelpWindow(QWidget):
         left_layout.addWidget(self.section_list)
 
         # Right panel: Markdown viewer using QWebEngineView
-        self.markdown_viewer = QWebEngineView()
+        self.markdown_viewer = ExternalLinkWebView()
         self.markdown_viewer.setHtml(self.html_content)  # Display the styled HTML content
 
         # Add widgets to the splitter
@@ -145,3 +145,16 @@ class HelpWindow(QWidget):
         else:
             self.section_list.show()
             self.toggle_button.setIcon(qta.icon('fa5s.angle-left'))
+
+class ExternalLinkWebView(QWebEngineView):
+    """Custom QWebEngineView to handle external link opening."""
+    def __init__(self):
+        super().__init__()
+
+    def acceptNavigationRequest(self, url, type_, is_main_frame):
+        # Check if the navigation request is for an external URL
+        if type_ == QWebEnginePage.NavigationTypeLinkClicked and url.scheme() == "http" or url.scheme() == "https":
+            # Open the URL in the default web browser
+            QDesktopServices.openUrl(url)
+            return False  # Prevent the link from being opened in the QWebEngineView
+        return super().acceptNavigationRequest(url, type_, is_main_frame)
