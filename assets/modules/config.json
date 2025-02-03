@@ -1,12 +1,7 @@
 {
-    "safe_area_size": 100,
+    "safe_area_size": 0,
     "text_size": "default",
     "theme": "dark",
     "recent_tools": [],
-    "tool_usage": {},
-<<<<<<< HEAD
-    "experimental_tools_enabled": false
+    "tool_usage": {}
 }
-=======
-}
->>>>>>> 8851dc2277884388a56981833d146544808c79d6
