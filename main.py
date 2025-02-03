@@ -629,6 +629,8 @@ class MainWindow(QMainWindow):
         self.filter_tools(self.search_field.text())
 
     def filter_tools(self, search_text):
+        if not hasattr(self, 'search_field') or self.search_field is None:
+            return  # Exit if search_field is not available
         search_text = search_text.lower()
         
         if search_text.strip():  # Check if there is any non-whitespace text
