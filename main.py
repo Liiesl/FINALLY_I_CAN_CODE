@@ -331,7 +331,7 @@ class MainWindow(QMainWindow):
         if has_tool_usage:
             for tool_name in sorted(self.tool_usage, key=lambda x: -self.tool_usage[x])[:3]:
                 btn = self.create_tool_button(tool_name, self.tools_dict.get(tool_name, ("Popular tool", []))[0], self.tools_dict.get(tool_name, ("Popular tool", []))[1])
-                most_used_layout.addWidget(btn)
+                most_used_layout.addWidget(button)
             layout.addWidget(most_used_widget)
         else:
             most_used_label.hide()
@@ -354,7 +354,7 @@ class MainWindow(QMainWindow):
         if has_recent_tools:
             for tool_name in self.recent_tools[:3]:
                 btn = self.create_tool_button(tool_name, self.tools_dict.get(tool_name, ("Recently used tool", []))[0], self.tools_dict.get(tool_name, ("Recently used tool", []))[1])
-                recent_layout.addWidget(btn)
+                recent_layout.addWidget(button)
             layout.addWidget(recent_widget)
         else:
             recent_label.hide()
@@ -379,8 +379,8 @@ class MainWindow(QMainWindow):
             btn = self.create_tool_button(tool[0], tool[1], tool[2])
             row = index // columns
             col = index % columns
-            all_tools_grid.addWidget(btn, row, col)
-            self.tool_buttons.append(btn)
+            all_tools_grid.addWidget(button, row, col)
+            self.tool_buttons.append(button)
 
         layout.addWidget(all_tools_widget)
 
@@ -449,7 +449,7 @@ class MainWindow(QMainWindow):
         # Connect the tool selection action
         button.clicked.connect(lambda: self.tool_selected(tool_name))
     
-        return button
+        return button, description_label
     
     def on_tag_selected(self):
         self.most_used_label.hide()
