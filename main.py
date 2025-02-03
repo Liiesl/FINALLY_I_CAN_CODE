@@ -45,8 +45,6 @@ class MainWindow(QMainWindow):
 
         self.config = Config(source="MainWindow")
         self.main_menu_active = True
-        self.experimental_tools_enabled = self.config.get_experimental_tools_enabled()
-        self.experimental_tools_enabled = False
 
         self.custom_window_bar = CustomWindowBar(self, self.app)
         self.layout.addWidget(self.custom_window_bar)
@@ -593,16 +591,27 @@ class MainWindow(QMainWindow):
 
     def update_tool_button_visibility(self, event=None):
         if self.main_menu_active and self.tool_buttons:
-            # Only handle automatic visibility if there's no search filter
+            # Fetch the experimental tools visibility status directly from the config
+            self.experimental_tools_enabled = self.config.get_experimental_tools_enabled()
+    
+            # Update visibility for all buttons based on experimental toggle
+            for i, button in enumerate(self.tool_buttons):
+                tool = self.tools[i]
+                categories = set(tool[2])
+                is_experimental = "experimental" in categories
+                # Determine visibility: show if experimental tools are enabled or if the tool is not experimental
+                visible = (self.experimental_tools_enabled or not is_experimental)
+                button.setVisible(visible)
+    
+            # Adjust visibility based on container width (if no search filter is applied)
             if not self.search_field.text():
                 container_width = self.scroll_area.width()
                 button_width = 220
                 visible_buttons = max(1, container_width // button_width)
+                # Ensure only the first few buttons are visible based on container width
                 for i, button in enumerate(self.tool_buttons):
-                    button.setVisible(i < visible_buttons)
-
-                for button in self.tool_buttons:
-                    button.setVisible(True)
+                    if i >= visible_buttons:
+                        button.setVisible(False)
 
     def update_category_filters(self):
         current_splitter = self.tab_contents.currentWidget()
@@ -622,43 +631,26 @@ class MainWindow(QMainWindow):
                 self.on_tag_deselected()
             self.filter_tools(self.search_field.text())
 
-    def toggle_experimental_tools(self, enabled=None):
-        """
-        Toggle the visibility of experimental tools.
-        If 'enabled' is not provided, toggle the current state.
-        """
-        if enabled is None:
-            # Toggle the current state if no explicit value is provided
-            self.experimental_tools_enabled = not self.experimental_tools_enabled
-        else:
-            # Use the provided value
-            self.experimental_tools_enabled = enabled
-    
-        # Update the visibility of experimental tools
-        self.filter_tools(self.search_field.text())
-
     def filter_tools(self, search_text):
         if not hasattr(self, 'search_field') or self.search_field is None:
             return  # Exit if search_field is not available
+    
         search_text = search_text.lower()
-        
         if search_text.strip():  # Check if there is any non-whitespace text
             self.on_tag_selected()
         else:
             self.on_tag_deselected()
-            
+    
         for index, tool in enumerate(self.tools):
             button = self.tool_buttons[index]
             name = tool[0].lower()
             desc = tool[1].lower()
             categories = set(tool[2])
-
-            is_experimental = "experimental" in categories
-
+    
+            # Determine visibility based on search text and active categories
             text_match = search_text in name or search_text in desc
             category_match = not self.active_categories or bool(categories & self.active_categories)
-            visible = text_match and category_match and (self.experimental_tools_enabled or not is_experimental)
-            
+            visible = text_match and category_match
             button.setVisible(visible)
 
 if __name__ == "__main__":
