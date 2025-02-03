@@ -437,6 +437,7 @@ class MainWindow(QMainWindow):
         # Layout for the button
         button_layout = QVBoxLayout(button)
         button_layout.addWidget(combined_label)
+        button_layout.addStretch()
         button_layout.setAlignment(Qt.AlignCenter)
     
         # Create the description label (hidden by default)
