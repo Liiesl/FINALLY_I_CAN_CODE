@@ -454,7 +454,6 @@ class MainWindow(QMainWindow):
             self.apply_text_size()
             self.apply_theme()
             self.update_tool_button_visibility()
-            self.filter_tools(self.search_field.text())
 
     def on_tag_selected(self):
         self.most_used_label.hide()
@@ -587,6 +586,7 @@ class MainWindow(QMainWindow):
         self.apply_text_size()  # Update text size
         self.apply_theme()  # Update theme)
         self.toggle_experimental_tools(self.experimental_tools_enabled)
+        self.filter_tools(self.search_field.text())
 
         self.custom_window_bar.current_palette()
         self.custom_window_bar.update_colors()
