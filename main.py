@@ -271,7 +271,7 @@ class MainWindow(QMainWindow):
                 "large": 34,
                 "huge": 42
             }.get(text_size, 26)  # Default to 18 if text size is unknown
-            btn.setFont(QFont("Inter ExtraBold", font_size - 10))
+            btn.setFont(QFont("Inter Regular", font_size - 10))
             btn.setStyleSheet(f"""
                 QPushButton {{
                     border: 2px solid {self.highlight_color};
