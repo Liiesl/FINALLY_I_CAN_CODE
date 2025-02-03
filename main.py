@@ -586,8 +586,6 @@ class MainWindow(QMainWindow):
         self.apply_text_size()  # Update text size
         self.apply_theme()  # Update theme)
         self.toggle_experimental_tools(self.experimental_tools_enabled)
-        self.filter_tools(self.search_field.text())
-
         self.custom_window_bar.current_palette()
         self.custom_window_bar.update_colors()
         self.side_panel.current_palette()
@@ -627,6 +625,7 @@ class MainWindow(QMainWindow):
     def toggle_experimental_tools(self, enabled):
         """Toggle the visibility of experimental tools."""
         self.experimental_tools_enabled = enabled
+        self.filter_tools(self.search_field.text())
 
     def filter_tools(self, search_text):
         if not hasattr(self, 'search_field') or self.search_field is None:
