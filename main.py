@@ -156,7 +156,7 @@ class MainWindow(QMainWindow):
         if current_splitter is not None:
             main_content = current_splitter.widget(1)  # Main content is the second widget in the splitter
             main_content_layout = main_content.layout()
-    
+            self.main_menu_active = True
             # Clear the existing layout
             self.clear_layout(main_content_layout)
     
@@ -214,9 +214,10 @@ class MainWindow(QMainWindow):
     
             # Add the NotificationBar below the top bar
             self.notification_bar = NotificationBar(self)
-            main_content_layout.addWidget(self.notification_bar)
+            if hasattr(self, 'notification_bar'):
+                main_content_layout.addWidget(self.notification_bar)
     
-            # Add categories and tools dynamically
+            # Add categories and tools dynamicallym
             self.add_categories_and_tools(main_content_layout)
     
             # Apply theme and text size
@@ -236,9 +237,8 @@ class MainWindow(QMainWindow):
         category_layout.setContentsMargins(0, 0, 0, 0)
         category_layout.setSpacing(8)
     
-        # Initialize tool buttons and active categories for this tab
+        # Initialize tool buttons
         self.tool_buttons = []
-        self.active_categories = set()
     
         # Define tools
         tools = [
@@ -277,10 +277,11 @@ class MainWindow(QMainWindow):
                     color: {self.highlight_text_color};
                 }}
             """)
-        btn.clicked.connect(self.update_category_filters)
-        category_layout.addWidget(btn)
+            btn.clicked.connect(self.update_category_filters)
+            self.category_buttons[category] = btn
+            category_layout.addWidget(btn)
+            
         category_layout.addStretch()
-    
         main_h_layout.addWidget(category_panel, stretch=1)
     
         # Create scroll area for tools
@@ -292,12 +293,14 @@ class MainWindow(QMainWindow):
         scroll_area = QScrollArea()
         scroll_area.setWidgetResizable(True)
         scroll_area.setWidget(scroll_content)
+        scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         self.scroll_area = scroll_area
     
         # Add tools dynamically
         self.add_tool_sections(main_scroll_layout, tools)
     
-        main_h_layout.addWidget(scroll_area, stretch=4)
+        main_h_layout.addWidget(self.scroll_area, stretch=4)
         layout.addLayout(main_h_layout)
     
     def add_tool_sections(self, layout, tools):
@@ -372,10 +375,10 @@ class MainWindow(QMainWindow):
         layout.addWidget(all_tools_widget)
 
     def create_tool_button(self, tool_name, tool_description, categories):
-
         # Get the actual description from the tuple if needed
         if isinstance(tool_description, tuple):
             tool_description = tool_description[0]
+            
         button = QPushButton()
         button.setFixedSize(300, 200)
         button.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
