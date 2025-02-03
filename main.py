@@ -307,7 +307,7 @@ class MainWindow(QMainWindow):
         scroll_area = QScrollArea()
         scroll_area.setWidgetResizable(True)
         scroll_area.setWidget(scroll_content)
-        self.scroll_area + scroll area
+        self.scroll_area = scroll_area
     
         # Add tools dynamically
         self.add_tool_sections(main_scroll_layout, tools)
