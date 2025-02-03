@@ -449,7 +449,7 @@ class MainWindow(QMainWindow):
         # Connect the tool selection action
         button.clicked.connect(lambda: self.tool_selected(tool_name))
     
-        return button, description_label  # Return both button and description_label
+        return button
     
     def on_tag_selected(self):
         self.most_used_label.hide()
