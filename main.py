@@ -404,19 +404,46 @@ class MainWindow(QMainWindow):
                 background-color: {self.hover_background_color};
             }}
         """)
+        # Define a placeholder emoji for each tool (you can customize these later)
+        emojis = {
+            "Longer Appearance SRT": "⏳",
+            "Merge SRT Files": "✨",
+            "Subtitle Converter": "🔄",
+            "Subtitle Shifter": "➡️",
+            "Multilingual Merge": "🌍",
+            "Coming Soon": "🚀"
+        }
     
-        # Create the name label (visible always)
-        text_size = self.config.get_text_size()
+        # Get the emoji for the current tool
+        emoji = emojis.get(tool_name, "❓")  # Default to question mark if no emoji is defined
+    
+        # Create the layout for the button
+        button_layout = QVBoxLayout(button)
+        button_layout.setAlignment(Qt.AlignCenter)  # Center-align contents
+
+        # Add the emoji label (top part of the button)
+        emoji_label = QLabel(emoji)
         font_size = {
-            "small": 18,
-            "default": 26,
-            "large": 34,
-            "huge": 42
-        }.get(text_size, 26)
+            "small": 48,
+            "default": 64,
+            "large": 80,
+            "huge": 96
+        }.get(self.config.get_text_size(), 64)  # Adjust size based on text size setting
+        emoji_label.setFont(QFont("Inter Regular", font_size))
+        emoji_label.setStyleSheet(f"color: {self.text_color};")
+        button_layout.addWidget(emoji_label)
+        
         name_label = QLabel(tool_name)
-        name_label.setFont(QFont("Inter ExtraBold", font_size, QFont.Bold))
-        name_label.setStyleSheet(f"color: {self.border_color}; background-color: transparent;")
+        name_font_size = {
+            "small": 14,
+            "default": 18,
+            "large": 22,
+            "huge": 26
+        }.get(self.config.get_text_size(), 18)  # Adjust size based on text size setting
+        name_label.setFont(QFont("Inter ExtraBold", name_font_size, QFont.Bold))
+        name_label.setStyleSheet(f"color: {self.text_color};")
         name_label.setAlignment(Qt.AlignCenter)
+        button_layout.addWidget(name_label)
     
         # Create the description label (hidden by default)
         description_label = QLabel(tool_description)
@@ -431,12 +458,7 @@ class MainWindow(QMainWindow):
         description_label.setWordWrap(True)
         description_label.hide()  # Hide initially
         description_label.setFixedSize(300, 200)
-        # Parent the description label to the MainWindow
         description_label.setParent(self)  # Set MainWindow as the parent
-        # Layout for the button
-        button_layout = QVBoxLayout(button)
-        button_layout.addWidget(name_label)
-        button_layout.addStretch()
     
         # Show description on hover
         def show_description(event):
