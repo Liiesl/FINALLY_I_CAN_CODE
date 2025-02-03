@@ -398,7 +398,7 @@ class MainWindow(QMainWindow):
             }
             QPushButton:hover {
                 border: none;
-                background-color: transparent;
+                background-color: {self.hover_background_color};
             }
         """)
     
@@ -464,9 +464,9 @@ class MainWindow(QMainWindow):
                 # If neither side has enough space, default to the left
                 final_pos = pos_left
             
-            # Adjust vertical position to align with the button
-            final_pos.setY(button_global_pos.y())
-        
+            # Align the top edge of the description label with the top edge of the button
+            final_pos.setY(button_global_pos.y())  # Ensure vertical alignment
+            
             # Move and show the description label
             description_label.move(final_pos)
             description_label.show()
