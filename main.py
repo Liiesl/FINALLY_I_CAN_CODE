@@ -320,7 +320,7 @@ class MainWindow(QMainWindow):
         self.scroll_area = scroll_area
     
         # Add tools dynamically
-        self.add_tool_sections(main_scroll_layout, tools)
+        self.add_tool_sections(main_scroll_layout, tools, tool_buttons)
     
         main_h_layout.addWidget(self.scroll_area, stretch=4)
         layout.addLayout(main_h_layout)
