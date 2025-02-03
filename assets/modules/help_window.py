@@ -90,20 +90,20 @@ class HelpWindow(QWidget):
         self.section_list = QListWidget()
         self.section_list.setFont(QFont("Arial", 14))  # Increase text size
         
-    for level, title in self.headers:
-        item = QListWidgetItem(title)
-        item.setData(Qt.UserRole, title)  # Store the header title for later use
-        
-        # Set font size based on header level with increased size gap
-        font_size = max(8, 28 - (level * 5))  # Increase the size gap by multiplying level by 4
-        font = QFont("Arial", font_size)
-        
-        # Add indentation based on the header level
-        indent = level * 20  # Each level gets an additional 20 pixels of indentation
-        item.setText(f"{' ' * (indent // 10)}{title}")  # Approximate tab-like spacing
-        
-        item.setFont(font)
-        self.section_list.addItem(item)
+        for level, title in self.headers:
+            item = QListWidgetItem(title)
+            item.setData(Qt.UserRole, title)  # Store the header title for later use
+            
+            # Set font size based on header level with increased size gap
+            font_size = max(8, 28 - (level * 5))  # Increase the size gap by multiplying level by 4
+            font = QFont("Arial", font_size)
+            
+            # Add indentation based on the header level
+            indent = level * 20  # Each level gets an additional 20 pixels of indentation
+            item.setText(f"{' ' * (indent // 10)}{title}")  # Approximate tab-like spacing
+            
+            item.setFont(font)
+            self.section_list.addItem(item)
         
         self.section_list.itemClicked.connect(self.scroll_to_section)
         left_layout.addWidget(self.section_list)
