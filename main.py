@@ -428,6 +428,9 @@ class MainWindow(QMainWindow):
         description_label.setWordWrap(True)
         description_label.hide()  # Hide initially
     
+        # Parent the description label to the MainWindow
+        description_label.setParent(self)  # Set MainWindow as the parent
+    
         # Layout for the button
         button_layout = QVBoxLayout(button)
         button_layout.addWidget(name_label)
@@ -436,13 +439,15 @@ class MainWindow(QMainWindow):
         # Show description on hover
         def show_description(event):
             pos = button.mapToGlobal(QPoint(0, 0))  # Get global position of the button
-            description_label.setParent(button.parent())  # Set the same parent as the button
-            description_label.move(pos.x() + button.width(), pos.y())  # Position beside the button
+            x = pos.x() + button.width()  # Position beside the button
+            y = pos.y()
+            description_label.move(x, y)  # Reposition the label
             description_label.show()
     
         def hide_description(event):
             description_label.hide()
     
+        # Assign custom event handlers for hover events
         button.enterEvent = lambda event: show_description(event)  # On hover enter
         button.leaveEvent = lambda event: hide_description(event)  # On hover leave
     
