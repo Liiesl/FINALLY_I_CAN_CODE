@@ -41,23 +41,12 @@ class HelpWindow(QWidget):
         """Extract headers and subheaders from the markdown content."""
         headers = []
         lines = markdown_content.split('\n')
-        title_counts = {}  # Dictionary to track duplicate titles
-    
         for line in lines:
             match = re.match(r'^(#+)\s+(.*)', line)
             if match:
                 level = len(match.group(1))  # Number of '#' indicates the header level
                 title = match.group(2).strip()
-    
-                # Handle duplicate titles by appending a counter
-                if title in title_counts:
-                    title_counts[title] += 1
-                    title = f"{title}-{title_counts[title]}"
-                else:
-                    title_counts[title] = 0
-    
                 headers.append((level, title))
-    
         return headers
 
     def convert_to_html_with_styling(self):
@@ -65,14 +54,14 @@ class HelpWindow(QWidget):
         # Define markdown extensions for syntax highlighting, table of contents, and unique IDs
         extensions = ['extra', 'codehilite', 'toc']
         html_content = markdown.markdown(self.markdown_content, extensions=extensions, output_format='html5')
-        
+
         # Load custom CSS for styling
         css_path = resource_path("assets/modules/styles.css")
         css_content = ""
         if os.path.exists(css_path):
             with open(css_path, 'r', encoding='utf-8') as f:
                 css_content = f.read()
-        
+
         # Wrap the HTML content with the CSS
         styled_html = f"""
         <html>
@@ -105,7 +94,7 @@ class HelpWindow(QWidget):
 
         self.section_list = QListWidget()
         self.section_list.setFont(QFont("Arial", 14))  # Increase text size
-        
+
         for level, title in self.headers:
             item = QListWidgetItem(title)
             item.setData(Qt.UserRole, title)  # Store the header title for later use
@@ -118,10 +107,10 @@ class HelpWindow(QWidget):
             else:
                 indent = (level - 1) * 20  # Indentation for h2 and higher levels
             item.setText(f"{' ' * (indent // 10)}{title}")  # Approximate tab-like spacing
-            
+
             item.setFont(font)
             self.section_list.addItem(item)
-        
+
         self.section_list.itemClicked.connect(self.scroll_to_section)
         left_layout.addWidget(self.section_list)
 
@@ -143,9 +132,9 @@ class HelpWindow(QWidget):
         self.markdown_viewer.page().runJavaScript(f"document.getElementById('{anchor}').scrollIntoView();")
 
     def generate_anchor(self, title):
-        """Generate a unique anchor name for a given header title."""
-        # Convert the title to lowercase, replace spaces with hyphens, and remove special characters
-        anchor = re.sub(r'[^\w\-]', '', title).strip().lower().replace(' ', '-')
+        """Generate an anchor name for a given header title."""
+        # Convert the title to lowercase, replace spaces with hyphens, and remove non-alphanumeric characters
+        anchor = re.sub(r'[^\w\- ]', '', title).strip().lower().replace(' ', '-')
         return anchor
 
     def toggle_navigation(self):
