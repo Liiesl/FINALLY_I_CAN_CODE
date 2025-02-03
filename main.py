@@ -622,9 +622,19 @@ class MainWindow(QMainWindow):
                 self.on_tag_deselected()
             self.filter_tools(self.search_field.text())
 
-    def toggle_experimental_tools(self, enabled):
-        """Toggle the visibility of experimental tools."""
-        self.experimental_tools_enabled = enabled
+    def toggle_experimental_tools(self, enabled=None):
+        """
+        Toggle the visibility of experimental tools.
+        If 'enabled' is not provided, toggle the current state.
+        """
+        if enabled is None:
+            # Toggle the current state if no explicit value is provided
+            self.experimental_tools_enabled = not self.experimental_tools_enabled
+        else:
+            # Use the provided value
+            self.experimental_tools_enabled = enabled
+    
+        # Update the visibility of experimental tools
         self.filter_tools(self.search_field.text())
 
     def filter_tools(self, search_text):
