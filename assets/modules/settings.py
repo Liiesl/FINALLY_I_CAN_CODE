@@ -19,6 +19,8 @@ class Settings(QWidget):
         self.setFont(QFont("Inter Regular"))
         self.config = Config(source="Settings")
         self.initial_theme = self.config.get_theme()
+        self.initial_experimental_tools = self.config.get_experimental_tools()  # Add this method to your Config class if not present
+
         self.init_ui()
 
     def init_ui(self):
@@ -206,13 +208,18 @@ class Settings(QWidget):
         self.config.save()
         self.config.load()
         # Check if the theme has changed
-        self.new_theme = self.config.get_theme()
-        if self.initial_theme != self.new_theme:
+        new_theme = self.config.get_theme()
+        new_experimental_tools = self.config.get_experimental_tools()  # Retrieve the updated experimental tools state
+        
+        theme_changed = self.initial_theme != new_theme
+        experimental_tools_changed = self.initial_experimental_tools != new_experimental_tools
+
+        if theme_changed or experimental_tools_changed:
             # Show a confirmation message box
             msg_box = QMessageBox()
             msg_box.setIcon(QMessageBox.Question)
             msg_box.setText(
-                "The theme has been changed.\n\n"
+                "The theme or experimental tools settings has been changed.\n\n"
                 "You need to relaunch the application for the change to fully take effect,\n\n"
                 "Do you want to relaunch the application?"
             )
