@@ -447,7 +447,7 @@ class MainWindow(QMainWindow):
             button_size = button.size()
             description_size = description_label.size()
             
-            # Get the window geometry (global coordinates)
+            # Get the current window geometry (global coordinates)
             window_geometry = self.geometry()
             window_top_left = self.mapToGlobal(QPoint(0, 0))
             window_bottom_right = window_top_left + QPoint(window_geometry.width(), window_geometry.height())
