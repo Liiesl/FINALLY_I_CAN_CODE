@@ -17,7 +17,7 @@ For a comprehensive guide on how to use the app, including detailed instructions
 ## Installation
 
 ### Windows
-1. Download the latest release from the [Releases](https://github.com/yourusername/Subtl/releases) page.
+1. Download the latest release from the [Releases](https://github.com/Liiesl/Subtl/releases) page.
 2. Run the installer and follow the on-screen instructions.
 
 ### macOS
